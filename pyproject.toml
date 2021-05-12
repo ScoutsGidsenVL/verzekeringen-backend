@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "verzekeringen.api"
+version = "0.1.0"
+description = "The api for scouts verzekeringen"
+authors = ["Jonas Elst <jonas.elst@inuits.eu>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^3.2.2"
+psycopg2 = "^2.8.6"
+djangorestframework = "^3.12.4"
+mozilla-django-oidc = "^1.2.4"
+django-cors-headers = "^3.7.0"
+django-filter = "^2.4.0"
+environs = "^9.3.2"
+drf-yasg2 = "^1.19.4"
+PyYAML = "^5.4.1"
+packaging = "^20.9"
+dj-email-url = "^1.0.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 119
+target-version = ['py39']
+exclude = '''
+/(
+  | migrations
+)/
+
+'''
