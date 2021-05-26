@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "apps.scouts_auth",
+    "apps.members",
+    "apps.insurances",
     "mozilla_django_oidc",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -150,7 +152,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
-    "DEFAULT_PAGINATION_CLASS": "scouts_wwdb_api.pagination.ScoutsPageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "verzekeringen_api.pagination.PageNumberPagination",
+    "EXCEPTION_HANDLER": "apps.base.utils.exception_handler",
 }
 
 # Email
@@ -179,7 +182,10 @@ OIDC_RP_SIGN_ALGO = "RS256"
 
 OIDC_OP_JWKS_ENDPOINT = env.str("OIDC_OP_ISSUER") + env.str("OIDC_OP_JWKS_ENDPOINT")
 OIDC_OP_TOKEN_ENDPOINT = env.str("OIDC_OP_ISSUER") + env.str("OIDC_OP_TOKEN_ENDPOINT")
-OIDC_OP_USER_ENDPOINT = env.str("OIDC_OP_ISSUER") + env.str("OIDC_OP_USER_ENDPOINT")
+if env.str("OIDC_OP_USER_ENDPOINT").startswith("http"):
+    OIDC_OP_USER_ENDPOINT = env.str("OIDC_OP_USER_ENDPOINT")
+else:
+    OIDC_OP_USER_ENDPOINT = env.str("OIDC_OP_ISSUER") + env.str("OIDC_OP_USER_ENDPOINT")
 
 OIDC_RP_CLIENT_ID = env.str("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")

@@ -1,3 +1,4 @@
+from datetime import datetime
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from mozilla_django_oidc.contrib.drf import OIDCAuthentication
 from django.conf import settings
@@ -5,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
 from rest_framework import exceptions
 from requests.exceptions import HTTPError
-from pprint import pprint
+from apps.scouts_auth.services import GroupAdminService
 
 
 class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
@@ -48,12 +49,37 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
 
         user.first_name = claims.get("vgagegevens", {}).get("voornaam", user.first_name)
         user.last_name = claims.get("vgagegevens", {}).get("achternaam", user.last_name)
+        user.group_admin_id = claims.get("id", "")
+        # The following aren't stored in database but are just put in memory
+        birth_date_str = claims.get("vgagegevens", {}).get("geboortedatum", "")
+        try:
+            user.birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
+        except:
+            pass
+        user.membership_number = claims.get("verbondsgegevens", {}).get("lidnummer", "")
 
         # Everybody gets role user
         roles = ["role_user"]
-        # give admin role if in one of the scouts groups
-        scouts_groups = claims.get("functies", [])
         admin_scouts_groups = ["X0001G", "X0002G", "X0015G", "X1027G"]
+        is_admin = True
+        # Loop over active groups, check for admin and get more group info
+        scouts_groups = [group_obj for group_obj in claims.get("functies", []) if not group_obj.get("einde", False)]
+        user_groups = []
+        for group_obj in scouts_groups:
+            href = next(
+                link.get("href")
+                for link in group_obj.get("links")
+                if link.get("rel") == "groep" and link.get("method") == "GET"
+            )
+            user_groups.append(GroupAdminService.get_detailed_group_info(href))
+            if group_obj.get("groep", "") in admin_scouts_groups:
+                is_admin = True
+                break
+
+        user.scouts_groups = user_groups
+        if is_admin:
+            roles.append("role_admin")
+
         user = self.map_user_roles(user, roles)
         return user
 
@@ -81,6 +107,7 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
         try:
             return super().authenticate(request)
         except HTTPError as exc:
+            print(exc.response.json())
             response = exc.response
             # If oidc returns 401 return auth failed error
             if response.status_code == 401:

@@ -1,0 +1,9 @@
+youthapp_api.egg-info
+__pycache__
+.env
+.DS_Store
+*.log
+*.properties
+!sonar-project.properties
+*.csv
+*.report

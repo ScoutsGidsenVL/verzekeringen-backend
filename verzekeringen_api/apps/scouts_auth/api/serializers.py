@@ -2,12 +2,31 @@ from rest_framework import serializers
 from ..models import User
 
 
+class GroupOutputSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    name = serializers.CharField()
+    location = serializers.CharField()
+
+
 class UserDetailOutputSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
+    birth_date = serializers.DateField()
+    membership_number = serializers.DateField()
+    scouts_groups = GroupOutputSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ("id", "first_name", "last_name", "date_joined", "permissions")
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "birth_date",
+            "membership_number",
+            "scouts_groups",
+            "date_joined",
+            "permissions",
+        )
 
     def get_permissions(self, obj):
         return obj.get_all_permissions()
