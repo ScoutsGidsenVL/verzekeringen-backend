@@ -8,7 +8,7 @@ from apps.members.api.serializers import (
     MemberNestedCreateInputSerializer,
 )
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
-from ...models import BaseInsurance, InsuranceType
+from ...models import BaseInsurance, ActivityInsurance, InsuranceType
 from ...models.enums import InsuranceStatus
 
 
@@ -22,6 +22,42 @@ class InsuranceListOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = BaseInsurance
         fields = ("id", "status", "type", "group", "start_date", "end_date", "responsible_member")
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_status(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(InsuranceStatus(obj.status))).data
+
+
+# Just some a tuple so we dont need to copy everything (cannot use inheritance because Meta does not get inherited)
+base_insurance_detail_fields = (
+    "id",
+    "status",
+    "type",
+    "group",
+    "start_date",
+    "end_date",
+    "responsible_member",
+    "total_cost",
+    "created_on",
+    "comment",
+    "vvks_comment",
+)
+
+
+class ActivityInsuranceDetailOutputSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+    type = InsuranceTypeOutputSerializer(read_only=True)
+    group = GroupOutputSerializer(read_only=True)
+    responsible_member = MemberNestedOutputSerializer(read_only=True)
+
+    class Meta:
+        model = ActivityInsurance
+        fields = base_insurance_detail_fields + (
+            "nature",
+            "people_amount",
+            "postcode",
+            "city",
+        )
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_status(self, obj):

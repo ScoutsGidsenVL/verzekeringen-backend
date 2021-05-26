@@ -11,6 +11,7 @@ class ActivityInsurance(BaseInsurance):
         on_delete=models.CASCADE,
         parent_link=True,
         primary_key=True,
+        related_name="activity_child",
     )
     nature = models.CharField(db_column="aardactiviteit", max_length=500)
     people_amount = models.IntegerField(

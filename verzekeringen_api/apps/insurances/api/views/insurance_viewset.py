@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 from ..serializers import (
     InsuranceListOutputSerializer,
+    ActivityInsuranceDetailOutputSerializer,
     BaseInsuranceCreateInputSerializer,
     ActivityInsuranceCreateInputSerializer,
 )
@@ -22,7 +23,11 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceListOutputSerializer})
     def retrieve(self, request, pk=None):
         insurance = self.get_object()
-        serializer = InsuranceListOutputSerializer(insurance)
+
+        if insurance.type_id == 1:
+            serializer = ActivityInsuranceDetailOutputSerializer(insurance.activity_child)
+        else:
+            serializer = InsuranceListOutputSerializer(insurance)
 
         return Response(serializer.data)
 
@@ -41,7 +46,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(
         request_body=ActivityInsuranceCreateInputSerializer,
-        responses={status.HTTP_201_CREATED: InsuranceListOutputSerializer},
+        responses={status.HTTP_201_CREATED: ActivityInsuranceDetailOutputSerializer},
     )
     @action(methods=["post"], detail=False, url_path="activity")
     def create_activity(self, request):
@@ -52,6 +57,6 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             **input_serializer.validated_data, created_by=request.user
         )
 
-        output_serializer = InsuranceListOutputSerializer(created_insurance)
+        output_serializer = ActivityInsuranceDetailOutputSerializer(created_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
