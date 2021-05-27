@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
 from rest_framework import exceptions
 from requests.exceptions import HTTPError
-from apps.scouts_auth.services import GroupAdminService
+from apps.scouts_auth.utils import PartialGroup
 
 
 class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
@@ -71,12 +71,13 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
                 for link in group_obj.get("links")
                 if link.get("rel") == "groep" and link.get("method") == "GET"
             )
-            user_groups.append(GroupAdminService.get_detailed_group_info(href))
+            group_id = group_obj.get("groep", "")
+            user_groups.append(PartialGroup(id=group_id, href=href))
             if group_obj.get("groep", "") in admin_scouts_groups:
                 is_admin = True
                 break
 
-        user.scouts_groups = user_groups
+        user.partial_scouts_groups = user_groups
         if is_admin:
             roles.append("role_admin")
 

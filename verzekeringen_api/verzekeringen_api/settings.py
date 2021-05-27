@@ -189,3 +189,5 @@ else:
 
 OIDC_RP_CLIENT_ID = env.str("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")
+
+BELGIAN_CITY_SEARCH_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/gis/gemeente"

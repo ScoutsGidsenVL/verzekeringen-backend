@@ -6,7 +6,10 @@ from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.members.api.serializers import (
     MemberNestedOutputSerializer,
     MemberNestedCreateInputSerializer,
+    BelgianPostcodeCityOutputSerializer,
+    BelgianPostcodeCityInputSerializer,
 )
+from apps.members.utils import PostcodeCity
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
 from ...models import BaseInsurance, ActivityInsurance, InsuranceType
 from ...models.enums import InsuranceStatus
@@ -49,19 +52,19 @@ class ActivityInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     type = InsuranceTypeOutputSerializer(read_only=True)
     group = GroupOutputSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
+    location = serializers.SerializerMethodField()
 
     class Meta:
         model = ActivityInsurance
-        fields = base_insurance_detail_fields + (
-            "nature",
-            "group_amount",
-            "postcode",
-            "city",
-        )
+        fields = base_insurance_detail_fields + ("nature", "group_amount", "location")
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_status(self, obj):
         return EnumOutputSerializer(parse_choice_to_tuple(InsuranceStatus(obj.status))).data
+
+    @swagger_serializer_method(serializer_or_field=BelgianPostcodeCityOutputSerializer)
+    def get_location(self, obj):
+        return BelgianPostcodeCityOutputSerializer(PostcodeCity(postcode=obj.postcode, name=obj.city)).data
 
 
 # Input
@@ -76,5 +79,4 @@ class BaseInsuranceCreateInputSerializer(serializers.Serializer):
 class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
     group_amount = serializers.IntegerField(min_value=1, max_value=9)
-    postcode = serializers.IntegerField()
-    city = serializers.CharField(max_length=40)
+    location = BelgianPostcodeCityInputSerializer()

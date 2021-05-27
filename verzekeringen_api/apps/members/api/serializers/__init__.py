@@ -1,1 +1,2 @@
 from .member_serializers import MemberNestedOutputSerializer, MemberNestedCreateInputSerializer
+from .location_serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer

@@ -1,9 +1,9 @@
 import requests
-from ..utils import Group
+from ..utils import Group, PartialGroup
 
 
-def get_detailed_group_info(href: str) -> Group:
-    response = requests.get(href)
+def get_detailed_group_info(partial_group: PartialGroup) -> Group:
+    response = requests.get(partial_group.href)
 
     response.raise_for_status()
     json = response.json()
