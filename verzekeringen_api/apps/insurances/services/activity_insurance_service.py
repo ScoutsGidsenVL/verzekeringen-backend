@@ -5,7 +5,7 @@ from . import base_insurance_service as BaseInsuranceService
 
 @transaction.atomic
 def activity_insurance_create(
-    *, nature: str, people_amount: int, postcode: int, city: str, **base_insurance_fields
+    *, nature: str, group_amount: int, postcode: int, city: str, **base_insurance_fields
 ) -> ActivityInsurance:
     # TODO calculate cost
     total_cost = 1
@@ -14,7 +14,7 @@ def activity_insurance_create(
     )
     insurance = ActivityInsurance(
         nature=nature,
-        people_amount=people_amount,
+        group_amount=group_amount,
         postcode=postcode,
         city=city,
         **base_insurance_fields,

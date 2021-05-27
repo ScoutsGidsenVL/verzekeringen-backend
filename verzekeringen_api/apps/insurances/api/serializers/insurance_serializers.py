@@ -54,7 +54,7 @@ class ActivityInsuranceDetailOutputSerializer(serializers.ModelSerializer):
         model = ActivityInsurance
         fields = base_insurance_detail_fields + (
             "nature",
-            "people_amount",
+            "group_amount",
             "postcode",
             "city",
         )
@@ -75,6 +75,6 @@ class BaseInsuranceCreateInputSerializer(serializers.Serializer):
 
 class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
-    people_amount = serializers.IntegerField(min_value=1, max_value=9)
+    group_amount = serializers.IntegerField(min_value=1, max_value=9)
     postcode = serializers.IntegerField()
     city = serializers.CharField(max_length=40)
