@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, permissions, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -8,7 +9,7 @@ from ..serializers import (
     BaseInsuranceCreateInputSerializer,
     ActivityInsuranceCreateInputSerializer,
 )
-from ...models import InsuranceType, BaseInsurance
+from ...models import InsuranceType, BaseInsurance, ActivityInsurance
 from ...services import ActivityInsuranceService
 
 
@@ -58,5 +59,23 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = ActivityInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=ActivityInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: ActivityInsuranceDetailOutputSerializer},
+    )
+    @action(methods=["put"], detail=False, url_path="activity/(?P<pk>\d+)")
+    def update_activity(self, request, pk=None):
+        activity = get_object_or_404(ActivityInsurance.objects.all(), pk=pk)
+        input_serializer = ActivityInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        updated_insurance = ActivityInsuranceService.activity_insurance_update(
+            insurance=activity, **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = ActivityInsuranceDetailOutputSerializer(updated_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

@@ -31,9 +31,7 @@ class BaseInsurance(models.Model):
     _end_date = models.DateField(db_column="einddatum", null=True)
     payment_date = models.DateTimeField(db_column="betalingsdatum", null=True, blank=True)
 
-    responsible_member = models.ForeignKey(
-        Member, null=True, db_column="verantwoordelijkeid", on_delete=models.RESTRICT
-    )
+    responsible_member = models.ForeignKey(Member, db_column="verantwoordelijkeid", on_delete=models.CASCADE)
     type = models.ForeignKey(InsuranceType, null=True, db_column="typeid", on_delete=models.RESTRICT)
 
     class Meta:

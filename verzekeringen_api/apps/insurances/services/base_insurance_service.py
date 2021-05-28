@@ -19,6 +19,7 @@ def base_insurance_creation_fields(
     created_by: settings.AUTH_USER_MODEL,
     total_cost: int,
     comment: str = "",
+    id: str = None,
 ) -> dict:
     # validate group
     created_by.fetch_detailed_group_info()
@@ -38,6 +39,12 @@ def base_insurance_creation_fields(
         "responsible_member": member,
         "comment": comment,
         "created_on": timezone.now(),
+        "id": id,
     }
 
     return fields
+
+
+def base_insurance_delete_relations(*, insurance: BaseInsurance):
+    insurance.responsible_member.delete()
+    return insurance
