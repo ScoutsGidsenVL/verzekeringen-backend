@@ -28,11 +28,16 @@ def activity_insurance_create(
 
 
 @transaction.atomic
+def activity_insurance_delete(*, insurance: ActivityInsurance):
+    insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+    insurance.delete()
+
+
+@transaction.atomic
 def activity_insurance_update(*, insurance: ActivityInsurance, **fields) -> ActivityInsurance:
     # For this update we just delete the old one and create a new one with the given fields (but same id)
     # Bit of a cheat but it matches expectations of customer
     old_id = insurance.id
-    insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
-    insurance.delete()
+    activity_insurance_delete(insurance=insurance)
     new_insurance = activity_insurance_create(**fields, id=old_id)
     return new_insurance

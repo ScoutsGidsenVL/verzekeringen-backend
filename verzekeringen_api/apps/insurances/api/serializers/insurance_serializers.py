@@ -6,12 +6,13 @@ from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.members.api.serializers import (
     MemberNestedOutputSerializer,
     MemberNestedCreateInputSerializer,
+    NonMemberNestedOutputSerializer,
+    NonMemberCreateInputSerializer,
     BelgianPostcodeCityOutputSerializer,
     BelgianPostcodeCityInputSerializer,
 )
-from apps.members.utils import PostcodeCity
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
-from ...models import BaseInsurance, ActivityInsurance, InsuranceType
+from ...models import BaseInsurance, ActivityInsurance, TemporaryInsurance, InsuranceType
 from ...models.enums import InsuranceStatus, GroupSize
 
 
@@ -47,12 +48,19 @@ base_insurance_detail_fields = (
 )
 
 
-class ActivityInsuranceDetailOutputSerializer(serializers.ModelSerializer):
+class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     type = InsuranceTypeOutputSerializer(read_only=True)
     group = GroupOutputSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
-    location = serializers.SerializerMethodField()
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_status(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(InsuranceStatus(obj.status))).data
+
+
+class ActivityInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    location = BelgianPostcodeCityOutputSerializer(source="postcode_city")
     group_size = serializers.SerializerMethodField()
 
     class Meta:
@@ -60,16 +68,17 @@ class ActivityInsuranceDetailOutputSerializer(serializers.ModelSerializer):
         fields = base_insurance_detail_fields + ("nature", "group_size", "location")
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
-    def get_status(self, obj):
-        return EnumOutputSerializer(parse_choice_to_tuple(InsuranceStatus(obj.status))).data
-
-    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_group_size(self, obj):
         return EnumOutputSerializer(parse_choice_to_tuple(GroupSize(obj.group_size))).data
 
-    @swagger_serializer_method(serializer_or_field=BelgianPostcodeCityOutputSerializer)
-    def get_location(self, obj):
-        return BelgianPostcodeCityOutputSerializer(PostcodeCity(postcode=obj.postcode, name=obj.city)).data
+
+class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    postcode_city = BelgianPostcodeCityOutputSerializer()
+    non_members = NonMemberNestedOutputSerializer(many=True)
+
+    class Meta:
+        model = TemporaryInsurance
+        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "non_members")
 
 
 # Input
@@ -85,3 +94,22 @@ class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer)
     nature = serializers.CharField(max_length=500)
     group_size = serializers.ChoiceField(choices=GroupSize.choices)
     location = BelgianPostcodeCityInputSerializer()
+
+
+class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+    nature = serializers.CharField(max_length=500)
+    country = serializers.CharField(max_length=45, required=False)
+    postcode_city = BelgianPostcodeCityInputSerializer(required=False)
+    non_members = NonMemberCreateInputSerializer(many=True)
+
+    def validate_non_members(self, value):
+        if len(value) < 1:
+            raise serializers.ValidationError("At least one non member is required")
+        return value
+
+    def validate(self, data):
+        if not data.get("postcode_city") and not data.get("country"):
+            raise serializers.ValidationError("Either postcode_city or country is required")
+        elif data.get("postcode_city") and data.get("country"):
+            raise serializers.ValidationError("Country and postcode_city are mutually exclusive fields")
+        return data

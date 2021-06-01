@@ -1,6 +1,8 @@
 from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
+from .managers import InuitsNonMemberManager
+from .utils import PostcodeCity
 
 
 class Member(models.Model):
@@ -17,6 +19,7 @@ class Member(models.Model):
     class Meta:
         db_table = "vrzkleden"
         managed = False
+        ordering = ["id"]
 
     def clean(self):
         if not (self.birth_date and self.phone_number and self.email) or (
@@ -57,6 +60,7 @@ class NonMember(models.Model):
     class Meta:
         db_table = "vrzknietleden"
         managed = False
+        ordering = ["id"]
 
     def clean(self):
         if not (self.street and self.number and self.postcode and self.city) or (
@@ -79,34 +83,40 @@ class NonMember(models.Model):
     def birth_date(self, value: datetime.date):
         self._birth_date = value
 
+    @property
+    def postcode_city(self):
+        return PostcodeCity(postcode=self.postcode, name=self.city)
+
 
 class InuitsNonMember(models.Model):
     """Extra non member class we can use to save unique non members so we can have an easy and clean table to search in.
     These are not linked to any insurance but just used to offer some extra functionalities that old database doesnt allow us to do.
     """
 
+    objects = InuitsNonMemberManager()
+
     id = models.AutoField(primary_key=True)
     last_name = models.CharField(max_length=25)
     first_name = models.CharField(max_length=15)
-    phone_number = models.CharField(max_length=15, blank=True)
-    birth_date = models.DateField(null=True, blank=True)
-    street = models.CharField(max_length=100, blank=True)
-    number = models.CharField(max_length=5, blank=True)
+    phone_number = models.CharField(max_length=15)
+    birth_date = models.DateField()
+    street = models.CharField(max_length=100)
+    number = models.CharField(max_length=5)
     letter_box = models.CharField(max_length=5, blank=True)
     # Making postcode int field is bad practice but keeping it because of compatibility with actual NonMember
-    postcode = models.IntegerField(null=True, blank=True)
-    city = models.CharField(max_length=40, blank=True)
+    postcode = models.IntegerField()
+    city = models.CharField(max_length=40)
     comment = models.CharField(max_length=500, blank=True)
-
-    def clean(self):
-        if not (self.street and self.number and self.postcode and self.city) or (
-            not self.street and not self.number and not self.postcode and not self.city
-        ):
-            raise ValidationError("Street, number, postcode and city need to be either filled in or blank together")
+    # Keep group number
+    group_number = models.CharField(max_length=6)
 
     @property
     def full_name(self):
         return self.first_name + " " + self.last_name
+
+    @property
+    def postcode_city(self):
+        return PostcodeCity(postcode=self.postcode, name=self.city)
 
 
 class Adress(models.Model):

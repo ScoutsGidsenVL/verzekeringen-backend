@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
+from apps.members.utils import PostcodeCity
 from .base_insurance import BaseInsurance
 from .enums import GroupSize
 
@@ -33,3 +34,7 @@ class ActivityInsurance(BaseInsurance):
     @group_size.setter
     def group_size(self, value):
         self._group_size = value.value
+
+    @property
+    def postcode_city(self):
+        return PostcodeCity(postcode=self.postcode, name=self.city)

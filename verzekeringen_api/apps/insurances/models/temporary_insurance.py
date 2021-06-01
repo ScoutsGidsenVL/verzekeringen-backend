@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.members.models import NonMember
+from apps.members.utils import PostcodeCity
 from .base_insurance import BaseInsurance
 
 
@@ -34,11 +35,15 @@ class TemporaryInsurance(BaseInsurance):
         elif not self.country and ((self.postcode and not self.city) or (self.city and not self.postcode)):
             raise ValidationError("When no country given both city and postcode are required")
 
+    @property
+    def postcode_city(self):
+        return PostcodeCity(postcode=self.postcode, name=self.city)
+
 
 class NonMemberTemporaryInsurance(models.Model):
-    non_member_id = models.ForeignKey(NonMember, db_column="nietledenid", on_delete=models.CASCADE)
+    non_member_id = models.ForeignKey(NonMember, db_column="nietledenid", on_delete=models.CASCADE, primary_key=True)
     temporary_insurance = models.ForeignKey(TemporaryInsurance, db_column="verzekeringsid", on_delete=models.CASCADE)
 
     class Meta:
-        db_table = "VRZKNIETLEDENTIJD"
+        db_table = "vrzknietledentijd"
         managed = False

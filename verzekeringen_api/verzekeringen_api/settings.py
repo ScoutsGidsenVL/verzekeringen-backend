@@ -32,6 +32,9 @@ DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 BASE_URL = env.str("BASE_URL")
 
+# Turn this off because of existing database we work with
+SILENCED_SYSTEM_CHECKS = ["fields.W342"]
+
 
 # Application definition
 

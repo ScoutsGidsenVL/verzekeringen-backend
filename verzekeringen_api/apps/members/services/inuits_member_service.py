@@ -1,30 +1,11 @@
 from datetime import datetime
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from ..utils import PostcodeCity
-from ..models import Member, NonMember
+from ..models import InuitsNonMember
 
 
-def member_create_from_user(
-    *,
-    user: settings.AUTH_USER_MODEL,
-    phone_number: str,
-) -> Member:
-    member = Member(
-        last_name=user.last_name,
-        first_name=user.first_name,
-        phone_number=phone_number,
-        email=user.email,
-        birth_date=user.birth_date,
-        membership_number=user.membership_number,
-        group_admin_id=user.group_admin_id,
-    )
-    member.full_clean()
-    member.save()
-
-    return member
-
-
-def non_member_create(
+def inuits_non_member_create(
     *,
     last_name: str,
     first_name: str,
@@ -33,10 +14,15 @@ def non_member_create(
     street: str,
     number: str,
     postcode_city: PostcodeCity,
+    group_id: str,
+    created_by: settings.AUTH_USER_MODEL,
     letter_box: str = "",
     comment: str = "",
-) -> NonMember:
-    non_member = NonMember(
+) -> InuitsNonMember:
+    # validate group
+    if group_id not in (group.id for group in created_by.partial_scouts_groups):
+        raise ValidationError("Given group %s is not a valid group of user" % group_id)
+    non_member = InuitsNonMember(
         last_name=last_name,
         first_name=first_name,
         phone_number=phone_number,
@@ -45,6 +31,7 @@ def non_member_create(
         number=number,
         postcode=int(postcode_city.postcode),
         city=postcode_city.name,
+        group_number=group_id,
         letter_box=letter_box,
         comment=comment,
     )

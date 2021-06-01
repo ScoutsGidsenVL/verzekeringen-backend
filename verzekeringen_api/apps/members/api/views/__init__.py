@@ -1,1 +1,2 @@
 from .location_views import BelgianPostcodeCitySearch
+from .inuits_non_member_viewset import InuitsNonMemberViewSet

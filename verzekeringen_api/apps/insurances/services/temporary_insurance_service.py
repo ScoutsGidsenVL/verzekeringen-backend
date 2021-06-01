@@ -1,6 +1,6 @@
 from django.db import transaction
 from apps.members.utils import PostcodeCity
-from apps.members.models import InuitsNonMember
+from apps.members.services import MemberService
 from ..models import TemporaryInsurance, InsuranceType
 from . import base_insurance_service as BaseInsuranceService
 
@@ -9,9 +9,9 @@ from . import base_insurance_service as BaseInsuranceService
 def temporary_insurance_create(
     *,
     nature: str,
-    non_members: list[InuitsNonMember],
+    non_members: list[dict],
     country: str = None,
-    location: PostcodeCity = None,
+    postcode_city: PostcodeCity = None,
     **base_insurance_fields,
 ) -> TemporaryInsurance:
     # TODO calculate cost
@@ -22,10 +22,19 @@ def temporary_insurance_create(
     insurance = TemporaryInsurance(
         nature=nature,
         country=country,
-        postcode=int(location.postcode),
-        city=location.name,
+        postcode=int(postcode_city.postcode) if postcode_city else None,
+        city=postcode_city.name if postcode_city else None,
         **base_insurance_fields,
     )
+    insurance.full_clean()
+    insurance.save()
+
+    # Save insurance here already so we can create non members linked to it
+    # This whole function is atomic so if non members cant be created this will rollback aswell
+    for non_member_data in non_members:
+        non_member = MemberService.non_member_create(**non_member_data)
+        insurance.non_members.add(non_member)
+
     insurance.full_clean()
     insurance.save()
 
@@ -33,11 +42,17 @@ def temporary_insurance_create(
 
 
 @transaction.atomic
+def temporary_insurance_delete(*, insurance: TemporaryInsurance):
+    insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+    insurance.non_members.clear()
+    insurance.delete()
+
+
+@transaction.atomic
 def temporary_insurance_update(*, insurance: TemporaryInsurance, **fields) -> TemporaryInsurance:
     # For this update we just delete the old one and create a new one with the given fields (but same id)
     # Bit of a cheat but it matches expectations of customer
     old_id = insurance.id
-    insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
-    insurance.delete()
-    new_insurance = activity_insurance_create(**fields, id=old_id)
+    temporary_insurance_delete(insurance=insurance)
+    new_insurance = temporary_insurance_create(**fields, id=old_id)
     return new_insurance
