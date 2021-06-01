@@ -9,6 +9,9 @@ class InsuranceTypeManager(models.Manager):
     def activity(self):
         return self.get_queryset().get(id=1)
 
+    def temporary(self):
+        return self.get_queryset().get(id=2)
+
 
 class InsuranceType(models.Model):
     objects = InsuranceTypeManager()

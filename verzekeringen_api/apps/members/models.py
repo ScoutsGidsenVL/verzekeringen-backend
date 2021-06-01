@@ -80,6 +80,35 @@ class NonMember(models.Model):
         self._birth_date = value
 
 
+class InuitsNonMember(models.Model):
+    """Extra non member class we can use to save unique non members so we can have an easy and clean table to search in.
+    These are not linked to any insurance but just used to offer some extra functionalities that old database doesnt allow us to do.
+    """
+
+    id = models.AutoField(primary_key=True)
+    last_name = models.CharField(max_length=25)
+    first_name = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=15, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    street = models.CharField(max_length=100, blank=True)
+    number = models.CharField(max_length=5, blank=True)
+    letter_box = models.CharField(max_length=5, blank=True)
+    # Making postcode int field is bad practice but keeping it because of compatibility with actual NonMember
+    postcode = models.IntegerField(null=True, blank=True)
+    city = models.CharField(max_length=40, blank=True)
+    comment = models.CharField(max_length=500, blank=True)
+
+    def clean(self):
+        if not (self.street and self.number and self.postcode and self.city) or (
+            not self.street and not self.number and not self.postcode and not self.city
+        ):
+            raise ValidationError("Street, number, postcode and city need to be either filled in or blank together")
+
+    @property
+    def full_name(self):
+        return self.first_name + " " + self.last_name
+
+
 class Adress(models.Model):
 
     id = models.AutoField(db_column="adres_id", primary_key=True)

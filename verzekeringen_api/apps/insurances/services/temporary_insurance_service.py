@@ -1,22 +1,27 @@
 from django.db import transaction
 from apps.members.utils import PostcodeCity
-from ..models import ActivityInsurance, InsuranceType
-from ..models.enums import GroupSize
+from apps.members.models import InuitsNonMember
+from ..models import TemporaryInsurance, InsuranceType
 from . import base_insurance_service as BaseInsuranceService
 
 
 @transaction.atomic
-def activity_insurance_create(
-    *, nature: str, group_size: GroupSize, location: PostcodeCity, **base_insurance_fields
-) -> ActivityInsurance:
+def temporary_insurance_create(
+    *,
+    nature: str,
+    non_members: list[InuitsNonMember],
+    country: str = None,
+    location: PostcodeCity = None,
+    **base_insurance_fields,
+) -> TemporaryInsurance:
     # TODO calculate cost
     total_cost = 1
     base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
-        **base_insurance_fields, total_cost=total_cost, type=InsuranceType.objects.activity()
+        **base_insurance_fields, total_cost=total_cost, type=InsuranceType.objects.temporary()
     )
-    insurance = ActivityInsurance(
+    insurance = TemporaryInsurance(
         nature=nature,
-        group_size=GroupSize(group_size),
+        country=country,
         postcode=int(location.postcode),
         city=location.name,
         **base_insurance_fields,
@@ -28,7 +33,7 @@ def activity_insurance_create(
 
 
 @transaction.atomic
-def activity_insurance_update(*, insurance: ActivityInsurance, **fields) -> ActivityInsurance:
+def temporary_insurance_update(*, insurance: TemporaryInsurance, **fields) -> TemporaryInsurance:
     # For this update we just delete the old one and create a new one with the given fields (but same id)
     # Bit of a cheat but it matches expectations of customer
     old_id = insurance.id

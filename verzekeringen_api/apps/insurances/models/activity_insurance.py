@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from .base_insurance import BaseInsurance
+from .enums import GroupSize
 
 
 class ActivityInsurance(BaseInsurance):
@@ -14,7 +15,7 @@ class ActivityInsurance(BaseInsurance):
         related_name="activity_child",
     )
     nature = models.CharField(db_column="aardactiviteit", max_length=500)
-    group_amount = models.IntegerField(
+    _group_size = models.IntegerField(
         db_column="aantgroep", null=True, validators=[MinValueValidator(1), MaxValueValidator(9)]
     )
     postcode = models.IntegerField(db_column="postcode", null=True)
@@ -23,3 +24,12 @@ class ActivityInsurance(BaseInsurance):
     class Meta:
         db_table = "vrzktypeeenact"
         managed = False
+
+    # Parse group_size int to enum
+    @property
+    def group_size(self):
+        return GroupSize(self._group_size)
+
+    @group_size.setter
+    def group_size(self, value):
+        self._group_size = value.value

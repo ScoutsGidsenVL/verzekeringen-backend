@@ -38,7 +38,6 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(insurances)
 
         if page is not None:
-            print(page)
             serializer = InsuranceListOutputSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:

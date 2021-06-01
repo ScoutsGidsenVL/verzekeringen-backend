@@ -12,7 +12,7 @@ from apps.members.api.serializers import (
 from apps.members.utils import PostcodeCity
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
 from ...models import BaseInsurance, ActivityInsurance, InsuranceType
-from ...models.enums import InsuranceStatus
+from ...models.enums import InsuranceStatus, GroupSize
 
 
 # Output
@@ -53,14 +53,19 @@ class ActivityInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     group = GroupOutputSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
     location = serializers.SerializerMethodField()
+    group_size = serializers.SerializerMethodField()
 
     class Meta:
         model = ActivityInsurance
-        fields = base_insurance_detail_fields + ("nature", "group_amount", "location")
+        fields = base_insurance_detail_fields + ("nature", "group_size", "location")
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_status(self, obj):
         return EnumOutputSerializer(parse_choice_to_tuple(InsuranceStatus(obj.status))).data
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_group_size(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(GroupSize(obj.group_size))).data
 
     @swagger_serializer_method(serializer_or_field=BelgianPostcodeCityOutputSerializer)
     def get_location(self, obj):
@@ -78,5 +83,5 @@ class BaseInsuranceCreateInputSerializer(serializers.Serializer):
 
 class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
-    group_amount = serializers.IntegerField(min_value=1, max_value=9)
+    group_size = serializers.ChoiceField(choices=GroupSize.choices)
     location = BelgianPostcodeCityInputSerializer()
