@@ -2,6 +2,7 @@ from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
+from ..models import InuitsVehicle
 from ..enums import VehicleType
 from ..utils import Vehicle
 
@@ -23,6 +24,26 @@ class VehicleWithChassisOutputSerializer(VehicleOutputSerializer):
     chassis_number = serializers.CharField()
 
 
+class InuitsVehicleOutputSerializer(serializers.ModelSerializer):
+    type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = InuitsVehicle
+        fields = (
+            "type",
+            "brand",
+            "license_plate",
+            "construction_year",
+            "chassis_number",
+            "trailer",
+        )
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_type(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(VehicleType(obj.type))).data
+
+
+# Input
 class VehicleInputSerializer(serializers.Serializer):
     type = serializers.ChoiceField(choices=VehicleType.choices)
     brand = serializers.CharField(max_length=15)
@@ -40,3 +61,10 @@ class VehicleInputSerializer(serializers.Serializer):
             chassis_number=data.get("chassis_number"),
             trailer=data.get("trailer", False),
         )
+
+
+class InuitsVehicleCreateInputSerializer(VehicleInputSerializer):
+    group = serializers.CharField(source="group_id")
+
+    def validate(self, data):
+        return data
