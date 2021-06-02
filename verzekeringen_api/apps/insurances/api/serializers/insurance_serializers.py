@@ -11,8 +11,9 @@ from apps.members.api.serializers import (
     BelgianPostcodeCityOutputSerializer,
     BelgianPostcodeCityInputSerializer,
 )
+from apps.equipment.api.serializers import VehicleOutputSerializer, VehicleInputSerializer
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
-from ...models import BaseInsurance, ActivityInsurance, TemporaryInsurance, InsuranceType
+from ...models import BaseInsurance, ActivityInsurance, TemporaryInsurance, TravelAssistanceInsurance, InsuranceType
 from ...models.enums import InsuranceStatus, GroupSize
 
 
@@ -81,6 +82,15 @@ class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializ
         fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "non_members")
 
 
+class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    participants = NonMemberNestedOutputSerializer(many=True)
+    vehicle = VehicleOutputSerializer(read_only=True)
+
+    class Meta:
+        model = TravelAssistanceInsurance
+        fields = base_insurance_detail_fields + ("country", "participants", "vehicle")
+
+
 # Input
 class BaseInsuranceCreateInputSerializer(serializers.Serializer):
     group = serializers.CharField(source="group_id", max_length=6)
@@ -113,3 +123,14 @@ class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer
         elif data.get("postcode_city") and data.get("country"):
             raise serializers.ValidationError("Country and postcode_city are mutually exclusive fields")
         return data
+
+
+class TravelAssistanceInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+    country = serializers.CharField(max_length=40)
+    vehicle = VehicleInputSerializer(required=False)
+    participants = NonMemberCreateInputSerializer(many=True)
+
+    def validate_participants(self, value):
+        if len(value) < 1:
+            raise serializers.ValidationError("At least one participant is required")
+        return value

@@ -6,4 +6,6 @@ from .insurance_serializers import (
     ActivityInsuranceCreateInputSerializer,
     TemporaryInsuranceDetailOutputSerializer,
     TemporaryInsuranceCreateInputSerializer,
+    TravelAssistanceInsuranceDetailOutputSerializer,
+    TravelAssistanceInsuranceCreateInputSerializer,
 )

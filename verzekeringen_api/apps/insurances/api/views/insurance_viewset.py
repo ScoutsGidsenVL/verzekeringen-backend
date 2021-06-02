@@ -9,9 +9,11 @@ from ..serializers import (
     ActivityInsuranceCreateInputSerializer,
     TemporaryInsuranceDetailOutputSerializer,
     TemporaryInsuranceCreateInputSerializer,
+    TravelAssistanceInsuranceDetailOutputSerializer,
+    TravelAssistanceInsuranceCreateInputSerializer,
 )
-from ...models import InsuranceType, BaseInsurance, ActivityInsurance, TemporaryInsurance
-from ...services import ActivityInsuranceService, TemporaryInsuranceService
+from ...models import InsuranceType, BaseInsurance, ActivityInsurance, TemporaryInsurance, TravelAssistanceInsurance
+from ...services import ActivityInsuranceService, TemporaryInsuranceService, TravelAssistanceInsuranceService
 
 
 class InsuranceViewSet(viewsets.GenericViewSet):
@@ -30,6 +32,8 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             serializer = ActivityInsuranceDetailOutputSerializer(insurance.activity_child)
         elif insurance.type_id == 2:
             serializer = TemporaryInsuranceDetailOutputSerializer(insurance.temporary_child)
+        elif insurance.type_id in (3, 4):
+            serializer = TravelAssistanceInsuranceDetailOutputSerializer(insurance.travel_assistance_child)
         else:
             serializer = InsuranceListOutputSerializer(insurance)
 
@@ -114,5 +118,44 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = TemporaryInsuranceDetailOutputSerializer(updated_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=TravelAssistanceInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: TravelAssistanceInsuranceDetailOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="travel_assistance")
+    def create_travel_assistance(self, request):
+        input_serializer = TravelAssistanceInsuranceCreateInputSerializer(
+            data=request.data, context={"request": request}
+        )
+        input_serializer.is_valid(raise_exception=True)
+
+        created_insurance = TravelAssistanceInsuranceService.travel_assistance_insurance_create(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = TravelAssistanceInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=TravelAssistanceInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: TravelAssistanceInsuranceDetailOutputSerializer},
+    )
+    @action(methods=["put"], detail=False, url_path="travel_assistance/(?P<pk>\d+)")
+    def update_travel_assistance(self, request, pk=None):
+        existing_insurance = get_object_or_404(TravelAssistanceInsurance.objects.all(), pk=pk)
+        input_serializer = TravelAssistanceInsuranceCreateInputSerializer(
+            data=request.data, context={"request": request}
+        )
+        input_serializer.is_valid(raise_exception=True)
+
+        updated_insurance = TravelAssistanceInsuranceService.travel_assistance_insurance_update(
+            insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = TravelAssistanceInsuranceDetailOutputSerializer(updated_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

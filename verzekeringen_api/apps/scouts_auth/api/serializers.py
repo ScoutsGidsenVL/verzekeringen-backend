@@ -11,7 +11,8 @@ class GroupOutputSerializer(serializers.Serializer):
 class UserDetailOutputSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
     birth_date = serializers.DateField()
-    membership_number = serializers.DateField()
+    membership_number = serializers.CharField()
+    phone_number = serializers.CharField()
     scouts_groups = GroupOutputSerializer(many=True)
 
     class Meta:
@@ -23,6 +24,7 @@ class UserDetailOutputSerializer(serializers.ModelSerializer):
             "email",
             "birth_date",
             "membership_number",
+            "phone_number",
             "scouts_groups",
             "date_joined",
             "permissions",

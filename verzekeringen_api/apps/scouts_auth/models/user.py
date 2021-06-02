@@ -11,6 +11,7 @@ class User(AbstractUser):
     # Fields that arent saved in database but just kept in memory
     birth_date: datetime.date
     membership_number: str
+    phone_number: str
     # The partial groups are always filled in but do not include some extra data
     # This extra data can be gotten by calling the fetch_detailed_group_info method
     partial_scouts_groups: list = []

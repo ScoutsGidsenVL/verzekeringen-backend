@@ -46,7 +46,6 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         return user
 
     def map_user_with_groepsadmin_claims(self, user, claims):
-
         user.first_name = claims.get("vgagegevens", {}).get("voornaam", user.first_name)
         user.last_name = claims.get("vgagegevens", {}).get("achternaam", user.last_name)
         user.group_admin_id = claims.get("id", "")
@@ -56,6 +55,7 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
             user.birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
         except:
             pass
+        user.phone_number = claims.get("persoonsgegevens", {}).get("gsm", "")
         user.membership_number = claims.get("verbondsgegevens", {}).get("lidnummer", "")
 
         # Everybody gets role user
