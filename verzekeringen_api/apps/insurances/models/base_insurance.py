@@ -39,8 +39,8 @@ class BaseInsurance(models.Model):
         managed = False
 
     def clean(self):
-        if self.start_date >= self.end_date:
-            raise ValidationError("Start date needs to be before end date")
+        if self.start_date > self.end_date:
+            raise ValidationError("Start date needs to be before or equal to end date")
 
     # Utility functions for parsing char boolean to actual boolean and the reverse
     def parse_bool_to_char(value: bool) -> str:
