@@ -1,3 +1,4 @@
+import requests
 from datetime import datetime
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from mozilla_django_oidc.contrib.drf import OIDCAuthentication
@@ -10,6 +11,23 @@ from apps.scouts_auth.utils import PartialGroup
 
 
 class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
+    def get_userinfo(self, access_token, id_token, payload):
+        """Return user details dictionary. The id_token and payload are not used in
+        the default implementation, but may be used when overriding this method"""
+
+        user_response = requests.get(
+            self.OIDC_OP_USER_ENDPOINT,
+            headers={"Authorization": "Bearer {0}".format(access_token)},
+            verify=self.get_settings("OIDC_VERIFY_SSL", True),
+            timeout=self.get_settings("OIDC_TIMEOUT", None),
+            proxies=self.get_settings("OIDC_PROXY", None),
+        )
+        user_response.raise_for_status()
+        result = user_response.json()
+        # Add token to user response so we can access it later
+        result["access_token"] = access_token
+        return result
+
     def update_user(self, user, claims):
         """Update existing user with new claims, if necessary save, and return user"""
         updated_user = self.map_user_with_claims(user, claims)
@@ -57,6 +75,7 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
             pass
         user.phone_number = claims.get("persoonsgegevens", {}).get("gsm", "")
         user.membership_number = claims.get("verbondsgegevens", {}).get("lidnummer", "")
+        user.access_token = claims.get("access_token")
 
         # Everybody gets role user
         roles = ["role_user"]

@@ -5,5 +5,7 @@ from .member_serializers import (
     NonMemberCreateInputSerializer,
     InuitsNonMemberOutputSerializer,
     InuitsNonMemberCreateInputSerializer,
+    GroupAdminMemberListOutputSerializer,
+    GroupAdminMemberDetailOutputSerializer,
 )
 from .location_serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer

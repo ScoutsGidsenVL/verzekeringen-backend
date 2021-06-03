@@ -12,6 +12,7 @@ class User(AbstractUser):
     birth_date: datetime.date
     membership_number: str
     phone_number: str
+    access_token: str
     # The partial groups are always filled in but do not include some extra data
     # This extra data can be gotten by calling the fetch_detailed_group_info method
     partial_scouts_groups: list = []

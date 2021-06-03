@@ -10,7 +10,7 @@ class Vehicle:
     chassis_number: str
     trailer: bool
 
-    def __init__(self, type, brand, license_plate, construction_year, chassis_number, trailer=False):
+    def __init__(self, type, brand, license_plate, construction_year, chassis_number="", trailer=False):
         self.type = type
         self.brand = brand
         self.license_plate = license_plate

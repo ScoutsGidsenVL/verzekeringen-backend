@@ -46,6 +46,23 @@ class InuitsNonMemberOutputSerializer(serializers.ModelSerializer):
         )
 
 
+class GroupAdminMemberListOutputSerializer(serializers.Serializer):
+    last_name = serializers.CharField()
+    first_name = serializers.CharField()
+    phone_number = serializers.CharField()
+    email = serializers.EmailField()
+    birth_date = serializers.DateField()
+    group_admin_id = serializers.CharField()
+
+
+class GroupAdminMemberDetailOutputSerializer(GroupAdminMemberListOutputSerializer):
+    membership_number = serializers.CharField()
+    street = serializers.CharField(source="address.street")
+    number = serializers.CharField(source="address.number")
+    letter_box = serializers.CharField(source="address.letter_box")
+    postcode_city = BelgianPostcodeCityOutputSerializer(source="address.postcode_city")
+
+
 # Input
 class MemberNestedCreateInputSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=25)

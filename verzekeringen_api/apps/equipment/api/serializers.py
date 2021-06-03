@@ -49,7 +49,7 @@ class VehicleInputSerializer(serializers.Serializer):
     brand = serializers.CharField(max_length=15)
     license_plate = serializers.CharField(max_length=10)
     construction_year = serializers.DateField(input_formats=["%Y"])
-    chassis_number = serializers.CharField(max_length=20)
+    chassis_number = serializers.CharField(max_length=20, required=False)
     trailer = serializers.BooleanField(required=False)
 
     def validate(self, data):
@@ -61,6 +61,10 @@ class VehicleInputSerializer(serializers.Serializer):
             chassis_number=data.get("chassis_number"),
             trailer=data.get("trailer", False),
         )
+
+
+class VehicleWithChassisInputSerializer(serializers.Serializer):
+    chassis_number = serializers.CharField(max_length=20, required=True)
 
 
 class InuitsVehicleCreateInputSerializer(VehicleInputSerializer):
