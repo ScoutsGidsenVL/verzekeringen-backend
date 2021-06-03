@@ -22,7 +22,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     ordering = ["-created_on"]
 
     def get_queryset(self):
-        return BaseInsurance.objects.all()
+        return BaseInsurance.objects.all().allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceListOutputSerializer})
     def retrieve(self, request, pk=None):
@@ -74,7 +74,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["put"], detail=False, url_path="activity/(?P<pk>\d+)")
     def update_activity(self, request, pk=None):
-        existing_insurance = get_object_or_404(ActivityInsurance.objects.all(), pk=pk)
+        existing_insurance = get_object_or_404(ActivityInsurance.objects.all().allowed(request.user), pk=pk)
         input_serializer = ActivityInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
@@ -109,7 +109,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["put"], detail=False, url_path="temporary/(?P<pk>\d+)")
     def update_temporary(self, request, pk=None):
-        existing_insurance = get_object_or_404(TemporaryInsurance.objects.all(), pk=pk)
+        existing_insurance = get_object_or_404(TemporaryInsurance.objects.all().allowed(request.user), pk=pk)
         input_serializer = TemporaryInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
@@ -146,7 +146,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["put"], detail=False, url_path="travel_assistance/(?P<pk>\d+)")
     def update_travel_assistance(self, request, pk=None):
-        existing_insurance = get_object_or_404(TravelAssistanceInsurance.objects.all(), pk=pk)
+        existing_insurance = get_object_or_404(TravelAssistanceInsurance.objects.all().allowed(request.user), pk=pk)
         input_serializer = TravelAssistanceInsuranceCreateInputSerializer(
             data=request.data, context={"request": request}
         )

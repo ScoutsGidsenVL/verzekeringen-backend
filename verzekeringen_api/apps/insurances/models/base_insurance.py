@@ -7,7 +7,19 @@ from .insurance_type import InsuranceType
 from .enums import InsuranceStatus
 
 
+class BaseInsuranceQuerySet(models.QuerySet):
+    def allowed(self, user):
+        user_group_ids = [group.id for group in user.partial_scouts_groups]
+        return self.filter(_group_number__in=user_group_ids)
+
+
+class BaseInsuranceManager(models.Manager):
+    def get_queryset(self):
+        return BaseInsuranceQuerySet(self.model, using=self._db)
+
+
 class BaseInsurance(models.Model):
+    objects = BaseInsuranceManager()
 
     id = models.AutoField(primary_key=True, db_column="verzekeringsid")
     _status = models.IntegerField(db_column="status", null=True, blank=True)

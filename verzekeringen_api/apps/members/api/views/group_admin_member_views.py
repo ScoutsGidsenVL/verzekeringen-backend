@@ -1,5 +1,6 @@
 import requests
 from django.http import Http404
+from rest_framework.exceptions import ValidationError
 from rest_framework import views, status, permissions, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action

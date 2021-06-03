@@ -80,6 +80,4 @@ def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: st
             # If invalid member just dont add it to results
             pass
 
-    print(json)
-
     return results
