@@ -1,5 +1,5 @@
 from django.db import transaction
-from apps.members.utils import PostcodeCity
+from apps.locations.utils import PostcodeCity
 from ..models import ActivityInsurance, InsuranceType
 from ..models.enums import GroupSize
 from . import base_insurance_service as BaseInsuranceService

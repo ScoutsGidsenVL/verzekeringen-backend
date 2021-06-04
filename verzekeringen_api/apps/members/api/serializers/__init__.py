@@ -8,4 +8,3 @@ from .member_serializers import (
     GroupAdminMemberListOutputSerializer,
     GroupAdminMemberDetailOutputSerializer,
 )
-from .location_serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer

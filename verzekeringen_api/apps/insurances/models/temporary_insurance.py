@@ -2,7 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.members.models import NonMember
-from apps.members.utils import PostcodeCity
+from apps.locations.utils import PostcodeCity
 from .base_insurance import BaseInsurance
 
 

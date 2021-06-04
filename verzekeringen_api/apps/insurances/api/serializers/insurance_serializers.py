@@ -8,9 +8,8 @@ from apps.members.api.serializers import (
     MemberNestedCreateInputSerializer,
     NonMemberNestedOutputSerializer,
     NonMemberCreateInputSerializer,
-    BelgianPostcodeCityOutputSerializer,
-    BelgianPostcodeCityInputSerializer,
 )
+from apps.locations.api.serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
 from apps.equipment.api.serializers import VehicleOutputSerializer, VehicleInputSerializer
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
 from ...models import BaseInsurance, ActivityInsurance, TemporaryInsurance, TravelAssistanceInsurance, InsuranceType

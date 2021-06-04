@@ -1,6 +1,6 @@
 from rest_framework import serializers
+from apps.locations.api.serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
 from ...models import Member, NonMember, InuitsNonMember
-from .location_serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
 
 
 # Output
@@ -47,6 +47,7 @@ class InuitsNonMemberOutputSerializer(serializers.ModelSerializer):
 
 
 class GroupAdminMemberListOutputSerializer(serializers.Serializer):
+    id = serializers.CharField(source="group_admin_id")
     last_name = serializers.CharField()
     first_name = serializers.CharField()
     phone_number = serializers.CharField()

@@ -1,5 +1,5 @@
 from django.db import transaction
-from apps.members.utils import PostcodeCity
+from apps.locations.utils import PostcodeCity
 from apps.members.services import MemberService
 from ..models import TemporaryInsurance, InsuranceType
 from . import base_insurance_service as BaseInsuranceService

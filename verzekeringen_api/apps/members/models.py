@@ -119,7 +119,7 @@ class InuitsNonMember(models.Model):
         return PostcodeCity(postcode=self.postcode, name=self.city)
 
 
-class Adress(models.Model):
+class Address(models.Model):
 
     id = models.AutoField(db_column="adres_id", primary_key=True)
     street = models.CharField(db_column="straat", max_length=100)

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "apps.scouts_auth",
     "apps.members",
     "apps.equipment",
+    "apps.locations",
     "apps.insurances",
     "mozilla_django_oidc",
     "django.contrib.contenttypes",

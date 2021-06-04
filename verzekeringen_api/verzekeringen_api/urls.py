@@ -34,6 +34,7 @@ urlpatterns = [
     path("api/", include("apps.insurances.urls")),
     path("api/", include("apps.members.urls")),
     path("api/", include("apps.equipment.urls")),
+    path("api/", include("apps.locations.urls")),
     path("api/auth/", include("apps.scouts_auth.urls")),
     path("api/oidc/", include("apps.oidc.urls")),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),

@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from ...services import LocationService
-from ...utils import PostcodeCity
+from ..services import LocationService
+from ..utils import PostcodeCity
 
 # Output
 class BelgianPostcodeCityOutputSerializer(serializers.Serializer):

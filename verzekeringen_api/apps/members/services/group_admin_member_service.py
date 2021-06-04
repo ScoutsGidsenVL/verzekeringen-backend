@@ -1,7 +1,8 @@
 import requests
 from datetime import datetime
 from django.conf import settings
-from ..utils import GroupAdminMember, PostcodeCity, Address
+from apps.locations.utils import PostcodeCity, Address
+from ..utils import GroupAdminMember
 
 
 def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str):
