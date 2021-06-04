@@ -1,2 +1,2 @@
 from .location_views import BelgianPostcodeCitySearch
-from .country_views import CountryByInsuranceTypeView
+from .country_viewset import CountryViewSet

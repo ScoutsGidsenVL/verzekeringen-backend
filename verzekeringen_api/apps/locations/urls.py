@@ -1,7 +1,13 @@
 from django.urls import path
-from .api.views import BelgianPostcodeCitySearch, CountryByInsuranceTypeView
+from rest_framework import routers
+from .api.views import BelgianPostcodeCitySearch, CountryViewSet
 
-urlpatterns = [
-    path("belgian_city_search/", BelgianPostcodeCitySearch.as_view()),
-    path("countries_by_type/<int:type_id>", CountryByInsuranceTypeView.as_view()),
-]
+router = routers.SimpleRouter()
+router.register(r"", CountryViewSet, "Country")
+
+urlpatterns = router.urls
+urlpatterns.extend(
+    [
+        path("belgian_city_search/", BelgianPostcodeCitySearch.as_view()),
+    ]
+)
