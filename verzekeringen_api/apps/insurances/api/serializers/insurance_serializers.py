@@ -9,7 +9,12 @@ from apps.members.api.serializers import (
     NonMemberNestedOutputSerializer,
     NonMemberCreateInputSerializer,
 )
-from apps.locations.api.serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
+from apps.locations.api.serializers import (
+    BelgianPostcodeCityOutputSerializer,
+    BelgianPostcodeCityInputSerializer,
+    CountryOutputSerializer,
+)
+from apps.locations.models import Country
 from apps.equipment.api.serializers import VehicleOutputSerializer, VehicleInputSerializer
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
 from ...models import BaseInsurance, ActivityInsurance, TemporaryInsurance, TravelAssistanceInsurance, InsuranceType
@@ -75,6 +80,7 @@ class ActivityInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerialize
 class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     postcode_city = BelgianPostcodeCityOutputSerializer()
     non_members = NonMemberNestedOutputSerializer(many=True)
+    country = CountryOutputSerializer()
 
     class Meta:
         model = TemporaryInsurance
@@ -84,6 +90,7 @@ class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializ
 class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     participants = NonMemberNestedOutputSerializer(many=True)
     vehicle = VehicleOutputSerializer(read_only=True)
+    country = CountryOutputSerializer()
 
     class Meta:
         model = TravelAssistanceInsurance
@@ -107,7 +114,7 @@ class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer)
 
 class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
-    country = serializers.CharField(max_length=45, required=False)
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2))
     postcode_city = BelgianPostcodeCityInputSerializer(required=False)
     non_members = NonMemberCreateInputSerializer(many=True)
 
@@ -125,7 +132,7 @@ class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer
 
 
 class TravelAssistanceInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
-    country = serializers.CharField(max_length=40)
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_types([3, 4]))
     vehicle = VehicleInputSerializer(required=False)
     participants = NonMemberCreateInputSerializer(many=True)
 

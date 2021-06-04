@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.members.models import NonMember
 from apps.equipment.utils import Vehicle
 from apps.equipment.enums import VehicleType
+from apps.locations.models import Country
 from .base_insurance import BaseInsurance
 
 
@@ -17,7 +18,7 @@ class TravelAssistanceInsurance(BaseInsurance):
         primary_key=True,
         related_name="travel_assistance_child",
     )
-    country = models.CharField(db_column="bestemmingsland", max_length=40)
+    _country = models.CharField(db_column="bestemmingsland", max_length=40)
     _vehicle_type = models.CharField(db_column="autotype", max_length=30, null=True, blank=True)
     _vehicle_brand = models.CharField(db_column="automerk", max_length=15, null=True, blank=True)
     _vehicle_license_plate = models.CharField(db_column="autokenteken", max_length=10, null=True, blank=True)
@@ -78,6 +79,14 @@ class TravelAssistanceInsurance(BaseInsurance):
         self._vehicle_license_plate = value.license_plate
         self._vehicle_construction_year = value.construction_year.year
         self._vehicle_trailer = int(value.trailer)
+
+    @property
+    def country(self):
+        return Country.objects.get(name=self._country)
+
+    @country.setter
+    def country(self, value: Country):
+        self._country = value.name
 
 
 class ParticipantTravelAssistanceInsurance(models.Model):

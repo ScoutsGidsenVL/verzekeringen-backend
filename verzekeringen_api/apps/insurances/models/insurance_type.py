@@ -18,6 +18,12 @@ class InsuranceTypeManager(models.Manager):
     def travel_assistance_with_vehicle(self):
         return self.get_queryset().get(id=4)
 
+    def temporary_vehicle(self):
+        return self.get_queryset().get(id=5)
+
+    def equipment(self):
+        return self.get_queryset().get(id=6)
+
 
 class InsuranceType(models.Model):
     objects = InsuranceTypeManager()

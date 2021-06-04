@@ -1,11 +1,18 @@
 from rest_framework import serializers
 from ..services import LocationService
 from ..utils import PostcodeCity
+from ..models import Country
 
 # Output
 class BelgianPostcodeCityOutputSerializer(serializers.Serializer):
     postcode = serializers.CharField(read_only=True)
     city = serializers.CharField(source="name", read_only=True)
+
+
+class CountryOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ("id", "name")
 
 
 # Input

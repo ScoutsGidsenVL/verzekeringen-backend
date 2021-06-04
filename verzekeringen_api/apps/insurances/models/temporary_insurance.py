@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.members.models import NonMember
+from apps.locations.models import Country
 from apps.locations.utils import PostcodeCity
 from .base_insurance import BaseInsurance
 
@@ -18,7 +19,7 @@ class TemporaryInsurance(BaseInsurance):
     nature = models.CharField(db_column="aardactiviteit", max_length=500)
     postcode = models.IntegerField(db_column="postcode", null=True, blank=True)
     city = models.CharField(db_column="gemeente", max_length=40, blank=True)
-    country = models.CharField(db_column="land", max_length=45, blank=True)
+    _country = models.CharField(db_column="land", max_length=45, blank=True)
 
     non_members = models.ManyToManyField(
         NonMember, through="NonMemberTemporaryInsurance", related_name="temporary_insurances"
@@ -30,14 +31,22 @@ class TemporaryInsurance(BaseInsurance):
 
     def clean(self):
         super().clean()
-        if self.country and (self.postcode or self.city):
+        if self._country and (self.postcode or self.city):
             raise ValidationError("If country given then postcode and city cannot be given")
-        elif not self.country and ((self.postcode and not self.city) or (self.city and not self.postcode)):
+        elif not self._country and ((self.postcode and not self.city) or (self.city and not self.postcode)):
             raise ValidationError("When no country given both city and postcode are required")
 
     @property
     def postcode_city(self):
         return PostcodeCity(postcode=self.postcode, name=self.city)
+
+    @property
+    def country(self):
+        return Country.objects.get(name=self._country)
+
+    @country.setter
+    def country(self, value: Country):
+        self._country = value.name
 
 
 class NonMemberTemporaryInsurance(models.Model):
