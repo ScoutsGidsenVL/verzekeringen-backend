@@ -3,7 +3,7 @@ from drf_yasg2.utils import swagger_serializer_method
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
 from ..models import InuitsVehicle
-from ..enums import VehicleType
+from ..enums import VehicleType, VehicleTrailerOption
 from ..utils import Vehicle
 
 
@@ -13,7 +13,7 @@ class VehicleOutputSerializer(serializers.Serializer):
     brand = serializers.CharField()
     license_plate = serializers.CharField()
     construction_year = serializers.DateField(format="%Y")
-    trailer = serializers.BooleanField()
+    trailer = serializers.BooleanField(source="has_trailer")
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_type(self, obj):
@@ -22,10 +22,16 @@ class VehicleOutputSerializer(serializers.Serializer):
 
 class VehicleWithChassisOutputSerializer(VehicleOutputSerializer):
     chassis_number = serializers.CharField()
+    trailer = serializers.SerializerMethodField()
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_trailer(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(VehicleTrailerOption(obj.trailer))).data
 
 
 class InuitsVehicleOutputSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
+    trailer = serializers.SerializerMethodField()
 
     class Meta:
         model = InuitsVehicle
@@ -42,6 +48,10 @@ class InuitsVehicleOutputSerializer(serializers.ModelSerializer):
     def get_type(self, obj):
         return EnumOutputSerializer(parse_choice_to_tuple(VehicleType(obj.type))).data
 
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_trailer(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(VehicleTrailerOption(obj.trailer))).data
+
 
 # Input
 class VehicleInputSerializer(serializers.Serializer):
@@ -50,7 +60,7 @@ class VehicleInputSerializer(serializers.Serializer):
     license_plate = serializers.CharField(max_length=10)
     construction_year = serializers.DateField(input_formats=["%Y"])
     chassis_number = serializers.CharField(max_length=20, required=False)
-    trailer = serializers.BooleanField(required=False)
+    trailer = serializers.ChoiceField(choices=VehicleTrailerOption.choices, required=False)
 
     def validate(self, data):
         return Vehicle(
@@ -63,7 +73,7 @@ class VehicleInputSerializer(serializers.Serializer):
         )
 
 
-class VehicleWithChassisInputSerializer(serializers.Serializer):
+class VehicleWithChassisInputSerializer(VehicleInputSerializer):
     chassis_number = serializers.CharField(max_length=20, required=True)
 
 

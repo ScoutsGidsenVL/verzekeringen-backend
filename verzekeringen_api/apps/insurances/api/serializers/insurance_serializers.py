@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
+from django.conf import settings
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
@@ -7,7 +8,9 @@ from apps.members.api.serializers import (
     MemberNestedOutputSerializer,
     MemberNestedCreateInputSerializer,
     NonMemberNestedOutputSerializer,
+    NonMemberCompanyNestedOutputSerializer,
     NonMemberCreateInputSerializer,
+    NonMemberOrCompanyCreateInputSerializer,
 )
 from apps.locations.api.serializers import (
     BelgianPostcodeCityOutputSerializer,
@@ -15,10 +18,27 @@ from apps.locations.api.serializers import (
     CountryOutputSerializer,
 )
 from apps.locations.models import Country
-from apps.equipment.api.serializers import VehicleOutputSerializer, VehicleInputSerializer
+from apps.equipment.api.serializers import (
+    VehicleOutputSerializer,
+    VehicleInputSerializer,
+    VehicleWithChassisOutputSerializer,
+    VehicleWithChassisInputSerializer,
+)
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
-from ...models import BaseInsurance, ActivityInsurance, TemporaryInsurance, TravelAssistanceInsurance, InsuranceType
-from ...models.enums import InsuranceStatus, GroupSize
+from ...models import (
+    BaseInsurance,
+    ActivityInsurance,
+    TemporaryInsurance,
+    TravelAssistanceInsurance,
+    InsuranceType,
+    TemporaryVehicleInsurance,
+)
+from ...models.enums import (
+    InsuranceStatus,
+    GroupSize,
+    TemporaryVehicleInsuranceOption,
+    TemporaryVehicleInsuranceCoverageOption,
+)
 
 
 # Output
@@ -97,6 +117,36 @@ class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
         fields = base_insurance_detail_fields + ("country", "participants", "vehicle")
 
 
+class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    drivers = NonMemberNestedOutputSerializer(many=True)
+    owner = serializers.SerializerMethodField()
+    vehicle = VehicleWithChassisOutputSerializer(read_only=True)
+    insurance_option = serializers.SerializerMethodField()
+    max_coverage = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TemporaryVehicleInsurance
+        fields = base_insurance_detail_fields + ("insurance_option", "max_coverage", "vehicle", "owner", "drivers")
+
+    @swagger_serializer_method(serializer_or_field=NonMemberNestedOutputSerializer)
+    def get_owner(self, obj):
+        if obj.owner.first_name == settings.COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME:
+            return NonMemberCompanyNestedOutputSerializer(obj.owner).data
+        return NonMemberNestedOutputSerializer(obj.owner).data
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_insurance_option(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(TemporaryVehicleInsuranceOption(obj.insurance_option))).data
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_max_coverage(self, obj):
+        if not obj.max_coverage:
+            return None
+        return EnumOutputSerializer(
+            parse_choice_to_tuple(TemporaryVehicleInsuranceCoverageOption(obj.max_coverage))
+        ).data
+
+
 # Input
 class BaseInsuranceCreateInputSerializer(serializers.Serializer):
     group = serializers.CharField(source="group_id", max_length=6)
@@ -128,6 +178,44 @@ class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer
             raise serializers.ValidationError("Either postcode_city or country is required")
         elif data.get("postcode_city") and data.get("country"):
             raise serializers.ValidationError("Country and postcode_city are mutually exclusive fields")
+        return data
+
+
+class TemporaryVehicleInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+    insurance_option = serializers.ChoiceField(choices=TemporaryVehicleInsuranceOption.choices)
+    max_coverage = serializers.ChoiceField(choices=TemporaryVehicleInsuranceCoverageOption.choices, required=False)
+    drivers = NonMemberCreateInputSerializer(many=True)
+    owner = NonMemberOrCompanyCreateInputSerializer()
+    vehicle = VehicleWithChassisInputSerializer()
+
+    def validate_drivers(self, value):
+        if len(value) < 1:
+            raise serializers.ValidationError("At least one driver is required")
+        return value
+
+    def validate(self, data):
+        if (
+            data.get("insurance_option")
+            in (
+                TemporaryVehicleInsuranceOption.COVER_OMNIUM,
+                TemporaryVehicleInsuranceOption.COVER_OMNIUM_RENTAL,
+            )
+            and not data.get("max_coverage")
+        ):
+            raise serializers.ValidationError(
+                "If 'reeds afgesloten omnium afdekken' is chosen max_coverage is required"
+            )
+        elif (
+            data.get("insurance_option")
+            not in (
+                TemporaryVehicleInsuranceOption.COVER_OMNIUM,
+                TemporaryVehicleInsuranceOption.COVER_OMNIUM_RENTAL,
+            )
+            and data.get("max_coverage")
+        ):
+            raise serializers.ValidationError(
+                "If 'reeds afgesloten omnium afdekken' is not chosen max_coverage is not allowed to be given"
+            )
         return data
 
 

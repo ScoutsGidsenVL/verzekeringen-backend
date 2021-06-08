@@ -13,7 +13,7 @@ def inuits_vehicle_create(
     chassis_number: str,
     group_id: str,
     created_by: settings.AUTH_USER_MODEL,
-    trailer: bool = False,
+    trailer: str = "0",
 ) -> InuitsVehicle:
     # validate group
     if group_id not in (group.id for group in created_by.partial_scouts_groups):

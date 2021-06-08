@@ -4,7 +4,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from apps.members.models import Member, NonMember
-from .enums import VehicleType
+from .enums import VehicleType, VehicleTrailerOption
 from .managers import InuitsVehicleManager
 
 
@@ -56,7 +56,7 @@ class InuitsVehicle(models.Model):
     license_plate = models.CharField(max_length=10)
     construction_year = models.DateField()
     chassis_number = models.CharField(max_length=20)
-    trailer = models.BooleanField(default=True)
+    trailer = models.CharField(choices=VehicleTrailerOption.choices, max_length=1, default="0")
     group_number = models.CharField(max_length=6)
 
     def clean_construction_year(self, value):

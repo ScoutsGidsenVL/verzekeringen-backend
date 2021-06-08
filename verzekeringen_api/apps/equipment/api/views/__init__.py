@@ -1,2 +1,2 @@
-from .enum_viewsets import VehicleTypeViewSet
+from .enum_viewsets import VehicleTypeViewSet, VehicleTrailerOptionViewSet
 from .vehicle_viewset import VehicleViewSet

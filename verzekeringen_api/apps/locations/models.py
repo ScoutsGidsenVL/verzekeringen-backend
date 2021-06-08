@@ -6,7 +6,7 @@ class CountryQuerySet(models.QuerySet):
         return self.filter(insurance_types__id=type_id)
 
     def by_types(self, type_id_list):
-        return self.filter(insurance_types__id__in=type_id_list)
+        return self.filter(insurance_types__id__in=type_id_list).distinct()
 
 
 class CountryManager(models.Manager):

@@ -28,6 +28,24 @@ class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
         )
 
 
+class NonMemberCompanyNestedOutputSerializer(serializers.ModelSerializer):
+    postcode_city = BelgianPostcodeCityOutputSerializer()
+    company_name = serializers.CharField(source="last_name")
+
+    class Meta:
+        model = NonMember
+        fields = (
+            "company_name",
+            "phone_number",
+            "birth_date",
+            "street",
+            "number",
+            "letter_box",
+            "postcode_city",
+            "comment",
+        )
+
+
 class InuitsNonMemberOutputSerializer(serializers.ModelSerializer):
     postcode_city = BelgianPostcodeCityOutputSerializer()
 
@@ -84,6 +102,20 @@ class NonMemberCreateInputSerializer(serializers.Serializer):
     letter_box = serializers.CharField(max_length=5, required=False, allow_blank=True)
     comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
     postcode_city = BelgianPostcodeCityInputSerializer()
+
+
+class NonMemberOrCompanyCreateInputSerializer(NonMemberCreateInputSerializer):
+    company_name = serializers.CharField(max_length=25, required=False)
+    last_name = serializers.CharField(max_length=25)
+    first_name = serializers.CharField(max_length=15, required=False)
+
+    def validate(self, data):
+        # Either company_name or first_name, last_name should be given
+        if not data.get("company_name") and not (data.get("first_name") and data.get("last_name")):
+            raise serializers.ValidationError("If company_name not given first_name and last_name are required")
+        elif data.get("company_name") and (data.get("first_name") or data.get("last_name")):
+            raise serializers.ValidationError("If company_name given first_name and last_name are not allowed")
+        return data
 
 
 class InuitsNonMemberCreateInputSerializer(NonMemberCreateInputSerializer):
