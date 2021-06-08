@@ -106,7 +106,7 @@ class NonMemberCreateInputSerializer(serializers.Serializer):
 
 class NonMemberOrCompanyCreateInputSerializer(NonMemberCreateInputSerializer):
     company_name = serializers.CharField(max_length=25, required=False)
-    last_name = serializers.CharField(max_length=25)
+    last_name = serializers.CharField(max_length=25, required=False)
     first_name = serializers.CharField(max_length=15, required=False)
 
     def validate(self, data):
