@@ -114,7 +114,7 @@ class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer)
 
 class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
-    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2))
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2), required=False)
     postcode_city = BelgianPostcodeCityInputSerializer(required=False)
     non_members = NonMemberCreateInputSerializer(many=True)
 
