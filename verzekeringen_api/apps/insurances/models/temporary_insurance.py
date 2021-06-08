@@ -46,7 +46,10 @@ class TemporaryInsurance(BaseInsurance):
 
     @country.setter
     def country(self, value: Country):
-        self._country = value.name
+        if not value:
+            self._country = None
+        else:
+            self._country = value.name
 
 
 class NonMemberTemporaryInsurance(models.Model):

@@ -21,11 +21,11 @@ def temporary_insurance_create(
     )
     insurance = TemporaryInsurance(
         nature=nature,
-        country=country,
         postcode=int(postcode_city.postcode) if postcode_city else None,
         city=postcode_city.name if postcode_city else None,
         **base_insurance_fields,
     )
+    insurance.country = country
     insurance.full_clean()
     insurance.save()
 
