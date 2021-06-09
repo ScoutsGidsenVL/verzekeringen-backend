@@ -10,4 +10,6 @@ from .insurance_serializers import (
     TravelAssistanceInsuranceCreateInputSerializer,
     TemporaryVehicleInsuranceDetailOutputSerializer,
     TemporaryVehicleInsuranceCreateInputSerializer,
+    EventInsuranceDetailOutputSerializer,
+    EventInsuranceCreateInputSerializer,
 )

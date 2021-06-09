@@ -24,6 +24,9 @@ class InsuranceTypeManager(models.Manager):
     def equipment(self):
         return self.get_queryset().get(id=6)
 
+    def event(self):
+        return self.get_queryset().get(id=10)
+
 
 class InsuranceType(models.Model):
     objects = InsuranceTypeManager()

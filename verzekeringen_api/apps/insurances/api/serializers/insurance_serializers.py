@@ -32,10 +32,12 @@ from ...models import (
     TravelAssistanceInsurance,
     InsuranceType,
     TemporaryVehicleInsurance,
+    EventInsurance,
 )
 from ...models.enums import (
     InsuranceStatus,
     GroupSize,
+    EventSize,
     TemporaryVehicleInsuranceOption,
     TemporaryVehicleInsuranceCoverageOption,
 )
@@ -147,6 +149,19 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
         ).data
 
 
+class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    location = BelgianPostcodeCityOutputSerializer(source="postcode_city")
+    event_size = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EventInsurance
+        fields = base_insurance_detail_fields + ("nature", "event_size", "location")
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_event_size(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(EventSize(obj.event_size))).data
+
+
 # Input
 class BaseInsuranceCreateInputSerializer(serializers.Serializer):
     group = serializers.CharField(source="group_id", max_length=6)
@@ -228,3 +243,9 @@ class TravelAssistanceInsuranceCreateInputSerializer(BaseInsuranceCreateInputSer
         if len(value) < 1:
             raise serializers.ValidationError("At least one participant is required")
         return value
+
+
+class EventInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+    nature = serializers.CharField(max_length=500)
+    event_size = serializers.ChoiceField(choices=EventSize.choices)
+    location = BelgianPostcodeCityInputSerializer()

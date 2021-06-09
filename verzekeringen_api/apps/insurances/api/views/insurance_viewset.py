@@ -13,6 +13,8 @@ from ..serializers import (
     TravelAssistanceInsuranceCreateInputSerializer,
     TemporaryVehicleInsuranceDetailOutputSerializer,
     TemporaryVehicleInsuranceCreateInputSerializer,
+    EventInsuranceDetailOutputSerializer,
+    EventInsuranceCreateInputSerializer,
 )
 from ...models import (
     InsuranceType,
@@ -21,12 +23,14 @@ from ...models import (
     TemporaryInsurance,
     TravelAssistanceInsurance,
     TemporaryVehicleInsurance,
+    EventInsurance,
 )
 from ...services import (
     ActivityInsuranceService,
     TemporaryInsuranceService,
     TravelAssistanceInsuranceService,
     TemporaryVehicleInsuranceService,
+    EventInsuranceService,
 )
 
 
@@ -50,6 +54,8 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             serializer = TravelAssistanceInsuranceDetailOutputSerializer(insurance.travel_assistance_child)
         elif insurance.type_id == 5:
             serializer = TemporaryVehicleInsuranceDetailOutputSerializer(insurance.temporary_vehicle_child)
+        elif insurance.type_id == 10:
+            serializer = EventInsuranceDetailOutputSerializer(insurance.event_child)
         else:
             serializer = InsuranceListOutputSerializer(insurance)
 
@@ -212,5 +218,40 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = TemporaryVehicleInsuranceDetailOutputSerializer(updated_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=EventInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: EventInsuranceDetailOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="event")
+    def create_event(self, request):
+        input_serializer = EventInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        created_insurance = EventInsuranceService.event_insurance_create(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = EventInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=EventInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: EventInsuranceDetailOutputSerializer},
+    )
+    @action(methods=["put"], detail=False, url_path="event/(?P<pk>\d+)")
+    def update_event(self, request, pk=None):
+        existing_insurance = get_object_or_404(EventInsurance.objects.all().allowed(request.user), pk=pk)
+        input_serializer = EventInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        updated_insurance = EventInsuranceService.event_insurance_update(
+            insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = EventInsuranceDetailOutputSerializer(updated_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

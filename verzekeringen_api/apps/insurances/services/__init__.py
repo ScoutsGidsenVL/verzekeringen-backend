@@ -3,3 +3,4 @@ from . import activity_insurance_service as ActivityInsuranceService
 from . import temporary_insurance_service as TemporaryInsuranceService
 from . import travel_assistance_insurance_service as TravelAssistanceInsuranceService
 from . import temporary_vehicle_insurance_service as TemporaryVehicleInsuranceService
+from . import event_insurance_service as EventInsuranceService
