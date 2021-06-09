@@ -7,6 +7,7 @@ from .api.views import (
     GroupSizeViewSet,
     EventSizeViewSet,
     TemporaryVehicleInsuranceCoverageOptionViewSet,
+    TemporaryVehicleInsuranceOptionApiViewSet,
 )
 
 router = routers.SimpleRouter()
@@ -19,6 +20,11 @@ router.register(
     r"vehicle_insurance_coverage_options",
     TemporaryVehicleInsuranceCoverageOptionViewSet,
     "VehicleInsuranceCoverageOption",
+)
+router.register(
+    r"vehicle_insurance_options",
+    TemporaryVehicleInsuranceOptionApiViewSet,
+    "VehicleInsuranceOption",
 )
 
 

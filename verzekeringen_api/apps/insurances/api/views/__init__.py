@@ -4,5 +4,6 @@ from .enum_viewsets import (
     GroupSizeViewSet,
     InsuranceStatusViewSet,
     TemporaryVehicleInsuranceCoverageOptionViewSet,
+    TemporaryVehicleInsuranceOptionApiViewSet,
     EventSizeViewSet,
 )

@@ -13,7 +13,7 @@ def temporary_vehicle_insurance_create(
     owner: dict,
     drivers: list[dict],
     vehicle: Vehicle,
-    insurance_option: int = None,
+    insurance_options: set = None,
     max_coverage: str = None,
     **base_insurance_fields,
 ) -> TemporaryVehicleInsurance:
@@ -24,10 +24,10 @@ def temporary_vehicle_insurance_create(
         **base_insurance_fields, total_cost=total_cost, type=type
     )
     insurance = TemporaryVehicleInsurance(
-        insurance_option=insurance_option,
         max_coverage=max_coverage,
         **base_insurance_fields,
     )
+    insurance.insurance_options = insurance_options
     insurance.vehicle = vehicle
     insurance.full_clean()
     insurance.save()

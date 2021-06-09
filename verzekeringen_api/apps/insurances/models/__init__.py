@@ -6,3 +6,4 @@ from .travel_assistance_insurance import TravelAssistanceInsurance, ParticipantT
 from .temporary_vehicle_insurance import TemporaryVehicleInsurance, ParticipantTemporaryVehicleInsurance
 from .equipment_insurance import EquipmentInsurance
 from .event_insurance import EventInsurance
+from .cost_variable import CostVariable

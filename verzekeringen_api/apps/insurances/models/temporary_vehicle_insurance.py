@@ -23,7 +23,7 @@ class TemporaryVehicleInsurance(BaseInsurance):
         primary_key=True,
         related_name="temporary_vehicle_child",
     )
-    insurance_option = models.IntegerField(db_column="keuze", choices=TemporaryVehicleInsuranceOption.choices)
+    _insurance_option = models.IntegerField(db_column="keuze", choices=TemporaryVehicleInsuranceOption.choices)
     max_coverage = models.CharField(
         db_column="maxdekking",
         choices=TemporaryVehicleInsuranceCoverageOption.choices,
@@ -105,6 +105,14 @@ class TemporaryVehicleInsurance(BaseInsurance):
                 type=TemporaryVehicleParticipantType.DRIVER
             )
         ]
+
+    @property
+    def insurance_options(self):
+        return [int(digit) for digit in str(self._insurance_option)]
+
+    @insurance_options.setter
+    def insurance_options(self, value: set):
+        self._insurance_option = int("".join([str(sub_value) for sub_value in value]))
 
 
 class ParticipantTemporaryVehicleInsurance(models.Model):

@@ -39,6 +39,7 @@ from ...models.enums import (
     GroupSize,
     EventSize,
     TemporaryVehicleInsuranceOption,
+    TemporaryVehicleInsuranceOptionApi,
     TemporaryVehicleInsuranceCoverageOption,
 )
 
@@ -123,12 +124,12 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
     drivers = NonMemberNestedOutputSerializer(many=True)
     owner = serializers.SerializerMethodField()
     vehicle = VehicleWithChassisOutputSerializer(read_only=True)
-    insurance_option = serializers.SerializerMethodField()
+    insurance_options = serializers.SerializerMethodField()
     max_coverage = serializers.SerializerMethodField()
 
     class Meta:
         model = TemporaryVehicleInsurance
-        fields = base_insurance_detail_fields + ("insurance_option", "max_coverage", "vehicle", "owner", "drivers")
+        fields = base_insurance_detail_fields + ("insurance_options", "max_coverage", "vehicle", "owner", "drivers")
 
     @swagger_serializer_method(serializer_or_field=NonMemberNestedOutputSerializer)
     def get_owner(self, obj):
@@ -137,8 +138,11 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
         return NonMemberNestedOutputSerializer(obj.owner).data
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
-    def get_insurance_option(self, obj):
-        return EnumOutputSerializer(parse_choice_to_tuple(TemporaryVehicleInsuranceOption(obj.insurance_option))).data
+    def get_insurance_options(self, obj):
+        return EnumOutputSerializer(
+            [parse_choice_to_tuple(TemporaryVehicleInsuranceOptionApi(option)) for option in obj.insurance_options],
+            many=True,
+        ).data
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_max_coverage(self, obj):
@@ -197,7 +201,7 @@ class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer
 
 
 class TemporaryVehicleInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
-    insurance_option = serializers.ChoiceField(choices=TemporaryVehicleInsuranceOption.choices)
+    insurance_options = serializers.MultipleChoiceField(choices=TemporaryVehicleInsuranceOptionApi.choices)
     max_coverage = serializers.ChoiceField(choices=TemporaryVehicleInsuranceCoverageOption.choices, required=False)
     drivers = NonMemberCreateInputSerializer(many=True)
     owner = NonMemberOrCompanyCreateInputSerializer()
@@ -209,28 +213,23 @@ class TemporaryVehicleInsuranceCreateInputSerializer(BaseInsuranceCreateInputSer
         return value
 
     def validate(self, data):
-        if (
-            data.get("insurance_option")
-            in (
-                TemporaryVehicleInsuranceOption.COVER_OMNIUM,
-                TemporaryVehicleInsuranceOption.COVER_OMNIUM_RENTAL,
-            )
-            and not data.get("max_coverage")
+        if TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in data.get("insurance_options") and not data.get(
+            "max_coverage"
         ):
             raise serializers.ValidationError(
                 "If 'reeds afgesloten omnium afdekken' is chosen max_coverage is required"
             )
-        elif (
-            data.get("insurance_option")
-            not in (
-                TemporaryVehicleInsuranceOption.COVER_OMNIUM,
-                TemporaryVehicleInsuranceOption.COVER_OMNIUM_RENTAL,
-            )
-            and data.get("max_coverage")
+        elif TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM not in data.get("insurance_options") and data.get(
+            "max_coverage"
         ):
             raise serializers.ValidationError(
                 "If 'reeds afgesloten omnium afdekken' is not chosen max_coverage is not allowed to be given"
             )
+
+        if TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in data.get(
+            "insurance_options"
+        ) and TemporaryVehicleInsuranceOptionApi.OMNIUM in data.get("insurance_options"):
+            raise serializers.ValidationError("'reeds afgesloten omnium afdekken' and 'omnium' are mutually exclusive")
         return data
 
 
