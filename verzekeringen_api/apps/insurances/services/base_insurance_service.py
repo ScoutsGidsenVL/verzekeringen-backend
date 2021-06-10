@@ -17,7 +17,6 @@ def base_insurance_creation_fields(
     end_date: datetime.date,
     responsible_phone_number: str,
     created_by: settings.AUTH_USER_MODEL,
-    total_cost: int,
     comment: str = "",
     id: str = None,
 ) -> dict:
@@ -35,7 +34,6 @@ def base_insurance_creation_fields(
         "group": group_object,
         "start_date": start_date,
         "end_date": end_date,
-        "total_cost": total_cost,
         "responsible_member": member,
         "comment": comment,
         "created_on": timezone.now(),

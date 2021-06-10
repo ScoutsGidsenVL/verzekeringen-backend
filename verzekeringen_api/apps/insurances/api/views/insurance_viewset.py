@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 from ..serializers import (
+    InsuranceCostOutputSerializer,
     InsuranceListOutputSerializer,
     ActivityInsuranceDetailOutputSerializer,
     ActivityInsuranceCreateInputSerializer,
@@ -73,6 +74,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             serializer = InsuranceListOutputSerializer(insurances, many=True)
             return Response(serializer.data)
 
+    # Activity
     @swagger_auto_schema(
         request_body=ActivityInsuranceCreateInputSerializer,
         responses={status.HTTP_201_CREATED: ActivityInsuranceDetailOutputSerializer},
@@ -87,6 +89,23 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = ActivityInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=ActivityInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceCostOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="activity/cost")
+    def cost_calculation_activity(self, request):
+        input_serializer = ActivityInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        cost = ActivityInsuranceService.activity_insurance_cost_calculation(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceCostOutputSerializer({"total_cost": cost})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -108,6 +127,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
+    # Temporary
     @swagger_auto_schema(
         request_body=TemporaryInsuranceCreateInputSerializer,
         responses={status.HTTP_201_CREATED: TemporaryInsuranceDetailOutputSerializer},
@@ -122,6 +142,23 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = TemporaryInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=TemporaryInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceCostOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="temporary/cost")
+    def cost_calculation_temporary(self, request):
+        input_serializer = TemporaryInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        cost = TemporaryInsuranceService.temporary_insurance_cost_calculation(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceCostOutputSerializer({"total_cost": cost})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -143,6 +180,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
+    # Travel assistance
     @swagger_auto_schema(
         request_body=TravelAssistanceInsuranceCreateInputSerializer,
         responses={status.HTTP_201_CREATED: TravelAssistanceInsuranceDetailOutputSerializer},
@@ -159,6 +197,25 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = TravelAssistanceInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=TravelAssistanceInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceCostOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="travel_assistance/cost")
+    def cost_calculation_travel_assistance(self, request):
+        input_serializer = TravelAssistanceInsuranceCreateInputSerializer(
+            data=request.data, context={"request": request}
+        )
+        input_serializer.is_valid(raise_exception=True)
+
+        cost = TravelAssistanceInsuranceService.travel_assistance_insurance_cost_calculation(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceCostOutputSerializer({"total_cost": cost})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -182,6 +239,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
+    # Temporary vehicle
     @swagger_auto_schema(
         request_body=TemporaryVehicleInsuranceCreateInputSerializer,
         responses={status.HTTP_201_CREATED: TemporaryVehicleInsuranceDetailOutputSerializer},
@@ -198,6 +256,25 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = TemporaryVehicleInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=TemporaryVehicleInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceCostOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="temporary_vehicle/cost")
+    def cost_calculation_temporary_vehicle(self, request):
+        input_serializer = TemporaryVehicleInsuranceCreateInputSerializer(
+            data=request.data, context={"request": request}
+        )
+        input_serializer.is_valid(raise_exception=True)
+
+        cost = TemporaryVehicleInsuranceService.temporary_vehicle_insurance_cost_calculation(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceCostOutputSerializer({"total_cost": cost})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -221,6 +298,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
+    # Event
     @swagger_auto_schema(
         request_body=EventInsuranceCreateInputSerializer,
         responses={status.HTTP_201_CREATED: EventInsuranceDetailOutputSerializer},
@@ -235,6 +313,23 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = EventInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=EventInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceCostOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="event/cost")
+    def cost_calculation_event(self, request):
+        input_serializer = EventInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        cost = EventInsuranceService.event_insurance_cost_calculation(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceCostOutputSerializer({"total_cost": cost})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

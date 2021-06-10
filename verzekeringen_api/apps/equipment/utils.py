@@ -23,3 +23,7 @@ class Vehicle:
     @property
     def has_trailer(self):
         return self.trailer != VehicleTrailerOption.NO_TRAILER
+
+    @property
+    def has_heavy_trailer(self):
+        return self.trailer == VehicleTrailerOption.TRAILER_MORE_750

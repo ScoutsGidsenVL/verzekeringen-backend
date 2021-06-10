@@ -1,10 +1,74 @@
 from django.db import transaction
+from decimal import Decimal
 from django.conf import settings
 from apps.equipment.utils import Vehicle
 from apps.members.services import MemberService
-from ..models import TemporaryVehicleInsurance, InsuranceType, ParticipantTemporaryVehicleInsurance
-from ..models.enums import TemporaryVehicleParticipantType
+from ..models import TemporaryVehicleInsurance, InsuranceType, ParticipantTemporaryVehicleInsurance, CostVariable
+from ..models.enums import (
+    TemporaryVehicleParticipantType,
+    TemporaryVehicleInsuranceOptionApi,
+    TemporaryVehicleInsuranceCoverageOption,
+)
 from . import base_insurance_service as BaseInsuranceService
+
+
+def _calculate_total_cost(insurance: TemporaryVehicleInsurance) -> Decimal:
+    days = (insurance.end_date - insurance.start_date).days
+
+    cost = 0
+
+    if TemporaryVehicleInsuranceOptionApi.OMNIUM in insurance.insurance_options:
+        limits = (8, 15, 25, 31)
+        for limit in limits:
+            if days <= limit:
+                cost += CostVariable.objects.get_variable(insurance.type, "premium_option1_%s" % str(limit)).value
+                break
+
+    if TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in insurance.insurance_options:
+        limits = (15, 31)
+        for limit in limits:
+            if days <= limit:
+                cost += CostVariable.objects.get_variable(
+                    insurance.type, "premium_option2%s_%s" % (insurance.max_coverage, str(limit))
+                ).value
+                break
+
+    if TemporaryVehicleInsuranceOptionApi.RENTAL in insurance.insurance_options:
+        limits = (15, 20, 31)
+        for limit in limits:
+            if days <= limit:
+                cost += CostVariable.objects.get_variable(insurance.type, "premium_option3_%s" % str(limit)).value
+                break
+
+    # Will round here because we also do that in old code and might make a difference
+    cost = round(cost, 2)
+
+    # Double if you have heavy trailer
+    if insurance.vehicle.has_heavy_trailer:
+        cost *= 2
+
+    return cost
+
+
+# We create an insurance in memory (! so no saving) and calculate cost
+def temporary_vehicle_insurance_cost_calculation(
+    *,
+    owner: dict,
+    drivers: list[dict],
+    vehicle: Vehicle,
+    insurance_options: set = None,
+    max_coverage: str = None,
+    **base_insurance_fields,
+) -> Decimal:
+    type = InsuranceType.objects.temporary_vehicle()
+    base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
+    insurance = TemporaryVehicleInsurance(
+        max_coverage=max_coverage,
+        **base_insurance_fields,
+    )
+    insurance.insurance_options = insurance_options
+    insurance.vehicle = vehicle
+    return _calculate_total_cost(insurance)
 
 
 @transaction.atomic
@@ -17,18 +81,15 @@ def temporary_vehicle_insurance_create(
     max_coverage: str = None,
     **base_insurance_fields,
 ) -> TemporaryVehicleInsurance:
-    # TODO calculate cost
-    total_cost = 1
     type = InsuranceType.objects.temporary_vehicle()
-    base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
-        **base_insurance_fields, total_cost=total_cost, type=type
-    )
+    base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
     insurance = TemporaryVehicleInsurance(
         max_coverage=max_coverage,
         **base_insurance_fields,
     )
     insurance.insurance_options = insurance_options
     insurance.vehicle = vehicle
+    insurance.total_cost = _calculate_total_cost(insurance)
     insurance.full_clean()
     insurance.save()
 

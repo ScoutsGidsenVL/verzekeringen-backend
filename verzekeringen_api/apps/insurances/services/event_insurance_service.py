@@ -1,18 +1,26 @@
 from django.db import transaction
+from decimal import Decimal
 from apps.locations.utils import PostcodeCity
-from ..models import EventInsurance, InsuranceType
+from ..models import EventInsurance, InsuranceType, CostVariable
 from ..models.enums import EventSize
 from . import base_insurance_service as BaseInsuranceService
 
 
-@transaction.atomic
-def event_insurance_create(
+def _calculate_total_cost(insurance: EventInsurance) -> Decimal:
+    days = (insurance.end_date - insurance.start_date).days
+
+    premium = CostVariable.objects.get_variable(insurance.type, "premium_%s" % str(insurance.event_size)).value
+    cost = round(days * premium, 2)
+
+    return cost
+
+
+# We create an insurance in memory (! so no saving) and calculate cost
+def event_insurance_cost_calculation(
     *, nature: str, event_size: int, location: PostcodeCity, **base_insurance_fields
-) -> EventInsurance:
-    # TODO calculate cost
-    total_cost = 1
+) -> Decimal:
     base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
-        **base_insurance_fields, total_cost=total_cost, type=InsuranceType.objects.event()
+        **base_insurance_fields, type=InsuranceType.objects.event()
     )
     insurance = EventInsurance(
         nature=nature,
@@ -21,6 +29,24 @@ def event_insurance_create(
         city=location.name,
         **base_insurance_fields,
     )
+    return _calculate_total_cost(insurance)
+
+
+@transaction.atomic
+def event_insurance_create(
+    *, nature: str, event_size: int, location: PostcodeCity, **base_insurance_fields
+) -> EventInsurance:
+    base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
+        **base_insurance_fields, type=InsuranceType.objects.event()
+    )
+    insurance = EventInsurance(
+        nature=nature,
+        event_size=event_size,
+        postcode=int(location.postcode),
+        city=location.name,
+        **base_insurance_fields,
+    )
+    insurance.total_cost = _calculate_total_cost(insurance)
     insurance.full_clean()
     insurance.save()
 

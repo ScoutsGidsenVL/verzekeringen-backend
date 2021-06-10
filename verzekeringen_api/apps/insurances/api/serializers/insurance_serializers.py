@@ -45,6 +45,10 @@ from ...models.enums import (
 
 
 # Output
+class InsuranceCostOutputSerializer(serializers.Serializer):
+    total_cost = serializers.DecimalField(max_digits=7, decimal_places=2)
+
+
 class InsuranceListOutputSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     type = InsuranceTypeOutputSerializer(read_only=True)

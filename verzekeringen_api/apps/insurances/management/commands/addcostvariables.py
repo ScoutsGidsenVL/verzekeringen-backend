@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django.core.management.base import BaseCommand, CommandError
 from ...models import InsuranceType, CostVariable
+from ...models.enums import EventSize
 
 
 class Command(BaseCommand):
@@ -76,11 +77,11 @@ class Command(BaseCommand):
         # Event insurance
         type = InsuranceType.objects.event()
         costs = {
-            500: Decimal("65.55"),
-            1000: Decimal("131.10"),
-            1500: Decimal("163.88"),
-            2500: Decimal("229.43"),
-            "unlimited": Decimal("0"),
+            EventSize.FIVEHUNDRED: Decimal("65.55"),
+            EventSize.THOUSAND: Decimal("131.10"),
+            EventSize.THOUSANDFIVEHUNDRED: Decimal("163.88"),
+            EventSize.TWOTHOUSAND: Decimal("229.43"),
+            EventSize.TWOTHOUSANDFIVEHUNDRED: Decimal("0"),
         }
         for size, value in costs.items():
             self.set_variable(type, "premium_%s" % size, value)
