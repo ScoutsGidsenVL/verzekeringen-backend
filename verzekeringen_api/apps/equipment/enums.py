@@ -9,6 +9,5 @@ class VehicleType(models.TextChoices):
 
 class VehicleTrailerOption(models.TextChoices):
     NO_TRAILER = "0", "Geen"
-    TRAILER_UNKNOWN = "1", "Onbekend gewicht"
     TRAILER_LESS_750 = "2", "<750kg"
     TRAILER_MORE_750 = "3", ">750kg"

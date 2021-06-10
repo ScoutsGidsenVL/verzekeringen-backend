@@ -8,16 +8,19 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('insurances', '__first__'),
+        ("insurances", "__first__"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Country',
+            name="Country",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=40)),
-                ('insurance_types', models.ManyToManyField(related_name='country_options', to='insurances.InsuranceType')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=40)),
+                (
+                    "insurance_types",
+                    models.ManyToManyField(related_name="country_options", to="insurances.InsuranceType"),
+                ),
             ],
         ),
     ]

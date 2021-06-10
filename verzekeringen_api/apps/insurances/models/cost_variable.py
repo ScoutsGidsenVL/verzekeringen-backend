@@ -23,9 +23,9 @@ class CostVariable(models.Model):
     id = models.AutoField(primary_key=True)
     key = models.CharField(max_length=30)
     value = models.DecimalField(
-        max_digits=7,
-        decimal_places=2,
-        validators=[MinValueValidator(Decimal("0.01"))],
+        max_digits=8,
+        decimal_places=5,
+        validators=[MinValueValidator(Decimal("0"))],
     )
     insurance_type = models.ForeignKey(InsuranceType, on_delete=models.RESTRICT, related_name="cost_variables")
 
