@@ -23,6 +23,8 @@ from apps.equipment.api.serializers import (
     VehicleInputSerializer,
     VehicleWithChassisOutputSerializer,
     VehicleWithChassisInputSerializer,
+    EquipmentNestedOutputSerializer,
+    EquipmentInputSerializer,
 )
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
 from ...models import (
@@ -32,6 +34,7 @@ from ...models import (
     TravelAssistanceInsurance,
     InsuranceType,
     TemporaryVehicleInsurance,
+    EquipmentInsurance,
     EventInsurance,
 )
 from ...models.enums import (
@@ -170,6 +173,16 @@ class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
         return EnumOutputSerializer(parse_choice_to_tuple(EventSize(obj.event_size))).data
 
 
+class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    postcode_city = BelgianPostcodeCityOutputSerializer()
+    equipment = EquipmentNestedOutputSerializer(many=True)
+    country = CountryOutputSerializer()
+
+    class Meta:
+        model = EquipmentInsurance
+        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "equipment")
+
+
 # Input
 class BaseInsuranceCreateInputSerializer(serializers.Serializer):
     group = serializers.CharField(source="group_id", max_length=6)
@@ -252,3 +265,22 @@ class EventInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
     event_size = serializers.ChoiceField(choices=EventSize.choices)
     location = BelgianPostcodeCityInputSerializer()
+
+
+class EquipmentInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+    nature = serializers.CharField(max_length=500)
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2), required=False)
+    postcode_city = BelgianPostcodeCityInputSerializer(required=False)
+    equipment = EquipmentInputSerializer(many=True)
+
+    def validate_equipment(self, value):
+        if len(value) < 1:
+            raise serializers.ValidationError("At least one equipment is required")
+        return value
+
+    def validate(self, data):
+        if not data.get("postcode_city") and not data.get("country"):
+            raise serializers.ValidationError("Either postcode_city or country is required")
+        elif data.get("postcode_city") and data.get("country"):
+            raise serializers.ValidationError("Country and postcode_city are mutually exclusive fields")
+        return data

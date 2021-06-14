@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from apps.members.models import Member, NonMember, InuitsNonMember
 from .enums import VehicleType, VehicleTrailerOption
-from .managers import InuitsVehicleManager
+from .managers import InuitsVehicleManager, InuitsEquipmentManager
 
 
 class Equipment(models.Model):
@@ -50,49 +50,42 @@ class Equipment(models.Model):
         managed = False
 
     def clean(self):
-        if (not self.owner_non_member and not self.owner_member) or (self.owner_non_member and self.owner_member):
-            raise ValidationError("There needs to be max one owner")
-        if self.owner_non_member and not self.nature:
+        if self.owner_non_member and self.owner_member:
+            raise ValidationError("There needs to be only one owner")
+        if self.owner_member and self.nature:
             raise ValidationError("If owner member then nature can not be given")
-        if not self.owner_non_member and self.nature:
-            raise ValidationError("If no owner member then nature can not be given")
 
 
-# class InuitsEquipment(models.Model):
+class InuitsEquipment(models.Model):
+    objects = InuitsEquipmentManager()
 
-#     id = models.AutoField(primary_key=True)
-#     nature = models.CharField(max_length=50, blank=True)
-#     description = models.CharField(max_length=500)
-#     # Amount will not be used in the future so we will put it default 1 and ignore it
-#     _amount = models.IntegerField(validators=[MinValueValidator(1)], default=1)
-#     total_value = models.DecimalField(
-#         max_digits=7,
-#         decimal_places=2,
-#         validators=[MinValueValidator(Decimal("0.01"))],
-#     )
-#     owner_non_member = models.ForeignKey(
-#         InuitsNonMember,
-#         null=True,
-#         related_name="inuits_equipment",
-#         blank=True,
-#         on_delete=models.CASCADE,
-#     )
-#     owner_member = models.ForeignKey(
-#         Member,
-#         null=True,
-#         related_name="inuits_equipment",
-#         blank=True,
-#         on_delete=models.CASCADE,
-#     )
-#     group_number = models.CharField(max_length=6)
+    id = models.AutoField(primary_key=True)
+    nature = models.CharField(max_length=50, null=True, blank=True)
+    description = models.CharField(max_length=500)
+    # Amount will not be used in the future so we will put it default 1 and ignore it
+    _amount = models.IntegerField(validators=[MinValueValidator(1)], default=1)
+    total_value = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.01"))],
+    )
+    owner_non_member = models.ForeignKey(
+        InuitsNonMember,
+        null=True,
+        related_name="inuits_equipment",
+        blank=True,
+        on_delete=models.CASCADE,
+    )
+    # Save some group admin id of owner, all detailed info will be gotten from group admin
+    owner_member_group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
 
-#     def clean(self):
-#         if (not self.owner_non_member and not self.owner_member) or (self.owner_non_member and self.owner_member):
-#             raise ValidationError("There needs to be max one owner")
-#         if self.owner_non_member and not self.nature:
-#             raise ValidationError("If owner member then nature can not be given")
-#         if not self.owner_non_member and self.nature:
-#             raise ValidationError("If no owner member then nature can not be given")
+    group_number = models.CharField(max_length=6)
+
+    def clean(self):
+        if self.owner_non_member and self.owner_member_group_admin_id:
+            raise ValidationError("There needs to be only one owner")
+        if self.owner_member_group_admin_id and self.nature:
+            raise ValidationError("If owner member then nature can not be given")
 
 
 class InuitsVehicle(models.Model):

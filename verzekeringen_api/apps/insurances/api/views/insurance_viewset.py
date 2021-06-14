@@ -16,6 +16,8 @@ from ..serializers import (
     TemporaryVehicleInsuranceCreateInputSerializer,
     EventInsuranceDetailOutputSerializer,
     EventInsuranceCreateInputSerializer,
+    EquipmentInsuranceDetailOutputSerializer,
+    EquipmentInsuranceCreateInputSerializer,
 )
 from ...models import (
     InsuranceType,
@@ -25,6 +27,7 @@ from ...models import (
     TravelAssistanceInsurance,
     TemporaryVehicleInsurance,
     EventInsurance,
+    EquipmentInsurance,
 )
 from ...services import (
     ActivityInsuranceService,
@@ -32,6 +35,7 @@ from ...services import (
     TravelAssistanceInsuranceService,
     TemporaryVehicleInsuranceService,
     EventInsuranceService,
+    EquipmentInsuranceService,
 )
 
 
@@ -55,6 +59,8 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             serializer = TravelAssistanceInsuranceDetailOutputSerializer(insurance.travel_assistance_child)
         elif insurance.type_id == 5:
             serializer = TemporaryVehicleInsuranceDetailOutputSerializer(insurance.temporary_vehicle_child)
+        elif insurance.type_id == 6:
+            serializer = EquipmentInsuranceDetailOutputSerializer(insurance.equipment_child)
         elif insurance.type_id == 10:
             serializer = EventInsuranceDetailOutputSerializer(insurance.event_child)
         else:
@@ -348,5 +354,58 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = EventInsuranceDetailOutputSerializer(updated_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    # Equipment
+    @swagger_auto_schema(
+        request_body=EquipmentInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: EquipmentInsuranceDetailOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="equipment")
+    def create_equipment(self, request):
+        input_serializer = EquipmentInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        created_insurance = EquipmentInsuranceService.equipment_insurance_create(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = EquipmentInsuranceDetailOutputSerializer(created_insurance)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=EquipmentInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceCostOutputSerializer},
+    )
+    @action(methods=["post"], detail=False, url_path="equipment/cost")
+    def cost_calculation_equipment(self, request):
+        input_serializer = EquipmentInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        cost = EquipmentInsuranceService.equipment_insurance_cost_calculation(
+            **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceCostOutputSerializer({"total_cost": cost})
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=EquipmentInsuranceCreateInputSerializer,
+        responses={status.HTTP_201_CREATED: EquipmentInsuranceDetailOutputSerializer},
+    )
+    @action(methods=["put"], detail=False, url_path="equipment/(?P<pk>\d+)")
+    def update_equipment(self, request, pk=None):
+        existing_insurance = get_object_or_404(EquipmentInsurance.objects.all().allowed(request.user), pk=pk)
+        input_serializer = EquipmentInsuranceCreateInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        updated_insurance = EquipmentInsuranceService.equipment_insurance_update(
+            insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = EquipmentInsuranceDetailOutputSerializer(updated_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

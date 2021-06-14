@@ -52,6 +52,7 @@ class InuitsNonMemberOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InuitsNonMember
         fields = (
+            "id",
             "last_name",
             "first_name",
             "phone_number",
@@ -75,7 +76,7 @@ class GroupAdminMemberListOutputSerializer(serializers.Serializer):
 
 
 class GroupAdminMemberDetailOutputSerializer(GroupAdminMemberListOutputSerializer):
-    membership_number = serializers.CharField()
+    membership_number = serializers.IntegerField()
     street = serializers.CharField(source="address.street")
     number = serializers.CharField(source="address.number")
     letter_box = serializers.CharField(source="address.letter_box")
@@ -90,6 +91,7 @@ class MemberNestedCreateInputSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=60)
     birth_date = serializers.DateField()
     membership_number = serializers.IntegerField()
+    group_admin_id = serializers.CharField(max_length=255)
 
 
 class NonMemberCreateInputSerializer(serializers.Serializer):

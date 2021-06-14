@@ -24,6 +24,31 @@ def member_create_from_user(
     return member
 
 
+def member_create(
+    *,
+    last_name: str,
+    first_name: str,
+    phone_number: str,
+    birth_date: datetime.date,
+    email: str,
+    membership_number: int,
+    group_admin_id: str,
+) -> Member:
+    member = Member(
+        last_name=last_name,
+        first_name=first_name,
+        phone_number=phone_number,
+        email=email,
+        birth_date=birth_date,
+        membership_number=membership_number,
+        group_admin_id=group_admin_id,
+    )
+    member.full_clean()
+    member.save()
+
+    return member
+
+
 def non_member_create(
     *,
     last_name: str,

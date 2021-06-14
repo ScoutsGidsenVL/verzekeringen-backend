@@ -21,6 +21,10 @@ class EquipmentInsurance(BaseInsurance):
     city = models.CharField(db_column="gemeente", max_length=40, blank=True)
     _country = models.CharField(db_column="land", max_length=45, blank=True)
 
+    # Related Many field
+    #
+    # equipment (Equipment)
+
     class Meta:
         db_table = "vrzktypemateriaal"
         managed = False

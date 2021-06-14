@@ -13,4 +13,6 @@ from .insurance_serializers import (
     TemporaryVehicleInsuranceCreateInputSerializer,
     EventInsuranceDetailOutputSerializer,
     EventInsuranceCreateInputSerializer,
+    EquipmentInsuranceDetailOutputSerializer,
+    EquipmentInsuranceCreateInputSerializer,
 )

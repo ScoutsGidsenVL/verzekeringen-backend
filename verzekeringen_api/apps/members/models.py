@@ -12,7 +12,7 @@ class Member(models.Model):
     first_name = models.CharField(db_column="voornaam", max_length=15)
     phone_number = models.CharField(db_column="telefoon", max_length=15, blank=True)
     _birth_date = models.DateField(db_column="geboortedatum", null=True, blank=True)
-    membership_number = models.BigIntegerField(db_column="lidnr", null=True)
+    membership_number = models.BigIntegerField(db_column="lidnr")
     email = models.EmailField(max_length=60, blank=True)
     group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True)
 

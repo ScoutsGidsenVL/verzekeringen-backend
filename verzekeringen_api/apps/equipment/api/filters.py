@@ -1,7 +1,7 @@
 import django_filters
 from django.db.models.functions import Concat
 from django.db.models import Value, Q
-from ..models import InuitsVehicle
+from ..models import InuitsVehicle, InuitsEquipment
 
 
 class InuitsVehicleFilter(django_filters.FilterSet):
@@ -18,3 +18,11 @@ class InuitsVehicleFilter(django_filters.FilterSet):
             .annotate(brand_license_2=Concat("license_plate", Value(" "), "brand"))
             .filter(Q(brand_license_1__icontains=value) | Q(brand_license_2__icontains=value))
         )
+
+
+class InuitsEquipmentFilter(django_filters.FilterSet):
+    term = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
+
+    class Meta:
+        model = InuitsEquipment
+        fields = []

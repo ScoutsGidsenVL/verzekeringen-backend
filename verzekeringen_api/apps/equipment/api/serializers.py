@@ -2,7 +2,17 @@ from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
-from ..models import InuitsVehicle
+from apps.members.api.serializers import (
+    InuitsNonMemberOutputSerializer,
+    GroupAdminMemberDetailOutputSerializer,
+    MemberNestedOutputSerializer,
+    NonMemberNestedOutputSerializer,
+    MemberNestedCreateInputSerializer,
+    NonMemberCreateInputSerializer,
+)
+from apps.members.services import GroupAdminMemberService
+from apps.members.models import InuitsNonMember
+from ..models import InuitsVehicle, InuitsEquipment, Equipment
 from ..enums import VehicleType, VehicleTrailerOption
 from ..utils import Vehicle
 
@@ -53,6 +63,57 @@ class InuitsVehicleOutputSerializer(serializers.ModelSerializer):
         return EnumOutputSerializer(parse_choice_to_tuple(VehicleTrailerOption(obj.trailer))).data
 
 
+class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
+    owner_non_member = NonMemberNestedOutputSerializer()
+    owner_member = MemberNestedOutputSerializer()
+
+    class Meta:
+        model = Equipment
+        fields = (
+            "nature",
+            "description",
+            "total_value",
+            "owner_non_member",
+            "owner_member",
+        )
+
+
+class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InuitsEquipment
+        fields = (
+            "nature",
+            "description",
+            "total_value",
+        )
+
+
+class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
+    owner_non_member = InuitsNonMemberOutputSerializer()
+    owner_member = serializers.SerializerMethodField()
+
+    class Meta:
+        model = InuitsEquipment
+        fields = (
+            "nature",
+            "description",
+            "total_value",
+            "owner_non_member",
+            "owner_member",
+        )
+
+    @swagger_serializer_method(serializer_or_field=GroupAdminMemberDetailOutputSerializer)
+    def get_owner_member(self, obj):
+        if not obj.owner_member_group_admin_id:
+            return None
+        request = self.context.get("request", None)
+        return GroupAdminMemberDetailOutputSerializer(
+            GroupAdminMemberService.group_admin_member_detail(
+                active_user=request.user, group_admin_id=obj.owner_member_group_admin_id
+            )
+        ).data
+
+
 # Input
 class VehicleInputSerializer(serializers.Serializer):
     type = serializers.ChoiceField(choices=VehicleType.choices)
@@ -81,4 +142,44 @@ class InuitsVehicleCreateInputSerializer(VehicleInputSerializer):
     group = serializers.CharField(source="group_id")
 
     def validate(self, data):
+        return data
+
+
+class EquipmentInputSerializer(serializers.Serializer):
+    nature = serializers.CharField(max_length=50, required=False)
+    description = serializers.CharField(max_length=500)
+    total_value = serializers.DecimalField(max_digits=7, decimal_places=2)
+    owner_member = MemberNestedCreateInputSerializer(required=False)
+    owner_non_member = NonMemberCreateInputSerializer(required=False)
+
+    def validate(self, data):
+        if data.get("owner_member") and data.get("owner_non_member"):
+            raise serializers.ValidationError("There can only be one max owner")
+        return data
+
+
+class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
+    # Special filter field so we can get allowed in queryset
+    class InuitsEquipmentNonMemberRelatedField(serializers.PrimaryKeyRelatedField):
+        def get_queryset(self):
+            request = self.context.get("request", None)
+            queryset = InuitsNonMember.objects.all().allowed(request.user)
+            return queryset
+
+    group = serializers.CharField(source="group_id")
+    owner_member = serializers.CharField(source="owner_member_id", required=False)
+    owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False)
+
+    def validate_owner_member(self, value):
+        # Validate wether membership number of member is valid
+        request = self.context.get("request", None)
+        try:
+            GroupAdminMemberService.group_admin_member_detail(active_user=request.user, group_admin_id=value)
+        except:
+            raise serializers.ValidationError("Invalid member id given")
+        return value
+
+    def validate(self, data):
+        if data.get("owner_member_id") and data.get("owner_non_member"):
+            raise serializers.ValidationError("There can only be one max owner")
         return data
