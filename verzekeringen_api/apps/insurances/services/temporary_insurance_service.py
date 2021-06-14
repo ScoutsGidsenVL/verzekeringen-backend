@@ -17,7 +17,7 @@ def _calculate_total_cost(insurance: TemporaryInsurance, non_member_amount: int)
 def temporary_insurance_cost_calculation(
     *,
     nature: str,
-    non_members: list[dict],
+    non_members: list,
     country: str = None,
     postcode_city: PostcodeCity = None,
     **base_insurance_fields,
@@ -40,7 +40,7 @@ def temporary_insurance_cost_calculation(
 def temporary_insurance_create(
     *,
     nature: str,
-    non_members: list[dict],
+    non_members: list,
     country: str = None,
     postcode_city: PostcodeCity = None,
     **base_insurance_fields,

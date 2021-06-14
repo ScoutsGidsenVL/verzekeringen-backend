@@ -5,7 +5,7 @@ description = "The api for scouts verzekeringen"
 authors = ["Jonas Elst <jonas.elst@inuits.eu>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 Django = "^3.2.2"
 psycopg2 = "^2.8.6"
 djangorestframework = "^3.12.4"
@@ -27,7 +27,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 119
-target-version = ['py39']
+target-version = ['py37']
 exclude = '''
 /(
   | migrations

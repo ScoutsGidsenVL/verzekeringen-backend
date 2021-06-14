@@ -42,7 +42,7 @@ def _calculate_total_cost(insurance: TravelAssistanceInsurance, participant_amou
 # We create an insurance in memory (! so no saving) and calculate cost
 def travel_assistance_insurance_cost_calculation(
     *,
-    participants: list[dict],
+    participants: list,
     country: str,
     vehicle: Vehicle = None,
     **base_insurance_fields,
@@ -65,7 +65,7 @@ def travel_assistance_insurance_cost_calculation(
 @transaction.atomic
 def travel_assistance_insurance_create(
     *,
-    participants: list[dict],
+    participants: list,
     country: str,
     vehicle: Vehicle = None,
     **base_insurance_fields,

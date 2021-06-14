@@ -54,7 +54,7 @@ def _calculate_total_cost(insurance: TemporaryVehicleInsurance) -> Decimal:
 def temporary_vehicle_insurance_cost_calculation(
     *,
     owner: dict,
-    drivers: list[dict],
+    drivers: list,
     vehicle: Vehicle,
     insurance_options: set = None,
     max_coverage: str = None,
@@ -75,7 +75,7 @@ def temporary_vehicle_insurance_cost_calculation(
 def temporary_vehicle_insurance_create(
     *,
     owner: dict,
-    drivers: list[dict],
+    drivers: list,
     vehicle: Vehicle,
     insurance_options: set = None,
     max_coverage: str = None,
