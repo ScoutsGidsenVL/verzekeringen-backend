@@ -64,3 +64,8 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         output_serializer = InsuranceDraftOutputSerializer(new_draft)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, pk=None):
+        draft = self.get_object()
+        InsuranceDraftService.insurance_draft_delete(draft=draft)
+        return Response(status=status.HTTP_200_OK)
