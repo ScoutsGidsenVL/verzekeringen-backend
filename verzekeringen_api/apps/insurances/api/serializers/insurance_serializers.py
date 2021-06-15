@@ -80,6 +80,7 @@ base_insurance_detail_fields = (
     "created_on",
     "comment",
     "vvks_comment",
+    "editable",
 )
 
 

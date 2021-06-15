@@ -12,6 +12,9 @@ class BaseInsuranceQuerySet(models.QuerySet):
         user_group_ids = [group.id for group in user.partial_scouts_groups]
         return self.filter(_group_number__in=user_group_ids)
 
+    def editable(self):
+        return self.filter(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
+
 
 class BaseInsuranceManager(models.Manager):
     def get_queryset(self):
@@ -133,3 +136,7 @@ class BaseInsurance(models.Model):
     @end_date.setter
     def end_date(self, value: datetime.date):
         self._end_date = value
+
+    @property
+    def editable(self):
+        return self.status in [InsuranceStatus.NEW, InsuranceStatus.WAITING]
