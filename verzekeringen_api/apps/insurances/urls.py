@@ -4,6 +4,7 @@ from .api.views import (
     InsuranceTypeViewSet,
     InsuranceViewSet,
     InsuranceStatusViewSet,
+    InsuranceDraftViewSet,
     GroupSizeViewSet,
     EventSizeViewSet,
     TemporaryVehicleInsuranceCoverageOptionViewSet,
@@ -13,6 +14,7 @@ from .api.views import (
 router = routers.SimpleRouter()
 router.register(r"insurance_types", InsuranceTypeViewSet, "InsuranceType")
 router.register(r"insurances", InsuranceViewSet, "Insurance")
+router.register(r"insurance_drafts", InsuranceDraftViewSet, "InsuranceDraft")
 router.register(r"insurance_statuses", InsuranceStatusViewSet, "InsuranceStatus")
 router.register(r"insurance_group_sizes", GroupSizeViewSet, "GroupSize")
 router.register(r"insurance_event_sizes", EventSizeViewSet, "EventSize")

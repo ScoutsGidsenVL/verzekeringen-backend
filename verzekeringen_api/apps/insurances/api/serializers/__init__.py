@@ -1,18 +1,3 @@
-from .insurance_type_serializers import InsuranceTypeOutputSerializer
-from .insurance_serializers import (
-    InsuranceCostOutputSerializer,
-    InsuranceListOutputSerializer,
-    ActivityInsuranceDetailOutputSerializer,
-    BaseInsuranceCreateInputSerializer,
-    ActivityInsuranceCreateInputSerializer,
-    TemporaryInsuranceDetailOutputSerializer,
-    TemporaryInsuranceCreateInputSerializer,
-    TravelAssistanceInsuranceDetailOutputSerializer,
-    TravelAssistanceInsuranceCreateInputSerializer,
-    TemporaryVehicleInsuranceDetailOutputSerializer,
-    TemporaryVehicleInsuranceCreateInputSerializer,
-    EventInsuranceDetailOutputSerializer,
-    EventInsuranceCreateInputSerializer,
-    EquipmentInsuranceDetailOutputSerializer,
-    EquipmentInsuranceCreateInputSerializer,
-)
+from .insurance_type_serializers import *
+from .insurance_serializers import *
+from .insurance_draft_serializers import *

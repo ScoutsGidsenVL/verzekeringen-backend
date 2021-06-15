@@ -7,3 +7,4 @@ from .temporary_vehicle_insurance import TemporaryVehicleInsurance, ParticipantT
 from .equipment_insurance import EquipmentInsurance
 from .event_insurance import EventInsurance
 from .cost_variable import CostVariable
+from .insurance_draft import InsuranceDraft

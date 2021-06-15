@@ -1,9 +1,4 @@
 from .insurance_type_viewset import InsuranceTypeViewSet
 from .insurance_viewset import InsuranceViewSet
-from .enum_viewsets import (
-    GroupSizeViewSet,
-    InsuranceStatusViewSet,
-    TemporaryVehicleInsuranceCoverageOptionViewSet,
-    TemporaryVehicleInsuranceOptionApiViewSet,
-    EventSizeViewSet,
-)
+from .insurance_draft_viewset import InsuranceDraftViewSet
+from .enum_viewsets import *
