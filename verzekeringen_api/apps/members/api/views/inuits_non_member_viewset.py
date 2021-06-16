@@ -52,3 +52,23 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         output_serializer = InuitsNonMemberOutputSerializer(created_non_member, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=InuitsNonMemberCreateInputSerializer,
+        responses={status.HTTP_200_OK: InuitsNonMemberOutputSerializer},
+    )
+    def partial_update(self, request, pk=None):
+        non_member = self.get_object()
+
+        serializer = InuitsNonMemberCreateInputSerializer(
+            data=request.data, instance=non_member, context={"request": request}, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        updated_non_member = InuitsMemberService.inuits_non_member_update(
+            non_member=non_member, **serializer.validated_data
+        )
+
+        output_serializer = InuitsNonMemberOutputSerializer(updated_non_member)
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)

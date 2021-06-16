@@ -46,6 +46,7 @@ class InuitsVehicleOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InuitsVehicle
         fields = (
+            "id",
             "type",
             "brand",
             "license_plate",
@@ -82,6 +83,7 @@ class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InuitsEquipment
         fields = (
+            "id",
             "nature",
             "description",
             "total_value",
@@ -95,6 +97,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InuitsEquipment
         fields = (
+            "id",
             "nature",
             "description",
             "total_value",
@@ -120,7 +123,7 @@ class VehicleInputSerializer(serializers.Serializer):
     brand = serializers.CharField(max_length=15)
     license_plate = serializers.CharField(max_length=10)
     construction_year = serializers.DateField(input_formats=["%Y"])
-    chassis_number = serializers.CharField(max_length=20, required=False)
+    chassis_number = serializers.CharField(max_length=20, required=False, allow_null=True)
     trailer = serializers.ChoiceField(choices=VehicleTrailerOption.choices, required=False)
 
     def validate(self, data):
@@ -146,7 +149,7 @@ class InuitsVehicleCreateInputSerializer(VehicleInputSerializer):
 
 
 class EquipmentInputSerializer(serializers.Serializer):
-    nature = serializers.CharField(max_length=50, required=False)
+    nature = serializers.CharField(max_length=50, required=False, allow_null=True)
     description = serializers.CharField(max_length=500)
     total_value = serializers.DecimalField(max_digits=7, decimal_places=2)
     owner_member = MemberNestedCreateInputSerializer(required=False)
@@ -167,8 +170,8 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
             return queryset
 
     group = serializers.CharField(source="group_id")
-    owner_member = serializers.CharField(source="owner_member_id", required=False)
-    owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False)
+    owner_member = serializers.CharField(source="owner_member_id", required=False, allow_null=True)
+    owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
 
     def validate_owner_member(self, value):
         # Validate wether membership number of member is valid

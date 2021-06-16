@@ -2,6 +2,7 @@ from datetime import datetime
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from ..models import InuitsVehicle
+from ..utils import VehicleTrailerOption
 
 
 def inuits_vehicle_create(
@@ -13,7 +14,7 @@ def inuits_vehicle_create(
     chassis_number: str,
     group_id: str,
     created_by: settings.AUTH_USER_MODEL,
-    trailer: str = "0",
+    trailer: str = VehicleTrailerOption.NO_TRAILER,
 ) -> InuitsVehicle:
     # validate group
     if group_id not in (group.id for group in created_by.partial_scouts_groups):
@@ -27,6 +28,20 @@ def inuits_vehicle_create(
         group_number=group_id,
         trailer=trailer,
     )
+    vehicle.full_clean()
+    vehicle.save()
+
+    return vehicle
+
+
+def inuits_vehicle_update(*, vehicle: InuitsVehicle, **fields) -> InuitsVehicle:
+    vehicle.type = fields.get("type", vehicle.type)
+    vehicle.brand = fields.get("brand", vehicle.brand)
+    vehicle.license_plate = fields.get("license_plate", vehicle.license_plate)
+    vehicle.construction_year = fields.get("construction_year", vehicle.construction_year)
+    vehicle.chassis_number = fields.get("chassis_number", vehicle.chassis_number)
+    vehicle.trailer = fields.get("trailer", vehicle.trailer)
+
     vehicle.full_clean()
     vehicle.save()
 

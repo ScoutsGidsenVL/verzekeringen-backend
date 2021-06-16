@@ -52,3 +52,21 @@ class VehicleViewSet(viewsets.GenericViewSet):
         output_serializer = InuitsVehicleOutputSerializer(created_vehicle, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=InuitsVehicleCreateInputSerializer,
+        responses={status.HTTP_200_OK: InuitsVehicleOutputSerializer},
+    )
+    def partial_update(self, request, pk=None):
+        vehicle = self.get_object()
+
+        serializer = InuitsVehicleCreateInputSerializer(
+            data=request.data, instance=vehicle, context={"request": request}, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        updated_vehicle = VehicleService.inuits_vehicle_update(vehicle=vehicle, **serializer.validated_data)
+
+        output_serializer = InuitsVehicleOutputSerializer(updated_vehicle)
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)

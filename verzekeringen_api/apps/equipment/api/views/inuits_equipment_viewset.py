@@ -56,3 +56,21 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         output_serializer = InuitsEquipmentDetailOutputSerializer(created_equipment, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        request_body=InuitsEquipmentCreateInputSerializer,
+        responses={status.HTTP_200_OK: InuitsEquipmentDetailOutputSerializer},
+    )
+    def partial_update(self, request, pk=None):
+        equipment = self.get_object()
+
+        serializer = InuitsEquipmentCreateInputSerializer(
+            data=request.data, instance=equipment, context={"request": request}, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        updated_equipment = EquipmentService.inuits_equipment_update(equipment=equipment, **serializer.validated_data)
+
+        output_serializer = InuitsEquipmentDetailOutputSerializer(updated_equipment, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)

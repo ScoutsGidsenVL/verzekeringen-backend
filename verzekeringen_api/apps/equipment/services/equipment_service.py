@@ -36,6 +36,19 @@ def inuits_equipment_create(
     return equipment
 
 
+def inuits_equipment_update(*, equipment: InuitsEquipment, **fields) -> InuitsEquipment:
+    equipment.nature = fields.get("nature", equipment.nature)
+    equipment.description = fields.get("description", equipment.description)
+    equipment.total_value = fields.get("total_value", equipment.total_value)
+    equipment.owner_non_member = fields.get("owner_non_member", equipment.owner_non_member)
+    equipment.owner_member_group_admin_id = fields.get("owner_member_id", equipment.owner_member_group_admin_id)
+
+    equipment.full_clean()
+    equipment.save()
+
+    return equipment
+
+
 @transaction.atomic
 def equipment_create(
     *,
