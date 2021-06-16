@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "apps.equipment",
     "apps.locations",
     "apps.insurances",
+    "apps.info",
     "mozilla_django_oidc",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
