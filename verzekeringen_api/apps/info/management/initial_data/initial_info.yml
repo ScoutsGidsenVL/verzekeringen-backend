@@ -1,0 +1,3 @@
+# Put the initial info values here, can be imported with addinfovariables command
+test: "<div>HELLO WORLD</div>"
+test2: "<div>HELLO WORLD AGAIN</div>"
