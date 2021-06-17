@@ -163,15 +163,13 @@ REST_FRAMEWORK = {
 }
 
 # Email
-# email = env.dj_email_url("EMAIL_URL")
-# EMAIL_HOST = email["EMAIL_HOST"]
-# EMAIL_PORT = email["EMAIL_PORT"]
-# EMAIL_HOST_PASSWORD = email["EMAIL_HOST_PASSWORD"]
-# EMAIL_HOST_USER = email["EMAIL_HOST_USER"]
-# EMAIL_USE_TLS = email["EMAIL_USE_TLS"]
+# We are going to use anymail which maps multiple providers like sendinblue with default django mailing
+# For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
 
-# DEFAULT_FROM_EMAIL = env.str("EMAIL_SENDER")
-# DEFAULT_EMAIL_RECIPIENTS = env.list("EMAIL_RECIPIENTS")
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": "<API key here, get it from env file when you have it ofcourse>",
+}
 
 # CORS
 
