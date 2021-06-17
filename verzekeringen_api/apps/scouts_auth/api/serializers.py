@@ -28,6 +28,7 @@ class UserDetailOutputSerializer(serializers.ModelSerializer):
             "scouts_groups",
             "date_joined",
             "permissions",
+            "group_admin_id",
         )
 
     def get_permissions(self, obj):
