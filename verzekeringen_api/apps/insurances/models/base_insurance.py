@@ -42,8 +42,8 @@ class BaseInsurance(models.Model):
     _listed = models.CharField(db_column="lijstok", max_length=1, default="N")
 
     created_on = models.DateTimeField(db_column="datumvaninvulling", null=True)
-    _start_date = models.DateField(db_column="begindatum", null=True)
-    _end_date = models.DateField(db_column="einddatum", null=True)
+    _start_date = models.DateTimeField(db_column="begindatum", null=True)
+    _end_date = models.DateTimeField(db_column="einddatum", null=True)
     payment_date = models.DateTimeField(db_column="betalingsdatum", null=True, blank=True)
 
     responsible_member = models.ForeignKey(Member, db_column="verantwoordelijkeid", on_delete=models.CASCADE)
@@ -116,11 +116,8 @@ class BaseInsurance(models.Model):
     def listed(self, value):
         self._listed = parse_bool_to_char(value)
 
-    # Because of the old database Datefields return as datetime, fix this
     @property
     def start_date(self):
-        if type(self._start_date) == datetime:
-            return self._start_date.date()
         return self._start_date
 
     @start_date.setter
@@ -129,8 +126,6 @@ class BaseInsurance(models.Model):
 
     @property
     def end_date(self):
-        if type(self._end_date) == datetime:
-            return self._end_date.date()
         return self._end_date
 
     @end_date.setter

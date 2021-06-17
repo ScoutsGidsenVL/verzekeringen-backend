@@ -187,8 +187,8 @@ class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializ
 # Input
 class BaseInsuranceCreateInputSerializer(serializers.Serializer):
     group = serializers.CharField(source="group_id", max_length=6)
-    start_date = serializers.DateField()
-    end_date = serializers.DateField()
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
     comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
     responsible_phone_number = serializers.CharField(max_length=15, required=False)
 
