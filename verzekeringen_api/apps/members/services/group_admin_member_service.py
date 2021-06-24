@@ -14,8 +14,8 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     response.raise_for_status()
     member_data = response.json()
 
-    birth_date_str = member_data.get("geboortedatum")
     try:
+        birth_date_str = member_data.get("vgagegevens").get("geboortedatum")
         birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
     except:
         birth_date = None
