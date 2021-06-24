@@ -22,7 +22,7 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
 
     addresses = member_data.get("adressen", [])
     if len(addresses) == 0:
-        raise Error("Something went wrong, chosen member has no address")
+        raise Exception("Something went wrong, chosen member has no address")
     raw_address = addresses[0]
     postcode_city = PostcodeCity(postcode=raw_address.get("postcode"), name=raw_address.get("gemeente"))
 
