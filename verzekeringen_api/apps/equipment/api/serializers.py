@@ -177,7 +177,8 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
         # Validate wether membership number of member is valid
         request = self.context.get("request", None)
         try:
-            GroupAdminMemberService.group_admin_member_detail(active_user=request.user, group_admin_id=value)
+            if value:
+                GroupAdminMemberService.group_admin_member_detail(active_user=request.user, group_admin_id=value)
         except:
             raise serializers.ValidationError("Invalid member id given")
         return value

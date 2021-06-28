@@ -6,6 +6,16 @@ from ..utils import GroupAdminMember
 
 
 def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str):
+    """
+        Makes call to IDP to retrieve member details.
+
+    Args:
+        active_user (scouts_auth.User): settings.AUTH_USER_MODEL
+        group_admin_id (str): foreign id
+
+    Returns: GroupAdminMember
+
+    """
     response = requests.get(
         "{0}/{1}".format(settings.GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT, group_admin_id),
         headers={"Authorization": "Bearer {0}".format(active_user.access_token)},

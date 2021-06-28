@@ -77,7 +77,11 @@ class InuitsEquipment(models.Model):
         on_delete=models.CASCADE,
     )
     # Save some group admin id of owner, all detailed info will be gotten from group admin
-    owner_member_group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
+    owner_member_group_admin_id = models.CharField(
+        db_column="ga_id",
+        max_length=255,
+        blank=True,
+        null=True)
 
     group_number = models.CharField(max_length=6)
 
