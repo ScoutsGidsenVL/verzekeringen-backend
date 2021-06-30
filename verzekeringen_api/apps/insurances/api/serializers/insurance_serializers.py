@@ -57,6 +57,8 @@ class InsuranceListOutputSerializer(serializers.ModelSerializer):
     type = InsuranceTypeOutputSerializer(read_only=True)
     group = GroupOutputSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
 
     class Meta:
         model = BaseInsurance
@@ -89,6 +91,8 @@ class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     type = InsuranceTypeOutputSerializer(read_only=True)
     group = GroupOutputSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_status(self, obj):
