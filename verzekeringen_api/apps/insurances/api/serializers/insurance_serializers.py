@@ -26,6 +26,8 @@ from apps.equipment.api.serializers import (
     EquipmentNestedOutputSerializer,
     EquipmentInputSerializer,
 )
+
+from apps.base.serializers import DateTimeTZField
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
 from ...models import (
     BaseInsurance,
@@ -57,8 +59,8 @@ class InsuranceListOutputSerializer(serializers.ModelSerializer):
     type = InsuranceTypeOutputSerializer(read_only=True)
     group = GroupOutputSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
-    start_date = serializers.DateTimeField()
-    end_date = serializers.DateTimeField()
+    start_date = DateTimeTZField()
+    end_date = DateTimeTZField()
 
     class Meta:
         model = BaseInsurance
@@ -91,8 +93,8 @@ class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     type = InsuranceTypeOutputSerializer(read_only=True)
     group = GroupOutputSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
-    start_date = serializers.DateTimeField()
-    end_date = serializers.DateTimeField()
+    start_date = DateTimeTZField()
+    end_date = DateTimeTZField()
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_status(self, obj):
@@ -191,8 +193,8 @@ class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializ
 # Input
 class BaseInsuranceCreateInputSerializer(serializers.Serializer):
     group = serializers.CharField(source="group_id", max_length=6)
-    start_date = serializers.DateTimeField()
-    end_date = serializers.DateTimeField()
+    start_date = DateTimeTZField()
+    end_date = DateTimeTZField()
     comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
     responsible_phone_number = serializers.CharField(max_length=15, required=False)
 
