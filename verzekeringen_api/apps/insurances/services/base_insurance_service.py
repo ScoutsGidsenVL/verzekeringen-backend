@@ -28,7 +28,6 @@ def base_insurance_creation_fields(
     if not group_object:
         raise ValidationError("Given group %s is not a valid group of user" % group_id)
     member = MemberService.member_create_from_user(user=created_by, phone_number=responsible_phone_number)
-    print(start_date)
     fields = {
         "status": InsuranceStatus.NEW,
         "type": type,
