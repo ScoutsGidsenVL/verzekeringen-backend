@@ -71,6 +71,7 @@ class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipment
         fields = (
+            "id",
             "nature",
             "description",
             "total_value",
