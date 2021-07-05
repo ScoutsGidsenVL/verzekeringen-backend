@@ -10,7 +10,7 @@ from ...services import InsuranceDraftService
 class InsuranceDraftViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["created_on"]
-    ordering = ["created_on"]
+    ordering = ["-created_on"]
 
     def get_queryset(self):
         return InsuranceDraft.objects.all().allowed(self.request.user)
