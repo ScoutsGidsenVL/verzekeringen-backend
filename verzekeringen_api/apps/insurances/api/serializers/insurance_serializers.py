@@ -61,10 +61,11 @@ class InsuranceListOutputSerializer(serializers.ModelSerializer):
     responsible_member = MemberNestedOutputSerializer(read_only=True)
     start_date = DateTimeTZField()
     end_date = DateTimeTZField()
+    created_on = DateTimeTZField()
 
     class Meta:
         model = BaseInsurance
-        fields = ("id", "status", "type", "group", "start_date", "end_date", "responsible_member")
+        fields = ("id", "status", "type", "group", "start_date", "end_date", "responsible_member", "created_on")
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_status(self, obj):
