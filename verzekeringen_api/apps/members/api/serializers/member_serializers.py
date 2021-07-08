@@ -23,6 +23,7 @@ class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = NonMember
         fields = (
+            "id",
             "last_name",
             "first_name",
             "phone_number",
@@ -42,6 +43,7 @@ class NonMemberCompanyNestedOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = NonMember
         fields = (
+            "id",
             "company_name",
             "phone_number",
             "birth_date",
