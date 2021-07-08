@@ -40,7 +40,8 @@ from ...services import (
 
 
 class InsuranceViewSet(viewsets.GenericViewSet):
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['_group_number']
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
 
