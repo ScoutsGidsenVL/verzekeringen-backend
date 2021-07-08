@@ -7,7 +7,14 @@ from ...models import Member, NonMember, InuitsNonMember
 class MemberNestedOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ("id", "last_name", "first_name", "phone_number", "birth_date", "membership_number", "email")
+        fields = ("id",
+                  "last_name",
+                  "first_name",
+                  "phone_number",
+                  "birth_date",
+                  "membership_number",
+                  "email",
+                  "group_admin_id")
 
 
 class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
