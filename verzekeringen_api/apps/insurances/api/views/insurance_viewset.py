@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, permissions, filters
 from rest_framework.response import Response
@@ -46,7 +47,11 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     ordering = ["-created_on"]
 
     def get_queryset(self):
-        return BaseInsurance.objects.all().allowed(self.request.user)
+        return BaseInsurance.objects\
+            .filter(
+                created_on__gte=datetime.now() - timedelta(days=3 * 365)
+            )\
+            .allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceListOutputSerializer})
     def retrieve(self, request, pk=None):
