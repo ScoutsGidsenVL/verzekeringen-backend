@@ -6,3 +6,4 @@ from . import temporary_vehicle_insurance_service as TemporaryVehicleInsuranceSe
 from . import event_insurance_service as EventInsuranceService
 from . import equipment_insurance_service as EquipmentInsuranceService
 from . import insurance_draft_service as InsuranceDraftService
+from . import insurance_claim_service as InsuranceClaimService

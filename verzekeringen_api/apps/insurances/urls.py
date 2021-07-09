@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .api.views import (
+    InsuranceClaimViewSet,
     InsuranceTypeViewSet,
     InsuranceViewSet,
     InsuranceStatusViewSet,
@@ -14,6 +15,7 @@ from .api.views import (
 router = routers.SimpleRouter()
 router.register(r"insurance_types", InsuranceTypeViewSet, "InsuranceType")
 router.register(r"insurances", InsuranceViewSet, "Insurance")
+router.register(r"insurances_claims", InsuranceClaimViewSet, "Insurance Claims")
 router.register(r"insurance_drafts", InsuranceDraftViewSet, "InsuranceDraft")
 router.register(r"insurance_statuses", InsuranceStatusViewSet, "InsuranceStatus")
 router.register(r"insurance_group_sizes", GroupSizeViewSet, "GroupSize")
