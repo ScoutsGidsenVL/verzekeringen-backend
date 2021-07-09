@@ -106,8 +106,8 @@ class MemberNestedCreateInputSerializer(serializers.Serializer):
 class NonMemberCreateInputSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=25)
     first_name = serializers.CharField(max_length=15)
-    phone_number = serializers.CharField(max_length=15)
-    birth_date = serializers.DateField()
+    phone_number = serializers.CharField(max_length=15, required=False)
+    birth_date = serializers.DateField(required=False)
     street = serializers.CharField(max_length=100)
     number = serializers.CharField(max_length=5)
     letter_box = serializers.CharField(max_length=5, required=False, allow_blank=True)
