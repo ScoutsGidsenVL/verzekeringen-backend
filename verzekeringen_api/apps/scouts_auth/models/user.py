@@ -19,7 +19,9 @@ class User(AbstractUser):
     scouts_groups: list = []
 
     def fetch_detailed_group_info(self):
-        detailed_groups = []
+        detailed_groups = dict()
+        # refs: #79675 - distinct members groups
         for partial_group in self.partial_scouts_groups:
-            detailed_groups.append(GroupAdminService.get_detailed_group_info(partial_group))
-        self.scouts_groups = detailed_groups
+            if not partial_group in detailed_groups:
+                detailed_groups[partial_group.id] = GroupAdminService.get_detailed_group_info(partial_group)
+        self.scouts_groups = detailed_groups.values()
