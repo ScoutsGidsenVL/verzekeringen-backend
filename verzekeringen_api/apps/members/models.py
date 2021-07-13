@@ -1,6 +1,8 @@
 from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
+
+from . import enums
 from .managers import InuitsNonMemberManager
 from .utils import PostcodeCity
 
@@ -109,6 +111,7 @@ class InuitsNonMember(models.Model):
     comment = models.CharField(max_length=500, blank=True)
     # Keep group number
     group_number = models.CharField(max_length=6)
+    sex = models.CharField(max_length=1, null=True, blank=True, choices=enums.Sex.choices)
 
     @property
     def full_name(self):
