@@ -4,6 +4,7 @@ from apps.insurances.models.enums.insurance_claim import ActivityType, DamageTyp
 from apps.members.models import Member, InuitsNonMember
 from apps.scouts_auth.models import User
 from django.core.exceptions import ValidationError
+from jsonfield import JSONField
 
 
 class InsuranceClaim(models.Model):
@@ -27,7 +28,8 @@ class InsuranceClaim(models.Model):
     bank_account = models.CharField(max_length=30, null=True, blank=True)
     date_of_accident = models.DateTimeField()
     activity = models.CharField(max_length=1024)
-    activity_type = models.CharField(max_length=30, choices=ActivityType.choices)
+    # Custom JSONField
+    activity_type = JSONField(max_length=128)
     used_transport = models.CharField(max_length=30, null=True, blank=True)
     damage_type = models.CharField(max_length=30, choices=DamageType.choices, null=True, blank=True)
     description = models.CharField(max_length=1024)
