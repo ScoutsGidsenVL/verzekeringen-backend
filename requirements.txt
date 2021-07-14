@@ -115,6 +115,9 @@ jinja2==3.0.1; python_version >= "3.6" \
 josepy==1.8.0; python_version >= "3.6" \
     --hash=sha256:6d632fcdaf0bed09e33f81f13b10575d4f0b7c37319350b725454e04a41e6a49 \
     --hash=sha256:a5a182eb499665d99e7ec54bb3fe389f9cbc483d429c9651f20384ba29564269
+jsonfield==3.1.0; python_version >= "3.6" \
+    --hash=sha256:df857811587f252b97bafba42e02805e70a398a7a47870bc6358a0308dd689ed \
+    --hash=sha256:7e4e84597de21eeaeeaaa7cc5da08c61c48a9b64d0c446b2d71255d01812887a
 markupsafe==2.0.1; python_version >= "3.6" \
     --hash=sha256:f9081981fe268bd86831e5c75f7de206ef275defcb82bc70740ae6dc507aee51 \
     --hash=sha256:0955295dd5eec6cb6cc2fe1698f4c6d84af2e92de33fbcac4111913cd100a6ff \
