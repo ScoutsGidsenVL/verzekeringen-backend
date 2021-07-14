@@ -11,10 +11,13 @@ from apps.members.api.serializers import MemberNestedCreateInputSerializer, NonM
 from ...models.insurance_claim import InsuranceClaim
 
 
+
 class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
     date_of_accident = DateTimeTZField()
     victim_member = serializers.SerializerMethodField()
     victim_non_member = InuitsNonMemberOutputSerializer()
+    activity_type = serializers.JSONField()
+
 
     class Meta:
         model = InsuranceClaim
@@ -24,6 +27,7 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
             "person",
             "date_of_accident",
             "activity",
+            "activity_type",
             "victim_member",
             "victim_non_member"
         )
@@ -63,6 +67,7 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     group = serializers.CharField(source="group_id")
     victim_member = serializers.CharField(required=False, allow_null=True)
     victim_non_member = InsuranceClaimNonMemberRelatedField(required=False, allow_null=True)
+    activity_type = serializers.JSONField()
 
     def validate_victim_member(self, value):
         # Validate wether membership number of member is valid

@@ -18,6 +18,7 @@ PyYAML = "^5.4.1"
 packaging = "^20.9"
 dj-email-url = "^1.0.2"
 django-anymail = {extras = ["sendinblue"], version = "^8.4"}
+jsonfield = "^3.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
