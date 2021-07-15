@@ -34,10 +34,10 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(insurances)
 
         if page is not None:
-            serializer = BaseInsuranceClaimSerializer(page, many=True)
+            serializer = BaseInsuranceClaimSerializer(page, many=True, context={"request": request})
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = BaseInsuranceClaimSerializer(insurances, many=True)
+            serializer = BaseInsuranceClaimSerializer(insurances, many=True, context={"request": request})
             return Response(serializer.data)
 
     @swagger_auto_schema(
