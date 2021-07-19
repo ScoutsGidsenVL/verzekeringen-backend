@@ -24,7 +24,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})
     def retrieve(self, request, pk=None):
         claim = self.get_object()
-        serializer = InsuranceClaimDetailOutputSerializer(claim)
+        serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
 
         return Response(serializer.data)
 
