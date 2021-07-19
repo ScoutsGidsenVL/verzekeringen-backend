@@ -1,0 +1,1866 @@
+[
+  {
+    "name": "Afghanistan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Albanië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Algerije",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Amerikaanse Maagdeneilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Amerikaanse ondergeschikte afgelegen eilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Amerikaans-Samoa",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Andorra",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Angola",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Anguilla",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Antarctica",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Antigua en Barbuda",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Argentinië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Armenië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Aruba",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Australië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Azerbeidjan (grens = Kaukasus)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Azerbeidzjan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bahama's",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bahrein",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bangladesh",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Barbados",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Belarus; Wit-Rusland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "België",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering",
+      "TypeEenmaligeActiviteit",
+      "TypeEvenementenVerzekering"
+    ]
+  },
+  {
+    "name": "Belize",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Benin",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bermuda",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bhutan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bolivia",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bosnië en Herzegovina",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Botswana",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bouveteiland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Brazilië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Brits Territorium in de Indische Oceaan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Britse Maagdeneilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Brunei",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Bulgarije",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Burkina Faso",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Burundi",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Cambodja",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Canada",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Caymaneilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Centraal-Afrikaanse Republiek",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Chili",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "China",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Christmaseiland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Cocoseilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Colombia",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Comoren",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Congo",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Cookeilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Costa Rica",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Cuba",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Cyprus",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Democratische Republiek Congo",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Denemarken",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Djibouti",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Dominica",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Dominicaanse Republiek",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Duitsland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Ecuador",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Egypte",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "El Salvador",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Equatoriaal-Guinea",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Eritrea",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Estland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Ethiopië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Faeröer",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Falklandeilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Fiji",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Filipijnen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Finland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Frankrijk",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Franse Gebieden in de zuidelijke Indische Oceaan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Frans-Guyana",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Frans-Polynesië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Gabon",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Gambia",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Georgië (grens = Kaukasus)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Georgië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Ghana",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Gibraltar",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Grenada",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Griekenland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Groenland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Guadeloupe",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Guam",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Guatemala",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Guinee",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Guinee-Bissau",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Guyana",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Haïti",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Heard- en McDonaldeilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Honduras",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Hongarije",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Hongkong",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Ierland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "IJsland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "India",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Indonesië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Irak",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Iran",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Israël",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Italië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Ivoorkust",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Jamaica",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Japan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Jemen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Jordanië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Kaapverdië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Kameroen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Kazachstan (grens = Oeralrivier)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Kazachstan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Kenia; Kenya",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Kirgizië; Kirgizstan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Kiribati",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Koeweit",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Kosovo",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Kroatië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Laos",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Lesotho",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Letland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Libanon",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Liberia",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Libië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Liechtenstein",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Litouwen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Luxemburg",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Macau",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Macedonië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Madagaskar",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Malawi",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Maldiven",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Maleisië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Mali",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Malta",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Marokko",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Marshalleilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Martinique",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Mauritanië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Mauritius",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Mayotte",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Mexico",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Micronesia",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Moldavië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Monaco",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Mongolië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Montenegro",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Montserrat",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Mozambique",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Myanmar",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Namibië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Nauru",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Nederland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Nederlandse Antillen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Nepal",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Nicaragua",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Nieuw-Caledonië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Nieuw-Zeeland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Niger",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Nigeria",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Niue",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Noordelijke Marianen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Noord-Korea",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Noorwegen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Norfolkeiland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Oekraïne",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Oezbekistan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Oman",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Oostenrijk",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Oost-Timor",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Pakistan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Palau; Belau",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Panama",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Papoea-Nieuw-Guinea",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Paraguay",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Peru",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Pitcairneilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Polen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Portugal",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Puerto Rico; Porto Rico",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Qatar",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Réunion",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Roemenië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Rusland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Rusland (met uitsluiting van Siberië)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Rwanda",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Saint Kitts en Nevis",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Saint Lucia",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Saint Vincent en de Grenadines",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Saint-Pierre en Miquelon",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Salomonseilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Samoa",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "San Marino",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Sao Tomé en Principe",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Saudi-Arabië; Saoedi-Arabië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Senegal",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Schotland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Servië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Seychellen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Sierra Leone",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Singapore",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Sint-Helena",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Slovenië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Slowakije",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Somalië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Spanje (zonder de Canarische eilanden, Ceuta en Melilla)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Spanje (Canarische eilanden)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Spanje (Ceuta)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Spanje (Melilla)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Sri Lanka",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Sudan; Soedan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Suriname",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Svalbard en Jan Mayen",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Swaziland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Syrië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Tadzjikistan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Taiwan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Tanzania",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Thailand",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Togo",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Tokelau-eilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Tonga",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Trinidad en Tobago",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Tsjaad",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Tsjechië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Tunesië",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Turkije (grens = de Dardanellen)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Turkije",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Turkmenistan",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Turks- en Caicoseilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Tuvalu",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Uganda; Oeganda",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Uruguay",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Vanuatu",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Heilige Stoel (Vaticaanstad)",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Venezuela",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Verenigd Koninkrijk",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Verenigde Arabische Emiraten",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Verenigde Staten",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Vietnam",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Wallis en Futuna",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Westelijke Sahara",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Wit-Rusland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto"
+    ]
+  },
+  {
+    "name": "Zambia",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Zimbabwe",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Zuid-Afrika",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Zuid-Georgië en Zuidelijke Sandwicheilanden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Zuid-Korea",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto"
+    ]
+  },
+  {
+    "name": "Zweden",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  },
+  {
+    "name": "Zwitserland",
+    "applicable_types": [
+      "TypeTijdelijkeVerzekering",
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeEthiasAssistanceMetAuto",
+      "TypeTijdelijkeAutoverzekering",
+      "TypeGroepsmateriaalVerzekering"
+    ]
+  }
+]

@@ -24,6 +24,6 @@ class Country(models.Model):
     objects = CountryManager()
 
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=40, unique=True)
+    name = models.CharField(max_length=60, unique=True)
 
     insurance_types = models.ManyToManyField("insurances.InsuranceType", related_name="country_options")

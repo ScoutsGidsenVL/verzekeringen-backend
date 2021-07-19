@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from apps.insurances.models import InsuranceType
 from ...models import Country
+import json
 
 
 class Command(BaseCommand):
@@ -11,24 +12,25 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         all_countries_path = os.path.join(
-            settings.BASE_DIR, "apps/locations/management/initial_data/all_countries.txt"
+            settings.BASE_DIR, "apps/locations/management/initial_data/countries.json"
         )
 
-        with open(all_countries_path, "r") as stream:
-            all_country_names = stream.read().splitlines()
-
-        for name in all_country_names:
-            countries = Country.objects.filter(name=name)
-            if not countries:
-                country = Country(name=name)
-                country.full_clean()
-                country.save()
-            else:
-                country = countries[0]
+        # Clear insurance types for all countries
+        countries: list[Country] = Country.objects.all()
+        for country in countries:
             country.insurance_types.clear()
-            country.insurance_types.add(InsuranceType.objects.temporary())
-            country.insurance_types.add(InsuranceType.objects.travel_assistance_without_vehicle())
-            country.insurance_types.add(InsuranceType.objects.travel_assistance_with_vehicle())
-            country.insurance_types.add(InsuranceType.objects.temporary_vehicle())
-            country.insurance_types.add(InsuranceType.objects.equipment())
-            country.save()
+
+        # Load json file
+        with open(all_countries_path, "r") as stream:
+            content = stream.read()
+            countries = json.loads(content)
+
+        # assign insurance countries
+        for country in countries:
+            print(country['name'])
+            obj: Country = Country.objects.filter(name=country['name']).get_or_create(name=country['name'])[0]
+            for type in country['applicable_types']:
+                print("\t - %s" % (type))
+                obj.insurance_types.add(InsuranceType.objects.filter(name=type).get())
+
+            obj.save()
