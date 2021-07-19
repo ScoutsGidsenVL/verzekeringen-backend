@@ -23,11 +23,15 @@ class VehicleOutputSerializer(serializers.Serializer):
     brand = serializers.CharField()
     license_plate = serializers.CharField()
     construction_year = serializers.DateField(format="%Y")
-    trailer = serializers.BooleanField(source="has_trailer")
+    trailer = serializers.SerializerMethodField()
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_type(self, obj):
         return EnumOutputSerializer(parse_choice_to_tuple(VehicleType(obj.type))).data
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_trailer(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(VehicleTrailerOption(obj.trailer))).data
 
 
 class VehicleWithChassisOutputSerializer(VehicleOutputSerializer):
