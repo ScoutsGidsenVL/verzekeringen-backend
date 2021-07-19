@@ -48,6 +48,10 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
     date = DateTimeTZField()
     date_of_accident = DateTimeTZField()
 
+    class Meta:
+        model = InsuranceClaim
+        fields = ("__all__")
+
 
 class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     class Meta:
