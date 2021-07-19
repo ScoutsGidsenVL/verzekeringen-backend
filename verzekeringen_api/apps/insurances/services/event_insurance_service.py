@@ -8,6 +8,8 @@ from . import base_insurance_service as BaseInsuranceService
 
 def _calculate_total_cost(insurance: EventInsurance) -> Decimal:
     days = (insurance.end_date - insurance.start_date).days
+    if days == 0:
+        days = 1
 
     premium = CostVariable.objects.get_variable(insurance.type, "premium_%s" % str(insurance.event_size)).value
     cost = round(days * premium, 2)
