@@ -5,9 +5,11 @@ from .api.views import (
     GroupAdminMemberSearch,
     GroupAdminMemberDetail,
 )
+from .api.views.persons_viewset import PersonSearch
 
 router = routers.SimpleRouter()
 router.register(r"non_member", InuitsNonMemberViewSet, "InuitsNonMember")
+router.register(r"persons", PersonSearch, "PersonSearch")
 
 urlpatterns = router.urls
 

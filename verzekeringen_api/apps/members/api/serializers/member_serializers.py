@@ -1,6 +1,21 @@
 from rest_framework import serializers
 from apps.locations.api.serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
 from ...models import Member, NonMember, InuitsNonMember
+from ...utils import GroupAdminMember
+
+
+class PersonOutputSerializer(serializers.Serializer):
+    id = serializers.CharField(required=False)
+    last_name = serializers.CharField()
+    first_name = serializers.CharField()
+    phone_number = serializers.CharField()
+    email = serializers.EmailField(required=False)
+    birth_date = serializers.DateField()
+    group_admin_id = serializers.CharField(required=False)
+    is_member = serializers.SerializerMethodField()
+
+    def get_is_member(self, obj) -> bool:
+        return type(obj.__class__) == GroupAdminMember.__class__
 
 
 # Output
