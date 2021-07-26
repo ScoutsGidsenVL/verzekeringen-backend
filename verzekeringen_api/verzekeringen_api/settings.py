@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "apps.locations",
     "apps.insurances",
     "apps.info",
+    "apps.files",
     "mozilla_django_oidc",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -198,3 +199,16 @@ BELGIAN_CITY_SEARCH_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/
 GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken"
 GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid"
 COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
+
+
+# Storages/S3
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_ACCESS_KEY_ID = env.str("S3_ACCESS_KEY")
+AWS_SECRET_ACCESS_KEY = env.str("S3_ACCESS_SECRET")
+AWS_STORAGE_BUCKET_NAME = env.str("S3_STORAGE_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = env.str("S3_ENDPOINT_URL")
+AWS_DEFAULT_ACL = "public-read"
+AWS_S3_FILE_OVERWRITE = False
+AWS_S3_SIGNATURE_VERSION = "s3v4"
