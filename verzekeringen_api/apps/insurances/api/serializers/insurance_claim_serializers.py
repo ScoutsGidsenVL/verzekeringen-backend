@@ -2,6 +2,7 @@ from drf_yasg2.utils import swagger_serializer_method
 from rest_framework import serializers
 
 from apps.base.serializers import DateTimeTZField
+from apps.files.models import InsuranceClaimAttachment
 
 from apps.members.models import InuitsNonMember
 from apps.members.services import GroupAdminMemberService
@@ -10,6 +11,11 @@ from apps.members.api.serializers import MemberNestedCreateInputSerializer, NonM
     GroupAdminMemberDetailOutputSerializer, InuitsNonMemberOutputSerializer
 from ...models.insurance_claim import InsuranceClaim
 
+
+class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InsuranceClaimAttachment
+        exclude = ("insurance_claim", "file")
 
 
 class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
@@ -47,6 +53,7 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
 class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
     date = DateTimeTZField()
     date_of_accident = DateTimeTZField()
+    attachment = InsuranceClaimAttachmentSerializer()
 
     class Meta:
         model = InsuranceClaim

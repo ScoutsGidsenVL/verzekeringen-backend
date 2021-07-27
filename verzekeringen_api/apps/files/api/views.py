@@ -44,7 +44,8 @@ class FileViewSet(viewsets.GenericViewSet):
         if not claim:
             return HttpResponse(404, "Insurance claim not found")
 
-        if claim.file is not None:
+
+        if InsuranceClaimAttachment.objects.filter(insurance_claim=claim):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Attachment already have file!"})
 
         try:
