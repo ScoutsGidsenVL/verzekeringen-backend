@@ -198,3 +198,7 @@ BELGIAN_CITY_SEARCH_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/
 GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken"
 GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid"
 COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
+
+OUTGOING_EMAIL = env.str("OUTGOING_MAIL")
+PDF_TEMPLATE_PATH = "resources/aangifte_decrypted.pdf"
+TMP_FOLDER = "resources/temp/"

@@ -24,7 +24,7 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "date",
-            "person",
+            "declarant",
             "date_of_accident",
             "activity",
             "activity_type",
@@ -58,7 +58,7 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
         model = InsuranceClaim
         exclude = (
             "date",
-            "person",
+            "declarant",
             "group_number"
         )
 

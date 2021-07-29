@@ -1,4 +1,5 @@
 from django.db import models
+from typing import Union
 
 from apps.insurances.models.enums.insurance_claim import ActivityType, DamageType
 from apps.members.models import Member, InuitsNonMember
@@ -10,7 +11,9 @@ from jsonfield import JSONField
 class InsuranceClaim(models.Model):
     group_number = models.CharField(max_length=6, null=True)
     date = models.DateTimeField(blank=True)
-    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
+    declarant = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
+    declarant_city = models.CharField(max_length=30, null=True, blank=True)
+    legal_representative = models.CharField(max_length=128, null=True, blank=True)
     victim_member_group_admin_id = models.CharField(
         db_column="ga_id",
         max_length=255,
@@ -30,6 +33,7 @@ class InsuranceClaim(models.Model):
     activity = models.CharField(max_length=1024)
     # Custom JSONField
     activity_type = JSONField(max_length=128)
+    location = models.CharField(max_length=128, null=True, blank=True)
     used_transport = models.CharField(max_length=30, null=True, blank=True)
     damage_type = models.CharField(max_length=30, choices=DamageType.choices, null=True, blank=True)
     description = models.CharField(max_length=1024)
@@ -40,6 +44,7 @@ class InsuranceClaim(models.Model):
     official_report_description = models.CharField(max_length=1024, null=True, blank=True)
     pv_number = models.CharField(max_length=30, null=True, blank=True)
 
+    witness_name = models.CharField(max_length=128, null=True, blank=True)
     witness_description = models.CharField(max_length=1024, null=True, blank=True)
 
     leadership_description = models.CharField(max_length=1024, null=True, blank=True)
@@ -50,3 +55,9 @@ class InsuranceClaim(models.Model):
 
         if not self.victim_member_group_admin_id and not self.victim_non_member:
             raise ValidationError("At least one member have to be specified")
+
+    def get_victim(self) -> Union[InuitsNonMember, str]:
+        if self.victim_member_group_admin_id:
+            return self.victim_member_group_admin_id
+        return self.victim_non_member
+
