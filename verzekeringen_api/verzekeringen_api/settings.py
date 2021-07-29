@@ -212,3 +212,7 @@ AWS_S3_ENDPOINT_URL = env.str("S3_ENDPOINT_URL")
 AWS_DEFAULT_ACL = "public-read"
 AWS_S3_FILE_OVERWRITE = False
 AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+OUTGOING_EMAIL = env.str("OUTGOING_MAIL")
+PDF_TEMPLATE_PATH = "resources/aangifte_decrypted.pdf"
+TMP_FOLDER = "resources/temp/"
