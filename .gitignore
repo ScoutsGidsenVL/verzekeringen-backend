@@ -7,3 +7,4 @@ __pycache__
 !sonar-project.properties
 *.csv
 *.report
+verzekeringen_api/resources/temp/*.pdf

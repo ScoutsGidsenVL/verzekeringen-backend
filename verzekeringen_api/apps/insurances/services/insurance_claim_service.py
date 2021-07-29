@@ -12,13 +12,16 @@ def insurance_claim_create(
     *,
         created_by: settings.AUTH_USER_MODEL,
         id: int = None,
+        declarant_city: str = None,
         group_id: str,
         victim_member: str = None,
         victim_non_member: InuitsNonMember = None,
+        legal_representative: str = None,
         bank_account: str = None,
         date_of_accident: datetime,
         activity: str = None,
         activity_type: str = None,
+        location: str = None,
         used_transport: str = None,
         damage_type: str = None,
         description: str = None,
@@ -26,6 +29,7 @@ def insurance_claim_create(
         involved_party_birthdate: str = None,
         official_report_description:  str = None,
         pv_number:  str = None,
+        witness_name: str = None,
         witness_description:  str = None,
         leadership_description:  str = None
 ) -> InsuranceClaim:
@@ -36,7 +40,9 @@ def insurance_claim_create(
 
     claim = InsuranceClaim(
         date=datetime.now(),
-        person=created_by,
+        declarant=created_by,
+        declarant_city=declarant_city,
+        legal_representative=legal_representative,
         group_number=group_id,
         victim_member_group_admin_id=victim_member,
         victim_non_member=victim_non_member,
@@ -44,6 +50,7 @@ def insurance_claim_create(
         date_of_accident=date_of_accident,
         activity=activity,
         activity_type=activity_type,
+        location=location,
         used_transport=used_transport,
         damage_type=damage_type,
         description=description,
@@ -51,6 +58,7 @@ def insurance_claim_create(
         involved_party_birthdate=involved_party_birthdate,
         official_report_description=official_report_description,
         pv_number=pv_number,
+        witness_name=witness_name,
         witness_description=witness_description,
         leadership_description=leadership_description
         )
