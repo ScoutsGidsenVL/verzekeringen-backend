@@ -1,10 +1,27 @@
-youthapp_api.egg-info
-__pycache__
-.env
 .DS_Store
-*.log
-*.properties
-!sonar-project.properties
-*.csv
-*.report
-verzekeringen_api/resources/temp/*.pdf
+.idea
+.docker
+/api
+/frontend
+
+############################
+#Eclipse Specific GitIgnore#
+############################
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+db.sqlite3
+
+# CDT-specific
+.cproject
