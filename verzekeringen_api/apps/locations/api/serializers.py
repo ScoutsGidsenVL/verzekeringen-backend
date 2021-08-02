@@ -3,6 +3,7 @@ from ..services import LocationService
 from ..utils import PostcodeCity
 from ..models import Country
 
+
 # Output
 class BelgianPostcodeCityOutputSerializer(serializers.Serializer):
     postcode = serializers.CharField(read_only=True)
@@ -34,8 +35,9 @@ class BelgianPostcodeCityInputSerializer(serializers.Serializer):
         """
         Validate if postcode and city match, we only do this on input because we want to keep flexibility in system
         """
-        if not LocationService.validate_belgian_postcode_city(
-            postcode=data.get("postcode"), city_name=data.get("name")
-        ):
-            raise serializers.ValidationError("Postcode and city do not match")
+        # refs: #80041
+        # if not LocationService.validate_belgian_postcode_city(
+        #     postcode=data.get("postcode"), city_name=data.get("name")
+        # ):
+        #     raise serializers.ValidationError("Postcode and city do not match")
         return PostcodeCity(postcode=data.get("postcode"), name=data.get("name"))
