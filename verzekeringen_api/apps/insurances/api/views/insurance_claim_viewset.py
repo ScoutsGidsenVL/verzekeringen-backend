@@ -79,7 +79,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(Postcode_2)': victim.address.postcode_city.postcode,
             '(Gemeente_2)': victim.address.postcode_city.name,
             '(Land_2)': 'BELGIUM',
-            # '(Geslacht_2)': sex,
+            '(Geslacht_2)': sex,
             # '(Taal)': 'N',
             '(Geboorte_Dag)': f'{victim.birth_date.day:02d}',
             '(Geboorte_Maand)': f'{victim.birth_date.month:02d}',
@@ -201,16 +201,14 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         PdfWriter().write(self._get_temp_file(filename), template)
 
         email = EmailMessage(
-            'Insurance claim',
-            'Body goes here',
-            'insurance@inuits.eu',
-            [settings.OUTGOING_EMAIL],
-            reply_to=['another@example.com']
+            subject='Insurance claim',
+            body='Body goes here',
+            to=[settings.INSURANCE_MAIL],
         )
 
         email.attach_file(self._get_temp_file(filename))
-        # email.send()
-        # os.remove(('%s/%s' % (settings.TMP_FOLDER, filename))
+        email.send()
+        os.remove(('%s/%s' % (settings.TMP_FOLDER, filename)))
 
         output_serializer = InsuranceClaimDetailOutputSerializer(claim,  context={"request": request})
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
