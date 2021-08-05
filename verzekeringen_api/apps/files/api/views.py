@@ -68,7 +68,10 @@ class FileViewSet(viewsets.GenericViewSet):
     )
     def retrieve(self, request, pk=None):
         attachement = get_object_or_404(InsuranceClaimAttachment.objects, pk=pk)
-        return HttpResponse(attachement.file, content_type=attachement.content_type)
+        response = HttpResponse(attachement.file, content_type=attachement.content_type)
+        response['Content-Disposition'] = 'attachment; filename={}'.format(attachement.file.name)
+        return response
+
 
     @swagger_auto_schema(
         responses={
