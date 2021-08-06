@@ -39,6 +39,7 @@ class InsuranceClaim(models.Model):
     damage_type = models.CharField(max_length=30, choices=DamageType.choices, null=True, blank=True)
     description = models.CharField(max_length=1024)
 
+    involved_party_name = models.CharField(max_length=1024, null=True, blank=True)
     involved_party_description = models.CharField(max_length=1024, null=True, blank=True)
     involved_party_birthdate = models.DateField(null=True, blank=True)
 

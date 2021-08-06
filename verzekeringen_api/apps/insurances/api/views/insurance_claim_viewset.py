@@ -82,7 +82,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(Bus_2)': victim.address.letter_box,
             '(Land_2)': 'België',
             '(Geslacht_2)': claim.sex,
-            # '(Taal)': 'N',
+            '(Taal)': 'N',
             '(Geboorte_Dag)': f'{victim.birth_date.day:02d}',
             '(Geboorte_Maand)': f'{victim.birth_date.month:02d}',
             '(Geboorte_Jaar)': str(victim.birth_date.year),
@@ -97,7 +97,8 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(IBAN_3)': claim.bank_account[8:12] if claim.bank_account else '',
             '(IBAN_4)': claim.bank_account[12:16] if claim.bank_account else '',
             '(Beoefende_sport/activiteit)': claim.activity,
-            '(Naam_Andere)': claim.involved_party_description,
+            '(Naam_Andere)': claim.involved_party_name,
+            '(Adres_Andere)': claim.involved_party_description,
             '(Welke_autoriteit)': claim.official_report_description,
             '(Gebruikte_Vervoermiddel)': claim.used_transport,
             '(Nr_PV)': claim.pv_number,
@@ -156,7 +157,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
                     property['/Kids'][1].update(PdfDict(AS=PdfName('Neen'), V=PdfName('Neen')))
 
             if property['/T'] == '(Vaststelling)':
-                if claim.involved_party_description:
+                if claim.official_report_description or claim.pv_number:
                     property.update(PdfDict(AS=PdfName('Ja'), V=PdfName('Ja')))
                     property['/Kids'][0].update(PdfDict(AS=PdfName('Ja'), V=PdfName('Ja')))
                 else:
@@ -164,7 +165,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
                     property['/Kids'][1].update(PdfDict(AS=PdfName('Neen'), V=PdfName('Neen')))
 
             if property['/T'] == '(Getuigen)':
-                if claim.witness_description:
+                if claim.witness_description or claim.witness_name:
                     property.update(PdfDict(AS=PdfName('Ja'), V=PdfName('Ja')))
                     property['/Kids'][0].update(PdfDict(AS=PdfName('Ja'), V=PdfName('Ja')))
                 else:
@@ -180,21 +181,22 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
                     property['/Kids'][1].update(PdfDict(AS=PdfName('Neen'), V=PdfName('Neen')))
 
             if property['/T'] == '(Code_activiteit)':
-                if claim.activity_type[0] == 'REGULAR':
-                    property.update(PdfDict(AS=PdfName('400_Training_club'), V=PdfName('400_Training_club')))
-                    property['/Kids'][0].update(PdfDict(AS=PdfName('400_Training_club'), V=PdfName('400_Training_club')))
+                for activity_type in claim.activity_type:
+                    if activity_type == 'REGULAR':
+                        property.update(PdfDict(AS=PdfName('400_Training_club'), V=PdfName('400_Training_club')))
+                        # property['/Kids'][0].update(PdfDict(AS=PdfName('400_Training_club'), V=PdfName('400_Training_club')))
 
-                if claim.activity_type[0] == 'IRREGULAR_LOCATION':
-                    property.update(PdfDict(AS=PdfName('420_Training_individueel'), V=PdfName('420_Training_individueel')))
-                    property['/Kids'][1].update(PdfDict(AS=PdfName('420_Training_individueel'), V=PdfName('420_Training_individueel')))
+                    if activity_type == 'IRREGULAR_LOCATION':
+                        property.update(PdfDict(AS=PdfName('420_Training_individueel'), V=PdfName('420_Training_individueel')))
+                        # property['/Kids'][1].update(PdfDict(AS=PdfName('420_Training_individueel'), V=PdfName('420_Training_individueel')))
 
-                if claim.activity_type[0] == 'TRANSPORT':
-                    property.update(PdfDict(AS=PdfName('061_Op_weg_naar_van_activiteit'), V=PdfName('061_Op_weg_naar_van_activiteit')))
-                    property['/Kids'][2].update(PdfDict(AS=PdfName('061_Op_weg_naar_van_activiteit'), V=PdfName('061_Op_weg_naar_van_activiteit')))
+                    if activity_type == 'TRANSPORT':
+                        property.update(PdfDict(AS=PdfName('061_Op_weg_naar_van_activiteit'), V=PdfName('061_Op_weg_naar_van_activiteit')))
+                        # property['/Kids'][2].update(PdfDict(AS=PdfName('061_Op_weg_naar_van_activiteit'), V=PdfName('061_Op_weg_naar_van_activiteit')))
 
-                if claim.activity_type[0] == 'OTHER':
-                    property.update(PdfDict(AS=PdfName('087_Andere'), V=PdfName('087_Andere')))
-                    property['/Kids'][3].update(PdfDict(AS=PdfName('087_Andere'), V=PdfName('087_Andere')))
+                    if activity_type == 'OTHER':
+                        property.update(PdfDict(AS=PdfName('087_Andere'), V=PdfName('087_Andere')))
+                        # property['/Kids'][3].update(PdfDict(AS=PdfName('087_Andere'), V=PdfName('087_Andere')))
 
         filename = ('verzekeringen-%s.pdf' % (claim.id))
 
