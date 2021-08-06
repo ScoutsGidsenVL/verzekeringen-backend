@@ -218,7 +218,7 @@ AWS_DEFAULT_ACL = "public-read"
 AWS_S3_FILE_OVERWRITE = False
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-DEFAULT_FROM_EMAIL = [env.str("OUTGOING_MAIL")]
+DEFAULT_FROM_EMAIL = env.str("OUTGOING_MAIL")
 INSURANCE_MAIL = env.str("INSURANCE_MAIL")
 PDF_TEMPLATE_PATH = "resources/blank_insurance_claim.pdf"
 TMP_FOLDER = "resources/temp/"
