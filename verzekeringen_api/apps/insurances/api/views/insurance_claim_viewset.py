@@ -59,12 +59,13 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         owner: GroupAdminMember = group_admin_member_detail(active_user=claim.declarant, group_admin_id=request.user.group_admin_id)
         victim = claim.get_victim()
 
-        if not isinstance(victim, InuitsNonMember):
-            victim = group_admin_member_detail(active_user=request.user, group_admin_id=victim)
-        else:
+        if isinstance(victim, InuitsNonMember):
             victim.birth_date = claim.victim_birth_date
             victim.email = None
             victim.membership_number = "NO LIDNUMMER"
+        else:
+            victim = group_admin_member_detail(active_user=request.user, group_admin_id=victim)
+
 
         model = {
             '(Benaming)': claim.group_number,
@@ -75,6 +76,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(E-mail)': owner.email,
             '(Naam_Slachtoffer)': victim.first_name,
             '(Voornaam_Slachtoffer)': victim.last_name,
+            '(E-mail_Slachtoffer)': claim.victim_email,
             '(Straat_2)': victim.address.street,
             '(Nr_2)': victim.address.number,
             '(Postcode_2)': victim.address.postcode_city.postcode,
@@ -90,7 +92,6 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(Ongeval_Maand)': f'{claim.date_of_accident.date().month:02d}',
             # '(Uur_ongeval_1)': ('%s %s' % (f'{claim.date_of_accident.time().hour:02d}', f'{claim.date_of_accident.time().minute:02d}')),
             '(Ongeval_Jaar)': str(claim.date_of_accident.date().year),
-            '(E-mail_Slachtoffer)': victim.email,
             '(Lidnummer)': victim.membership_number,
             '(IBAN_1)': claim.bank_account[2:4] if claim.bank_account else '',
             '(IBAN_2)': claim.bank_account[4:8] if claim.bank_account else '',

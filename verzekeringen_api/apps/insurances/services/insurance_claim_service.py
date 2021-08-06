@@ -34,6 +34,7 @@ def insurance_claim_create(
         witness_description:  str = None,
         leadership_description:  str = None,
         sex: str,
+        victim_email: str,
         victim_birth_date: date
 ) -> InsuranceClaim:
 
@@ -66,6 +67,7 @@ def insurance_claim_create(
         witness_description=witness_description,
         leadership_description=leadership_description,
         sex=sex,
+        victim_email=victim_email,
         victim_birth_date=victim_birth_date,
         )
 

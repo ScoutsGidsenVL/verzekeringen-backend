@@ -54,6 +54,7 @@ class InsuranceClaim(models.Model):
     note = models.CharField(max_length=1024, null=True, blank=True)
     case_number = models.CharField(max_length=30, null=True, blank=True)
     sex = models.CharField(max_length=1, choices=Sex.choices, default='O')
+    victim_email = models.CharField(max_length=128, null=True)
     victim_birth_date = models.DateField(default="1970-01-01")
 
     def clean(self):

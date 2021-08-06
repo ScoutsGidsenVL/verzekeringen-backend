@@ -81,6 +81,7 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     victim_non_member = InsuranceClaimNonMemberRelatedField(required=False, allow_null=True)
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
+    victim_email = serializers.EmailField(required=True)
 
     def validate_bank_account(self, value):
         pattern = re.compile('^BE[0-9]{14}$')
