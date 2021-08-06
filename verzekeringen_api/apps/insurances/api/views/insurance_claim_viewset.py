@@ -79,6 +79,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(Nr_2)': victim.address.number,
             '(Postcode_2)': victim.address.postcode_city.postcode,
             '(Gemeente_2)': victim.address.postcode_city.name,
+            '(Bus_2)': victim.address.letter_box,
             '(Land_2)': 'België',
             '(Geslacht_2)': claim.sex,
             # '(Taal)': 'N',
