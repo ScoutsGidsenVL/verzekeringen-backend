@@ -2,6 +2,7 @@ from django.db import models
 from typing import Union
 
 from apps.insurances.models.enums.insurance_claim import ActivityType, DamageType
+from apps.members.enums import Sex
 from apps.members.models import Member, InuitsNonMember
 from apps.scouts_auth.models import User
 from django.core.exceptions import ValidationError
@@ -48,6 +49,10 @@ class InsuranceClaim(models.Model):
     witness_description = models.CharField(max_length=1024, null=True, blank=True)
 
     leadership_description = models.CharField(max_length=1024, null=True, blank=True)
+
+    note = models.CharField(max_length=1024, null=True, blank=True)
+    case_number = models.CharField(max_length=30, null=True, blank=True)
+    sex = models.CharField(max_length=1, choices=Sex.choices, default='O')
 
     def clean(self):
         if self.victim_non_member and self.victim_member_group_admin_id:

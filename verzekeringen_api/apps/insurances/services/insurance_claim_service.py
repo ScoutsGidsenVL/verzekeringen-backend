@@ -31,7 +31,8 @@ def insurance_claim_create(
         pv_number:  str = None,
         witness_name: str = None,
         witness_description:  str = None,
-        leadership_description:  str = None
+        leadership_description:  str = None,
+        sex: str
 ) -> InsuranceClaim:
 
     # validate group
@@ -60,7 +61,8 @@ def insurance_claim_create(
         pv_number=pv_number,
         witness_name=witness_name,
         witness_description=witness_description,
-        leadership_description=leadership_description
+        leadership_description=leadership_description,
+        sex=sex
         )
 
     claim.full_clean()

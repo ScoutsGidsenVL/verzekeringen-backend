@@ -61,9 +61,6 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
 
         if not isinstance(victim, InuitsNonMember):
             victim = group_admin_member_detail(active_user=request.user, group_admin_id=victim)
-            sex = None
-        else:
-            sex = victim.sex
 
         model = {
             '(Benaming)': claim.group_number,
@@ -79,7 +76,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(Postcode_2)': victim.address.postcode_city.postcode,
             '(Gemeente_2)': victim.address.postcode_city.name,
             '(Land_2)': 'België',
-            '(Geslacht_2)': sex,
+            '(Geslacht_2)': claim.sex,
             # '(Taal)': 'N',
             '(Geboorte_Dag)': f'{victim.birth_date.day:02d}',
             '(Geboorte_Maand)': f'{victim.birth_date.month:02d}',
@@ -127,14 +124,12 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
                     )
 
             if property['/T'] == '(Geslacht_2)':
-                # sex field should not be filled, so we dont offend X gender
-                pass
-                # if model.get('(Geslacht_2)') == 'M':
-                #     property.update(PdfDict(AS=PdfName('M'), V=PdfName('M')))
-                #     property['/Kids'][0].update(PdfDict(AS=PdfName('M'), V=PdfName('M')))
-                # else:
-                #     property.update(PdfDict(AS=PdfName('V'), V=PdfName('V')))
-                #     property['/Kids'][1].update(PdfDict(AS=PdfName('V'), V=PdfName('V')))
+                if model.get('(Geslacht_2)') == 'M':
+                    property.update(PdfDict(AS=PdfName('M'), V=PdfName('M')))
+                    property['/Kids'][0].update(PdfDict(AS=PdfName('M'), V=PdfName('M')))
+                else:
+                    property.update(PdfDict(AS=PdfName('V'), V=PdfName('V')))
+                    property['/Kids'][1].update(PdfDict(AS=PdfName('V'), V=PdfName('V')))
 
             if property['/T'] == '(Taal)':
                 if model.get('(Taal)') == 'N':
