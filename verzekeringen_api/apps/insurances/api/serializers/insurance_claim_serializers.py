@@ -83,7 +83,7 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     bank_account = serializers.CharField(required=False, allow_null=True)
 
     def validate_bank_account(self, value):
-        pattern = re.compile('^BE[0-9]{14}&')
+        pattern = re.compile('^BE[0-9]{14}$')
         if not re.match(pattern, value):
             raise serializers.ValidationError("Invalid bank account number format. It has to be: BE68539007547034")
         return value
