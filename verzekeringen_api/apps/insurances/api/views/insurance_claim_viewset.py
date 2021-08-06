@@ -88,7 +88,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
             '(Geboorte_Jaar)': str(victim.birth_date.year),
             '(Ongeval_Dag)': f'{claim.date_of_accident.date().day:02d}',
             '(Ongeval_Maand)': f'{claim.date_of_accident.date().month:02d}',
-            '(Uur_ongeval_1)': ('%s %s' % (claim.date_of_accident.time().hour, claim.date_of_accident.time().minute)),
+            # '(Uur_ongeval_1)': ('%s %s' % (f'{claim.date_of_accident.time().hour:02d}', f'{claim.date_of_accident.time().minute:02d}')),
             '(Ongeval_Jaar)': str(claim.date_of_accident.date().year),
             '(E-mail_Slachtoffer)': victim.email,
             '(Lidnummer)': victim.membership_number,
