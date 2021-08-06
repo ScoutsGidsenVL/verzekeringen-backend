@@ -61,6 +61,10 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
 
         if not isinstance(victim, InuitsNonMember):
             victim = group_admin_member_detail(active_user=request.user, group_admin_id=victim)
+        else:
+            victim.birth_date = claim.victim_birth_date
+            victim.email = None
+            victim.membership_number = "NO LIDNUMMER"
 
         model = {
             '(Benaming)': claim.group_number,

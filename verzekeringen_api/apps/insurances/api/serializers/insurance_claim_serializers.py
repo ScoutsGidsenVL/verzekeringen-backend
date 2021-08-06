@@ -1,5 +1,6 @@
 from drf_yasg2.utils import swagger_serializer_method
 from rest_framework import serializers
+import re
 
 from apps.base.serializers import DateTimeTZField
 from apps.files.models import InsuranceClaimAttachment
@@ -79,6 +80,14 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     victim_member = serializers.CharField(required=False, allow_null=True)
     victim_non_member = InsuranceClaimNonMemberRelatedField(required=False, allow_null=True)
     activity_type = serializers.JSONField()
+    bank_account = serializers.CharField(required=False, allow_null=True)
+
+    def validate_bank_account(self, value):
+        pattern = re.compile('^BE[0-9]{14}&')
+        if not re.match(pattern, value):
+            raise serializers.ValidationError("Invalid bank account number format. It has to be: BE68539007547034")
+        return value
+
 
     def validate_victim_member(self, value):
         # Validate wether membership number of member is valid
