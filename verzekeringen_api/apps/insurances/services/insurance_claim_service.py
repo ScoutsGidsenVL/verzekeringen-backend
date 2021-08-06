@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -32,7 +32,8 @@ def insurance_claim_create(
         witness_name: str = None,
         witness_description:  str = None,
         leadership_description:  str = None,
-        sex: str
+        sex: str,
+        victim_birth_date: date
 ) -> InsuranceClaim:
 
     # validate group
@@ -62,7 +63,8 @@ def insurance_claim_create(
         witness_name=witness_name,
         witness_description=witness_description,
         leadership_description=leadership_description,
-        sex=sex
+        sex=sex,
+        victim_birth_date=victim_birth_date,
         )
 
     claim.full_clean()

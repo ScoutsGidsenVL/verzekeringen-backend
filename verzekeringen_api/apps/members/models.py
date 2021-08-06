@@ -121,6 +121,10 @@ class InuitsNonMember(models.Model):
     def postcode_city(self):
         return PostcodeCity(postcode=self.postcode, name=self.city)
 
+    @property
+    def address(self):
+        return Address(street=self.street, number=self.number, letter_box=self.letter_box, postcode=self.postcode, city=self.city)
+
 
 class Address(models.Model):
 
@@ -130,6 +134,10 @@ class Address(models.Model):
     letter_box = models.CharField(db_column="bus", max_length=5, null=True, blank=True)
     postcode = models.CharField(db_column="postcode", max_length=4)
     city = models.CharField(db_column="gemeente", max_length=40)
+
+    @property
+    def postcode_city(self):
+        return PostcodeCity(postcode=self.postcode, name=self.city)
 
     class Meta:
         db_table = "vrzk_adres"
