@@ -166,8 +166,8 @@ REST_FRAMEWORK = {
 # Email
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
-if env.str('DEBUG'):
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+if env.str("DEBUG"):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "mailcatcher"
     EMAIL_PORT = "1025"
 else:
@@ -221,4 +221,4 @@ AWS_S3_SIGNATURE_VERSION = "s3v4"
 DEFAULT_FROM_EMAIL = env.str("OUTGOING_MAIL")
 INSURANCE_MAIL = env.str("INSURANCE_MAIL")
 PDF_TEMPLATE_PATH = "resources/blank_insurance_claim.pdf"
-TMP_FOLDER = "resources/temp/"
+TMP_FOLDER = "resources/temp"
