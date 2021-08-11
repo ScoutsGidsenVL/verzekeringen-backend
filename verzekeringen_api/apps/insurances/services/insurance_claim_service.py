@@ -9,6 +9,7 @@ import os
 from django.conf import settings
 from django.core.mail import EmailMessage
 
+from ...mailing.services import sendTemplateEmail
 from ...members.services.group_admin_member_service import group_admin_member_detail
 from ...members.utils import GroupAdminMember
 
@@ -80,14 +81,11 @@ def insurance_claim_create(
 def send_pdf(claim):
     filename = generate_pdf(claim)
 
-    email = EmailMessage(
-        subject='Insurance claim',
-        body='Body goes here',
-        to=[settings.INSURANCE_MAIL],
+    sendTemplateEmail(
+        receivers=[settings.INSURANCE_MAIL],
+        template_id=settings.SENDINBLUE_TEMPLATE_ID,
+        file=filename,
     )
-
-    email.attach_file(filename)
-    email.send()
     os.remove(filename)
 
 
