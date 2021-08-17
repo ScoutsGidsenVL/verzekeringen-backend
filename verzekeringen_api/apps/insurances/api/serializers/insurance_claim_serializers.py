@@ -4,9 +4,11 @@ from rest_framework import serializers
 
 from apps.base.serializers import DateTimeTZField
 from apps.files.models import InsuranceClaimAttachment
+from apps.members.api.serializers import GroupAdminMemberListOutputSerializer
 from apps.members.enums import Sex
 from apps.members.models import InuitsNonMember
 from apps.members.services import GroupAdminMemberService
+from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from ...models.insurance_claim import InsuranceClaim, InsuranceClaimVictim
 
@@ -32,6 +34,7 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
     activity_type = serializers.JSONField()
     victim = InsuranceClaimVictimOutputListSerializer()
     group = GroupOutputSerializer()
+    declarant = serializers.SerializerMethodField()
 
     class Meta:
         model = InsuranceClaim
@@ -40,12 +43,17 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
             "group_number",
             "date",
             "declarant",
+            "declarant",
             "date_of_accident",
             "activity",
             "activity_type",
             "victim",
             "group"
         )
+
+    def get_declarant(self, object: InsuranceClaim):
+        data = group_admin_member_detail(active_user=self.context['request'].user, group_admin_id=object.declarant.group_admin_id)
+        return GroupAdminMemberListOutputSerializer(data).data
 
 
 class InsuranceClaimVictimOutputDetailSerializer(serializers.ModelSerializer):
