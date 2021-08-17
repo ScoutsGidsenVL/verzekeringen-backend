@@ -8,6 +8,7 @@ from apps.members.models import InuitsNonMember
 from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.members.utils import GroupAdminMember
 from apps.scouts_auth.models import User
+from apps.scouts_auth.services.group_admin_service import get_group_by_number
 from verzekeringen_api import settings
 
 
@@ -96,3 +97,8 @@ class InsuranceClaim(models.Model):
 
     note = models.CharField(max_length=1024, null=True, blank=True)
     case_number = models.CharField(max_length=30, null=True, blank=True)
+
+    @property
+    def group(self):
+        return get_group_by_number(self.group_number)
+

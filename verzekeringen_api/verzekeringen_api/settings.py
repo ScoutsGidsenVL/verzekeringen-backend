@@ -200,9 +200,11 @@ else:
 OIDC_RP_CLIENT_ID = env.str("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")
 
-BELGIAN_CITY_SEARCH_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/gis/gemeente"
-GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken"
-GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid"
+GROUP_ADMIN_BASE_URL = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga"
+BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"
+GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL +"/zoeken"
+GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL +"/lid"
+
 COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 
 

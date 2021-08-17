@@ -7,6 +7,7 @@ from apps.files.models import InsuranceClaimAttachment
 from apps.members.enums import Sex
 from apps.members.models import InuitsNonMember
 from apps.members.services import GroupAdminMemberService
+from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from ...models.insurance_claim import InsuranceClaim, InsuranceClaimVictim
 
 
@@ -15,6 +16,7 @@ class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
         model = InsuranceClaimAttachment
         exclude = ("insurance_claim", "file")
 
+
 class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaimVictim
@@ -22,12 +24,14 @@ class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
             'id',
             'first_name',
             'last_name'
-            ]
+        ]
+
 
 class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
     date_of_accident = DateTimeTZField()
     activity_type = serializers.JSONField()
     victim = InsuranceClaimVictimOutputListSerializer()
+    group = GroupOutputSerializer()
 
     class Meta:
         model = InsuranceClaim
@@ -39,7 +43,8 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
             "date_of_accident",
             "activity",
             "activity_type",
-            "victim"
+            "victim",
+            "group"
         )
 
 
@@ -47,6 +52,7 @@ class InsuranceClaimVictimOutputDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaimVictim
         fields = "__all__"
+
 
 class InsuranceClaimVictimInputSerializer(serializers.Serializer):
     class Meta:
