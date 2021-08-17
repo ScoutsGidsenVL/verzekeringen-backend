@@ -15,15 +15,25 @@ class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
         model = InsuranceClaimAttachment
         exclude = ("insurance_claim", "file")
 
+class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InsuranceClaimVictim
+        fields = [
+            'id',
+            'first_name',
+            'last_name'
+            ]
 
 class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
     date_of_accident = DateTimeTZField()
     activity_type = serializers.JSONField()
+    victim = InsuranceClaimVictimOutputListSerializer()
 
     class Meta:
         model = InsuranceClaim
         fields = (
             "id",
+            "group_number",
             "date",
             "declarant",
             "date_of_accident",
@@ -33,11 +43,10 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
         )
 
 
-class InsuranceClaimVictimOutputSerializer(serializers.ModelSerializer):
+class InsuranceClaimVictimOutputDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaimVictim
         fields = "__all__"
-
 
 class InsuranceClaimVictimInputSerializer(serializers.Serializer):
     class Meta:
@@ -85,7 +94,7 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
     date = DateTimeTZField()
     date_of_accident = DateTimeTZField()
     attachment = InsuranceClaimAttachmentSerializer()
-    victim = InsuranceClaimVictimOutputSerializer()
+    victim = InsuranceClaimVictimOutputDetailSerializer()
 
     class Meta:
         model = InsuranceClaim
