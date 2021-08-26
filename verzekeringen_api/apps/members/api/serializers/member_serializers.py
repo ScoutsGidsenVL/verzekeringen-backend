@@ -48,6 +48,7 @@ class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
             "letter_box",
             "postcode_city",
             "comment",
+            "inuits_non_member"
         )
 
 

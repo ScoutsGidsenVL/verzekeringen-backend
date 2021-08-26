@@ -51,12 +51,7 @@ class TemporaryVehicleInsurance(BaseInsurance):
         NonMember, through="ParticipantTemporaryVehicleInsurance", related_name="temporary_vehicle_insurances"
     )
 
-    inuits_vehicle = models.ForeignKey(
-        to=InuitsVehicle,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-    )
+    inuits_vehicle = models.ForeignKey(to=InuitsVehicle, null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "vrzktypetijdauto"
