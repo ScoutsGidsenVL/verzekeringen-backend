@@ -12,6 +12,7 @@ from .enums import (
     TemporaryVehicleParticipantType,
 )
 from .base_insurance import BaseInsurance
+from ...equipment.models import InuitsVehicle
 
 
 class TemporaryVehicleInsurance(BaseInsurance):
@@ -50,9 +51,16 @@ class TemporaryVehicleInsurance(BaseInsurance):
         NonMember, through="ParticipantTemporaryVehicleInsurance", related_name="temporary_vehicle_insurances"
     )
 
+    inuits_vehicle = models.ForeignKey(
+        to=InuitsVehicle,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+    )
+
     class Meta:
         db_table = "vrzktypetijdauto"
-        managed = False
+        managed = True
 
     def clean(self):
         super().clean()
