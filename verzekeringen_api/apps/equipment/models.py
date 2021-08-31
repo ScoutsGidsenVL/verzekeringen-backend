@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from apps.members.models import Member, NonMember, InuitsNonMember
 from .enums import VehicleType, VehicleTrailerOption
 from .managers import InuitsVehicleManager, InuitsEquipmentManager
+from ..insurances.models import TemporaryVehicleInsurance
 
 
 class Equipment(models.Model):
@@ -113,3 +114,13 @@ class InuitsVehicle(models.Model):
         if datetime.strptime("1900", "%Y") > value:
             raise ValidationError("Invalid construction year")
         return value
+
+
+class VehicleInuitsTemplate(models.Model):
+    temporary_vehicle_insurance = models.OneToOneField(
+        TemporaryVehicleInsurance,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        db_constraint=models.UniqueConstraint
+    )
+    inuits_vehicle = models.ForeignKey(InuitsVehicle, on_delete=models.CASCADE)

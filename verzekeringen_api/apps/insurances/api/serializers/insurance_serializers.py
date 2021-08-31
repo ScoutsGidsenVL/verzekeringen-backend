@@ -3,7 +3,7 @@ from drf_yasg2.utils import swagger_serializer_method
 from django.conf import settings
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
-from apps.equipment.models import InuitsVehicle
+from apps.equipment.models import InuitsVehicle, VehicleInuitsTemplate
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.members.api.serializers import (
     MemberNestedOutputSerializer,
@@ -145,7 +145,7 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
 
     class Meta:
         model = TemporaryVehicleInsurance
-        fields = base_insurance_detail_fields + ("insurance_options", "max_coverage", "vehicle", "owner", "drivers", "inuits_vehicle")
+        fields = base_insurance_detail_fields + ("insurance_options", "max_coverage", "vehicle", "owner", "drivers")
 
     @swagger_serializer_method(serializer_or_field=NonMemberNestedOutputSerializer)
     def get_owner(self, obj):
@@ -232,7 +232,6 @@ class TemporaryVehicleInsuranceCreateInputSerializer(BaseInsuranceCreateInputSer
     drivers = NonMemberCreateInputSerializer(many=True)
     owner = NonMemberOrCompanyCreateInputSerializer()
     vehicle = VehicleWithChassisInputSerializer()
-    inuits_vehicle = serializers.PrimaryKeyRelatedField(queryset=InuitsVehicle.objects.all(), required=False)
 
     def validate_drivers(self, value):
         if len(value) < 1:

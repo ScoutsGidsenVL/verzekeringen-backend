@@ -12,9 +12,10 @@ from apps.members.api.serializers import (
 )
 from apps.members.services import GroupAdminMemberService
 from apps.members.models import InuitsNonMember
-from ..models import InuitsVehicle, InuitsEquipment, Equipment
+from ..models import InuitsVehicle, InuitsEquipment, Equipment, VehicleInuitsTemplate
 from ..enums import VehicleType, VehicleTrailerOption
 from ..utils import Vehicle
+import json
 
 
 # Output
@@ -24,6 +25,16 @@ class VehicleOutputSerializer(serializers.Serializer):
     license_plate = serializers.CharField()
     construction_year = serializers.DateField(format="%Y")
     trailer = serializers.SerializerMethodField()
+    inuits_vehicle_id = serializers.SerializerMethodField()
+
+    @swagger_serializer_method(serializer_or_field=serializers.CharField)
+    def get_inuits_vehicle_id(self, obj) -> bool:
+        inuits_vehicle_template = VehicleInuitsTemplate.objects.filter(temporary_vehicle_insurance=self.context.id).first()
+        print(inuits_vehicle_template)
+        if inuits_vehicle_template:
+            return inuits_vehicle_template.inuits_vehicle.id
+
+        return None
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_type(self, obj):
@@ -130,6 +141,7 @@ class VehicleInputSerializer(serializers.Serializer):
     construction_year = serializers.DateField(input_formats=["%Y"])
     chassis_number = serializers.CharField(max_length=20, required=False, allow_null=True)
     trailer = serializers.ChoiceField(choices=VehicleTrailerOption.choices, required=False)
+    inuits_vehicle_id = serializers.CharField(max_length=36, required=False, allow_blank=True)
 
     def validate(self, data):
         return Vehicle(
@@ -139,6 +151,7 @@ class VehicleInputSerializer(serializers.Serializer):
             construction_year=data.get("construction_year"),
             chassis_number=data.get("chassis_number"),
             trailer=data.get("trailer", False),
+            inuits_vehicle_id=data.get("inuits_vehicle_id", None)
         )
 
 

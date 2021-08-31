@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.conf import settings
 from ..utils import PostcodeCity
-from ..models import Member, NonMember
+from ..models import Member, NonMember, NonMemberInuitsTemplate, InuitsNonMember
 
 
 def member_create_from_user(
@@ -59,7 +59,8 @@ def non_member_create(
     number: str,
     postcode_city: PostcodeCity,
     letter_box: str = "",
-    comment: str = "",
+    comment: str = None,
+    inuits_non_member_id: str = None,
 ) -> NonMember:
     non_member = NonMember(
         last_name=last_name,
@@ -75,5 +76,13 @@ def non_member_create(
     )
     non_member.full_clean()
     non_member.save()
+
+    if inuits_non_member_id:
+        inuits_non_member = InuitsNonMember.objects.filter(id=inuits_non_member_id).first()
+        if inuits_non_member:
+            NonMemberInuitsTemplate(
+                non_member=non_member,
+                inuits_non_member=inuits_non_member
+            ).save()
 
     return non_member

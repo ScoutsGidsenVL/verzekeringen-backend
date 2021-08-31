@@ -271,7 +271,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             **input_serializer.validated_data, created_by=request.user
         )
 
-        output_serializer = TemporaryVehicleInsuranceDetailOutputSerializer(created_insurance)
+        output_serializer = TemporaryVehicleInsuranceDetailOutputSerializer(created_insurance, context=created_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

@@ -94,7 +94,6 @@ class NonMember(models.Model):
     postcode = models.IntegerField(db_column="postcode", null=True, blank=True)
     city = models.CharField(db_column="gemeente", max_length=40, blank=True)
     comment = models.CharField(db_column="commentaar", max_length=500, blank=True)
-    inuits_non_member = models.ForeignKey(to=InuitsNonMember, null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "vrzknietleden"
@@ -143,3 +142,13 @@ class Address(models.Model):
     class Meta:
         db_table = "vrzk_adres"
         managed = False
+
+
+class NonMemberInuitsTemplate(models.Model):
+    non_member = models.OneToOneField(
+        NonMember,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        db_constraint=models.UniqueConstraint
+    )
+    inuits_non_member = models.ForeignKey(InuitsNonMember, on_delete=models.CASCADE)
