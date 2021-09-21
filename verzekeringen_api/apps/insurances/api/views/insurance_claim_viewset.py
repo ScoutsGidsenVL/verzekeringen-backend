@@ -1,6 +1,8 @@
 from drf_yasg2.utils import swagger_auto_schema
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from ..serializers import (
     BaseInsuranceClaimSerializer,
@@ -11,7 +13,9 @@ from ...services import InsuranceClaimService
 
 
 class InsuranceClaimViewSet(viewsets.GenericViewSet):
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['group_number']
+    search_fields = ['victim__first_name', 'victim__last_name']
     ordering_fields = ["date"]
     ordering = ["-date"]
 
