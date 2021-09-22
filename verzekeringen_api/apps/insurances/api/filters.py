@@ -23,4 +23,4 @@ class InsuranceClaimFilter(filters.FilterSet):
             logger.debug("Filtering InsuranceClaim instances with year %s", year_of_accident)
             return parent.filter(date_of_accident__year=year_of_accident)
 
-        return []
+        return parent.all()
