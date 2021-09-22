@@ -16,7 +16,7 @@ from ...services import InsuranceClaimService
 
 class InsuranceClaimViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
-    search_fields = ["victim__first_name", "victim__last_name", "group_number"]
+    search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]
     ordering_fields = ["date"]
     ordering = ["-date"]
     # Filters on the year of the accident
