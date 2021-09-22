@@ -40,6 +40,8 @@ class InsuranceClaimVictim(models.Model):
     # 81237
     # The get_member_number should be moved to a service, not on the model imho
     _member_detail: GroupAdminMember = None
+    # To allow django to filter on this field, it needs to be added to the model,
+    # thus triggering a migration. Check if this is ok with the scouts ?
     member_number = None
 
     def get_member_number(self, active_user: settings.AUTH_USER_MODEL):
