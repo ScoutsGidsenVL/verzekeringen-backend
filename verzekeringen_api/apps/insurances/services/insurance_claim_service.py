@@ -48,8 +48,8 @@ def insurance_claim_create(
 
     # Assuming that the group_admin_id has been loaded when adding the victim to the claim
     # @ricardo: check this please
-    if victim.group_admin_id:
-        victim.get_member_number()
+    # if victim.group_admin_id:
+    #     victim.get_member_number()
     victim.save()
 
     claim = InsuranceClaim(
