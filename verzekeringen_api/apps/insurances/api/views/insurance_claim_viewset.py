@@ -6,7 +6,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from ..serializers import (
     BaseInsuranceClaimSerializer,
-    InsuranceClaimInputSerializer, InsuranceClaimDetailOutputSerializer
+    InsuranceClaimInputSerializer,
+    InsuranceClaimDetailOutputSerializer,
 )
 from ...models.insurance_claim import InsuranceClaim
 from ...services import InsuranceClaimService
@@ -14,8 +15,8 @@ from ...services import InsuranceClaimService
 
 class InsuranceClaimViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['group_number']
-    search_fields = ['victim__first_name', 'victim__last_name', 'group_number']
+    filterset_fields = ["group_number"]
+    search_fields = ["victim__first_name", "victim__last_name", "victim__member_number", "group_number"]
     ordering_fields = ["date"]
     ordering = ["-date"]
 
@@ -49,8 +50,9 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         input_serializer = InsuranceClaimInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        claim: InsuranceClaim = InsuranceClaimService.insurance_claim_create(created_by=request.user,
-                                                                             **input_serializer.validated_data)
+        claim: InsuranceClaim = InsuranceClaimService.insurance_claim_create(
+            created_by=request.user, **input_serializer.validated_data
+        )
         InsuranceClaimService.send_pdf(claim=claim)
         output_serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

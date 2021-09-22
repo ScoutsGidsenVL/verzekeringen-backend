@@ -27,11 +27,7 @@ class InsuranceClaimVictim(models.Model):
     sex = models.CharField(max_length=1, null=True, blank=True, choices=Sex.choices)
     legal_representative = models.CharField(max_length=128, null=True, blank=True)
 
-    group_admin_id = models.CharField(
-        db_column="ga_id",
-        max_length=255,
-        blank=True,
-        null=True)
+    group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
     #
     non_member = models.ForeignKey(
         InuitsNonMember,
@@ -41,14 +37,20 @@ class InsuranceClaimVictim(models.Model):
         on_delete=models.SET_NULL,
     )
 
+    # 81237
+    # The get_member_number should be moved to a service, not on the model imho
     _member_detail: GroupAdminMember = None
+    member_number = None
 
     def get_member_number(self, active_user: settings.AUTH_USER_MODEL):
         if self.group_admin_id:
             if not self._member_detail:
-                self._member_detail = group_admin_member_detail(active_user=active_user,
-                                                                group_admin_id=str(self.group_admin_id))
-            return self._member_detail.membership_number
+                self._member_detail = group_admin_member_detail(
+                    active_user=active_user, group_admin_id=str(self.group_admin_id)
+                )
+            self.member_number = self._member_detail.membership_number
+
+            return self.member_number
         return None
 
     @property
@@ -57,10 +59,9 @@ class InsuranceClaimVictim(models.Model):
 
     @property
     def address(self):
-        return Address(street=self.street,
-                       number=self.number,
-                       letter_box=self.letter_box,
-                       postcode_city=self.postcode_city)
+        return Address(
+            street=self.street, number=self.number, letter_box=self.letter_box, postcode_city=self.postcode_city
+        )
 
     def clean(self):
         if self.non_member and self.group_admin_id:
@@ -101,4 +102,3 @@ class InsuranceClaim(models.Model):
     @property
     def group(self):
         return get_group_by_number(self.group_number)
-
