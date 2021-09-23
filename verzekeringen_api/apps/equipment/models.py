@@ -109,6 +109,11 @@ class InuitsVehicle(models.Model):
     trailer = models.CharField(choices=VehicleTrailerOption.choices, max_length=1, default="0")
     group_number = models.CharField(max_length=6)
 
+    class Meta:
+        constraints = [
+            # add unique constraint on chassis_number
+        ]
+
     def clean_construction_year(self, value):
         if datetime.strptime("1900", "%Y") > value:
             raise ValidationError("Invalid construction year")
