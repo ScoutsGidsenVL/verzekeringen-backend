@@ -3,6 +3,7 @@ from datetime import datetime
 from django.conf import settings
 from apps.locations.utils import PostcodeCity, Address
 from ..utils import GroupAdminMember
+from ..enums import Sex
 
 
 def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str):
@@ -46,6 +47,7 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     member = GroupAdminMember(
         first_name=member_data.get("vgagegevens", {}).get("voornaam"),
         last_name=member_data.get("vgagegevens", {}).get("achternaam"),
+        gender=member_data.get("persoonsgegevens", {}).get("geslacht", Sex.OTHER),
         email=member_data.get("email"),
         birth_date=birth_date,
         phone_number=member_data.get("persoonsgegevens", {}).get("gsm", ""),

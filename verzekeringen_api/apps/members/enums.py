@@ -6,3 +6,4 @@ class Sex(models.TextChoices):
     FEMALE = "F", "Female"
     MALE = "M", "Male"
     OTHER = "O", "Other"
+    UNKNOWN = "U", "Unknown"
