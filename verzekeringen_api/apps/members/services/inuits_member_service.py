@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from ..utils import PostcodeCity
+from apps.locations.utils import PostcodeCity
 from ..models import InuitsNonMember
 
 
