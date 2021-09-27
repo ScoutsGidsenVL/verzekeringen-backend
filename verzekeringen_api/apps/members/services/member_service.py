@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.conf import settings
-from ..utils import PostcodeCity
+from apps.locations.utils import PostcodeCity
 from ..models import Member, NonMember, NonMemberInuitsTemplate, InuitsNonMember
 
 
@@ -80,9 +80,6 @@ def non_member_create(
     if inuits_non_member_id:
         inuits_non_member = InuitsNonMember.objects.filter(id=inuits_non_member_id).first()
         if inuits_non_member:
-            NonMemberInuitsTemplate(
-                non_member=non_member,
-                inuits_non_member=inuits_non_member
-            ).save()
+            NonMemberInuitsTemplate(non_member=non_member, inuits_non_member=inuits_non_member).save()
 
     return non_member
