@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 
 from . import enums
 from .managers import InuitsNonMemberManager
-from .utils import PostcodeCity
+from apps.locations.utils import PostcodeCity
 from .enums import Sex
 
 
