@@ -1,4 +1,4 @@
-# Verzekereingen API
+# Verzekeringen API
 
 This is the Django API repository for the Scouts verzekeringen project. See https://gitlab.inuits.io/customers/scouts/verzekeringen/verzekeringen-common for general information.
 
