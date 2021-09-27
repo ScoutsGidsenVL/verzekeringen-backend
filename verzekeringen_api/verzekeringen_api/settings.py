@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os
+import os, logging, logging.config
 from environs import Env
 
 env = Env()
@@ -166,16 +166,14 @@ REST_FRAMEWORK = {
 # Email
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
-if env.str("DEBUG") and not env.bool('USE_SENDINBLUE', False):
+if env.str("DEBUG") and not env.bool("USE_SENDINBLUE", False):
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "mailcatcher"
     EMAIL_PORT = "1025"
 else:
     EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
 
-ANYMAIL = {
-    "SENDINBLUE_API_KEY": env.str('SENDINBLUE_API_KEY')
-}
+ANYMAIL = {"SENDINBLUE_API_KEY": env.str("SENDINBLUE_API_KEY")}
 
 # CORS
 
@@ -202,8 +200,8 @@ OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")
 
 GROUP_ADMIN_BASE_URL = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga"
 BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"
-GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL +"/zoeken"
-GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL +"/lid"
+GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/zoeken"
+GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid"
 
 COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 
@@ -224,3 +222,47 @@ INSURANCE_MAIL = env.str("INSURANCE_MAIL")
 PDF_TEMPLATE_PATH = "resources/blank_insurance_claim.pdf"
 TMP_FOLDER = "resources/temp"
 SENDINBLUE_TEMPLATE_ID = env.str("SENDINBLUE_TEMPLATE_ID", None)
+
+
+LOGGING_CONFIG = None
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(asctime)s - %(levelname)-7s - %(name)-12s - %(message)s",
+        },
+        "simple": {
+            "format": "%(levelname)-8s - %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "filename": "scouts-kampvisum.debug.log",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "mozilla_django_oidc": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "apps": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
+}
+logging.config.dictConfig(LOGGING)
