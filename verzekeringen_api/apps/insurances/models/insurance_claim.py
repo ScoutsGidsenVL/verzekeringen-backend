@@ -57,9 +57,12 @@ class InsuranceClaimVictim(models.Model):
         return Address(
             street=self.street, number=self.number, letter_box=self.letter_box, postcode_city=self.postcode_city
         )
+<<<<<<< HEAD
 
     def get_sex(self):
         return self.sex
+=======
+>>>>>>> f0c24ccbfe64f2729844be62ca53e38ee9b33a4d
 
     def clean(self):
         if self.non_member and self.group_admin_id:

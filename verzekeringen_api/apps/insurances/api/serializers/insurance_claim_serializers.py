@@ -22,11 +22,7 @@ class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
 class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaimVictim
-        fields = [
-            'id',
-            'first_name',
-            'last_name'
-        ]
+        fields = ["id", "first_name", "last_name"]
 
 
 class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
@@ -48,11 +44,13 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
             "activity",
             "activity_type",
             "victim",
-            "group"
+            "group",
         )
 
     def get_declarant(self, object: InsuranceClaim):
-        data = group_admin_member_detail(active_user=self.context['request'].user, group_admin_id=object.declarant.group_admin_id)
+        data = group_admin_member_detail(
+            active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
+        )
         return GroupAdminMemberListOutputSerializer(data).data
 
 
@@ -64,7 +62,7 @@ class InsuranceClaimVictimOutputDetailSerializer(serializers.ModelSerializer):
 
 class InsuranceClaimVictimInputSerializer(serializers.Serializer):
     class Meta:
-        fields = '__all__'
+        fields = "__all__"
 
     class InsuranceClaimNonMemberRelatedField(serializers.PrimaryKeyRelatedField):
         def get_queryset(self):
@@ -83,7 +81,7 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
     city = serializers.CharField()
     email = serializers.EmailField()
     legal_representative = serializers.CharField(required=False)
-    sex = serializers.ChoiceField(required=False, choices=Sex.choices)
+    sex = serializers.ChoiceField(required=False, choices=Sex.choices, default=Sex.UNKNOWN)
 
     group_admin_id = serializers.CharField(required=False, allow_null=True)
     non_member = InsuranceClaimNonMemberRelatedField(required=False, allow_null=True)
@@ -118,11 +116,7 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
 class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaim
-        exclude = (
-            "date",
-            "declarant",
-            "group_number"
-        )
+        exclude = ("date", "declarant", "group_number")
 
     group = serializers.CharField(source="group_id")
     activity_type = serializers.JSONField()
@@ -130,7 +124,7 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     victim = InsuranceClaimVictimInputSerializer()
 
     def validate_bank_account(self, value):
-        pattern = re.compile('^BE[0-9]{14}$')
+        pattern = re.compile("^BE[0-9]{14}$")
         if not re.match(pattern, value):
             raise serializers.ValidationError("Invalid bank account number format. It has to be: BE68539007547034")
         return value
