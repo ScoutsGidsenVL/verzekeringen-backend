@@ -2,6 +2,7 @@ from rest_framework import serializers
 from apps.locations.api.serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
 from ...models import Member, NonMember, InuitsNonMember, NonMemberInuitsTemplate
 from ...utils import GroupAdminMember
+from ...enums import Sex
 
 
 class InuitsNonMemberTemplateOutputSerializer(serializers.ModelSerializer):
@@ -114,6 +115,7 @@ class GroupAdminMemberListOutputSerializer(serializers.Serializer):
     id = serializers.CharField(source="group_admin_id")
     last_name = serializers.CharField()
     first_name = serializers.CharField()
+    gender = serializers.ChoiceField(choices=Sex.choices, default=Sex.UNKNOWN)
     phone_number = serializers.CharField()
     email = serializers.EmailField()
     birth_date = serializers.DateField()
