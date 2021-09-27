@@ -1,19 +1,26 @@
 from drf_yasg2.utils import swagger_auto_schema
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from ..serializers import (
     BaseInsuranceClaimSerializer,
-    InsuranceClaimInputSerializer, InsuranceClaimDetailOutputSerializer
+    InsuranceClaimInputSerializer,
+    InsuranceClaimDetailOutputSerializer,
 )
+from ..filters import InsuranceClaimFilter
 from ...models.insurance_claim import InsuranceClaim
 from ...services import InsuranceClaimService
 
 
 class InsuranceClaimViewSet(viewsets.GenericViewSet):
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]
     ordering_fields = ["date"]
     ordering = ["-date"]
+    # Filters on the year of the accident
+    filterset_class = InsuranceClaimFilter
 
     def get_queryset(self):
         return InsuranceClaim.objects.all()
@@ -45,8 +52,9 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         input_serializer = InsuranceClaimInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        claim: InsuranceClaim = InsuranceClaimService.insurance_claim_create(created_by=request.user,
-                                                                             **input_serializer.validated_data)
+        claim: InsuranceClaim = InsuranceClaimService.insurance_claim_create(
+            created_by=request.user, **input_serializer.validated_data
+        )
         InsuranceClaimService.send_pdf(claim=claim)
         output_serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

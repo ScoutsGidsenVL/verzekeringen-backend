@@ -20,6 +20,7 @@ from apps.locations.api.serializers import (
 )
 from apps.locations.models import Country
 from apps.equipment.api.serializers import (
+    InuitsVehicleOutputSerializer,
     VehicleOutputSerializer,
     VehicleInputSerializer,
     VehicleWithChassisOutputSerializer,
@@ -48,6 +49,7 @@ from ...models.enums import (
     TemporaryVehicleInsuranceOptionApi,
     TemporaryVehicleInsuranceCoverageOption,
 )
+from apps.equipment.models import InuitsVehicle
 
 
 # Output
@@ -139,7 +141,8 @@ class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
 class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     drivers = NonMemberNestedOutputSerializer(many=True)
     owner = serializers.SerializerMethodField()
-    vehicle = VehicleWithChassisOutputSerializer(read_only=True)
+    #vehicle = VehicleWithChassisOutputSerializer(read_only=True)
+    vehicle = serializers.SerializerMethodField()
     insurance_options = serializers.SerializerMethodField()
     max_coverage = serializers.SerializerMethodField()
 
@@ -167,6 +170,12 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
         return EnumOutputSerializer(
             parse_choice_to_tuple(TemporaryVehicleInsuranceCoverageOption(obj.max_coverage))
         ).data
+    
+    @swagger_serializer_method(serializer_or_field=InuitsVehicleOutputSerializer)
+    def get_vehicle(self, obj):
+        vehicle = InuitsVehicle.objects.get(chassis_number=obj.vehicle.chassis_number)
+
+        return InuitsVehicleOutputSerializer(vehicle).data
 
 
 class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
