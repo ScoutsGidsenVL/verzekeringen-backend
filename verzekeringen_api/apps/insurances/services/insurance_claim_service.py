@@ -12,10 +12,11 @@ from django.core.mail import EmailMessage
 from ...mailing.services import sendTemplateEmail
 from ...members.services.group_admin_member_service import group_admin_member_detail
 from ...members.utils import GroupAdminMember
+import tempfile
 
 
 def _get_temp_file(filename: str):
-    return "%s/%s" % (settings.TMP_FOLDER, filename)
+    return "%s/%s" % (tempfile.gettempdir(), filename)
 
 
 @transaction.atomic
