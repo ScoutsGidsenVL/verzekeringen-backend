@@ -28,8 +28,6 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     response.raise_for_status()
     member_data = response.json()
 
-    logger.debug(member_data)
-
     try:
         birth_date_str = member_data.get("vgagegevens").get("geboortedatum")
         birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
@@ -60,8 +58,6 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
         membership_number=member_data.get("verbondsgegevens", {}).get("lidnummer", ""),
         address=address,
     )
-
-    logger.debug("GENDER: %s", member.get_sex())
 
     return member
 
@@ -133,7 +129,6 @@ def _parse_search_results_for_group(active_user, json, group: str):
             group_admin_member = group_admin_member_detail(
                 active_user=active_user, group_admin_id=member.group_admin_id
             )
-            logger.debug("GENDER FOR MEMBER: %s", group_admin_member.get_sex())
             results.append(group_admin_member)
 
     return results
