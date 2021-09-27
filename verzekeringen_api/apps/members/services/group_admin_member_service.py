@@ -62,7 +62,10 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     return member
 
 
-def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: str) -> list:
+def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: str, group: str = None) -> list:
+    """
+    @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#ledenlijst-filterlijst-post
+    """
     payload = {"query": term}
     response = requests.get(
         settings.GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT,
@@ -73,28 +76,55 @@ def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: st
     response.raise_for_status()
     json = response.json()
 
+    if group:
+        return _parse_search_results_for_group(json, group)
+    else:
+        return _parse_search_results(json)
+
+
+def _parse_search_result(member_data) -> GroupAdminMember:
+    birth_date_str = member_data.get("geboortedatum")
+    try:
+        birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
+    except:
+        birth_date = None
+
+    try:
+        # We can only create a basic member with this data
+        return GroupAdminMember(
+            first_name=member_data.get("voornaam"),
+            last_name=member_data.get("achternaam"),
+            gender=member_data.get("geslacht", Sex.UNKNOWN),
+            email=member_data.get("email"),
+            birth_date=birth_date,
+            phone_number=member_data.get("gsm"),
+            group_admin_id=member_data.get("id"),
+        )
+    except ValueError:
+        # If invalid member just dont add it to results
+        pass
+
+    return None
+
+
+def _parse_search_results(json):
     results = []
+
     for member_data in json.get("leden", []):
-        logger.info(member_data)
-        birth_date_str = member_data.get("geboortedatum")
-        try:
-            birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
-        except:
-            birth_date = None
-        try:
-            # We can only create a basic member with this data
-            member = GroupAdminMember(
-                first_name=member_data.get("voornaam"),
-                last_name=member_data.get("achternaam"),
-                gender=member_data.get("geslacht", Sex.UNKNOWN),
-                email=member_data.get("email"),
-                birth_date=birth_date,
-                phone_number=member_data.get("gsm"),
-                group_admin_id=member_data.get("id"),
-            )
+        member = _parse_search_result(member_data)
+        if member:
             results.append(member)
-        except ValueError:
-            # If invalid member just dont add it to results
-            pass
+
+    return results
+
+
+def _parse_search_results_for_group(json, group: str):
+    results = []
+
+    for member_data in json.get("leden", []):
+        member = _parse_search_result(member_data)
+        if member:
+            group_admin_id = member.group_admin_id
+            results.append(group_admin_member_detail(active_user=requests.request.user, group_admin_id=group_admin_id))
 
     return results

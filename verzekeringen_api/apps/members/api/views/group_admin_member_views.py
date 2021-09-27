@@ -14,10 +14,14 @@ class GroupAdminMemberSearch(views.APIView):
     @swagger_auto_schema(responses={status.HTTP_200_OK: GroupAdminMemberListOutputSerializer})
     def get(self, request):
         search_term = self.request.GET.get("term", None)
+        group = self.request.GET.get("group", None)
+
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        results = GroupAdminMemberService.group_admin_member_search(active_user=request.user, term=search_term)
+        results = GroupAdminMemberService.group_admin_member_search(
+            active_user=request.user, term=search_term, group=group
+        )
         output_serializer = GroupAdminMemberListOutputSerializer(results, many=True)
 
         return Response(output_serializer.data)
