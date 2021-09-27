@@ -28,6 +28,8 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     response.raise_for_status()
     member_data = response.json()
 
+    logger.debug(member_data)
+
     try:
         birth_date_str = member_data.get("vgagegevens").get("geboortedatum")
         birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
@@ -50,7 +52,7 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     member = GroupAdminMember(
         first_name=member_data.get("vgagegevens", {}).get("voornaam"),
         last_name=member_data.get("vgagegevens", {}).get("achternaam"),
-        gender=member_data.get("persoonsgegevens", {}).get("geslacht", Sex.OTHER),
+        gender=member_data.get("persoonsgegevens", {}).get("geslacht"),
         email=member_data.get("email"),
         birth_date=birth_date,
         phone_number=member_data.get("persoonsgegevens", {}).get("gsm", ""),
@@ -58,6 +60,8 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
         membership_number=member_data.get("verbondsgegevens", {}).get("lidnummer", ""),
         address=address,
     )
+
+    logger.debug("GENDER: %s", member.get_sex())
 
     return member
 
@@ -77,9 +81,9 @@ def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: st
     json = response.json()
 
     if group:
-        return _parse_search_results_for_group(json, group)
+        return _parse_search_results_for_group(active_user, json, group)
     else:
-        return _parse_search_results(json)
+        return _parse_search_results(active_user, json)
 
 
 def _parse_search_result(member_data) -> GroupAdminMember:
@@ -94,7 +98,7 @@ def _parse_search_result(member_data) -> GroupAdminMember:
         return GroupAdminMember(
             first_name=member_data.get("voornaam"),
             last_name=member_data.get("achternaam"),
-            gender=member_data.get("geslacht", Sex.UNKNOWN),
+            gender=member_data.get("geslacht"),
             email=member_data.get("email"),
             birth_date=birth_date,
             phone_number=member_data.get("gsm"),
@@ -107,7 +111,7 @@ def _parse_search_result(member_data) -> GroupAdminMember:
     return None
 
 
-def _parse_search_results(json):
+def _parse_search_results(active_user, json):
     results = []
 
     for member_data in json.get("leden", []):
@@ -118,13 +122,18 @@ def _parse_search_results(json):
     return results
 
 
-def _parse_search_results_for_group(json, group: str):
+def _parse_search_results_for_group(active_user, json, group: str):
+    logger.debug("Filtering members for group %s", group)
+
     results = []
 
     for member_data in json.get("leden", []):
         member = _parse_search_result(member_data)
         if member:
-            group_admin_id = member.group_admin_id
-            results.append(group_admin_member_detail(active_user=requests.request.user, group_admin_id=group_admin_id))
+            group_admin_member = group_admin_member_detail(
+                active_user=active_user, group_admin_id=member.group_admin_id
+            )
+            logger.debug("GENDER FOR MEMBER: %s", group_admin_member.get_sex())
+            results.append(group_admin_member)
 
     return results

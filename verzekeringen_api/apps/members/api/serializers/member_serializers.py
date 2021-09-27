@@ -115,7 +115,7 @@ class GroupAdminMemberListOutputSerializer(serializers.Serializer):
     id = serializers.CharField(source="group_admin_id")
     last_name = serializers.CharField()
     first_name = serializers.CharField()
-    gender = serializers.ChoiceField(choices=Sex.choices, default=Sex.UNKNOWN)
+    gender = serializers.ChoiceField(choices=Sex.choices)
     phone_number = serializers.CharField()
     email = serializers.EmailField()
     birth_date = serializers.DateField()
