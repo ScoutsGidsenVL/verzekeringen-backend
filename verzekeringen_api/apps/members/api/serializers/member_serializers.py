@@ -1,8 +1,13 @@
 from rest_framework import serializers
 from apps.locations.api.serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
-from ...models import Member, NonMember, InuitsNonMember
+from ...models import Member, NonMember, InuitsNonMember, NonMemberInuitsTemplate
 from ...utils import GroupAdminMember
 
+
+class InuitsNonMemberTemplateOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NonMemberInuitsTemplate
+        fields = ("inuits_non_member")
 
 class PersonOutputSerializer(serializers.Serializer):
     id = serializers.CharField(required=False)
@@ -34,6 +39,14 @@ class MemberNestedOutputSerializer(serializers.ModelSerializer):
 
 class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
     postcode_city = BelgianPostcodeCityOutputSerializer()
+    inuits_non_member_id = serializers.SerializerMethodField()
+
+    def get_inuits_non_member_id(self, obj) -> bool:
+        inmt = NonMemberInuitsTemplate.objects.filter(non_member=obj.id).first()
+        if inmt:
+            return inmt.inuits_non_member.id
+
+        return None
 
     class Meta:
         model = NonMember
@@ -48,6 +61,7 @@ class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
             "letter_box",
             "postcode_city",
             "comment",
+            "inuits_non_member_id"
         )
 
 
@@ -128,6 +142,7 @@ class NonMemberCreateInputSerializer(serializers.Serializer):
     letter_box = serializers.CharField(max_length=5, required=False, allow_blank=True)
     comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
     postcode_city = BelgianPostcodeCityInputSerializer()
+    inuits_non_member_id = serializers.CharField(max_length=36, required=False, allow_blank=True)
 
 
 class NonMemberOrCompanyCreateInputSerializer(NonMemberCreateInputSerializer):

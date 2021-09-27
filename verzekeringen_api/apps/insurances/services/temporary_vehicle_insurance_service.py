@@ -10,6 +10,7 @@ from ..models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
 )
 from . import base_insurance_service as BaseInsuranceService
+from ...equipment.models import InuitsVehicle, VehicleInuitsTemplate
 
 
 def _calculate_total_cost(insurance: TemporaryVehicleInsurance) -> Decimal:
@@ -92,6 +93,14 @@ def temporary_vehicle_insurance_create(
     insurance.total_cost = _calculate_total_cost(insurance)
     insurance.full_clean()
     insurance.save()
+
+    if vehicle.inuits_vehicle_id:
+        inuits_vehicle = InuitsVehicle.objects.filter(id=vehicle.inuits_vehicle_id).first()
+        if inuits_vehicle:
+            VehicleInuitsTemplate(
+                temporary_vehicle_insurance=insurance,
+                inuits_vehicle=inuits_vehicle
+            ).save()
 
     # Save insurance here already so we can create non members linked to it
     # This whole function is atomic so if non members cant be created this will rollback aswell

@@ -3,6 +3,7 @@ from drf_yasg2.utils import swagger_serializer_method
 from django.conf import settings
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
+from apps.equipment.models import InuitsVehicle, VehicleInuitsTemplate
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.members.api.serializers import (
     MemberNestedOutputSerializer,

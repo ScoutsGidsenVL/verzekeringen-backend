@@ -9,9 +9,10 @@ class Vehicle:
     construction_year: datetime.date
     chassis_number: str
     trailer: str
+    inuits_vehicle_id: str
 
     def __init__(
-        self, type, brand, license_plate, construction_year, chassis_number="", trailer=VehicleTrailerOption.NO_TRAILER
+        self, type, brand, license_plate, construction_year, chassis_number="", trailer=VehicleTrailerOption.NO_TRAILER, inuits_vehicle_id=None
     ):
         self.type = type
         self.brand = brand
@@ -19,6 +20,7 @@ class Vehicle:
         self.construction_year = construction_year
         self.chassis_number = chassis_number
         self.trailer = trailer
+        self.inuits_vehicle_id = inuits_vehicle_id
 
     @property
     def has_trailer(self):
