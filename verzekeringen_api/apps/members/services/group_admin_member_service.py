@@ -1,9 +1,12 @@
-import requests
+import requests, logging
 from datetime import datetime
 from django.conf import settings
 from apps.locations.utils import PostcodeCity, Address
 from ..utils import GroupAdminMember
 from ..enums import Sex
+
+
+logger = logging.getLogger(__name__)
 
 
 def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str):
@@ -72,6 +75,7 @@ def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: st
 
     results = []
     for member_data in json.get("leden", []):
+        logger.info(member_data)
         birth_date_str = member_data.get("geboortedatum")
         try:
             birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
@@ -79,17 +83,16 @@ def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: st
             birth_date = None
         try:
             # We can only create a basic member with this data
-            results.append(
-                GroupAdminMember(
-                    first_name=member_data.get("voornaam"),
-                    last_name=member_data.get("achternaam"),
-                    gender=member_data.get("geslacht", Sex.UNKNOWN),
-                    email=member_data.get("email"),
-                    birth_date=birth_date,
-                    phone_number=member_data.get("gsm"),
-                    group_admin_id=member_data.get("id"),
-                )
+            member = GroupAdminMember(
+                first_name=member_data.get("voornaam"),
+                last_name=member_data.get("achternaam"),
+                gender=member_data.get("geslacht", Sex.UNKNOWN),
+                email=member_data.get("email"),
+                birth_date=birth_date,
+                phone_number=member_data.get("gsm"),
+                group_admin_id=member_data.get("id"),
             )
+            results.append(member)
         except ValueError:
             # If invalid member just dont add it to results
             pass
