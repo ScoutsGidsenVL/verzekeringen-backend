@@ -42,3 +42,6 @@ class GroupAdminMember:
         self.group_admin_id = group_admin_id
         self.membership_number = membership_number
         self.address = address
+
+    def get_sex(self):
+        return self.gender

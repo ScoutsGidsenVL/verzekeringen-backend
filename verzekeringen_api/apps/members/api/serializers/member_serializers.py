@@ -7,12 +7,14 @@ from ...utils import GroupAdminMember
 class InuitsNonMemberTemplateOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = NonMemberInuitsTemplate
-        fields = ("inuits_non_member")
+        fields = "inuits_non_member"
+
 
 class PersonOutputSerializer(serializers.Serializer):
     id = serializers.CharField(required=False)
     last_name = serializers.CharField()
     first_name = serializers.CharField()
+    gender = serializers.SerializerMethodField()
     phone_number = serializers.CharField()
     email = serializers.EmailField(required=False)
     birth_date = serializers.DateField()
@@ -22,19 +24,24 @@ class PersonOutputSerializer(serializers.Serializer):
     def get_is_member(self, obj) -> bool:
         return type(obj.__class__) == GroupAdminMember.__class__
 
+    def get_gender(self, obj):
+        return obj.get_sex()
+
 
 # Output
 class MemberNestedOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ("id",
-                  "last_name",
-                  "first_name",
-                  "phone_number",
-                  "birth_date",
-                  "membership_number",
-                  "email",
-                  "group_admin_id")
+        fields = (
+            "id",
+            "last_name",
+            "first_name",
+            "phone_number",
+            "birth_date",
+            "membership_number",
+            "email",
+            "group_admin_id",
+        )
 
 
 class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
@@ -61,7 +68,7 @@ class NonMemberNestedOutputSerializer(serializers.ModelSerializer):
             "letter_box",
             "postcode_city",
             "comment",
-            "inuits_non_member_id"
+            "inuits_non_member_id",
         )
 
 
