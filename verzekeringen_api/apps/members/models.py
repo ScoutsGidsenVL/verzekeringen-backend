@@ -8,7 +8,7 @@ from apps.locations.utils import PostcodeCity
 from .enums import Sex
 
 
-class AbstractMember:
+class AbstractMember(models.Model):
 
     last_name = models.CharField(db_column="naam", max_length=25)
     first_name = models.CharField(db_column="voornaam", max_length=15)
