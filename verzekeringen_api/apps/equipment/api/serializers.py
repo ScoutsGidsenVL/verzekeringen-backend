@@ -29,7 +29,9 @@ class VehicleOutputSerializer(serializers.Serializer):
 
     @swagger_serializer_method(serializer_or_field=serializers.CharField)
     def get_inuits_vehicle_id(self, obj) -> bool:
-        inuits_vehicle_template = VehicleInuitsTemplate.objects.filter(temporary_vehicle_insurance=self.context.id).first()
+        inuits_vehicle_template = VehicleInuitsTemplate.objects.filter(
+            temporary_vehicle_insurance=self.context.get("id")
+        ).first()
         print(inuits_vehicle_template)
         if inuits_vehicle_template:
             return inuits_vehicle_template.inuits_vehicle.id
@@ -151,7 +153,7 @@ class VehicleInputSerializer(serializers.Serializer):
             construction_year=data.get("construction_year"),
             chassis_number=data.get("chassis_number"),
             trailer=data.get("trailer", False),
-            inuits_vehicle_id=data.get("inuits_vehicle_id", None)
+            inuits_vehicle_id=data.get("inuits_vehicle_id", None),
         )
 
 
