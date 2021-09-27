@@ -83,6 +83,7 @@ def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: st
                 GroupAdminMember(
                     first_name=member_data.get("voornaam"),
                     last_name=member_data.get("achternaam"),
+                    gender=member_data.get("geslacht", Sex.UNKNOWN),
                     email=member_data.get("email"),
                     birth_date=birth_date,
                     phone_number=member_data.get("gsm"),
