@@ -53,7 +53,7 @@ class Member(AbstractMember, models.Model):
             raise ValidationError("Birth date, Phone number and email need to be either filled in or blank together")
 
 
-class NonMember(models.Model):
+class NonMember(AbstractMember, models.Model):
 
     id = models.AutoField(db_column="nietlidid", primary_key=True)
     street = models.CharField(db_column="straat", max_length=100, blank=True)
