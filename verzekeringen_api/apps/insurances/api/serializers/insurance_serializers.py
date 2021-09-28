@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
 from django.conf import settings
+from django.db.models import Q
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
 from apps.equipment.models import InuitsVehicle, VehicleInuitsTemplate
@@ -130,12 +131,23 @@ class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializ
 
 class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     participants = NonMemberNestedOutputSerializer(many=True)
-    vehicle = VehicleOutputSerializer(read_only=True)
+    vehicle = serializers.SerializerMethodField()
     country = CountryOutputSerializer()
 
     class Meta:
         model = TravelAssistanceInsurance
         fields = base_insurance_detail_fields + ("country", "participants", "vehicle")
+    
+    @swagger_serializer_method(serializer_or_field=InuitsVehicleOutputSerializer)
+    def get_vehicle(self, obj):
+        vehicle = obj.vehicle
+
+        inuits_vehicles = InuitsVehicle.objects.filter(Q(brand=vehicle.brand) | Q(license_plate=vehicle.license_plate))
+
+        if inuits_vehicles.count() > 0:
+            return InuitsVehicleOutputSerializer(inuits_vehicles[0]).data
+        
+        return VehicleOutputSerializer(vehicle).data
 
 
 class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
