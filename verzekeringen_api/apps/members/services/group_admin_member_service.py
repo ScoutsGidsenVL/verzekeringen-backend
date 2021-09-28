@@ -9,7 +9,7 @@ from ..enums import Sex
 logger = logging.getLogger(__name__)
 
 
-def _get_group_admin_member_detail_data(*, active_user: settings.AUTH_USER_MODEL, group_admin_id:str) -> dict:
+def _get_group_admin_member_detail_data(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> dict:
     """
         Makes call to IDP to retrieve member details.
 
@@ -26,9 +26,11 @@ def _get_group_admin_member_detail_data(*, active_user: settings.AUTH_USER_MODEL
     )
 
     response.raise_for_status()
+
     return response.json()
 
-def _parse_member_data(member_data:dict, group_admin_id:str) -> GroupAdminMember:
+
+def _parse_member_data(member_data: dict, group_admin_id: str) -> GroupAdminMember:
     try:
         birth_date_str = member_data.get("vgagegevens").get("geboortedatum")
         birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
@@ -61,6 +63,7 @@ def _parse_member_data(member_data:dict, group_admin_id:str) -> GroupAdminMember
     )
 
     return member
+
 
 def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str):
     member_data = _get_group_admin_member_detail_data(active_user=active_user, group_admin_id=group_admin_id)
@@ -132,15 +135,15 @@ def _parse_search_results_for_group(active_user, json, group: str):
     for member_data in json.get("leden", []):
         member = _parse_search_result(member_data)
         if member:
-            detailed_data = _get_group_admin_member_detail_data(active_user=active_user, group_admin_id=member.group_admin_id)
-
-            for function in detailed_data.get("functies", []):
-                group = function.get("groep", None)
-
-            group_admin_member = group_admin_member_detail(
+            detailed_data = _get_group_admin_member_detail_data(
                 active_user=active_user, group_admin_id=member.group_admin_id
             )
 
-            results.append(group_admin_member)
+            groups = []
+            for function in detailed_data.get("functies", []):
+                groups.append(function.get("groep", None))
+
+            if group in groups:
+                results.append(_parse_member_data(detailed_data, member.group_admin_id))
 
     return results
