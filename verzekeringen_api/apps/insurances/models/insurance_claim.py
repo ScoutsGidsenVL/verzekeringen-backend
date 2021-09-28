@@ -97,6 +97,11 @@ class InsuranceClaim(models.Model):
     note = models.CharField(max_length=1024, null=True, blank=True)
     case_number = models.CharField(max_length=30, null=True, blank=True)
 
+    class Meta:
+        permissions = (
+            ("can_view_note_and_case_number", "Administratieve gebruikers kunnen dossiernummer en opmerkingen bekijken"),
+        )
+
     @property
     def group(self):
         return get_group_by_number(self.group_number)

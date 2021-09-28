@@ -11,6 +11,7 @@ from apps.members.services import GroupAdminMemberService
 from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from ...models.insurance_claim import InsuranceClaim, InsuranceClaimVictim
+from . import InsuranceClaimAdmistrativeFieldsMixin
 
 
 class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
@@ -25,7 +26,7 @@ class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
         fields = ["id", "first_name", "last_name"]
 
 
-class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
+class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
     date_of_accident = DateTimeTZField()
     activity_type = serializers.JSONField()
     victim = InsuranceClaimVictimOutputListSerializer()
@@ -45,6 +46,8 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
             "activity_type",
             "victim",
             "group",
+            "note",
+            "case_number",
         )
 
     def get_declarant(self, object: InsuranceClaim):
