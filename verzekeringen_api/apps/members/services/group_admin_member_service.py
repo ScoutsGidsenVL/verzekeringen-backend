@@ -9,7 +9,7 @@ from ..enums import Sex
 logger = logging.getLogger(__name__)
 
 
-def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str):
+def _get_group_admin_member_detail_data(*, active_user: settings.AUTH_USER_MODEL, group_admin_id:str) -> dict:
     """
         Makes call to IDP to retrieve member details.
 
@@ -26,8 +26,9 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     )
 
     response.raise_for_status()
-    member_data = response.json()
+    return response.json()
 
+def _parse_member_data(member_data:dict, group_admin_id:str) -> GroupAdminMember:
     try:
         birth_date_str = member_data.get("vgagegevens").get("geboortedatum")
         birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
@@ -60,6 +61,11 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     )
 
     return member
+
+def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_admin_id: str):
+    member_data = _get_group_admin_member_detail_data(active_user=active_user, group_admin_id=group_admin_id)
+
+    return _parse_member_data(member_data=member_data, group_admin_id=group_admin_id)
 
 
 def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: str, group: str = None) -> list:
@@ -126,9 +132,15 @@ def _parse_search_results_for_group(active_user, json, group: str):
     for member_data in json.get("leden", []):
         member = _parse_search_result(member_data)
         if member:
+            detailed_data = _get_group_admin_member_detail_data(active_user=active_user, group_admin_id=member.group_admin_id)
+
+            for function in detailed_data.get("functies", []):
+                group = function.get("groep", None)
+
             group_admin_member = group_admin_member_detail(
                 active_user=active_user, group_admin_id=member.group_admin_id
             )
+
             results.append(group_admin_member)
 
     return results
