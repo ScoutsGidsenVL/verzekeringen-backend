@@ -82,13 +82,13 @@ base_insurance_detail_fields = (
     "status",
     "type",
     "group",
+    "responsible_member",
     "start_date",
     "end_date",
-    "responsible_member",
-    "total_cost",
-    "created_on",
     "comment",
     "vvks_comment",
+    "total_cost",
+    "created_on",
     "editable",
 )
 
@@ -100,6 +100,8 @@ class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     responsible_member = MemberNestedOutputSerializer(read_only=True)
     start_date = DateTimeTZField()
     end_date = DateTimeTZField()
+    comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    vvks_comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_status(self, obj):
