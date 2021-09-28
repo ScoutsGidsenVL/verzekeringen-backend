@@ -1,5 +1,5 @@
 import requests, logging
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from django.conf import settings
 from apps.locations.utils import PostcodeCity, Address
 from ..utils import GroupAdminMember
@@ -116,13 +116,39 @@ def _parse_search_result(member_data) -> GroupAdminMember:
     return None
 
 
+def _calculate_past_year(current_date: date, number_of_years: int) -> date:
+    return (current_date - timedelta(days=number_of_years * 365)).date()
+
+
 def _parse_search_results(active_user, json):
     results = []
+    previous_period = _calculate_past_year(datetime.now(), 3)
 
     for member_data in json.get("leden", []):
         member = _parse_search_result(member_data)
         if member:
-            results.append(member)
+            detailed_data = _get_group_admin_member_detail_data(
+                active_user=active_user, group_admin_id=member.group_admin_id
+            )
+
+            was_active = False
+            end_of_activity_period_counter = 0
+            for function in detailed_data.get("functies", []):
+                if was_active:
+                    break
+
+                end_of_activity_period_str = function.get("einde", None)
+
+                if end_of_activity_period_str:
+                    end_of_activity_period_counter = end_of_activity_period_counter + 1
+                    end_of_activity_period = datetime.fromisoformat(end_of_activity_period_str).date()
+
+                    if end_of_activity_period < previous_period:
+                        results.append(_parse_member_data(detailed_data, member.group_admin_id))
+                        was_active = True
+
+            if end_of_activity_period_counter == 0:
+                results.append(_parse_member_data(detailed_data, member.group_admin_id))
 
     return results
 
