@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, date
 
 from django.core.exceptions import ValidationError
@@ -9,10 +10,13 @@ import os
 from django.conf import settings
 from django.core.mail import EmailMessage
 
-from ...mailing.services import sendTemplateEmail
+from apps.mailing import MailService
 from ...members.services.group_admin_member_service import group_admin_member_detail
 from ...members.utils import GroupAdminMember
 import tempfile
+
+
+logger = logging.getLogger(__name__)
 
 
 def _get_temp_file(filename: str):
@@ -84,11 +88,15 @@ def insurance_claim_create(
 
 
 def send_pdf(claim):
+    receivers = settings.EMAIL_INSURANCE_RECEIVERS
+
+    logger.debug("Generating pdf for claim and sending it to %s", receivers)
+
     filename = generate_pdf(claim)
 
-    sendTemplateEmail(
-        receivers=[settings.INSURANCE_MAIL],
-        template_id=settings.SENDINBLUE_TEMPLATE_ID,
+    MailService().send_template_email(
+        receivers=receivers,
+        template_id=settings.ANYMAIL["SENDINBLUE_TEMPLATE_ID"],
         file=filename,
     )
     os.remove(filename)

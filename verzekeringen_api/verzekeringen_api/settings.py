@@ -41,14 +41,8 @@ SILENCED_SYSTEM_CHECKS = ["fields.W342"]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
-    "apps.scouts_auth",
-    "apps.members",
-    "apps.equipment",
-    "apps.locations",
-    "apps.insurances",
-    "apps.info",
-    "apps.files",
     "mozilla_django_oidc",
+    "apps.scouts_auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -57,6 +51,13 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_yasg2",
     "corsheaders",
+    "apps.members",
+    "apps.equipment",
+    "apps.locations",
+    "apps.insurances",
+    "apps.info",
+    "apps.files",
+    "apps.mailing",
 ]
 
 MIDDLEWARE = [
@@ -166,22 +167,41 @@ REST_FRAMEWORK = {
 # Email
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
-if env.str("DEBUG") and not env.bool("USE_SENDINBLUE", False):
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "mailcatcher"
-    EMAIL_PORT = "1025"
-else:
-    EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+def setup_mail():
+    global EMAIL_BACKEND
+    global ANYMAIL
+    global EMAIL_INSURANCE_SENDERS
+    global EMAIL_INSURANCE_RECEIVERS
 
-ANYMAIL = {"SENDINBLUE_API_KEY": env.str("SENDINBLUE_API_KEY")}
+    if env.str("DEVELOPMENT") or (not env.str("DEBUG") and env.bool("USE_SENDINBLUE", True)):
+        EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+        ANYMAIL["SENDINBLUE_API_KEY"] = env.str("SENDINBLUE_API_KEY")
+        ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SENDINBLUE_TEMPLATE_ID", None)
+
+    if env.str("DEBUG"):
+        EMAIL_INSURANCE_RECEIVERS = ["boro@inuits.eu"]
+
+    senders = env.str("EMAIL_INSURANCE_SENDERS", "")
+    EMAIL_INSURANCE_SENDERS = senders.split(",")
+    receivers = env.str("EMAIL_INSURANCE_RECEIVERS", "")
+    EMAIL_INSURANCE_RECEIVERS = receivers.split(",")
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "mailcatcher"
+EMAIL_PORT = "1025"
+EMAIL_INSURANCE_SENDERS = ""
+EMAIL_INSURANCE_RECEIVERS = ""
+PDF_TEMPLATE_PATH = "resources/blank_insurance_claim.pdf"
+TMP_FOLDER = "resources/temp"
+ANYMAIL = {}
+setup_mail()
 
 # CORS
-
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 
 # OIDC
 AUTH_USER_MODEL = "scouts_auth.User"
-
 AUTHENTICATION_BACKENDS = {
     "apps.oidc.auth.InuitsOIDCAuthenticationBackend",
 }
@@ -202,7 +222,6 @@ GROUP_ADMIN_BASE_URL = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsad
 BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"
 GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/zoeken"
 GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid"
-
 COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 
 
@@ -218,13 +237,9 @@ AWS_DEFAULT_ACL = "public-read"
 AWS_S3_FILE_OVERWRITE = False
 AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-INSURANCE_MAIL = env.str("INSURANCE_MAIL")
-PDF_TEMPLATE_PATH = "resources/blank_insurance_claim.pdf"
-TMP_FOLDER = "resources/temp"
-SENDINBLUE_TEMPLATE_ID = env.str("SENDINBLUE_TEMPLATE_ID", None)
-
 
 LOGGING_CONFIG = None
+LOGGING_LEVEL = "DEBUG" if env.str("DEBUG") else "INFO"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -239,14 +254,14 @@ LOGGING = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "level": "DEBUG",
+            "level": LOGGING_LEVEL,
             "formatter": "verbose",
         },
-        "file": {
-            "class": "logging.FileHandler",
-            "level": "DEBUG",
-            "filename": "scouts-kampvisum.debug.log",
-        },
+        # "file": {
+        #     "class": "logging.FileHandler",
+        #     "level": LOGGING_LEVEL,
+        #     "filename": "scouts-kampvisum.debug.log",
+        # },
     },
     "root": {
         "handlers": ["console"],
@@ -255,12 +270,12 @@ LOGGING = {
     "loggers": {
         "mozilla_django_oidc": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": LOGGING_LEVEL,
             "propagate": False,
         },
         "apps": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": LOGGING_LEVEL,
             "propagate": False,
         },
     },

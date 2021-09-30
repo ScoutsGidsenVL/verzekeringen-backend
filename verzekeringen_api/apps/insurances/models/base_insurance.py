@@ -94,27 +94,27 @@ class BaseInsurance(models.Model):
     # Create property getter and setters for the boolean charfields so we can use them properly
     @property
     def printed(self):
-        return parse_char_to_bool(self._printed)
+        return self.parse_char_to_bool(self._printed)
 
     @printed.setter
     def printed(self, value):
-        self._printed = parse_bool_to_char(value)
+        self._printed = self.parse_bool_to_char(value)
 
     @property
     def finished(self):
-        return parse_char_to_bool(self._finished)
+        return self.parse_char_to_bool(self._finished)
 
     @finished.setter
     def finished(self, value):
-        self._finished = parse_bool_to_char(value)
+        self._finished = self.parse_bool_to_char(value)
 
     @property
     def listed(self):
-        return parse_char_to_bool(self._listed)
+        return self.parse_char_to_bool(self._listed)
 
     @listed.setter
     def listed(self, value):
-        self._listed = parse_bool_to_char(value)
+        self._listed = self.parse_bool_to_char(value)
 
     @property
     def start_date(self):
