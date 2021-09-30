@@ -8,9 +8,8 @@ from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 from ..models.insurance_claim import InsuranceClaim, InsuranceClaimVictim
 import os
 from django.conf import settings
-from django.core.mail import EmailMessage
 
-from apps.mailing import MailService
+from apps.mailing.services import MailService
 from ...members.services.group_admin_member_service import group_admin_member_detail
 from ...members.utils import GroupAdminMember
 import tempfile
@@ -87,17 +86,38 @@ def insurance_claim_create(
     return claim
 
 
-def send_pdf(claim):
-    receivers = settings.EMAIL_INSURANCE_RECEIVERS
+def _parse_body(title: str, claim: InsuranceClaim):
+    # @TODO: i18n
+    dictionary = {
+        "title": title,
+        "declarant_name": "claim.declarant.first_name + " " + claim.declarant.last_name",
+        "victim__name": "claim.victim.first_name + " " + claim.victim.last_name",
+        "victim__email": "claim.victim.email",
+        "date_of_accident": "claim.date_of_accident",
+        "date_of_declaration": "claim.date",
+    }
 
-    logger.debug("Generating pdf for claim and sending it to %s", receivers)
+    with open(settings.RESOURCES_CLAIMS_EMAIL_PATH, "r") as file:
+        for key in dictionary.keys():
+            data = file.read().replace(key, dictionary[key])
+
+
+def send_pdf(claim: InsuranceClaim):
+    from_email = settings.EMAIL_INSURANCE_FROM
+    to = settings.EMAIL_INSURANCE_TO
+    subject = "Documenten schadeaangifte (#" + str(claim.id) + ")"
+
+    logger.debug("Generating pdf for claim and sending it to %s", to)
 
     filename = generate_pdf(claim)
 
-    MailService().send_template_email(
-        receivers=receivers,
+    MailService().send_email(
+        subject=subject,
+        body=_parse_body(subject, claim),
+        from_email=from_email,
+        to=to,
+        attachment_paths=[filename],
         template_id=settings.ANYMAIL["SENDINBLUE_TEMPLATE_ID"],
-        file=filename,
     )
     os.remove(filename)
 

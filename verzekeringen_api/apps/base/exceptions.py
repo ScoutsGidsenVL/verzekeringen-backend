@@ -20,3 +20,8 @@ class InvalidWorkflowTransitionAPIException(APIException):
     def __init__(self, exception: InvalidWorkflowTransitionException):
         detail = str(exception)
         return super().__init__(detail)
+
+
+class MailServiceException(Exception):
+    def __init__(self, message):
+        return super().__init__(message)

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <h1>Beste {{ declarant_name }}</h1>
+
+    <p>
+        Je deed onlangs aangifte van lichamelijke schade.<br />
+        Die aangifte werd verstuurd naar Ethias. Het slachtoffer kreeg hier ook een kopie van. <br />
+        Vanaf nu loopt alle communicatie rechtstreeks tussen onze verzekeringspartner Ethias en (de ouders van) het
+        slachtoffer.
+    </p>
+
+
+    <p>
+        Hieronder vind je nog even de samenvatting van de ingevulde gegevens :
+    </p>
+
+    <ul>
+        <li>Aangever: {{ declarant__name }}</li>
+        <li>Slachtoffer: {{ victim__name }} ({{ victim__email }})</li>
+        <li>Datum ongeval: {{ date_of_accident }}</li>
+        <li>Datum aangifte: {{ date_of_declaration }}</li>
+    </ul>
+
+    <p>
+        Heb je nog vragen? Contacteer dan onze dienst verzekeringen (<a
+            href="mailto:verzekeringen@scoutsengidsenvlaanderen.be">verzekeringen@scoutsengidsenvlaanderen.be</a>).<br />
+        Bedankt dat je dit in orde bracht.
+    </p>
+</body>
+
+</html>

@@ -164,36 +164,40 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "apps.base.utils.exception_handler",
 }
 
+# RESOURCES
+RESOURCES_PATH = env.str("RESOURCES_PATH")
+RESOURCES_MAIL_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_PATH")
+RESOURCES_CLAIMS_EMAIL_PATH = RESOURCES_MAIL_PATH + env.str("RESOURCES_CLAIMS_EMAIL_PATH")
+
 # Email
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
 def setup_mail():
     global EMAIL_BACKEND
     global ANYMAIL
-    global EMAIL_INSURANCE_SENDERS
-    global EMAIL_INSURANCE_RECEIVERS
+    global EMAIL_INSURANCE_FROM
+    global EMAIL_INSURANCE_TO
 
     if env.str("DEVELOPMENT") or (not env.str("DEBUG") and env.bool("USE_SENDINBLUE", True)):
         EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
         ANYMAIL["SENDINBLUE_API_KEY"] = env.str("SENDINBLUE_API_KEY")
         ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SENDINBLUE_TEMPLATE_ID", None)
 
-    if env.str("DEBUG"):
-        EMAIL_INSURANCE_RECEIVERS = ["boro@inuits.eu"]
-
-    senders = env.str("EMAIL_INSURANCE_SENDERS", "")
-    EMAIL_INSURANCE_SENDERS = senders.split(",")
-    receivers = env.str("EMAIL_INSURANCE_RECEIVERS", "")
-    EMAIL_INSURANCE_RECEIVERS = receivers.split(",")
+    EMAIL_INSURANCE_FROM = env.str("EMAIL_INSURANCE_FROM", "")
+    EMAIL_INSURANCE_TO = env.str("EMAIL_INSURANCE_TO", "").split(",")
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "mailcatcher"
 EMAIL_PORT = "1025"
-EMAIL_INSURANCE_SENDERS = ""
-EMAIL_INSURANCE_RECEIVERS = ""
-PDF_TEMPLATE_PATH = "resources/blank_insurance_claim.pdf"
-TMP_FOLDER = "resources/temp"
+EMAIL_INSURANCE_FROM = ""
+EMAIL_INSURANCE_REPLY_TO = EMAIL_INSURANCE_FROM
+# EMAIL_INSURANCE_TO_LIST=verzekeringen@scoutsengidsenvlaanderen.be
+EMAIL_INSURANCE_TO = []
+# EMAIL_INSURANCE_CC=
+# EMAIL_INSURANCE_BCC=
+PDF_TEMPLATE_PATH = RESOURCES_PATH + "blank_insurance_claim.pdf"
+TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}
 setup_mail()
 
