@@ -55,6 +55,6 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         claim: InsuranceClaim = InsuranceClaimService.insurance_claim_create(
             created_by=request.user, **input_serializer.validated_data
         )
-        InsuranceClaimService.send_pdf(claim=claim)
+        InsuranceClaimService.email_claim(claim=claim)
         output_serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

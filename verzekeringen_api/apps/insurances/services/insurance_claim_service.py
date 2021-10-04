@@ -1,18 +1,16 @@
-import logging
+import os, logging, tempfile
 from datetime import datetime, date
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
-
-from ..models.insurance_claim import InsuranceClaim, InsuranceClaimVictim
-import os
 from django.conf import settings
 
-from apps.mailing.services import MailService
+from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
+
 from ...members.services.group_admin_member_service import group_admin_member_detail
 from ...members.utils import GroupAdminMember
-import tempfile
+from ..models.insurance_claim import InsuranceClaim, InsuranceClaimVictim
+from . import InsuranceClaimMailService
 
 
 logger = logging.getLogger(__name__)
@@ -86,40 +84,13 @@ def insurance_claim_create(
     return claim
 
 
-def _parse_body(title: str, claim: InsuranceClaim):
-    # @TODO: i18n
-    dictionary = {
-        "title": title,
-        "declarant_name": "claim.declarant.first_name + " " + claim.declarant.last_name",
-        "victim__name": "claim.victim.first_name + " " + claim.victim.last_name",
-        "victim__email": "claim.victim.email",
-        "date_of_accident": "claim.date_of_accident",
-        "date_of_declaration": "claim.date",
-    }
-
-    with open(settings.RESOURCES_CLAIMS_EMAIL_PATH, "r") as file:
-        for key in dictionary.keys():
-            data = file.read().replace(key, dictionary[key])
-
-
-def send_pdf(claim: InsuranceClaim):
-    from_email = settings.EMAIL_INSURANCE_FROM
-    to = settings.EMAIL_INSURANCE_TO
-    subject = "Documenten schadeaangifte (#" + str(claim.id) + ")"
+def email_claim(claim: InsuranceClaim):
 
     logger.debug("Generating pdf for claim and sending it to %s", to)
 
     filename = generate_pdf(claim)
 
-    MailService().send_email(
-        subject=subject,
-        body=_parse_body(subject, claim),
-        from_email=from_email,
-        to=to,
-        attachment_paths=[filename],
-        template_id=settings.ANYMAIL["SENDINBLUE_TEMPLATE_ID"],
-    )
-    os.remove(filename)
+    InsuranceClaimMailService().send_email(claim=claim, filename=filename)
 
 
 def generate_pdf(claim):
