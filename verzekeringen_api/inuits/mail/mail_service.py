@@ -1,17 +1,13 @@
 import logging
+
 from django.conf import settings
 from django.core.mail import EmailMessage
 from anymail.message import AnymailMessage
-
-from apps.insurances.models.insurance_claim import InsuranceClaim
-from apps.base.exceptions import MailServiceException
 
 logger = logging.getLogger(__name__)
 
 
 class MailService:
-    # Example method that might be handy when sending send in blue emails
-    # Not tested but should work
     def send_email(
         self,
         subject: str = "",
@@ -93,6 +89,7 @@ class MailService:
         message = AnymailMessage(
             subject="Welcome",
             body="Welcome to our site",
+            from_email=from_email,
             to=to,
             tags=["Schadeclaim"],  # Anymail extra in constructor
         )
@@ -103,15 +100,3 @@ class MailService:
         message.send()
 
         logger.debug("Mail status: %s", message.anymail_status)
-
-
-class InsuranceClaimMailService(MailService):
-    def send_claim(
-        self,
-        claim: InsuranceClaim,
-        attachment_paths: list = [],
-        template_id: str = None,
-    ):
-        subject = ""
-
-        super().send_email()

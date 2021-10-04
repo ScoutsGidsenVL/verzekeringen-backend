@@ -7,3 +7,4 @@ from . import event_insurance_service as EventInsuranceService
 from . import equipment_insurance_service as EquipmentInsuranceService
 from . import insurance_draft_service as InsuranceDraftService
 from . import insurance_claim_service as InsuranceClaimService
+from .insurance_claim_mail_service import InsuranceClaimMailService

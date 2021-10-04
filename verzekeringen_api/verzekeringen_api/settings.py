@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_yasg2",
     "corsheaders",
+    "inuits",
     "apps.members",
     "apps.equipment",
     "apps.locations",
@@ -230,7 +231,6 @@ COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 
 
 # Storages/S3
-
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 AWS_ACCESS_KEY_ID = env.str("S3_ACCESS_KEY")
