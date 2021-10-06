@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
-from api.verzekeringen_api.apps.insurances.services import temporary_insurance_service
 from ..serializers import (
     InsuranceCostOutputSerializer,
     InsuranceListOutputSerializer,
