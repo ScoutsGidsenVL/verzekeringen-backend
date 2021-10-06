@@ -4,6 +4,8 @@ from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
+
+from api.verzekeringen_api.apps.insurances.services import temporary_insurance_service
 from ..serializers import (
     InsuranceCostOutputSerializer,
     InsuranceListOutputSerializer,
@@ -45,6 +47,13 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     search_fields = ["_group_number"]
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
+
+    activity_insurance_service = ActivityInsuranceService()
+    temporary_insurance_service = TemporaryInsuranceService()
+    travel_assistance_insurance_service = TravelAssistanceInsuranceService()
+    temporary_vehicle_insurance_service = TemporaryVehicleInsuranceService()
+    event_insurance_service = EventInsuranceService()
+    equipment_insurance_service = EquipmentInsuranceService()
 
     def get_queryset(self):
         return BaseInsurance.objects.filter(created_on__gte=datetime.now() - timedelta(days=3 * 365)).allowed(
@@ -94,7 +103,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = ActivityInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        created_insurance = ActivityInsuranceService.activity_insurance_create(
+        created_insurance = self.activity_insurance_service.activity_insurance_create(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -111,7 +120,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = ActivityInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        cost = ActivityInsuranceService.activity_insurance_cost_calculation(
+        cost = self.activity_insurance_service.activity_insurance_cost_calculation(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -129,7 +138,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = ActivityInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = ActivityInsuranceService.activity_insurance_update(
+        updated_insurance = self.activity_insurance_service.activity_insurance_update(
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
@@ -147,7 +156,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = TemporaryInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        created_insurance = TemporaryInsuranceService.temporary_insurance_create(
+        created_insurance = self.temporary_insurance_service.temporary_insurance_create(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -164,7 +173,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = TemporaryInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        cost = TemporaryInsuranceService.temporary_insurance_cost_calculation(
+        cost = self.temporary_insurance_service.temporary_insurance_cost_calculation(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -184,7 +193,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = TemporaryInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = TemporaryInsuranceService.temporary_insurance_update(
+        updated_insurance = self.temporary_insurance_service.temporary_insurance_update(
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
@@ -204,7 +213,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        created_insurance = TravelAssistanceInsuranceService.travel_assistance_insurance_create(
+        created_insurance = self.travel_insurance_service.travel_assistance_insurance_create(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -223,7 +232,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        cost = TravelAssistanceInsuranceService.travel_assistance_insurance_cost_calculation(
+        cost = self.travel_insurance_service.travel_assistance_insurance_cost_calculation(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -245,7 +254,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = TravelAssistanceInsuranceService.travel_assistance_insurance_update(
+        updated_insurance = self.travel_insurance_service.travel_assistance_insurance_update(
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
@@ -265,7 +274,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        created_insurance = TemporaryVehicleInsuranceService.temporary_vehicle_insurance_create(
+        created_insurance = self.temporary_vehicle_insurance_service.temporary_vehicle_insurance_create(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -286,7 +295,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        cost = TemporaryVehicleInsuranceService.temporary_vehicle_insurance_cost_calculation(
+        cost = self.temporary_vehicle_insurance_service.temporary_vehicle_insurance_cost_calculation(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -308,7 +317,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = TemporaryVehicleInsuranceService.temporary_vehicle_insurance_update(
+        updated_insurance = self.temporary_vehicle_insurance_service.temporary_vehicle_insurance_update(
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
@@ -326,7 +335,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = EventInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        created_insurance = EventInsuranceService.event_insurance_create(
+        created_insurance = self.event_insurance_service.event_insurance_create(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -343,7 +352,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = EventInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        cost = EventInsuranceService.event_insurance_cost_calculation(
+        cost = self.event_insurance_service.event_insurance_cost_calculation(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -361,7 +370,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = EventInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = EventInsuranceService.event_insurance_update(
+        updated_insurance = self.event_insurance_service.event_insurance_update(
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
@@ -379,7 +388,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = EquipmentInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        created_insurance = EquipmentInsuranceService.equipment_insurance_create(
+        created_insurance = self.equipment_insurance_service.equipment_insurance_create(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -396,7 +405,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = EquipmentInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        cost = EquipmentInsuranceService.equipment_insurance_cost_calculation(
+        cost = self.equipment_insurance_service.equipment_insurance_cost_calculation(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -416,7 +425,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         input_serializer = EquipmentInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = EquipmentInsuranceService.equipment_insurance_update(
+        updated_insurance = self.equipment_insurance_service.equipment_insurance_update(
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
