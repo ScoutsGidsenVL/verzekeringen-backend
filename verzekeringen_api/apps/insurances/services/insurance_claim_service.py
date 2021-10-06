@@ -253,6 +253,6 @@ class InsuranceClaimService:
 
     def email_claim(self, claim: InsuranceClaim):
         logger.debug("Generating pdf for claim and emailing the claim report")
-        claim_report = self.generate_pdf(claim)
+        claim_report_path = self.generate_pdf(claim)
 
-        InsuranceClaimMailService().send_claim(claim=claim, claim_report=claim_report)
+        InsuranceClaimMailService().send_claim(claim=claim, claim_report_path=claim_report_path)
