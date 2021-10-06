@@ -71,7 +71,9 @@ def group_admin_member_detail(*, active_user: settings.AUTH_USER_MODEL, group_ad
     return _parse_member_data(member_data=member_data, group_admin_id=group_admin_id)
 
 
-def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: str, group: str = None) -> list:
+def group_admin_member_search(
+    *, active_user: settings.AUTH_USER_MODEL, term: str, group: str = None, include_inactive: bool = False
+) -> list:
     """
     @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#ledenlijst-filterlijst-post
     """
@@ -86,9 +88,9 @@ def group_admin_member_search(*, active_user: settings.AUTH_USER_MODEL, term: st
     json = response.json()
 
     if group:
-        return _parse_search_results_for_group(active_user, json, group)
+        return _parse_search_results_for_group(active_user, json, group, include_inactive=include_inactive)
     else:
-        return _parse_search_results(active_user, json)
+        return _parse_search_results(active_user, json, include_inactive=include_inactive)
 
 
 def _parse_search_result(member_data) -> GroupAdminMember:
@@ -120,7 +122,7 @@ def _calculate_past_year(current_date: date, number_of_years: int) -> date:
     return (current_date - timedelta(days=number_of_years * 365)).date()
 
 
-def _parse_search_results(active_user, json):
+def _parse_search_results(active_user, json, include_inactive: bool = False):
     results = []
     previous_period = _calculate_past_year(datetime.now(), 3)
 
@@ -131,29 +133,32 @@ def _parse_search_results(active_user, json):
                 active_user=active_user, group_admin_id=member.group_admin_id
             )
 
-            was_active = False
-            end_of_activity_period_counter = 0
-            for function in detailed_data.get("functies", []):
-                if was_active:
-                    break
+            if include_inactive:
+                was_active = False
+                end_of_activity_period_counter = 0
+                for function in detailed_data.get("functies", []):
+                    if was_active:
+                        break
 
-                end_of_activity_period_str = function.get("einde", None)
+                    end_of_activity_period_str = function.get("einde", None)
 
-                if end_of_activity_period_str:
-                    end_of_activity_period_counter = end_of_activity_period_counter + 1
-                    end_of_activity_period = datetime.fromisoformat(end_of_activity_period_str).date()
+                    if end_of_activity_period_str:
+                        end_of_activity_period_counter = end_of_activity_period_counter + 1
+                        end_of_activity_period = datetime.fromisoformat(end_of_activity_period_str).date()
 
-                    if end_of_activity_period < previous_period:
-                        results.append(_parse_member_data(detailed_data, member.group_admin_id))
-                        was_active = True
+                        if end_of_activity_period < previous_period:
+                            results.append(_parse_member_data(detailed_data, member.group_admin_id))
+                            was_active = True
 
-            if end_of_activity_period_counter == 0:
+                if end_of_activity_period_counter == 0:
+                    results.append(_parse_member_data(detailed_data, member.group_admin_id))
+            else:
                 results.append(_parse_member_data(detailed_data, member.group_admin_id))
 
     return results
 
 
-def _parse_search_results_for_group(active_user, json, group: str):
+def _parse_search_results_for_group(active_user, json, group: str, include_inactive: bool = False):
     logger.debug("Filtering members for group %s", group)
 
     results = []

@@ -11,6 +11,8 @@ from . import BaseInsuranceService
 
 
 class EquipmentInsuranceService:
+    base_insurance_service = BaseInsuranceService()
+
     def _calculate_total_cost(self, insurance: EquipmentInsurance, equipment_list: list = []) -> Decimal:
         equipment_cost = 0
 
@@ -37,7 +39,9 @@ class EquipmentInsuranceService:
         **base_insurance_fields,
     ) -> Decimal:
         type = InsuranceType.objects.equipment()
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
+            **base_insurance_fields, type=type
+        )
         insurance = EquipmentInsurance(
             nature=nature,
             postcode=int(postcode_city.postcode) if postcode_city else None,
@@ -62,7 +66,9 @@ class EquipmentInsuranceService:
         **base_insurance_fields,
     ) -> EquipmentInsurance:
         type = InsuranceType.objects.equipment()
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
+            **base_insurance_fields, type=type
+        )
         insurance = EquipmentInsurance(
             nature=nature,
             postcode=int(postcode_city.postcode) if postcode_city else None,
@@ -87,7 +93,7 @@ class EquipmentInsuranceService:
 
     @transaction.atomic
     def equipment_insurance_delete(self, *, insurance: EquipmentInsurance):
-        insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+        insurance = self.base_insurance_service.base_insurance_delete_relations(insurance=insurance)
         insurance.equipment.clear()
         insurance.delete()
 

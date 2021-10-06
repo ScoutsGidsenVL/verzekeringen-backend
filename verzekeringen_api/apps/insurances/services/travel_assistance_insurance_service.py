@@ -10,6 +10,8 @@ from . import BaseInsuranceService
 
 
 class TravelAssistanceInsuranceService:
+    base_insurance_service = BaseInsuranceService()
+
     def _cost_by_prefix(self, prefix: str, type: InsuranceType, active_limit: int, days: int) -> Decimal:
         if not active_limit:
             # If no active limit we need to get price of max so 32 and calculate extra months
@@ -54,7 +56,9 @@ class TravelAssistanceInsuranceService:
             if vehicle is None
             else InsuranceType.objects.travel_assistance_with_vehicle()
         )
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
+            **base_insurance_fields, type=type
+        )
         insurance = TravelAssistanceInsurance(
             country=country,
             **base_insurance_fields,
@@ -77,7 +81,9 @@ class TravelAssistanceInsuranceService:
             if vehicle is None
             else InsuranceType.objects.travel_assistance_with_vehicle()
         )
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
+            **base_insurance_fields, type=type
+        )
         insurance = TravelAssistanceInsurance(
             country=country,
             **base_insurance_fields,
@@ -101,7 +107,7 @@ class TravelAssistanceInsuranceService:
 
     @transaction.atomic
     def travel_assistance_insurance_delete(self, *, insurance: TravelAssistanceInsurance):
-        insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+        insurance = self.base_insurance_service.base_insurance_delete_relations(insurance=insurance)
         insurance.participants.clear()
         insurance.delete()
 

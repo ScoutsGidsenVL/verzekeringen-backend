@@ -9,6 +9,8 @@ from . import BaseInsuranceService
 
 
 class EventInsuranceService:
+    base_insurance_service = BaseInsuranceService()
+
     def _calculate_total_cost(self, insurance: EventInsurance) -> Decimal:
         days = (insurance.end_date - insurance.start_date).days
         if days == 0:
@@ -23,7 +25,7 @@ class EventInsuranceService:
     def event_insurance_cost_calculation(
         self, *, nature: str, event_size: int, location: PostcodeCity, **base_insurance_fields
     ) -> Decimal:
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=InsuranceType.objects.event()
         )
         insurance = EventInsurance(
@@ -39,7 +41,7 @@ class EventInsuranceService:
     def event_insurance_create(
         self, *, nature: str, event_size: int, location: PostcodeCity, **base_insurance_fields
     ) -> EventInsurance:
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=InsuranceType.objects.event()
         )
         insurance = EventInsurance(
@@ -57,7 +59,7 @@ class EventInsuranceService:
 
     @transaction.atomic
     def event_insurance_delete(self, *, insurance: EventInsurance):
-        insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+        insurance = self.base_insurance_service.base_insurance_delete_relations(insurance=insurance)
         insurance.delete()
 
     @transaction.atomic

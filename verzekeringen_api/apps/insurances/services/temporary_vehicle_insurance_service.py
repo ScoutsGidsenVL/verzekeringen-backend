@@ -15,11 +15,13 @@ from apps.insurances.models.enums import (
     TemporaryVehicleParticipantType,
     TemporaryVehicleInsuranceOptionApi,
 )
-from . import base_insurance_service as BaseInsuranceService
+from . import BaseInsuranceService
 from apps.equipment.models import InuitsVehicle, VehicleInuitsTemplate
 
 
 class TemporaryVehicleInsuranceService:
+    base_insurance_service = BaseInsuranceService()
+
     def _calculate_total_cost(self, insurance: TemporaryVehicleInsurance) -> Decimal:
         days = (insurance.end_date - insurance.start_date).days
 
@@ -69,7 +71,9 @@ class TemporaryVehicleInsuranceService:
         **base_insurance_fields,
     ) -> Decimal:
         type = InsuranceType.objects.temporary_vehicle()
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
+            **base_insurance_fields, type=type
+        )
         insurance = TemporaryVehicleInsurance(
             max_coverage=max_coverage,
             **base_insurance_fields,
@@ -90,7 +94,9 @@ class TemporaryVehicleInsuranceService:
         **base_insurance_fields,
     ) -> TemporaryVehicleInsurance:
         type = InsuranceType.objects.temporary_vehicle()
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(**base_insurance_fields, type=type)
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
+            **base_insurance_fields, type=type
+        )
         insurance = TemporaryVehicleInsurance(
             max_coverage=max_coverage,
             **base_insurance_fields,
@@ -135,7 +141,7 @@ class TemporaryVehicleInsuranceService:
 
     @transaction.atomic
     def temporary_vehicle_insurance_delete(self, *, insurance: TemporaryVehicleInsurance):
-        insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+        insurance = self.base_insurance_service.base_insurance_delete_relations(insurance=insurance)
         insurance.participants.clear()
         insurance.delete()
 

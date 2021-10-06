@@ -9,6 +9,8 @@ from . import BaseInsuranceService
 
 
 class ActivityInsuranceService:
+    base_insurance_service = BaseInsuranceService()
+
     def _calculate_total_cost(self, insurance: ActivityInsurance) -> Decimal:
         premium = CostVariable.objects.get_variable(insurance.type, "premium")
         cost = round(insurance.group_size.value * premium.value, 2)
@@ -19,7 +21,7 @@ class ActivityInsuranceService:
     def activity_insurance_cost_calculation(
         self, *, nature: str, group_size: GroupSize, location: PostcodeCity, **base_insurance_fields
     ) -> Decimal:
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=InsuranceType.objects.activity()
         )
         insurance = ActivityInsurance(
@@ -35,7 +37,7 @@ class ActivityInsuranceService:
     def activity_insurance_create(
         self, *, nature: str, group_size: GroupSize, location: PostcodeCity, **base_insurance_fields
     ) -> ActivityInsurance:
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=InsuranceType.objects.activity()
         )
         insurance = ActivityInsurance(
@@ -53,7 +55,7 @@ class ActivityInsuranceService:
 
     @transaction.atomic
     def activity_insurance_delete(self, *, insurance: ActivityInsurance):
-        insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+        insurance = self.base_insurance_service.base_insurance_delete_relations(insurance=insurance)
         insurance.delete()
 
     @transaction.atomic

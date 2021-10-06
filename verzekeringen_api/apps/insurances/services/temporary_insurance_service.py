@@ -9,6 +9,8 @@ from . import BaseInsuranceService
 
 
 class TemporaryInsuranceService:
+    base_insurance_service = BaseInsuranceService()
+
     def _calculate_total_cost(self, insurance: TemporaryInsurance, non_member_amount: int) -> Decimal:
         premium = CostVariable.objects.get_variable(insurance.type, "premium")
         cost = round(non_member_amount * premium.value, 2)
@@ -25,7 +27,7 @@ class TemporaryInsuranceService:
         postcode_city: PostcodeCity = None,
         **base_insurance_fields,
     ) -> Decimal:
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=InsuranceType.objects.temporary()
         )
         insurance = TemporaryInsurance(
@@ -48,7 +50,7 @@ class TemporaryInsuranceService:
         postcode_city: PostcodeCity = None,
         **base_insurance_fields,
     ) -> TemporaryInsurance:
-        base_insurance_fields = BaseInsuranceService.base_insurance_creation_fields(
+        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=InsuranceType.objects.temporary()
         )
         insurance = TemporaryInsurance(
@@ -75,7 +77,7 @@ class TemporaryInsuranceService:
 
     @transaction.atomic
     def temporary_insurance_delete(self, *, insurance: TemporaryInsurance):
-        insurance = BaseInsuranceService.base_insurance_delete_relations(insurance=insurance)
+        insurance = self.base_insurance_service.base_insurance_delete_relations(insurance=insurance)
         insurance.non_members.clear()
         insurance.delete()
 
