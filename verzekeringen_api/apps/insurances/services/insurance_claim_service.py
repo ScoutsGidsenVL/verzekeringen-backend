@@ -12,6 +12,7 @@ from apps.members.services.group_admin_member_service import group_admin_member_
 from apps.members.utils import GroupAdminMember
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from apps.insurances.services import InsuranceClaimMailService
+from inuits.files import FileService
 
 
 logger = logging.getLogger(__name__)
@@ -245,7 +246,7 @@ class InsuranceClaimService:
                         property.update(PdfDict(AS=PdfName("087_Andere"), V=PdfName("087_Andere")))
                         property["/Kids"][3].update(PdfDict(AS=PdfName("087_Andere"), V=PdfName("087_Andere")))
 
-        filename = FileUtils.get_temp_file(filename=("verzekeringen-%s.pdf" % claim.id))
+        filename = FileService.get_temp_file(filename=("verzekeringen-%s.pdf" % claim.id))
 
         PdfWriter().write(filename, template)
         return filename
