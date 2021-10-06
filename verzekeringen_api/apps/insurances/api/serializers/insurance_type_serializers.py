@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ...models import InsuranceType
+from apps.insurances.models import InsuranceType
 
 
 # Output

@@ -7,22 +7,12 @@ from django.core.exceptions import ValidationError
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_FILE, TYPE_ARRAY
 from .serializers import UploadFileInputSerializer, UploadFileOutputSerializer
-from ..models import InsuranceClaimAttachment
-from ..services.file_service import store_attachment
+from apps.insurances.models import InsuranceClaimAttachment
+from apps.insurances.services import InsuranceClaimService
 
 responses = {
-    status.HTTP_400_BAD_REQUEST: Schema(
-        type=TYPE_ARRAY,
-        items=Schema(
-            type=TYPE_STRING
-        )
-    ),
-    status.HTTP_404_NOT_FOUND: Schema(
-        type=TYPE_OBJECT,
-        properties={
-            'detail': Schema(type=TYPE_STRING)
-        }
-    )
+    status.HTTP_400_BAD_REQUEST: Schema(type=TYPE_ARRAY, items=Schema(type=TYPE_STRING)),
+    status.HTTP_404_NOT_FOUND: Schema(type=TYPE_OBJECT, properties={"detail": Schema(type=TYPE_STRING)}),
 }
 
 
@@ -32,24 +22,23 @@ class FileViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(
         request_body=UploadFileInputSerializer,
         responses={status.HTTP_201_CREATED: UploadFileOutputSerializer},
-        tags=['Files'],
+        tags=["Files"],
     )
     def create(self, request):
         serializer = UploadFileInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
-        claim = data.get('insurance_claim')
+        claim = data.get("insurance_claim")
 
         if not claim:
             return HttpResponse(404, "Insurance claim not found")
-
 
         if InsuranceClaimAttachment.objects.filter(insurance_claim=claim):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Attachment already have file!"})
 
         try:
-            result = store_attachment(uploaded_file=data.get("file"), claim=claim)
+            result = FileService().store_attachment(uploaded_file=data.get("file"), claim=claim)
         except ValidationError as e:
             raise serializers.ValidationError("; ".join(e.messages))
         url = request.build_absolute_uri("/api/files/download/" + str(result.id))
@@ -64,14 +53,13 @@ class FileViewSet(viewsets.GenericViewSet):
                 type=TYPE_FILE,
             ),
         },
-        tags=['Files'],
+        tags=["Files"],
     )
     def retrieve(self, request, pk=None):
         attachement = get_object_or_404(InsuranceClaimAttachment.objects, pk=pk)
         response = HttpResponse(attachement.file, content_type=attachement.content_type)
-        response['Content-Disposition'] = 'attachment; filename={}'.format(attachement.file.name)
+        response["Content-Disposition"] = "attachment; filename={}".format(attachement.file.name)
         return response
-
 
     @swagger_auto_schema(
         responses={
@@ -80,7 +68,7 @@ class FileViewSet(viewsets.GenericViewSet):
                 type=TYPE_STRING,
             ),
         },
-        tags=['Files'],
+        tags=["Files"],
     )
     def destroy(self, request, pk):
         attachement: InsuranceClaimAttachment = get_object_or_404(InsuranceClaimAttachment.objects, pk=pk)

@@ -9,6 +9,7 @@ from apps.members.services.group_admin_member_service import group_admin_member_
 from apps.members.utils import GroupAdminMember
 from apps.scouts_auth.models import User
 from apps.scouts_auth.services.group_admin_service import get_group_by_number
+
 from verzekeringen_api import settings
 
 
@@ -99,7 +100,10 @@ class InsuranceClaim(models.Model):
 
     class Meta:
         permissions = (
-            ("can_view_note_and_case_number", "Administratieve gebruikers kunnen dossiernummer en opmerkingen bekijken"),
+            (
+                "can_view_note_and_case_number",
+                "Administratieve gebruikers kunnen dossiernummer en opmerkingen bekijken",
+            ),
         )
 
     @property

@@ -1,10 +1,10 @@
-from . import base_insurance_service as BaseInsuranceService
-from . import activity_insurance_service as ActivityInsuranceService
-from . import temporary_insurance_service as TemporaryInsuranceService
-from . import travel_assistance_insurance_service as TravelAssistanceInsuranceService
-from . import temporary_vehicle_insurance_service as TemporaryVehicleInsuranceService
-from . import event_insurance_service as EventInsuranceService
-from . import equipment_insurance_service as EquipmentInsuranceService
-from . import insurance_draft_service as InsuranceDraftService
-from . import insurance_claim_service as InsuranceClaimService
+from .base_insurance_service import BaseInsuranceService
+from .activity_insurance_service import ActivityInsuranceService
+from .temporary_insurance_service import TemporaryInsuranceService
+from .travel_assistance_insurance_service import TravelAssistanceInsuranceService
+from .temporary_vehicle_insurance_service import TemporaryVehicleInsuranceService
+from .event_insurance_service import EventInsuranceService
+from .equipment_insurance_service import EquipmentInsuranceService
+from .insurance_draft_service import InsuranceDraftService
 from .insurance_claim_mail_service import InsuranceClaimMailService
+from .insurance_claim_service import InsuranceClaimService

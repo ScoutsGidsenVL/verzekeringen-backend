@@ -3,14 +3,13 @@ import re
 from rest_framework import serializers
 
 from apps.base.serializers import DateTimeTZField
-from apps.files.models import InsuranceClaimAttachment
 from apps.members.api.serializers import GroupAdminMemberListOutputSerializer
 from apps.members.enums import Sex
 from apps.members.models import InuitsNonMember
 from apps.members.services import GroupAdminMemberService
 from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
-from ...models.insurance_claim import InsuranceClaim, InsuranceClaimVictim
+from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from . import InsuranceClaimAdmistrativeFieldsMixin
 
 

@@ -4,11 +4,10 @@ from django.conf import settings
 from django.db.models import Q
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
-from apps.equipment.models import InuitsVehicle, VehicleInuitsTemplate
+from apps.equipment.models import InuitsVehicle
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.members.api.serializers import (
     MemberNestedOutputSerializer,
-    MemberNestedCreateInputSerializer,
     NonMemberNestedOutputSerializer,
     NonMemberCompanyNestedOutputSerializer,
     NonMemberCreateInputSerializer,
@@ -24,7 +23,6 @@ from apps.equipment.api.serializers import (
     InuitsVehicleOutputSerializer,
     VehicleOutputSerializer,
     VehicleInputSerializer,
-    VehicleWithChassisOutputSerializer,
     VehicleWithChassisInputSerializer,
     EquipmentNestedOutputSerializer,
     EquipmentInputSerializer,
@@ -32,21 +30,19 @@ from apps.equipment.api.serializers import (
 
 from apps.base.serializers import DateTimeTZField
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
-from ...models import (
+from apps.insurances.models import (
     BaseInsurance,
     ActivityInsurance,
     TemporaryInsurance,
     TravelAssistanceInsurance,
-    InsuranceType,
     TemporaryVehicleInsurance,
     EquipmentInsurance,
     EventInsurance,
 )
-from ...models.enums import (
+from apps.insurances.models.enums import (
     InsuranceStatus,
     GroupSize,
     EventSize,
-    TemporaryVehicleInsuranceOption,
     TemporaryVehicleInsuranceOptionApi,
     TemporaryVehicleInsuranceCoverageOption,
 )
@@ -139,7 +135,7 @@ class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
     class Meta:
         model = TravelAssistanceInsurance
         fields = base_insurance_detail_fields + ("country", "participants", "vehicle")
-    
+
     @swagger_serializer_method(serializer_or_field=InuitsVehicleOutputSerializer)
     def get_vehicle(self, obj):
         vehicle = obj.vehicle
@@ -148,14 +144,14 @@ class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
 
         if inuits_vehicles.count() > 0:
             return InuitsVehicleOutputSerializer(inuits_vehicles[0]).data
-        
+
         return VehicleOutputSerializer(vehicle).data
 
 
 class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     drivers = NonMemberNestedOutputSerializer(many=True)
     owner = serializers.SerializerMethodField()
-    #vehicle = VehicleWithChassisOutputSerializer(read_only=True)
+    # vehicle = VehicleWithChassisOutputSerializer(read_only=True)
     vehicle = serializers.SerializerMethodField()
     insurance_options = serializers.SerializerMethodField()
     max_coverage = serializers.SerializerMethodField()
@@ -184,7 +180,7 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
         return EnumOutputSerializer(
             parse_choice_to_tuple(TemporaryVehicleInsuranceCoverageOption(obj.max_coverage))
         ).data
-    
+
     @swagger_serializer_method(serializer_or_field=InuitsVehicleOutputSerializer)
     def get_vehicle(self, obj):
         vehicle = InuitsVehicle.objects.get(chassis_number=obj.vehicle.chassis_number)

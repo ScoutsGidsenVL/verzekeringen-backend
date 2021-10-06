@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     "apps.locations",
     "apps.insurances",
     "apps.info",
-    "apps.files",
     "apps.mailing",
 ]
 
@@ -169,6 +168,7 @@ REST_FRAMEWORK = {
 RESOURCES_PATH = env.str("RESOURCES_PATH")
 RESOURCES_MAIL_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_PATH")
 RESOURCES_CLAIMS_EMAIL_PATH = RESOURCES_MAIL_PATH + env.str("RESOURCES_CLAIMS_EMAIL_PATH")
+RESOURCES_CLAIMS_EMAIL_NOTIFICATION_PATH = RESOURCES_MAIL_PATH + env.str("RESOURCES_CLAIMS_EMAIL_NOTIFICATION_PATH")
 
 # Email
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing

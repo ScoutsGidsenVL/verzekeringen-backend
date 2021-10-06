@@ -11,7 +11,7 @@ from ..serializers import (
 )
 from ..filters import InsuranceClaimFilter
 from ...models.insurance_claim import InsuranceClaim
-from ...services import InsuranceClaimService
+from apps.insurances.services import InsuranceClaimService
 
 
 class InsuranceClaimViewSet(viewsets.GenericViewSet):
@@ -21,6 +21,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
     ordering = ["-date"]
     # Filters on the year of the accident
     filterset_class = InsuranceClaimFilter
+    service = InsuranceClaimService()
 
     def get_queryset(self):
         return InsuranceClaim.objects.all()
@@ -52,9 +53,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         input_serializer = InsuranceClaimInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        claim: InsuranceClaim = InsuranceClaimService.insurance_claim_create(
-            created_by=request.user, **input_serializer.validated_data
-        )
-        InsuranceClaimService.email_claim(claim=claim)
+        claim: InsuranceClaim = self.service.create(created_by=request.user, **input_serializer.validated_data)
+        self.service.email_claim(claim=claim)
         output_serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

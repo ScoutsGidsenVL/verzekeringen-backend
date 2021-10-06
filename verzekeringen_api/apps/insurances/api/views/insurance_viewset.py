@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, permissions, filters
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
@@ -42,16 +42,14 @@ from ...services import (
 
 class InsuranceViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    search_fields = ['_group_number']
+    search_fields = ["_group_number"]
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
 
     def get_queryset(self):
-        return BaseInsurance.objects\
-            .filter(
-                created_on__gte=datetime.now() - timedelta(days=3 * 365)
-            )\
-            .allowed(self.request.user)
+        return BaseInsurance.objects.filter(created_on__gte=datetime.now() - timedelta(days=3 * 365)).allowed(
+            self.request.user
+        )
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceListOutputSerializer})
     def retrieve(self, request, pk=None):
@@ -271,7 +269,9 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             **input_serializer.validated_data, created_by=request.user
         )
 
-        output_serializer = TemporaryVehicleInsuranceDetailOutputSerializer(created_insurance, context=created_insurance)
+        output_serializer = TemporaryVehicleInsuranceDetailOutputSerializer(
+            created_insurance, context=created_insurance
+        )
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

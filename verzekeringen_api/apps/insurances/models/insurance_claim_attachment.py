@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from apps.insurances.models.insurance_claim import InsuranceClaim
+
+from apps.insurances.models import InsuranceClaim
 from inuits.models import BaseModel
 
 

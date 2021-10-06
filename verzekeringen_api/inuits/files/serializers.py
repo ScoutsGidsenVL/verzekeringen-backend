@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
-from ..models import InsuranceClaimAttachment
-from ...insurances.models.insurance_claim import InsuranceClaim
+
+from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
 
 class UploadFileInputSerializer(serializers.Serializer):

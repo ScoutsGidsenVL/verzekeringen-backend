@@ -210,6 +210,17 @@ python-versions = ">=3.5"
 Django = ">=2.2"
 
 [[package]]
+name = "django-safedelete"
+version = "1.1.0"
+description = "Mask your objects instead of deleting them from your database."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Django = "*"
+
+[[package]]
 name = "django-storages"
 version = "1.11.1"
 description = "Support for many storage backends in Django"
@@ -686,7 +697,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "157e4192459b18967898859ff5e596d7d7b5371efb382dd81357f4ef1a8f5190"
+content-hash = "7219f744fd115edd500853f50e1c9b32bb21ca7373b628d7f1229e636c0875ab"
 
 [metadata.files]
 asgiref = [
@@ -809,6 +820,10 @@ django-cors-headers = [
 django-filter = [
     {file = "django-filter-2.4.0.tar.gz", hash = "sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06"},
     {file = "django_filter-2.4.0-py3-none-any.whl", hash = "sha256:e00d32cebdb3d54273c48f4f878f898dced8d5dfaad009438fe61ebdf535ace1"},
+]
+django-safedelete = [
+    {file = "django-safedelete-1.1.0.tar.gz", hash = "sha256:eb725b0c24a2f38560e609de999b1f7fc0c13ea500659ed618c942734b3e72df"},
+    {file = "django_safedelete-1.1.0-py3-none-any.whl", hash = "sha256:473ef5c5e4e4fefece1ddbd3b8efbdf18732e8338413166f50a7ddb087a0a858"},
 ]
 django-storages = [
     {file = "django-storages-1.11.1.tar.gz", hash = "sha256:c823dbf56c9e35b0999a13d7e05062b837bae36c518a40255d522fbe3750fbb4"},
