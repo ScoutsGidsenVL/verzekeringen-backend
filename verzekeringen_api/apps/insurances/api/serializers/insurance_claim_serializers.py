@@ -10,6 +10,7 @@ from apps.members.services import GroupAdminMemberService
 from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
+from apps.insurances.api.serializers import InsuranceClaimAttachmentUploadSerializer
 from . import InsuranceClaimAdmistrativeFieldsMixin
 
 
@@ -124,7 +125,7 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()
-    file = serializers.FileField(required=False)
+    file = InsuranceClaimAttachmentUploadSerializer()
 
     def validate_bank_account(self, value):
         pattern = re.compile("^BE[0-9]{14}$")

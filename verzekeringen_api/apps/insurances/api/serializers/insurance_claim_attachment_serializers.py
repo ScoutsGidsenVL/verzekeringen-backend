@@ -6,7 +6,7 @@ from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
 class InsuranceClaimAttachmentUploadSerializer(serializers.Serializer):
     insurance_claim = serializers.PrimaryKeyRelatedField(queryset=InsuranceClaim.objects.all())
-    file = serializers.FileField()
+    file = serializers.FileField(required=False)
 
 
 class InsuranceClaimAttachmentSerializer(serializers.Serializer):
