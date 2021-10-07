@@ -92,7 +92,7 @@ class InsuranceClaimMailService(MailService):
         subject = self.email_subject.replace("{{ claim.id }}", str(claim.id))
 
         # @TODO: i18n
-        dictionary = {
+        return {
             "subject": subject,
             "declarant_name": claim.declarant.first_name + " " + claim.declarant.last_name,
             "victim__name": claim.victim.first_name + " " + claim.victim.last_name,
@@ -101,7 +101,6 @@ class InsuranceClaimMailService(MailService):
             "date_of_declaration": claim.date,
         }
 
-        return dictionary
-
     def _prepare_email_body(self, path: str, dictionary: dict) -> str:
-        return TextUtils.replace(path, dictionary)
+        logger.debug(dictionary)
+        return TextUtils.replace(path=path, dictionary=dictionary)
