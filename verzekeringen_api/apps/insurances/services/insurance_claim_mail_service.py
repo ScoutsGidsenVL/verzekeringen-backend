@@ -57,8 +57,8 @@ class InsuranceClaimMailService(MailService):
         to.append(claim.victim.email)
 
         attachment_paths = [claim_report_path]
-        if claim.attachment:
-            attachment_paths.append(claim.attachment)
+        if claim.file:
+            attachment_paths.append(claim.file)
 
         mail = Mail(
             subject=dictionary["subject"],
