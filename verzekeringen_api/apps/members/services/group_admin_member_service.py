@@ -156,7 +156,7 @@ def _parse_search_results(active_user, json, include_inactive: bool = False):
                             results.append(_parse_member_data(detailed_data, member.group_admin_id))
                             was_active = True
 
-                # There
+                # The member is still active
                 if end_of_activity_period_counter == 0:
                     results.append(_parse_member_data(detailed_data, member.group_admin_id))
 

@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import serializers
 from apps.locations.api.serializers import BelgianPostcodeCityOutputSerializer, BelgianPostcodeCityInputSerializer
 from ...models import Member, NonMember, InuitsNonMember, NonMemberInuitsTemplate
@@ -5,10 +7,18 @@ from ...utils import GroupAdminMember
 from ...enums import Sex
 
 
+logger = logging.getLogger(__name__)
+
+
 class InuitsNonMemberTemplateOutputSerializer(serializers.ModelSerializer):
+    gender = serializers.SerializerMethodField()
+
     class Meta:
         model = NonMemberInuitsTemplate
         fields = "inuits_non_member"
+
+    def get_gender(self, obj) -> str:
+        return obj.get_sex()
 
 
 class PersonOutputSerializer(serializers.Serializer):
@@ -25,8 +35,11 @@ class PersonOutputSerializer(serializers.Serializer):
     def get_is_member(self, obj) -> bool:
         return type(obj.__class__) == GroupAdminMember.__class__
 
-    def get_gender(self, obj):
-        return obj.get_sex()
+    def get_gender(self, obj) -> str:
+        if self.get_is_member(obj):
+            return obj.get_sex()
+        else:
+            return obj.sex
 
 
 # Output

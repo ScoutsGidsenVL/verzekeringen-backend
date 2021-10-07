@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -5,7 +6,10 @@ from django.core.exceptions import ValidationError
 from . import enums
 from .managers import InuitsNonMemberManager
 from apps.locations.utils import PostcodeCity
-from .enums import Sex
+from .enums import Sex, SexHelper
+
+
+logger = logging.getLogger(__name__)
 
 
 class AbstractMember(models.Model):
@@ -121,7 +125,9 @@ class InuitsNonMember(models.Model):
 
     @property
     def get_sex(self):
-        return self.sex
+        gender = SexHelper.parse_sex(self.sex)
+
+        return gender
 
 
 class Address(models.Model):
