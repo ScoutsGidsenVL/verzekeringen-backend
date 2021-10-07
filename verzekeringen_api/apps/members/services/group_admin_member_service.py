@@ -118,13 +118,14 @@ def _parse_search_result(member_data) -> GroupAdminMember:
     return None
 
 
-def _calculate_past_year(current_date: date, number_of_years: int) -> date:
+def _calculate_activity_epoch(current_date: date, number_of_years: int) -> date:
     return (current_date - timedelta(days=number_of_years * 365)).date()
 
 
 def _parse_search_results(active_user, json, include_inactive: bool = False):
     results = []
-    previous_period = _calculate_past_year(datetime.now(), 3)
+    # The "activity epoch" after which a member is deemed a past active member
+    activity_epoch = _calculate_activity_epoch(datetime.now(), 3)
 
     for member_data in json.get("leden", []):
         member = _parse_search_result(member_data)
@@ -133,27 +134,31 @@ def _parse_search_results(active_user, json, include_inactive: bool = False):
                 active_user=active_user, group_admin_id=member.group_admin_id
             )
 
-            if include_inactive:
-                was_active = False
-                end_of_activity_period_counter = 0
-                for function in detailed_data.get("functies", []):
-                    if was_active:
-                        break
+            was_active = False
+            end_of_activity_period_counter = 0
+            for function in detailed_data.get("functies", []):
+                # Member was active in at least one function since the activity epoch, don't look further
+                if was_active:
+                    break
 
-                    end_of_activity_period_str = function.get("einde", None)
+                end_of_activity_period_str = function.get("einde", None)
 
-                    if end_of_activity_period_str:
-                        end_of_activity_period_counter = end_of_activity_period_counter + 1
-                        end_of_activity_period = datetime.fromisoformat(end_of_activity_period_str).date()
+                if end_of_activity_period_str:
+                    # An end date of a function was registered in the member record
+                    end_of_activity_period_counter = end_of_activity_period_counter + 1
+                    end_of_activity_period = datetime.fromisoformat(end_of_activity_period_str).date()
 
-                        if end_of_activity_period < previous_period:
+                    # Was the end date of the activity after the activity epoch ?
+                    if activity_epoch < end_of_activity_period:
+                        # Not all insurance types require recently active members to be included in the search results
+                        # (currently only temporary insurance for non-members)
+                        if include_inactive:
                             results.append(_parse_member_data(detailed_data, member.group_admin_id))
                             was_active = True
 
+                # There
                 if end_of_activity_period_counter == 0:
                     results.append(_parse_member_data(detailed_data, member.group_admin_id))
-            else:
-                results.append(_parse_member_data(detailed_data, member.group_admin_id))
 
     return results
 
