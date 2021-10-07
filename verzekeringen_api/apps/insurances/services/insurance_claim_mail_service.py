@@ -102,5 +102,4 @@ class InsuranceClaimMailService(MailService):
         }
 
     def _prepare_email_body(self, path: str, dictionary: dict) -> str:
-        logger.debug(dictionary)
         return TextUtils.replace(path=path, dictionary=dictionary)

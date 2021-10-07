@@ -4,12 +4,12 @@ from drf_yasg2.utils import swagger_serializer_method
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
 
-class UploadFileInputSerializer(serializers.Serializer):
+class InsuranceClaimAttachmentUploadSerializer(serializers.Serializer):
     insurance_claim = serializers.PrimaryKeyRelatedField(queryset=InsuranceClaim.objects.all())
     file = serializers.FileField()
 
 
-class UploadFileOutputSerializer(serializers.Serializer):
+class InsuranceClaimAttachmentSerializer(serializers.Serializer):
     id = serializers.CharField()
     url = serializers.CharField()
 

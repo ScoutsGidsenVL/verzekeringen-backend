@@ -1,14 +1,20 @@
-from rest_framework.parsers import MultiPartParser
-from rest_framework import views, status, serializers, permissions, viewsets
-from rest_framework.response import Response
+import logging
+
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser
+from rest_framework import status, serializers, viewsets
+from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_FILE, TYPE_ARRAY
-from .serializers import UploadFileInputSerializer, UploadFileOutputSerializer
+
 from apps.insurances.models import InsuranceClaimAttachment
-from apps.insurances.services import InsuranceClaimService
+from apps.insurances.services import InsuranceClaimAttachmentService
+from apps.insurances.api.serializers import (
+    InsuranceClaimAttachmentUploadSerializer,
+    InsuranceClaimAttachmentSerializer,
+)
 
 responses = {
     status.HTTP_400_BAD_REQUEST: Schema(type=TYPE_ARRAY, items=Schema(type=TYPE_STRING)),
@@ -16,20 +22,26 @@ responses = {
 }
 
 
-class FileViewSet(viewsets.GenericViewSet):
+logger = logging.getLogger(__name__)
+
+
+class InsuranceClaimAttachmentViewSet(viewsets.GenericViewSet):
     parser_classes = [MultiPartParser]
+    service = InsuranceClaimAttachmentService()
 
     @swagger_auto_schema(
-        request_body=UploadFileInputSerializer,
-        responses={status.HTTP_201_CREATED: UploadFileOutputSerializer},
+        request_body=InsuranceClaimAttachmentUploadSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceClaimAttachmentSerializer},
         tags=["Files"],
     )
     def create(self, request):
-        serializer = UploadFileInputSerializer(data=request.data)
+        serializer = InsuranceClaimAttachmentUploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
         claim = data.get("insurance_claim")
+
+        logger.debug("Received a file upload request for claim %s", claim)
 
         if not claim:
             return HttpResponse(404, "Insurance claim not found")
@@ -38,11 +50,12 @@ class FileViewSet(viewsets.GenericViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Attachment already have file!"})
 
         try:
-            result = FileService().store_attachment(uploaded_file=data.get("file"), claim=claim)
+            result = self.service.store_attachment(uploaded_file=data.get("file"), claim=claim)
         except ValidationError as e:
             raise serializers.ValidationError("; ".join(e.messages))
+
         url = request.build_absolute_uri("/api/files/download/" + str(result.id))
-        output_serializer = UploadFileOutputSerializer({"url": url, "id": str(result.id)})
+        output_serializer = InsuranceClaimAttachmentSerializer({"url": url, "id": str(result.id)})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

@@ -14,25 +14,6 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
     def get_queryset(self):
         return InsuranceDraft.objects.all().allowed(self.request.user)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceDraftOutputSerializer})
-    def retrieve(self, request, pk=None):
-        draft = self.get_object()
-        serializer = InsuranceDraftOutputSerializer(draft)
-
-        return Response(serializer.data)
-
-    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceDraftOutputSerializer})
-    def list(self, request):
-        drafts = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(drafts)
-
-        if page is not None:
-            serializer = InsuranceDraftOutputSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        else:
-            serializer = InsuranceDraftOutputSerializer(drafts, many=True)
-            return Response(serializer.data)
-
     @swagger_auto_schema(
         request_body=InsuranceDraftCreateInputSerializer,
         responses={status.HTTP_201_CREATED: InsuranceDraftOutputSerializer},
@@ -47,6 +28,11 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         output_serializer = InsuranceDraftOutputSerializer(draft)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceDraftOutputSerializer})
+    def retrieve(self, request, pk=None):
+        draft = self.get_object()
+        serializer = InsuranceDraftOutputSerializer(draft)
 
     @swagger_auto_schema(
         request_body=InsuranceDraftCreateInputSerializer,
@@ -64,7 +50,21 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
+        return Response(serializer.data)
+
     def destroy(self, request, pk=None):
         draft = self.get_object()
         InsuranceDraftService.insurance_draft_delete(draft=draft)
         return Response(status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceDraftOutputSerializer})
+    def list(self, request):
+        drafts = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(drafts)
+
+        if page is not None:
+            serializer = InsuranceDraftOutputSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = InsuranceDraftOutputSerializer(drafts, many=True)
+            return Response(serializer.data)

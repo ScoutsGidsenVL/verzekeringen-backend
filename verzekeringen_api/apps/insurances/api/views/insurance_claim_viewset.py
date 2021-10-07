@@ -26,6 +26,20 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
     def get_queryset(self):
         return InsuranceClaim.objects.all()
 
+    @swagger_auto_schema(
+        request_body=InsuranceClaimInputSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceClaimDetailOutputSerializer},
+    )
+    def create(self, request):
+        input_serializer = InsuranceClaimInputSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+
+        claim: InsuranceClaim = self.service.create(created_by=request.user, **input_serializer.validated_data)
+        self.service.email_claim(claim=claim)
+        output_serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})
     def retrieve(self, request, pk=None):
         claim = self.get_object()
@@ -44,16 +58,3 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         else:
             serializer = BaseInsuranceClaimSerializer(insurances, many=True, context={"request": request})
             return Response(serializer.data)
-
-    @swagger_auto_schema(
-        request_body=InsuranceClaimInputSerializer,
-        responses={status.HTTP_201_CREATED: InsuranceClaimDetailOutputSerializer},
-    )
-    def create(self, request):
-        input_serializer = InsuranceClaimInputSerializer(data=request.data, context={"request": request})
-        input_serializer.is_valid(raise_exception=True)
-
-        claim: InsuranceClaim = self.service.create(created_by=request.user, **input_serializer.validated_data)
-        self.service.email_claim(claim=claim)
-        output_serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)

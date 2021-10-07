@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 from .api.views import (
     InsuranceClaimViewSet,
+    InsuranceClaimAttachmentViewSet,
     InsuranceTypeViewSet,
     InsuranceViewSet,
     InsuranceStatusViewSet,
@@ -30,6 +31,7 @@ router.register(
     TemporaryVehicleInsuranceOptionApiViewSet,
     "VehicleInsuranceOption",
 )
+router.register(r"files", InsuranceClaimAttachmentViewSet, "Files")
 
 
 urlpatterns = router.urls

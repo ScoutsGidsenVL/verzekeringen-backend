@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime, date
 
-from django.core.files.base import File
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.conf import settings
@@ -11,7 +10,7 @@ from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.members.utils import GroupAdminMember
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
-from apps.insurances.services import InsuranceClaimMailService
+from apps.insurances.services import InsuranceClaimAttachmentService, InsuranceClaimMailService
 from inuits.files import FileService
 
 
@@ -43,6 +42,7 @@ class InsuranceClaimService:
         witness_description: str = None,
         leadership_description: str = None,
         victim: InsuranceClaimVictim,
+        file=None,
     ) -> InsuranceClaim:
         # validate if person have rights to create claim for this group
         if group_id not in (group.id for group in created_by.partial_scouts_groups):
@@ -81,17 +81,10 @@ class InsuranceClaimService:
         claim.full_clean()
         claim.save()
 
+        if file:
+            InsuranceClaimAttachmentService().store_attachment(uploaded_file=file, claim=claim)
+
         return claim
-
-    def store_attachment(self, *, uploaded_file: File, claim: InsuranceClaimAttachment) -> InsuranceClaimAttachment:
-        attachment = InsuranceClaimAttachment()
-        attachment.insurance_claim = claim
-        attachment.file.save(name=uploaded_file.name, content=uploaded_file)
-        attachment.content_type = uploaded_file.content_type
-        attachment.full_clean()
-        attachment.save()
-
-        return attachment
 
     def generate_pdf(self, claim: InsuranceClaim):
         owner: GroupAdminMember = group_admin_member_detail(
