@@ -49,9 +49,7 @@ class InsuranceClaimMailService(MailService):
 
     def report_claim(self, claim: InsuranceClaim, claim_report_path: str):
         """Reports the claim to the insurance company and member/parents."""
-        subject = self.email_subject.replace("{{ claim.id }}", str(claim.id))
-
-        dictionary = self._prepare_dictionary(subject, claim)
+        dictionary = self._prepare_dictionary(claim)
         body = self._prepare_email_body(self.email_path, dictionary)
 
         to = self.to
@@ -63,7 +61,7 @@ class InsuranceClaimMailService(MailService):
             attachment_paths.append(claim.attachment)
 
         mail = Mail(
-            subject=subject,
+            subject=dictionary["subject"],
             body=body,
             from_email=self.from_email,
             to=to,
@@ -74,15 +72,13 @@ class InsuranceClaimMailService(MailService):
 
     def notify_stakeholders(self, claim: InsuranceClaim, stakeholder: str):
         """Notifies the group leader of the reported claim."""
-        subject = self.email_subject.replace("{{ claim.id }}", str(claim.id))
-
-        dictionary = self._prepare_dictionary(subject, claim)
+        dictionary = self._prepare_dictionary(claim)
         # Name of the group leader
         dictionary["stakeholder_name"] = stakeholder
         body = self._prepare_email_body(self.email_notification_path, dictionary)
 
         mail = Mail(
-            subject=subject,
+            subject=dictionary["subject"],
             body=body,
             from_email=self.from_email,
             to=stakeholder,
@@ -91,8 +87,9 @@ class InsuranceClaimMailService(MailService):
             template_id=self.template_id,
         )
 
-    def _prepare_dictionary(self, subject: str, claim: InsuranceClaim):
+    def _prepare_dictionary(self, claim: InsuranceClaim):
         """Replaces the keys in the mail template with the actual values."""
+        subject = self.email_subject.replace("{{ claim.id }}", str(claim.id))
 
         # @TODO: i18n
         dictionary = {
