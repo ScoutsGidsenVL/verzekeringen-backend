@@ -124,7 +124,7 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()
-    file = serializers.FileField()
+    file = serializers.FileField(required=False)
 
     def validate_bank_account(self, value):
         pattern = re.compile("^BE[0-9]{14}$")
