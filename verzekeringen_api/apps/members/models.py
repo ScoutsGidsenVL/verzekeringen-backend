@@ -119,6 +119,10 @@ class InuitsNonMember(models.Model):
             street=self.street, number=self.number, letter_box=self.letter_box, postcode=self.postcode, city=self.city
         )
 
+    @property
+    def get_sex(self):
+        return self.sex
+
 
 class Address(models.Model):
 

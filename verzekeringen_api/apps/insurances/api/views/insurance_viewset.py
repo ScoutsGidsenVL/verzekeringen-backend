@@ -212,7 +212,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        created_insurance = self.travel_insurance_service.travel_assistance_insurance_create(
+        created_insurance = self.travel_assistance_insurance_service.travel_assistance_insurance_create(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -231,7 +231,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        cost = self.travel_insurance_service.travel_assistance_insurance_cost_calculation(
+        cost = self.travel_assistance_insurance_service.travel_assistance_insurance_cost_calculation(
             **input_serializer.validated_data, created_by=request.user
         )
 
@@ -253,7 +253,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         )
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = self.travel_insurance_service.travel_assistance_insurance_update(
+        updated_insurance = self.travel_assistance_insurance_service.travel_assistance_insurance_update(
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
