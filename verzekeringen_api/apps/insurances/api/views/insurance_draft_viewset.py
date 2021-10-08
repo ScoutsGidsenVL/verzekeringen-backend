@@ -33,6 +33,8 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         draft = self.get_object()
         serializer = InsuranceDraftOutputSerializer(draft)
 
+        return Response(serializer.data)
+
     @swagger_auto_schema(
         request_body=InsuranceDraftCreateInputSerializer,
         responses={status.HTTP_201_CREATED: InsuranceDraftOutputSerializer},
@@ -48,8 +50,6 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         output_serializer = InsuranceDraftOutputSerializer(new_draft)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.data)
 
     def destroy(self, request, pk=None):
         draft = self.get_object()
