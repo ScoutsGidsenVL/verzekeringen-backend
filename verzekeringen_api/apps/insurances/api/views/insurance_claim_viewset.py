@@ -37,7 +37,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
         request_body=InsuranceClaimInputSerializer,
         responses={status.HTTP_201_CREATED: InsuranceClaimDetailOutputSerializer},
     )
-    @parser_classes([MultipartJsonParser])
+    @parser_classes(MultipartJsonParser)
     def create(self, request):
         input_serializer = InsuranceClaimInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
