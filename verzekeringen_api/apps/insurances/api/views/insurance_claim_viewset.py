@@ -25,7 +25,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
     search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]
     ordering_fields = ["date"]
     ordering = ["-date"]
-    parser_classes = (MultipartJsonParser, parsers.JSONParser)
+    parser_classes = [MultipartJsonParser, parsers.JSONParser]
     # Filters on the year of the accident
     filterset_class = InsuranceClaimFilter
     service = InsuranceClaimService()
