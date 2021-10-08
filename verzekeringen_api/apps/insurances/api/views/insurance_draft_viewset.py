@@ -10,6 +10,7 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
+    service = InsuranceDraftService()
 
     def get_queryset(self):
         return InsuranceDraft.objects.all().allowed(self.request.user)
@@ -21,9 +22,7 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
     def create(self, request):
         input_serializer = InsuranceDraftCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
-        draft = InsuranceDraftService.insurance_draft_create(
-            **input_serializer.validated_data, created_by=request.user
-        )
+        draft = self.service.insurance_draft_create(**input_serializer.validated_data, created_by=request.user)
 
         output_serializer = InsuranceDraftOutputSerializer(draft)
 
@@ -42,7 +41,7 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         draft = self.get_object()
         input_serializer = InsuranceDraftCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
-        new_draft = InsuranceDraftService.insurance_draft_update(
+        new_draft = self.service.insurance_draft_update(
             draft=draft, **input_serializer.validated_data, created_by=request.user
         )
 
@@ -54,7 +53,7 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
 
     def destroy(self, request, pk=None):
         draft = self.get_object()
-        InsuranceDraftService.insurance_draft_delete(draft=draft)
+        self.service.insurance_draft_delete(draft=draft)
         return Response(status=status.HTTP_200_OK)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceDraftOutputSerializer})
