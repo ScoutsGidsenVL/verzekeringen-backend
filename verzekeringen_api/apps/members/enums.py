@@ -20,11 +20,11 @@ class SexHelper:
             return Sex.UNKNOWN
 
         value = value.strip().upper()
-        if value in ("O", "OTHER", "ANDERE"):
+        if value in ["O", "OTHER", "ANDERE"]:
             return Sex.OTHER
-        if value in ("F", "FEMALE", "V", "VROUW"):
+        if value in ["F", "FEMALE", "V", "VROUW"]:
             return Sex.FEMALE
-        if value in ("M", "MALE", "MAN"):
+        if value in ["M", "MALE", "MAN"]:
             return Sex.MALE
 
         return Sex.UNKNOWN
