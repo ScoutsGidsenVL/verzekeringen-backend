@@ -2,7 +2,7 @@ import logging
 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, parsers
-from rest_framework.decorators import parser_classes
+from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
@@ -25,7 +25,7 @@ class InsuranceClaimViewSet(viewsets.GenericViewSet):
     search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]
     ordering_fields = ["date"]
     ordering = ["-date"]
-    parser_classes = [MultipartJsonParser, parsers.JSONParser]
+
     # Filters on the year of the accident
     filterset_class = InsuranceClaimFilter
     service = InsuranceClaimService()
