@@ -62,6 +62,8 @@ def _parse_member_data(member_data: dict, group_admin_id: str) -> GroupAdminMemb
         address=address,
     )
 
+    logger.debug("Detailed member data for id %s: %s %s", group_admin_id, member.first_name, member.last_name)
+
     return member
 
 
@@ -130,6 +132,8 @@ def _parse_search_results(active_user, json, include_inactive: bool = False):
     for member_data in json.get("leden", []):
         member = _parse_search_result(member_data)
         if member:
+            logger.debug("Requesting detailed member data from GA for member %s", member.group_admin_id)
+
             detailed_data = _get_group_admin_member_detail_data(
                 active_user=active_user, group_admin_id=member.group_admin_id
             )
@@ -143,6 +147,7 @@ def _parse_search_results(active_user, json, include_inactive: bool = False):
 
                 end_of_activity_period_str = function.get("einde", None)
 
+                # Member has ended an activity for at least one function, examine
                 if end_of_activity_period_str:
                     # An end date of a function was registered in the member record
                     end_of_activity_period_counter = end_of_activity_period_counter + 1
@@ -152,13 +157,14 @@ def _parse_search_results(active_user, json, include_inactive: bool = False):
                     if activity_epoch < end_of_activity_period:
                         # Not all insurance types require recently active members to be included in the search results
                         # (currently only temporary insurance for non-members)
+                        was_active = True
+
                         if include_inactive:
                             results.append(_parse_member_data(detailed_data, member.group_admin_id))
-                            was_active = True
 
-                # The member is still active
-                if end_of_activity_period_counter == 0:
-                    results.append(_parse_member_data(detailed_data, member.group_admin_id))
+            # The member is still active
+            if end_of_activity_period_counter == 0:
+                results.append(_parse_member_data(detailed_data, member.group_admin_id))
 
     return results
 

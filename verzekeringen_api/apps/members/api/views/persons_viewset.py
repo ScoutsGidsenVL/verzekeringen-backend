@@ -1,19 +1,21 @@
-from django.db.models import Q
+import logging
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import ValidationError
-from rest_framework import views, viewsets, status, permissions, filters
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
-from ..filters import InuitsNonMemberFilter
-from ..serializers import (
-    GroupAdminMemberListOutputSerializer,
-    GroupAdminMemberDetailOutputSerializer,
+from apps.members.api.filters import InuitsNonMemberFilter
+from apps.members.api.serializers import (
     PersonOutputSerializer,
 )
-from ...models import InuitsNonMember
-from ...services import GroupAdminMemberService
+from apps.members.models import InuitsNonMember
+from apps.members.services import GroupAdminMemberService
+
+
+logger = logging.getLogger(__name__)
 
 
 class PersonSearch(viewsets.GenericViewSet):
@@ -40,6 +42,8 @@ class PersonSearch(viewsets.GenericViewSet):
         search_term = self.request.GET.get("term", None)
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
+
+        logger.debug("Searching for member with search term %s", search_term)
 
         members = GroupAdminMemberService.group_admin_member_search(
             active_user=request.user, term=search_term, include_inactive=include_inactive
