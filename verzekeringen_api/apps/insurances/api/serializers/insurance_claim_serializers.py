@@ -1,6 +1,7 @@
 import logging, re
 
 from django.core.exceptions import ValidationError
+from django.utils.datastructures import MultiValueDict
 
 from rest_framework import serializers
 
@@ -122,9 +123,6 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
 
 
 class InsuranceClaimInputSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = InsuranceClaim
-        exclude = ("date", "declarant", "group_number")
 
     group = serializers.CharField(source="group_number")
     activity_type = serializers.JSONField()
@@ -132,17 +130,21 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     victim = InsuranceClaimVictimInputSerializer()
     file = InsuranceClaimAttachmentUploadSerializer(required=False, allow_null=True)
 
+    class Meta:
+        model = InsuranceClaim
+        exclude = ("date", "declarant", "group_number")
+
     def create(self, validated_data):
-        # create product
+        # Create insurance claim
         try:
-            insurance_claim = InsuranceClaim.objects.create(name=validated_data["name"])
+            insurance_claim = InsuranceClaim.objects.create(id=validated_data["id"])
         except Exception:
             raise ValidationError(detail={"message": "The request is not acceptable."}, code=406)
 
         if "attachments" in self.context:  # checking if key is in context
-            images_data = self.context["attachments"]
-            for i in images_data.getlist("file"):
-                InsuranceClaimAttachment.objects.create(insurance_claim=insurance_claim, file=i)
+            files: MultiValueDict = self.context["attachments"]
+            for file in files.getlist("file"):
+                InsuranceClaimAttachment.objects.create(insurance_claim=insurance_claim, file=file)
 
         return insurance_claim
 

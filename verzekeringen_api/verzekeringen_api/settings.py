@@ -282,6 +282,11 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
+        "inuits": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
     },
 }
 logging.config.dictConfig(LOGGING)

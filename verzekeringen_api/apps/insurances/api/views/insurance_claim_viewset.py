@@ -2,6 +2,7 @@ import logging
 
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
+from django.utils.datastructures import MultiValueDict
 from rest_framework import viewsets, status, filters, parsers
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
@@ -80,22 +81,16 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         responses={status.HTTP_201_CREATED: InsuranceClaimDetailOutputSerializer},
     )
     def create(self, request, *args, **kwargs):
-        # Validating images with its own serializer, but not creating.
-        # The adding process must be through Serializer.
         try:
-            image_serializer = InsuranceClaimAttachmentUploadSerializer(data=request.FILES)
-            image_serializer.is_valid(raise_exception=True)
-        except Exception:
+            file_serializer = InsuranceClaimAttachmentUploadSerializer(data=request.FILES)
+            file_serializer.is_valid(raise_exception=True)
+        except Exception as exc:
+            logger.error("Error while handling uploaded file", exc)
             raise ValidationError(
-                detail={
-                    "message": "Upload a valid image. The file you uploaded was either not "
-                    "an image or a corrupted image."
-                },
+                message={"file": "Upload a valid file."},
                 code=406,
             )
 
-        # the rest of method is about the product serialization(with extra context),
-        # validation and creation.
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

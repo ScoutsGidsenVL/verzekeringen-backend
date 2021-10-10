@@ -20,9 +20,10 @@ class MultipartJsonParser(parsers.MultiPartParser):
 
         data = {}
 
+        logger.debug("REST API: received frontend input:")
         for key, value in result.data.items():
-            logger.info("KEY: %s", key)
-            logger.info("VALUE: %s", value)
+            logger.debug("%s: %s", key, value)
+
             if type(value) != str:
                 data[key] = value
                 continue
@@ -30,14 +31,9 @@ class MultipartJsonParser(parsers.MultiPartParser):
                 try:
                     data[key] = json.loads(value)
                 except ValueError:
+                    logger.error("Value error while attempting to parse value as json (key: %s)", key)
                     data[key] = value
             else:
                 data[key] = value
 
-        # data = json.loads(result.data["detail"])
-
-        # qdict = QueryDict("", mutable=True)
-        # qdict.update(data)
-
-        # return parsers.DataAndFiles(qdict, result.files)
-        return parsers.dataAndFiles(data, result.files)
+        return parsers.DataAndFiles(data, result.files)
