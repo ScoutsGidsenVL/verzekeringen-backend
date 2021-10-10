@@ -23,36 +23,6 @@ from inuits.utils import MultipartJsonParser
 logger = logging.getLogger(__name__)
 
 
-# class InsuranceClaimViewSet(viewsets.GenericViewSet):
-#     filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
-#     search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]
-#     ordering_fields = ["date"]
-#     ordering = ["-date"]
-
-#     # Filters on the year of the accident
-#     filterset_class = InsuranceClaimFilter
-#     service = InsuranceClaimService()
-
-#     def get_queryset(self):
-#         return InsuranceClaim.objects.all()
-
-#     @swagger_auto_schema(
-#         request_body=InsuranceClaimInputSerializer,
-#         responses={status.HTTP_201_CREATED: InsuranceClaimDetailOutputSerializer},
-#     )
-#     @parser_classes([MultipartJsonParser, parsers.JSONParser])
-#     def create(self, request):
-#         input_serializer = InsuranceClaimInputSerializer(data=request.data, context={"request": request})
-#         input_serializer.is_valid(raise_exception=True)
-#         data = input_serializer.validated_data
-#         logger.info("DICT: %s", data)
-#         claim: InsuranceClaim = self.service.create(created_by=request.user, **data)
-#         self.service.email_claim(claim=claim)
-#         output_serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
-
-#         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-
-
 class InsuranceClaimViewSet(viewsets.ModelViewSet):
     queryset = InsuranceClaim.objects.all()
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
@@ -81,6 +51,8 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         responses={status.HTTP_201_CREATED: InsuranceClaimDetailOutputSerializer},
     )
     def create(self, request, *args, **kwargs):
+        if len(request.FILES) != 1:
+            raise ValidationError
         try:
             file_serializer = InsuranceClaimAttachmentUploadSerializer(data=request.FILES)
             file_serializer.is_valid(raise_exception=True)
@@ -96,6 +68,13 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})
+    def retrieve(self, request, pk=None):
+        claim = self.get_object()
+        serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
+
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         request_body=InsuranceClaimInputSerializer,
@@ -114,13 +93,6 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         output_serializer = InsuranceClaimDetailOutputSerializer(updated_claim, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})
-    def retrieve(self, request, pk=None):
-        claim = self.get_object()
-        serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
-
-        return Response(serializer.data)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: BaseInsuranceClaimSerializer})
     def list(self, request):
