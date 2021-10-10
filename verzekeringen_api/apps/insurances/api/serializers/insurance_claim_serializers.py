@@ -113,7 +113,7 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
 class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
     date = DateTimeTZField()
     date_of_accident = DateTimeTZField()
-    file = InsuranceClaimAttachmentSerializer()
+    # file = InsuranceClaimAttachmentSerializer()
     victim = InsuranceClaimVictimOutputDetailSerializer()
 
     class Meta:
