@@ -88,6 +88,15 @@ class InsuranceClaimService:
 
         return claim
 
+    def claim_update(*, claim: InsuranceClaim, **fields) -> InsuranceClaim:
+        claim.note = fields.get("note", claim.note)
+        claim.case_number = fields.get("case_number", claim.case_number)
+
+        claim.full_clean()
+        claim.save()
+
+        return claim
+
     def generate_pdf(self, claim: InsuranceClaim):
         owner: GroupAdminMember = group_admin_member_detail(
             active_user=claim.declarant, group_admin_id=claim.declarant.group_admin_id

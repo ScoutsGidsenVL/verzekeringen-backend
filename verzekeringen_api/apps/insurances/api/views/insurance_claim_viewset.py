@@ -97,6 +97,24 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    @swagger_auto_schema(
+        request_body=InsuranceClaimInputSerializer,
+        responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer},
+    )
+    def partial_update(self, request, pk=None):
+        claim = self.get_object()
+
+        serializer = InsuranceClaimInputSerializer(
+            data=request.data, instance=InsuranceClaim, context={"request": request}, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        updated_claim = InsuranceClaimService.claim_update(claim=claim, **serializer.validated_data)
+
+        output_serializer = InsuranceClaimDetailOutputSerializer(updated_claim, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})
     def retrieve(self, request, pk=None):
         claim = self.get_object()
