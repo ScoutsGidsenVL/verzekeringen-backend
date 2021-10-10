@@ -51,25 +51,6 @@ logger = logging.getLogger(__name__)
 
 #         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
-#     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})
-#     def retrieve(self, request, pk=None):
-#         claim = self.get_object()
-#         serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
-
-#         return Response(serializer.data)
-
-#     @swagger_auto_schema(responses={status.HTTP_200_OK: BaseInsuranceClaimSerializer})
-#     def list(self, request):
-#         insurances = self.filter_queryset(self.get_queryset())
-#         page = self.paginate_queryset(insurances)
-
-#         if page is not None:
-#             serializer = BaseInsuranceClaimSerializer(page, many=True, context={"request": request})
-#             return self.get_paginated_response(serializer.data)
-#         else:
-#             serializer = BaseInsuranceClaimSerializer(insurances, many=True, context={"request": request})
-#             return Response(serializer.data)
-
 
 class InsuranceClaimViewSet(viewsets.ModelViewSet):
     queryset = InsuranceClaim.objects.all()
@@ -120,3 +101,22 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})
+    def retrieve(self, request, pk=None):
+        claim = self.get_object()
+        serializer = InsuranceClaimDetailOutputSerializer(claim, context={"request": request})
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: BaseInsuranceClaimSerializer})
+    def list(self, request):
+        insurances = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(insurances)
+
+        if page is not None:
+            serializer = BaseInsuranceClaimSerializer(page, many=True, context={"request": request})
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = BaseInsuranceClaimSerializer(insurances, many=True, context={"request": request})
+            return Response(serializer.data)
