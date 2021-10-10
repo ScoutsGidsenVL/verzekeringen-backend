@@ -26,7 +26,9 @@ logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimAttachmentViewSet(viewsets.GenericViewSet):
-    parser_classes = [MultiPartParser]
+
+    queryset = InsuranceClaimAttachment.objects.all()
+    serializer_class = InsuranceClaimAttachmentUploadSerializer
     service = InsuranceClaimAttachmentService()
 
     @swagger_auto_schema(

@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 
+from apps.insurances.models import InsuranceClaim
+
 from inuits.models import BaseModel
 
 
@@ -25,8 +27,11 @@ class InsuranceClaimAttachment(BaseModel):
                 ]
             )
         ],
+        null=True,
+        blank=True,
     )
     content_type = models.CharField(max_length=100)
+    insurance_claim = models.OneToOneField(InsuranceClaim, on_delete=models.CASCADE, null=True)
 
     def delete(self, using=None, keep_parents=False):
         storage = self.file.storage

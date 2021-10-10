@@ -1,4 +1,6 @@
-import re
+import logging, re
+
+from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
@@ -12,6 +14,9 @@ from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from apps.insurances.api.serializers import InsuranceClaimAttachmentUploadSerializer
 from . import InsuranceClaimAdmistrativeFieldsMixin
+
+
+logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
@@ -121,11 +126,25 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
         model = InsuranceClaim
         exclude = ("date", "declarant", "group_number")
 
-    group = serializers.CharField(source="group_id")
+    group = serializers.CharField(source="group_number")
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()
     file = InsuranceClaimAttachmentUploadSerializer(required=False, allow_null=True)
+
+    def create(self, validated_data):
+        # create product
+        try:
+            insurance_claim = InsuranceClaim.objects.create(name=validated_data["name"])
+        except Exception:
+            raise ValidationError(detail={"message": "The request is not acceptable."}, code=406)
+
+        if "attachments" in self.context:  # checking if key is in context
+            images_data = self.context["attachments"]
+            for i in images_data.getlist("file"):
+                InsuranceClaimAttachment.objects.create(insurance_claim=insurance_claim, file=i)
+
+        return insurance_claim
 
     def validate_bank_account(self, value):
         pattern = re.compile("^BE[0-9]{14}$")
