@@ -1,9 +1,14 @@
+import logging
+
 from django.db import models
 from django.core.validators import FileExtensionValidator
 
 from apps.insurances.models import InsuranceClaim
 
 from inuits.models import BaseModel
+
+
+logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimAttachment(BaseModel):

@@ -21,6 +21,10 @@ class MultipartJsonParser(parsers.MultiPartParser):
         data = {}
 
         logger.debug("REST API: received frontend input:")
+
+        for file in result.files:
+            logger.debug("FILE: %s", result.files.get(file))
+
         for key, value in result.data.items():
             logger.debug("%s: %s", key, value)
 

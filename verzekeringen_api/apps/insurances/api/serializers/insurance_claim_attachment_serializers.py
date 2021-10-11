@@ -1,9 +1,14 @@
+import logging
+
 from django.forms import FileField as DjangoFileField
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
 
-from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
+from apps.insurances.models import InsuranceClaimAttachment
+
+
+logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimAttachmentUploadSerializer(serializers.Serializer):
@@ -15,16 +20,19 @@ class InsuranceClaimAttachmentUploadSerializer(serializers.Serializer):
         extra_kwargs = {"insurance_claim": {"required": False}}
 
     def validate(self, attrs):
-        if len(self.initial_data) != 1:
-            raise ValidationError("An insurance claim can have only 1 attachment.")
+        # There can be only one
+        if len(self.initial_data) > 1:
+            raise ValidationError("An insurance claim can have at most 1 attachment")
+
         default_error_messages = {
             "invalid_file": "Upload a valid file.",
         }
 
-        for i in self.initial_data.getlist("image"):
+        for i in self.initial_data.getlist("file"):
             django_field = DjangoFileField()
             django_field.error_messages = default_error_messages
             django_field.clean(i)
+
         return attrs
 
 

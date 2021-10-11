@@ -51,22 +51,23 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         responses={status.HTTP_201_CREATED: InsuranceClaimDetailOutputSerializer},
     )
     def create(self, request, *args, **kwargs):
-        if len(request.FILES) != 1:
-            raise ValidationError
         try:
             file_serializer = InsuranceClaimAttachmentUploadSerializer(data=request.FILES)
             file_serializer.is_valid(raise_exception=True)
         except Exception as exc:
-            logger.error("Error while handling uploaded file", exc)
+            logger.error("Error while handling uploaded insurance claim attachment", exc)
             raise ValidationError(
-                message={"file": "Upload a valid file."},
+                message={"file": "Error while handling file upload"},
                 code=406,
             )
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+
+        # self.perform_create(serializer)
+        self.service.create(created_by=request.user, file=file_serializer.validated_data, **serializer.validated_data)
         headers = self.get_success_headers(serializer.data)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimDetailOutputSerializer})

@@ -107,7 +107,8 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data.get("victim_member_id") and data.get("victim_non_member"):
-            raise serializers.ValidationError("There can only be one max victim")
+            raise serializers.ValidationError("Victim cannot be member and non member at same time")
+
         return InsuranceClaimVictim(**data)
 
 
@@ -124,11 +125,10 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
 
 class InsuranceClaimInputSerializer(serializers.ModelSerializer):
 
-    group = serializers.CharField(source="group_number")
+    group = serializers.CharField(source="group_id")
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()
-    file = InsuranceClaimAttachmentUploadSerializer(required=False, allow_null=True)
 
     class Meta:
         model = InsuranceClaim
@@ -137,10 +137,10 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Create insurance claim
         try:
-            insurance_claim = InsuranceClaim.objects.create(id=validated_data["id"])
+            insurance_claim = InsuranceClaim.objects.create(id=validated_data.get("id", None))
         except Exception:
             raise ValidationError(detail={"message": "The request is not acceptable."}, code=406)
-
+        logger.debug("attachments")
         if "attachments" in self.context:  # checking if key is in context
             files: MultiValueDict = self.context["attachments"]
             for file in files.getlist("file"):

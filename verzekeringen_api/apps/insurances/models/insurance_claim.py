@@ -1,3 +1,5 @@
+import logging
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from jsonfield import JSONField
@@ -11,6 +13,9 @@ from apps.scouts_auth.models import User
 from apps.scouts_auth.services.group_admin_service import get_group_by_number
 
 from verzekeringen_api import settings
+
+
+logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimVictim(models.Model):
