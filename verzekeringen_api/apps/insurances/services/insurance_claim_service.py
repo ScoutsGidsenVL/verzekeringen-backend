@@ -81,7 +81,7 @@ class InsuranceClaimService:
         claim.full_clean()
         claim.save()
 
-        if file is not None:
+        if file.get("file", None):
             InsuranceClaimAttachmentService().store_attachment(uploaded_file=file.get("file"), claim=claim)
 
         return claim
