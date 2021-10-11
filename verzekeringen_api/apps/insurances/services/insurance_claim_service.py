@@ -81,9 +81,6 @@ class InsuranceClaimService:
         claim.full_clean()
         claim.save()
 
-        logger.info("File: %s", file)
-        logger.info("Type of file: %s", type(file))
-        logger.info("NAME of file: %s", file.get("file").name)
         if file is not None:
             InsuranceClaimAttachmentService().store_attachment(uploaded_file=file.get("file"), claim=claim)
 
