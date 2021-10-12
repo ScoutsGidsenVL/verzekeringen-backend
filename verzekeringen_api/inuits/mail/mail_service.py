@@ -4,10 +4,28 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from anymail.message import AnymailMessage
 
+from inuits.mail import Mail
+
 logger = logging.getLogger(__name__)
 
 
 class MailService:
+
+    backend = settings.EMAIL_BACKEND
+
+    def send(self, mail: Mail):
+        return self.send_email(
+            subject=mail.subject,
+            body=mail.body,
+            from_email=mail.from_email,
+            to=mail.to,
+            cc=mail.cc,
+            bcc=mail.bcc,
+            reply_to=mail.reply_to,
+            attachment_paths=mail.attachment_paths,
+            template_id=mail.template_id,
+        )
+
     def send_email(
         self,
         subject: str = "",
@@ -20,8 +38,10 @@ class MailService:
         attachment_paths: list = None,
         template_id=None,
     ):
-        if settings.EMAIL_BACKEND == "anymail.backends.sendinblue.EmailBackend":
-            self.send_send_in_blue_email(
+        logger.debug("Sending mail through backend %s", self.backend)
+
+        if self.backend == "anymail.backends.sendinblue.EmailBackend":
+            return self.send_send_in_blue_email(
                 body=body,
                 subject=subject,
                 from_email=from_email,
@@ -30,7 +50,7 @@ class MailService:
                 template_id=template_id,
             )
         else:
-            self.send_django_email(
+            return self.send_django_email(
                 body=body,
                 subject=subject,
                 from_email=from_email,
@@ -62,17 +82,16 @@ class MailService:
             reply_to=reply_to,
         )
 
-        for attachment_path in attachment_paths:
-            message.attach_file(attachment_path)
+        if attachment_paths:
+            for attachment_path in attachment_paths:
+                message.attach_file(attachment_path)
 
         try:
-            logger.debug("Sending mail to (%s)", ", ".join(to))
             message.send()
-        except Exception as e:
-            print(e)
+        except Exception as exc:
             # Actually do something when this fails
             # https://redmine.inuits.eu/issues/83311
-            logger.error("Mail could not be sent")
+            logger.error("Mail could not be sent", exc)
 
     def send_send_in_blue_email(
         self,
@@ -94,8 +113,9 @@ class MailService:
             tags=["Schadeclaim"],  # Anymail extra in constructor
         )
 
-        for attachment_path in attachment_paths:
-            message.attach_file(attachment_path)
+        if attachment_paths:
+            for attachment_path in attachment_paths:
+                message.attach_file(attachment_path)
 
         message.send()
 

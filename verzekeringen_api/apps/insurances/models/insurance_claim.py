@@ -114,3 +114,6 @@ class InsuranceClaim(models.Model):
     @property
     def group(self):
         return get_group_by_number(self.group_number)
+
+    def has_attachment(self):
+        return hasattr(self, "attachment")

@@ -36,7 +36,12 @@ class InsuranceClaimAttachment(BaseModel):
         blank=True,
     )
     content_type = models.CharField(max_length=100)
-    insurance_claim = models.OneToOneField(InsuranceClaim, on_delete=models.CASCADE, null=True)
+    insurance_claim = models.OneToOneField(
+        InsuranceClaim, on_delete=models.CASCADE, related_name="attachment", null=True
+    )
+
+    def get_path(self):
+        return self.file.path
 
     def delete(self, using=None, keep_parents=False):
         storage = self.file.storage

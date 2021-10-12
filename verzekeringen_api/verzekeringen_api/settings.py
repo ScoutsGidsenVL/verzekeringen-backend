@@ -13,24 +13,126 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os, logging, logging.config
 from environs import Env
 
+
+# Get a pre-config logger
+logger = logging.getLogger(__name__)
+
+
+# Load the .env file
 env = Env()
 env.read_env()
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Load the appropriate environment file
+# In .env, define as only variable ENVIRONMENT
+# Set it to 'development' or 'production' and define the appropriate variables
+# in .env.development and .env.production
+# Default: development
+#
+# For testing the application outside of a docker, config rules can be defined
+# in .env.development.local
+# environments = [".env.development.local", ".env.development", ".env.production"]
+# environment_conf = env.str("ENVIRONMENT", default="development")
+# environment_loaded = False
+
+# if environment_conf:
+#     try:
+#         env = Env()
+#         env.read_env(".env." + environment_conf)
+
+#         environment_loaded = True
+#         logger.debug("Environment file loaded: .env.%s", environment_conf)
+#     except Exception:
+#         logger.warn(
+#             "WARN: Environment file .env.%s not found ! Defaulting to next configured default environment.",
+#             environment_conf,
+#         )
+
+#     if not environment_loaded:
+#         for environment in environments:
+#             if environment == ".env." + environment_conf:
+#                 pass
+
+#             try:
+#                 env = Env()
+#                 env.read_env(".env." + environment)
+
+#                 logger.debug("Environment file loaded: .env." + environment)
+#                 environment_loaded = True
+#             except Exception:
+#                 pass
+
+LOGGING_LEVEL = env.str("LOGGING_LEVEL", "INFO")
+LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "ERROR")
+
+
+LOGGING_CONFIG = None
+LOGGING_LEVEL = "DEBUG" if env.str("DEBUG") else "INFO"
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(asctime)s - %(levelname)-7s - %(name)-12s - %(message)s",
+        },
+        "simple": {
+            "format": "%(levelname)-8s - %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": LOGGING_LEVEL,
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "level": LOGGING_LEVEL,
+            "filename": "scouts-kampvisum.debug.log",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "mozilla_django_oidc": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "scouts-auth": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        "apps": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "inuits": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+    },
+}
+logging.config.dictConfig(LOGGING)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = env.str("BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BASE_URL = env.str("BASE_URL")
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 # Turn this off because of existing database we work with
 SILENCED_SYSTEM_CHECKS = ["fields.W342"]
@@ -97,12 +199,12 @@ WSGI_APPLICATION = "verzekeringen_api.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("DBNAME"),
-        "USER": env.str("DBUSER"),
-        "PASSWORD": env.str("DBPASSWORD"),
-        "HOST": env.str("DBHOST"),
-        "PORT": env.str("DBPORT"),
+        "ENGINE": env.str("DB_ENGINE"),
+        "HOST": env.str("DB_HOST"),
+        "PORT": env.str("DB_PORT"),
+        "NAME": env.str("DB_NAME"),
+        "USER": env.str("DB_USER"),
+        "PASSWORD": env.str("DB_PASSWORD"),
     }
 }
 
@@ -128,31 +230,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "Europe/Brussels"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = "static/"
-STATIC_ROOT = env.str("STATIC_ROOT")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Rest framework
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "apps.oidc.auth.InuitsOIDCAuthentication",
@@ -164,43 +252,6 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "apps.base.utils.exception_handler",
 }
 
-# RESOURCES
-RESOURCES_PATH = env.str("RESOURCES_PATH")
-RESOURCES_MAIL_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_PATH")
-RESOURCES_CLAIMS_EMAIL_PATH = RESOURCES_MAIL_PATH + env.str("RESOURCES_CLAIMS_EMAIL_PATH")
-RESOURCES_CLAIMS_EMAIL_NOTIFICATION_PATH = RESOURCES_MAIL_PATH + env.str("RESOURCES_CLAIMS_EMAIL_NOTIFICATION_PATH")
-
-# Email
-# We are going to use anymail which maps multiple providers like sendinblue with default django mailing
-# For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
-def setup_mail():
-    global EMAIL_BACKEND
-    global ANYMAIL
-    global EMAIL_INSURANCE_FROM
-    global EMAIL_INSURANCE_TO
-
-    if env.str("DEVELOPMENT") or (not env.str("DEBUG") and env.bool("USE_SENDINBLUE", True)):
-        EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
-        ANYMAIL["SENDINBLUE_API_KEY"] = env.str("SENDINBLUE_API_KEY")
-        ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SENDINBLUE_TEMPLATE_ID", None)
-
-    EMAIL_INSURANCE_FROM = env.str("EMAIL_INSURANCE_FROM", "")
-    EMAIL_INSURANCE_TO = env.str("EMAIL_INSURANCE_TO", "").split(",")
-
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "mailcatcher"
-EMAIL_PORT = "1025"
-EMAIL_INSURANCE_FROM = ""
-EMAIL_INSURANCE_REPLY_TO = EMAIL_INSURANCE_FROM
-# EMAIL_INSURANCE_TO_LIST=verzekeringen@scoutsengidsenvlaanderen.be
-EMAIL_INSURANCE_TO = []
-# EMAIL_INSURANCE_CC=
-# EMAIL_INSURANCE_BCC=
-PDF_TEMPLATE_PATH = RESOURCES_PATH + "blank_insurance_claim.pdf"
-TMP_FOLDER = RESOURCES_PATH + "temp"
-ANYMAIL = {}
-setup_mail()
 
 # CORS
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
@@ -231,62 +282,87 @@ COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 
 
 # Storages/S3
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+DEFAULT_FILE_STORAGE = "inuits.aws.MediaStorageService"
 
-AWS_ACCESS_KEY_ID = env.str("S3_ACCESS_KEY")
-AWS_SECRET_ACCESS_KEY = env.str("S3_ACCESS_SECRET")
-AWS_STORAGE_BUCKET_NAME = env.str("S3_STORAGE_BUCKET_NAME")
-AWS_S3_ENDPOINT_URL = env.str("S3_ENDPOINT_URL")
-AWS_DEFAULT_ACL = "public-read"
-AWS_S3_FILE_OVERWRITE = False
-AWS_S3_SIGNATURE_VERSION = "s3v4"
+USE_S3_STORAGE = env.bool("USE_S3_STORAGE", False) == True
+STATIC_URL = "static/"
+STATIC_ROOT = env.str("STATIC_ROOT")
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+if USE_S3_STORAGE:
+    AWS_ACCESS_KEY_ID = env.str("S3_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = env.str("S3_ACCESS_SECRET")
+    AWS_STORAGE_BUCKET_NAME = env.str("S3_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = env.str("S3_ENDPOINT_URL")
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+else:
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/3.2/howto/static-files/
+    STATIC_URL = "static/"
+    STATIC_ROOT = env.str("STATIC_ROOT")
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# EMAIL RESOURCES
+RESOURCES_PATH = env.str("RESOURCES_PATH")
+RESOURCES_MAIL_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_PATH")
+RESOURCES_CLAIMS_EMAIL_PATH = RESOURCES_MAIL_PATH + env.str("RESOURCES_CLAIMS_EMAIL_PATH")
+RESOURCES_CLAIMS_EMAIL_NOTIFICATION_PATH = RESOURCES_MAIL_PATH + env.str("RESOURCES_CLAIMS_EMAIL_NOTIFICATION_PATH")
+
+# EMAIL
+# We are going to use anymail which maps multiple providers like sendinblue with default django mailing
+# For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
+def setup_mail():
+    global EMAIL_BACKEND
+    global ANYMAIL
+    global EMAIL_INSURANCE_FROM
+    global EMAIL_INSURANCE_TO
+    global EMAIL_INSURANCE_CC
+    global EMAIL_INSURANCE_BCC
+    global EMAIL_TEMPLATE
+
+    if USE_SEND_IN_BLUE:
+        EMAIL_BACKEND = env.str("SEND_IN_BLUE_BACKEND")
+        ANYMAIL["SENDINBLUE_API_KEY"] = env.str("SEND_IN_BLUE_API_KEY")
+        ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SEND_IN_BLUE_TEMPLATE_ID")
+        EMAIL_TEMPLATE = ANYMAIL["SENDINBLUE_TEMPLATE_ID"]
+    else:
+        EMAIL_TEMPLATE = None
+
+    FROM_LIST = env.str("EMAIL_INSURANCE_FROM", None)
+    if FROM_LIST:
+        EMAIL_INSURANCE_FROM = FROM_LIST.split(",")
+    TO_LIST = env.str("EMAIL_INSURANCE_TO", None)
+    if TO_LIST:
+        EMAIL_INSURANCE_TO = TO_LIST.split(",")
+    CC_LIST = env.str("EMAIL_INSURANCE_CC", None)
+    if CC_LIST:
+        EMAIL_INSURANCE_CC = CC_LIST.split(",")
+    BCC_LIST = env.str("EMAIL_INSURANCE_BCC", None)
+    if BCC_LIST:
+        EMAIL_INSURANCE_BCC = BCC_LIST.split(",")
 
 
-LOGGING_CONFIG = None
-LOGGING_LEVEL = "DEBUG" if env.str("DEBUG") else "INFO"
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "%(asctime)s - %(levelname)-7s - %(name)-12s - %(message)s",
-        },
-        "simple": {
-            "format": "%(levelname)-8s - %(message)s",
-        },
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "level": LOGGING_LEVEL,
-            "formatter": "verbose",
-        },
-        # "file": {
-        #     "class": "logging.FileHandler",
-        #     "level": LOGGING_LEVEL,
-        #     "filename": "scouts-kampvisum.debug.log",
-        # },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
-    "loggers": {
-        "mozilla_django_oidc": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": False,
-        },
-        "apps": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": False,
-        },
-        "inuits": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": False,
-        },
-    },
-}
-logging.config.dictConfig(LOGGING)
+# DJANGO MAIL SETTINGS
+EMAIL_BACKEND = env.str("EMAIL_BACKEND")
+EMAIL_URL = env.str("EMAIL_URL")
+EMAIL_SENDER = env.str("EMAIL_SENDER")
+EMAIL_RECIPIENTS = env.str("EMAIL_RECIPIENTS")
+EMAIL_HOST = env.str("EMAIL_HOST")
+EMAIL_PORT = env.str("EMAIL_PORT")
+# SEND_IN_BLUE EMAIL SETTINGS
+USE_SEND_IN_BLUE = env.bool("USE_SEND_IN_BLUE", False)
+# SCOUTS VERZEKERINGEN EMAIL SETTINGS
+EMAIL_INSURANCE_FROM = None
+EMAIL_INSURANCE_REPLY_TO = EMAIL_INSURANCE_FROM
+EMAIL_INSURANCE_TO = None
+EMAIL_INSURANCE_CC = None
+EMAIL_INSURANCE_BCC = None
+EMAIL_TEMPLATE = None
+PDF_TEMPLATE_PATH = RESOURCES_PATH + "blank_insurance_claim.pdf"
+TMP_FOLDER = RESOURCES_PATH + "temp"
+ANYMAIL = {}
+
+setup_mail()

@@ -18,6 +18,7 @@ from apps.insurances.api.filters import InsuranceClaimFilter
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.services import InsuranceClaimService
 from inuits.utils import MultipartJsonParser
+from inuits.aws import MediaStorageService
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     # Filters on the year of the accident
     filterset_class = InsuranceClaimFilter
     service = InsuranceClaimService()
+    storage_service = MediaStorageService()
 
     serializer_class = InsuranceClaimInputSerializer
     parser_classes = [MultipartJsonParser, parsers.JSONParser]
@@ -64,8 +66,11 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # self.perform_create(serializer)
-        self.service.create(created_by=request.user, file=file_serializer.validated_data, **serializer.validated_data)
+        insurance_claim = self.service.create(
+            created_by=request.user, file=file_serializer.validated_data, **serializer.validated_data
+        )
+        self.service.email_claim(insurance_claim)
+
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

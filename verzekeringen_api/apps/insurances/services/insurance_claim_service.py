@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, date
 
 from django.core.exceptions import ValidationError
+from django.core.files.base import File
 from django.db import transaction
 from django.conf import settings
 
@@ -82,7 +83,9 @@ class InsuranceClaimService:
         claim.save()
 
         if file.get("file", None):
-            InsuranceClaimAttachmentService().store_attachment(uploaded_file=file.get("file"), claim=claim)
+            attachment = InsuranceClaimAttachmentService().store_attachment(
+                uploaded_file=file.get("file"), claim=claim
+            )
 
         return claim
 
@@ -251,6 +254,12 @@ class InsuranceClaimService:
         filename = FileService.get_temp_file(filename=("verzekeringen-%s.pdf" % claim.id))
 
         PdfWriter().write(filename, template)
+
+        # @TODO REMOVE after testing complete !
+        from shutil import copyfile
+
+        copyfile(filename, "test.pdf")
+
         return filename
 
     def email_claim(self, claim: InsuranceClaim):

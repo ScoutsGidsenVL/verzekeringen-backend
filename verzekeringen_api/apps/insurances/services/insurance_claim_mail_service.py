@@ -2,7 +2,7 @@ import logging
 
 from django.conf import settings
 
-from apps.insurances.models.insurance_claim import InsuranceClaim
+from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 from inuits.mail import Mail, MailService
 from inuits.utils import TextUtils
 
@@ -30,7 +30,9 @@ class InsuranceClaimMailService(MailService):
     email_notification_path = settings.RESOURCES_CLAIMS_EMAIL_NOTIFICATION_PATH
     email_notificaton_subject = "Schadeaangifte (#{{ claim.id }})"
 
-    template_id = settings.ANYMAIL["SENDINBLUE_TEMPLATE_ID"]
+    template_id = settings.EMAIL_TEMPLATE
+
+    mail_service = MailService()
 
     def send_claim(
         self,
@@ -49,16 +51,21 @@ class InsuranceClaimMailService(MailService):
 
     def report_claim(self, claim: InsuranceClaim, claim_report_path: str):
         """Reports the claim to the insurance company and member/parents."""
+
         dictionary = self._prepare_dictionary(claim)
         body = self._prepare_email_body(self.email_path, dictionary)
 
         to = self.to
-        to.append(claim.declarant.email)
+        # to.append(claim.declarant.email)
         to.append(claim.victim.email)
 
+        logger.debug("Preparing to send claim to insurer and member")
+        logger.debug("Receivers: %s", ", ".join(to))
+
         attachment_paths = [claim_report_path]
-        if claim.file:
-            attachment_paths.append(claim.file)
+        if claim.has_attachment():
+            attachment: InsuranceClaimAttachment = claim.attachment
+            attachment_paths.append(attachment.get_path())
 
         mail = Mail(
             subject=dictionary["subject"],
@@ -69,6 +76,8 @@ class InsuranceClaimMailService(MailService):
             attachment_paths=attachment_paths,
             template_id=self.template_id,
         )
+
+        self.mail_service.send(mail)
 
     def notify_stakeholders(self, claim: InsuranceClaim, stakeholder: str):
         """Notifies the group leader of the reported claim."""
