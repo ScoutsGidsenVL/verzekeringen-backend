@@ -3,13 +3,14 @@ import logging
 from django.conf import settings
 
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
-from inuits.mail import Mail, MailService
+from inuits.mail import Email, EmailAttachment, EmailService
+from inuits.files import FileService
 from inuits.utils import TextUtils
 
 logger = logging.getLogger(__name__)
 
 
-class InsuranceClaimMailService(MailService):
+class InsuranceClaimMailService(EmailService):
     """
     Prepares claims mails and sends them.
 
@@ -32,7 +33,8 @@ class InsuranceClaimMailService(MailService):
 
     template_id = settings.EMAIL_TEMPLATE
 
-    mail_service = MailService()
+    file_service = FileService()
+    mail_service = EmailService()
 
     def send_claim(
         self,
@@ -59,23 +61,23 @@ class InsuranceClaimMailService(MailService):
         # to.append(claim.declarant.email)
         to.append(claim.victim.email)
 
-        logger.debug("Preparing to send claim to insurer and member")
+        logger.debug("Preparing to send claim(%d) to insurer and member", claim.id)
         logger.debug("Receivers: %s", ", ".join(to))
 
-        attachment_paths = [claim_report_path]
-        if claim.has_attachment():
-            attachment: InsuranceClaimAttachment = claim.attachment
-            attachment_paths.append(attachment.get_path())
-
-        mail = Mail(
+        mail = Email(
             subject=dictionary["subject"],
             body=body,
             from_email=self.from_email,
             to=to,
             reply_to=self.from_email,
-            attachment_paths=attachment_paths,
             template_id=self.template_id,
         )
+
+        mail.add_attachment(EmailAttachment(claim_report_path))
+        if claim.has_attachment():
+            attachment: InsuranceClaimAttachment = claim.attachment
+            logger.debug("Adding attachment with path %s to claim(%d) email", attachment.get_path(), claim.id)
+            mail.add_attachment(EmailAttachment(attachment.get_path(), self.file_service))
 
         self.mail_service.send(mail)
 
@@ -86,7 +88,7 @@ class InsuranceClaimMailService(MailService):
         dictionary["stakeholder_name"] = stakeholder
         body = self._prepare_email_body(self.email_notification_path, dictionary)
 
-        mail = Mail(
+        mail = Email(
             subject=dictionary["subject"],
             body=body,
             from_email=self.from_email,

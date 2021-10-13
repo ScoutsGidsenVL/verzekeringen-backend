@@ -4,16 +4,16 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from anymail.message import AnymailMessage
 
-from inuits.mail import Mail
+from inuits.mail import Email
 
 logger = logging.getLogger(__name__)
 
 
-class MailService:
+class EmailService:
 
     backend = settings.EMAIL_BACKEND
 
-    def send(self, mail: Mail):
+    def send(self, mail: Email):
         return self.send_email(
             subject=mail.subject,
             body=mail.body,
@@ -24,6 +24,7 @@ class MailService:
             reply_to=mail.reply_to,
             attachment_paths=mail.attachment_paths,
             template_id=mail.template_id,
+            attachments=mail.attachments,
         )
 
     def send_email(
@@ -37,6 +38,7 @@ class MailService:
         reply_to: str = None,
         attachment_paths: list = None,
         template_id=None,
+        attachments: list = None,
     ):
         logger.debug("Sending mail through backend %s", self.backend)
 
@@ -48,6 +50,7 @@ class MailService:
                 to=to,
                 attachment_paths=attachment_paths,
                 template_id=template_id,
+                attachments=attachments,
             )
         else:
             return self.send_django_email(
@@ -56,6 +59,7 @@ class MailService:
                 from_email=from_email,
                 to=to,
                 attachment_paths=attachment_paths,
+                attachments=attachments,
             )
 
     def send_django_email(
@@ -68,6 +72,7 @@ class MailService:
         bcc: list = None,
         reply_to: str = None,
         attachment_paths: list = None,
+        attachments: list = None,
     ):
         if reply_to is None:
             reply_to = from_email
@@ -82,9 +87,17 @@ class MailService:
             reply_to=reply_to,
         )
 
-        if attachment_paths:
+        attachment_paths_len = len(attachment_paths)
+        if attachment_paths and attachment_paths_len > 0:
+            logger.debug("Adding %d attachments to email", attachment_paths_len)
             for attachment_path in attachment_paths:
                 message.attach_file(attachment_path)
+        attachments_len = len(attachments)
+        if attachments and attachments_len > 0:
+            logger.debug("Adding %d attachments to email", attachments_len)
+            for attachment in attachments:
+                message.attach_file(attachment.as_attachment())
+
 
         try:
             message.send()
@@ -104,6 +117,7 @@ class MailService:
         reply_to: str = None,
         attachment_paths: list = None,
         template_id=None,
+        attachments: list = None,
     ):
         message = AnymailMessage(
             subject="Welcome",
@@ -116,6 +130,9 @@ class MailService:
         if attachment_paths:
             for attachment_path in attachment_paths:
                 message.attach_file(attachment_path)
+        if attachments:
+            for attachment in attachments:
+                message.attach_file(attachment.as_attachment())
 
         message.send()
 

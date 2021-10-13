@@ -18,7 +18,7 @@ from apps.insurances.api.filters import InsuranceClaimFilter
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.services import InsuranceClaimService
 from inuits.utils import MultipartJsonParser
-from inuits.aws import MediaStorageService
+from inuits.aws import S3StorageService
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     # Filters on the year of the accident
     filterset_class = InsuranceClaimFilter
     service = InsuranceClaimService()
-    storage_service = MediaStorageService()
+    storage_service = S3StorageService()
 
     serializer_class = InsuranceClaimInputSerializer
     parser_classes = [MultipartJsonParser, parsers.JSONParser]

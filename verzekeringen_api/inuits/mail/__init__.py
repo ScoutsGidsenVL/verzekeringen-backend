@@ -1,3 +1,3 @@
-from .mail_model import Mail
-from .mail_service_exception import MailServiceException
-from .mail_service import MailService
+from .mail_model import EmailAttachment, Email
+from .mail_service_exception import EmailServiceException
+from .mail_service import EmailService

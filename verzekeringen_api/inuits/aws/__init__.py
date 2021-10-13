@@ -1,1 +1,1 @@
-from .media_storage_service import MediaStorageService
+from .s3_storage_service import S3StorageService

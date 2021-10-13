@@ -1,9 +1,25 @@
-from django.db import models
+# from django.db import models
 
-from inuits.models import BaseModel, ListField
+# from inuits.models import BaseModel, ListField
+from inuits.files import FileService
 
 
-class Mail:
+class EmailAttachment:
+    file_path: str = None
+    file_service: FileService = None
+
+    def __init__(self, file_path: str, file_service: FileService = None):
+        self.file_path = file_path
+        self.file_service = file_service
+    
+    def as_attachment(self, file_dest_path: str = None):
+        if self.file_service and file_dest_path:
+            return self.file_service.as_attachment(self.file_path)
+        
+        return self.file_path
+
+
+class Email:
 
     subject: str = ""
     body: str = ""
@@ -14,6 +30,7 @@ class Mail:
     reply_to: str = None
     attachment_paths: list = []
     template_id: str = None
+    attachments = []
 
     def __init__(
         self,
@@ -36,6 +53,12 @@ class Mail:
         self.reply_to = reply_to
         self.attachment_paths = attachment_paths
         self.template_id = template_id
+    
+    def add_attachment(self, attachment: EmailAttachment):
+        self.attachments.append(attachment)
+    
+    def has_attachments(self) -> bool:
+        return len(self.attachments) > 0
 
 
 # class Mail(BaseModel):
@@ -71,3 +94,4 @@ class Mail:
 #         self.reply_to = reply_to
 #         self.attachment_paths = attachment_paths
 #         self.template_id = template_id
+
