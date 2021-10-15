@@ -1,10 +1,11 @@
 import logging
 
 from django.conf import settings
+from django.core.files.storage import default_storage
 
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 from inuits.mail import Email, EmailAttachment, EmailService
-from inuits.files import FileService
+from inuits.files import StorageService
 from inuits.utils import TextUtils
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ class InsuranceClaimMailService(EmailService):
 
     template_id = settings.EMAIL_TEMPLATE
 
-    file_service = FileService()
+    file_service = default_storage
     mail_service = EmailService()
 
     def send_claim(
@@ -76,8 +77,8 @@ class InsuranceClaimMailService(EmailService):
         mail.add_attachment(EmailAttachment(claim_report_path))
         if claim.has_attachment():
             attachment: InsuranceClaimAttachment = claim.attachment
-            logger.debug("Adding attachment with path %s to claim(%d) email", attachment.get_path(), claim.id)
-            mail.add_attachment(EmailAttachment(attachment.get_path(), self.file_service))
+            logger.debug("Adding attachment with path %s to claim(%d) email", attachment.file.name, claim.id)
+            mail.add_attachment(EmailAttachment(attachment.file.name, self.file_service))
 
         self.mail_service.send(mail)
 

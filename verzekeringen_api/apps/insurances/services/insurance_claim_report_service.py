@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.core.files.storage import default_storage
 
 from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 
@@ -8,13 +9,15 @@ from apps.members.utils import GroupAdminMember
 from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from apps.insurances.utils import InsuranceClaimFileUtils
-from inuits.files import FileService
+from inuits.files import FileUtils
 
 
 logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimReportService:
+
+    store_report = settings.STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING
 
     def generate_pdf(self, claim: InsuranceClaim):
         owner: GroupAdminMember = group_admin_member_detail(
@@ -169,10 +172,20 @@ class InsuranceClaimReportService:
                         property.update(PdfDict(AS=PdfName("087_Andere"), V=PdfName("087_Andere")))
                         property["/Kids"][3].update(PdfDict(AS=PdfName("087_Andere"), V=PdfName("087_Andere")))
 
-        filename = InsuranceClaimFileUtils.generate_claim_report_file_name(claim)
-        filename = FileService.get_temp_file(filename=filename)
+        report_filename = InsuranceClaimFileUtils.generate_claim_report_temp_file_name(claim)
+        filename = FileUtils.get_temp_file(filename=report_filename)
         logger.debug("Generating pdf report for claim(%d) and saving it to %s", claim.id, filename)
 
         PdfWriter().write(filename, template)
+
+        if self.store_report:
+            logger.debug(
+                "STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING is set to True, saving the report (%s) with default_storage to %s",
+                filename,
+                report_filename,
+            )
+            import shutil
+
+            shutil.copyfile(filename, report_filename)
 
         return filename

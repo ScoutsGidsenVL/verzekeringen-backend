@@ -1,22 +1,30 @@
+import logging
+
 # from django.db import models
 
 # from inuits.models import BaseModel, ListField
-from inuits.files import FileService
+from inuits.files import StorageService
+
+
+logger = logging.getLogger(__name__)
 
 
 class EmailAttachment:
     file_path: str = None
-    file_service: FileService = None
+    file_service: StorageService = None
 
-    def __init__(self, file_path: str, file_service: FileService = None):
+    def __init__(self, file_path: str, file_service: StorageService = None):
         self.file_path = file_path
         self.file_service = file_service
-    
-    def as_attachment(self, file_dest_path: str = None):
-        if self.file_service and file_dest_path:
-            return self.file_service.as_attachment(self.file_path)
-        
-        return self.file_path
+
+    def get_file_and_contents(self, file_dest_path: str = None):
+        """Returns a tuple of file name and file contents."""
+        logger.debug("Returning name and contents of %s from file service %s", self.file_path, self.file_service)
+        if self.file_service:
+            return (self.file_path, self.file_service.get_file_contents(self.file_path))
+
+        with open(self.file_path, "rb") as f:
+            return (self.file_path, f.read())
 
 
 class Email:
@@ -53,10 +61,10 @@ class Email:
         self.reply_to = reply_to
         self.attachment_paths = attachment_paths
         self.template_id = template_id
-    
+
     def add_attachment(self, attachment: EmailAttachment):
         self.attachments.append(attachment)
-    
+
     def has_attachments(self) -> bool:
         return len(self.attachments) > 0
 
@@ -94,4 +102,3 @@ class Email:
 #         self.reply_to = reply_to
 #         self.attachment_paths = attachment_paths
 #         self.template_id = template_id
-
