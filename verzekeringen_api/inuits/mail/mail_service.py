@@ -95,8 +95,6 @@ class EmailService:
         """Decides wether to send email through the django backend or SendInBlue."""
         logger.debug("Sending mail through backend %s", self.backend)
 
-        from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
-
         if self.backend == "anymail.backends.sendinblue.EmailBackend":
             return self.send_send_in_blue_email(
                 body=body,

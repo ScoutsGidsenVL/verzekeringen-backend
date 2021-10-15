@@ -1,7 +1,8 @@
 import logging
 
 from django.conf import settings
-from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage, FileSystemStorage
 
 from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 
@@ -18,6 +19,9 @@ logger = logging.getLogger(__name__)
 class InsuranceClaimReportService:
 
     store_report = settings.STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING
+
+    local_storage = FileSystemStorage()
+    default_storage = default_storage
 
     def generate_pdf(self, claim: InsuranceClaim):
         owner: GroupAdminMember = group_admin_member_detail(
@@ -179,13 +183,14 @@ class InsuranceClaimReportService:
         PdfWriter().write(filename, template)
 
         if self.store_report:
+            report_filename = InsuranceClaimFileUtils.get_claim_base_path() + report_filename
             logger.debug(
                 "STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING is set to True, saving the report (%s) with default_storage to %s",
                 filename,
                 report_filename,
             )
-            import shutil
 
-            shutil.copyfile(filename, report_filename)
+            with open(filename, "rb") as f:
+                self.default_storage.save(report_filename, ContentFile(f.read()))
 
         return filename

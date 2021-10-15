@@ -43,10 +43,10 @@ class InsuranceClaimMailService(EmailService):
         claim_report_path: str,
     ):
         # TODO: load group leader from GA
-        stakeholder = self.to
+        stakeholders = [self.to]
 
         self.report_claim(claim=claim, claim_report_path=claim_report_path)
-        self.notify_stakeholders(claim=claim, stakeholder=stakeholder)
+        self.notify_stakeholders(claim=claim, stakeholders=stakeholders)
 
         #     os.remove(filename)
         # except MailServiceException:
@@ -60,7 +60,7 @@ class InsuranceClaimMailService(EmailService):
 
         to = self.to
         # to.append(claim.declarant.email)
-        to.append(claim.victim.email)
+        cc = [claim.victim.email]
 
         logger.debug("Preparing to send claim(%d) to insurer and member", claim.id)
         logger.debug("Receivers: %s", ", ".join(to))
@@ -70,6 +70,7 @@ class InsuranceClaimMailService(EmailService):
             body=body,
             from_email=self.from_email,
             to=to,
+            cc=cc,
             reply_to=self.from_email,
             template_id=self.template_id,
         )
@@ -82,18 +83,18 @@ class InsuranceClaimMailService(EmailService):
 
         self.mail_service.send(mail)
 
-    def notify_stakeholders(self, claim: InsuranceClaim, stakeholder: str):
+    def notify_stakeholders(self, claim: InsuranceClaim, stakeholders: list):
         """Notifies the group leader of the reported claim."""
         dictionary = self._prepare_dictionary(claim)
-        # Name of the group leader
-        dictionary["stakeholder_name"] = stakeholder
+        # @TODO: Name of the group leader
+        # dictionary["stakeholder_name"] = stakeholder
         body = self._prepare_email_body(self.email_notification_path, dictionary)
 
         mail = Email(
             subject=dictionary["subject"],
             body=body,
             from_email=self.from_email,
-            to=stakeholder,
+            to=stakeholders[0],
             reply_to=self.from_email,
             attachment_paths=None,
             template_id=self.template_id,
