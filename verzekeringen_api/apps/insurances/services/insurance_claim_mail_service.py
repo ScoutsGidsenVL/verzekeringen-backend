@@ -108,6 +108,7 @@ class InsuranceClaimMailService(EmailService):
             "subject": subject,
             "declarant__first_name": claim.declarant.first_name,
             "declarant__name": claim.declarant.first_name + " " + claim.declarant.last_name,
+            "victim__first_name": claim.victim.first_name,
             "victim__name": claim.victim.first_name + " " + claim.victim.last_name,
             "victim__email": claim.victim.email,
             "date_of_accident": claim.date_of_accident,

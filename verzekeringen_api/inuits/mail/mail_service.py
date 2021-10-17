@@ -169,13 +169,17 @@ class EmailService:
         from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
 
         message = AnymailMessage(
-            subject="Welcome",
-            body="Welcome to our site",
+            subject=subject,
+            body=body,
             from_email=from_email,
             to=to,
             tags=["Schadeclaim"],  # Anymail extra in constructor
         )
         self._add_attachments(message=message, attachment_paths=attachment_paths, attachments=attachments)
+
+        # if template_id:
+        #     logger.debug("Using template with id %s for SendInBlue mail", template_id)
+        #     message.template_id = template_id
 
         message.send()
 
