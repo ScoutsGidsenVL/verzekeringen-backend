@@ -17,10 +17,10 @@ class EmailService:
     def validate_email_arguments(
         self,
         from_email: str = None,
-        to: list = [],
-        cc: list = [],
-        bcc: list = [],
-        reply_to: str = "",
+        to: list = None,
+        cc: list = None,
+        bcc: list = None,
+        reply_to: str = None,
     ):
         if from_email is None:
             raise ValidationError("An email must have a sender:, 'from_email' is set to None")
@@ -89,18 +89,22 @@ class EmailService:
         bcc: list = None,
         reply_to: str = None,
         attachment_paths: list = None,
-        template_id=None,
         attachments: list = None,
+        template_id=None,
     ):
         """Decides wether to send email through the django backend or SendInBlue."""
         logger.debug("Sending mail through backend %s", self.backend)
 
+        logger.debug("TO: %s", to)
         if self.backend == "anymail.backends.sendinblue.EmailBackend":
             return self.send_send_in_blue_email(
                 body=body,
                 subject=subject,
                 from_email=from_email,
                 to=to,
+                cc=cc,
+                bcc=bcc,
+                reply_to=reply_to,
                 attachment_paths=attachment_paths,
                 attachments=attachments,
                 template_id=template_id,
@@ -111,6 +115,9 @@ class EmailService:
                 subject=subject,
                 from_email=from_email,
                 to=to,
+                cc=cc,
+                bcc=bcc,
+                reply_to=reply_to,
                 attachment_paths=attachment_paths,
                 attachments=attachments,
             )
@@ -120,12 +127,12 @@ class EmailService:
         subject: str = "",
         body: str = "",
         from_email: str = None,
-        to: list = [],
-        cc: list = [],
-        bcc: list = [],
-        reply_to: str = "",
-        attachment_paths: list = [],
-        attachments: list = [],
+        to: list = None,
+        cc: list = None,
+        bcc: list = None,
+        reply_to: str = None,
+        attachment_paths: list = None,
+        attachments: list = None,
     ):
         from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
 
@@ -183,5 +190,5 @@ class EmailService:
 
         message.send()
 
-        logger.debug("Mail status: %s", message.anymail_status)
-        logger.debug("TYPE: %s", type(message.anymail_status))
+        # logger.debug("Mail status: %s", message.anymail_status)
+        # logger.debug("TYPE: %s", type(message.anymail_status))
