@@ -68,7 +68,6 @@ class Email:
         self.attachment_paths.append(attachment_path)
 
     def add_attachment(self, attachment: EmailAttachment):
-        logger.debug("add_attachment: %s (total: %d)", attachment, len(self.attachments))
         self.attachments.append(attachment)
 
     def has_attachments(self) -> bool:
