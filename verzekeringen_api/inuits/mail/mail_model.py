@@ -19,7 +19,6 @@ class EmailAttachment:
 
     def get_file_and_contents(self, file_dest_path: str = None):
         """Returns a tuple of file name and file contents."""
-        logger.debug("Returning name and contents of %s from file service %s", self.file_path, self.file_service)
         if self.file_service:
             return (self.file_path, self.file_service.get_file_contents(self.file_path))
 
@@ -37,32 +36,39 @@ class Email:
     bcc: list = []
     reply_to: str = None
     attachment_paths: list = []
+    attachments: list = []
     template_id: str = None
-    attachments = []
 
+    # https://stackoverflow.com/questions/4535667/python-list-should-be-empty-on-class-instance-initialisation-but-its-not-why
     def __init__(
         self,
         subject: str = "",
         body: str = "",
         from_email: str = None,
-        to: list = [],
-        cc: list = [],
-        bcc: list = [],
+        to: list = None,
+        cc: list = None,
+        bcc: list = None,
         reply_to: str = None,
-        attachment_paths: list = [],
+        attachment_paths: list = None,
+        attachments: list = None,
         template_id=None,
     ):
         self.subject = subject
         self.body = body
         self.from_email = from_email
-        self.to = to
-        self.cc = cc
-        self.bcc = bcc
+        self.to = to if to is not None else []
+        self.cc = cc if cc is not None else []
+        self.bcc = bcc if bcc is not None else []
         self.reply_to = reply_to
-        self.attachment_paths = attachment_paths
+        self.attachment_paths = attachment_paths if attachment_paths is not None else []
+        self.attachments = attachments if attachments is not None else []
         self.template_id = template_id
 
+    def add_attachment_path(self, attachment_path: str):
+        self.attachment_paths.append(attachment_path)
+
     def add_attachment(self, attachment: EmailAttachment):
+        logger.debug("add_attachment: %s (total: %d)", attachment, len(self.attachments))
         self.attachments.append(attachment)
 
     def has_attachments(self) -> bool:

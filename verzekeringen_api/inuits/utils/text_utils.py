@@ -1,9 +1,20 @@
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
 class TextUtils:
     @staticmethod
     def replace(path, dictionary):
-        data = ""
-        with open(path, "r") as file:
-            for key in dictionary.keys():
-                data = file.read().replace(key, str(dictionary[key]))
+        try:
+            with open(path, "r") as f:
+                contents = f.read()
+                for key in dictionary.keys():
+                    contents = contents.replace("(((" + key + ")))", str(dictionary[key]))
 
-        return data
+                return contents
+        except Exception as exc:
+            logger.error("An error occurred while preparing the html template")
+
+        return ""

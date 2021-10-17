@@ -180,3 +180,4 @@ class EmailService:
         message.send()
 
         logger.debug("Mail status: %s", message.anymail_status)
+        logger.debug("TYPE: %s", type(message.anymail_status))

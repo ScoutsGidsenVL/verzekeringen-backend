@@ -63,7 +63,6 @@ class InsuranceClaimMailService(EmailService):
         cc = [claim.victim.email]
 
         logger.debug("Preparing to send claim(%d) to insurer and member", claim.id)
-        logger.debug("Receivers: %s", ", ".join(to))
 
         mail = Email(
             subject=dictionary["subject"],
@@ -107,7 +106,8 @@ class InsuranceClaimMailService(EmailService):
         # @TODO: i18n
         return {
             "subject": subject,
-            "declarant_name": claim.declarant.first_name + " " + claim.declarant.last_name,
+            "declarant__first_name": claim.declarant.first_name,
+            "declarant__name": claim.declarant.first_name + " " + claim.declarant.last_name,
             "victim__name": claim.victim.first_name + " " + claim.victim.last_name,
             "victim__email": claim.victim.email,
             "date_of_accident": claim.date_of_accident,

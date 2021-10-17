@@ -7,7 +7,9 @@ from django.db import transaction
 
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim
 from apps.insurances.services import (
-    InsuranceClaimReportService, InsuranceClaimAttachmentService, InsuranceClaimMailService
+    InsuranceClaimReportService,
+    InsuranceClaimAttachmentService,
+    InsuranceClaimMailService,
 )
 
 
@@ -84,9 +86,7 @@ class InsuranceClaimService:
         claim.save()
 
         if file.get("file", None):
-            attachment = self.attachment_service.store_attachment(
-                uploaded_file=file.get("file"), claim=claim
-            )
+            self.attachment_service.store_attachment(uploaded_file=file.get("file"), claim=claim)
 
         return claim
 
