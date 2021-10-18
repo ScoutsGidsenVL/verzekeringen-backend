@@ -129,7 +129,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             return None
         request = self.context.get("request", None)
         return GroupAdminMemberDetailOutputSerializer(
-            GroupAdminMemberService.group_admin_member_detail(
+            GroupAdminMemberService().group_admin_member_detail(
                 active_user=request.user, group_admin_id=obj.owner_member_group_admin_id
             )
         ).data

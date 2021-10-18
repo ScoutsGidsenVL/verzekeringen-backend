@@ -73,7 +73,7 @@ class BaseInsurance(models.Model):
     # Special group getter that returns group class to make it seem like normal model
     @property
     def group(self):
-        return ScoutsAuthGroup(self._group_number, self._group_name, self._group_location)
+        return ScoutsAuthGroup(self._group_number, self._group_name, "", self._group_location)
 
     # Special group setter that accepts group class
     @group.setter

@@ -55,7 +55,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
         )
 
     def get_declarant(self, object: InsuranceClaim):
-        data = group_admin_member_detail(
+        data = GroupAdminMemberService().group_admin_member_detail(
             active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
         )
         return GroupAdminMemberListOutputSerializer(data).data
