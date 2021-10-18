@@ -2,6 +2,7 @@ import logging
 
 from django.db import models
 from django.core.validators import FileExtensionValidator
+from inuits.files.validators import validate_file_extension
 
 from apps.insurances.models import InsuranceClaim
 
@@ -13,25 +14,7 @@ logger = logging.getLogger(__name__)
 
 class InsuranceClaimAttachment(BaseModel):
     file = models.FileField(
-        validators=[
-            FileExtensionValidator(
-                allowed_extensions=[
-                    "jpg",
-                    "jpeg",
-                    "png",
-                    "gif",
-                    "bmp",
-                    "webp",
-                    "tiff",
-                    "odt",
-                    "pptx",
-                    "docx",
-                    "pdf",
-                    "doc",
-                    "xls",
-                ]
-            )
-        ],
+        validators=[validate_file_extension],
         null=True,
         blank=True,
     )

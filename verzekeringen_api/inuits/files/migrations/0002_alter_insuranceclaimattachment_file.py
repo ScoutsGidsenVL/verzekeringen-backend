@@ -3,17 +3,19 @@
 import django.core.validators
 from django.db import migrations, models
 
+from inuits.files.validators import validate_file_extension
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('files', '0001_initial'),
+        ("files", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='insuranceclaimattachment',
-            name='file',
-            field=models.FileField(upload_to='', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff', 'odt', 'pptx', 'docx', 'pdf', 'doc', 'xls'])]),
+            model_name="insuranceclaimattachment",
+            name="file",
+            field=models.FileField(upload_to="", validators=[validate_file_extension]),
         ),
     ]
