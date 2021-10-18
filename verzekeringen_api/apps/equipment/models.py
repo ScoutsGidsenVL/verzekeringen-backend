@@ -1,12 +1,14 @@
 from datetime import datetime
 from decimal import Decimal
+
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+
 from apps.members.models import Member, NonMember, InuitsNonMember
-from .enums import VehicleType, VehicleTrailerOption
-from .managers import InuitsVehicleManager, InuitsEquipmentManager
-from ..insurances.models import TemporaryVehicleInsurance
+from apps.equipment.enums import VehicleType, VehicleTrailerOption
+from apps.equipment.managers import InuitsVehicleManager, InuitsEquipmentManager
+from apps.insurances.models import TemporaryVehicleInsurance
 
 
 class Equipment(models.Model):
@@ -78,11 +80,7 @@ class InuitsEquipment(models.Model):
         on_delete=models.CASCADE,
     )
     # Save some group admin id of owner, all detailed info will be gotten from group admin
-    owner_member_group_admin_id = models.CharField(
-        db_column="ga_id",
-        max_length=255,
-        blank=True,
-        null=True)
+    owner_member_group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
 
     group_number = models.CharField(max_length=6)
 
@@ -123,9 +121,6 @@ class InuitsVehicle(models.Model):
 
 class VehicleInuitsTemplate(models.Model):
     temporary_vehicle_insurance = models.OneToOneField(
-        TemporaryVehicleInsurance,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        db_constraint=models.UniqueConstraint
+        TemporaryVehicleInsurance, on_delete=models.CASCADE, primary_key=True, db_constraint=models.UniqueConstraint
     )
     inuits_vehicle = models.ForeignKey(InuitsVehicle, on_delete=models.CASCADE)

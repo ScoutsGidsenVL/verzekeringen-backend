@@ -2,17 +2,15 @@ import logging, re
 
 from django.core.exceptions import ValidationError
 from django.utils.datastructures import MultiValueDict
-
 from rest_framework import serializers
 
 from apps.base.serializers import DateTimeTZField
-from apps.members.api.serializers import GroupAdminMemberListOutputSerializer
-from apps.members.enums import Sex
 from apps.members.models import InuitsNonMember
-from apps.members.services import GroupAdminMemberService
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
-from . import InsuranceClaimAdmistrativeFieldsMixin
-from scouts_auth.serializers import ScoutsAuthGroupSerializer
+from apps.insurances.api.serializers import InsuranceClaimAdmistrativeFieldsMixin
+from scouts_auth.services import GroupAdminMemberService
+from scouts_auth.serializers import ScoutsGroupSerializer, GroupAdminMemberListSerializer
+from inuits.enums import Gender
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +32,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
     date_of_accident = DateTimeTZField()
     activity_type = serializers.JSONField()
     victim = InsuranceClaimVictimOutputListSerializer()
-    group = ScoutsAuthGroupSerializer()
+    group = ScoutsGroupSerializer()
     declarant = serializers.SerializerMethodField()
 
     class Meta:
@@ -55,10 +53,10 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
         )
 
     def get_declarant(self, object: InsuranceClaim):
-        data = GroupAdminMemberService.group_admin_member_detail(
+        data = GroupAdminMemberService().group_admin_member_detail(
             active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
         )
-        return GroupAdminMemberListOutputSerializer(data).data
+        return GroupAdminMemberListSerializer(data).data
 
 
 class InsuranceClaimVictimOutputDetailSerializer(serializers.ModelSerializer):
@@ -88,7 +86,7 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
     city = serializers.CharField()
     email = serializers.EmailField()
     legal_representative = serializers.CharField(required=False)
-    sex = serializers.ChoiceField(required=False, choices=Sex.choices, default=Sex.UNKNOWN)
+    gender = serializers.ChoiceField(required=False, choices=Gender.choices, default=Gender.UNKNOWN)
 
     group_admin_id = serializers.CharField(required=False, allow_null=True)
     non_member = InsuranceClaimNonMemberRelatedField(required=False, allow_null=True)
@@ -98,7 +96,7 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
         request = self.context.get("request", None)
         try:
             if value:
-                GroupAdminMemberService.group_admin_member_detail(active_user=request.user, group_admin_id=value)
+                GroupAdminMemberService().group_admin_member_detail(active_user=request.user, group_admin_id=value)
         except:
             raise serializers.ValidationError("Invalid member id given")
         return value

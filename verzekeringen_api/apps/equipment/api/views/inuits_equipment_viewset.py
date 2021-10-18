@@ -1,16 +1,16 @@
-from rest_framework import viewsets, status, permissions, filters
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from drf_yasg2.utils import swagger_auto_schema
 from django_filters.rest_framework import DjangoFilterBackend
-from ..serializers import (
+from rest_framework import viewsets, status, filters
+from rest_framework.response import Response
+from drf_yasg2.utils import swagger_auto_schema
+
+from apps.equipment.api.serializers import (
     InuitsEquipmentDetailOutputSerializer,
     InuitsEquipmentListOutputSerializer,
     InuitsEquipmentCreateInputSerializer,
 )
-from ..filters import InuitsEquipmentFilter
-from ...services import EquipmentService
-from ...models import InuitsEquipment
+from apps.equipment.api.filters import InuitsEquipmentFilter
+from apps.equipment.services import EquipmentService
+from apps.equipment.models import InuitsEquipment
 
 
 class InuitsEquipmentViewSet(viewsets.GenericViewSet):

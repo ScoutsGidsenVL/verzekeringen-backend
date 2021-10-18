@@ -1,9 +1,9 @@
-from rest_framework import viewsets, status, permissions, filters
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
-from .serializers import InfoVariableOutputSerializer
-from ..models import InfoVariable
+
+from apps.info.api.serializers import InfoVariableOutputSerializer
+from apps.info.models import InfoVariable
 
 
 class InfoVariableViewSet(viewsets.GenericViewSet):

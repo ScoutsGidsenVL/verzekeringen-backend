@@ -4,6 +4,7 @@ from django.db import transaction
 from django.conf import settings
 
 from apps.equipment.utils import Vehicle
+from apps.equipment.models import InuitsVehicle, VehicleInuitsTemplate
 from apps.members.services import MemberService
 from apps.insurances.models import (
     TemporaryVehicleInsurance,
@@ -15,8 +16,7 @@ from apps.insurances.models.enums import (
     TemporaryVehicleParticipantType,
     TemporaryVehicleInsuranceOptionApi,
 )
-from . import BaseInsuranceService
-from apps.equipment.models import InuitsVehicle, VehicleInuitsTemplate
+from apps.insurances.services import BaseInsuranceService
 
 
 class TemporaryVehicleInsuranceService:

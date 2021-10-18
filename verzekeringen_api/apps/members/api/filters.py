@@ -1,7 +1,8 @@
 import django_filters
 from django.db.models.functions import Concat
 from django.db.models import Value, Q
-from ..models import InuitsNonMember
+
+from apps.members.models import InuitsNonMember
 
 
 class InuitsNonMemberFilter(django_filters.FilterSet):

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from .insurance_type import InsuranceType
+
+from apps.insurances.models import InsuranceType
 
 
 class InsuranceDraftQuerySet(models.QuerySet):

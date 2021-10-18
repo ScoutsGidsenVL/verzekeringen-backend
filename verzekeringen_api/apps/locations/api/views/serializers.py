@@ -15,7 +15,7 @@ from apps.equipment.models import InuitsVehicle, InuitsEquipment, Equipment, Veh
 from apps.equipment.enums import VehicleType, VehicleTrailerOption
 from apps.equipment.utils import Vehicle
 from scouts_auth.serializers import GroupAdminMemberDetailSerializer
-from scouts_auth.services import GroupAdminMemberService
+from scouts_auth.services import BelgianPostcodeCitySerializer
 
 
 # Output
@@ -129,7 +129,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             return None
         request = self.context.get("request", None)
         return GroupAdminMemberDetailSerializer(
-            GroupAdminMemberService().group_admin_member_detail(
+            BelgianPostcodeCitySerializer().group_admin_member_detail(
                 active_user=request.user, group_admin_id=obj.owner_member_group_admin_id
             )
         ).data
@@ -198,7 +198,9 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
         request = self.context.get("request", None)
         try:
             if value:
-                GroupAdminMemberService().group_admin_member_detail(active_user=request.user, group_admin_id=value)
+                BelgianPostcodeCitySerializer().group_admin_member_detail(
+                    active_user=request.user, group_admin_id=value
+                )
         except:
             raise serializers.ValidationError("Invalid member id given")
         return value

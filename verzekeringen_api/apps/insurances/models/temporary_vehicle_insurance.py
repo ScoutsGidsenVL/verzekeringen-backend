@@ -1,17 +1,18 @@
 from datetime import datetime
+
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator
+
 from apps.members.models import NonMember
 from apps.equipment.utils import Vehicle
 from apps.equipment.enums import VehicleType, VehicleTrailerOption
-from apps.locations.models import Country
-from .enums import (
+from apps.insurances.models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
     TemporaryVehicleInsuranceOption,
     TemporaryVehicleParticipantType,
 )
-from .base_insurance import BaseInsurance
+from apps.insurances.models.base_insurance import BaseInsurance
 
 
 class TemporaryVehicleInsurance(BaseInsurance):

@@ -1,11 +1,9 @@
 import logging
 
 from django.db import models
-from django.core.validators import FileExtensionValidator
-from inuits.files.validators import validate_file_extension
 
 from apps.insurances.models import InsuranceClaim
-
+from inuits.files.validators import validate_file_extension
 from inuits.models import BaseModel
 
 

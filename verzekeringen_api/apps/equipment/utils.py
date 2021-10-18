@@ -1,5 +1,6 @@
 from datetime import datetime
-from .enums import VehicleType, VehicleTrailerOption
+
+from apps.equipment.enums import VehicleType, VehicleTrailerOption
 
 
 class Vehicle:
@@ -12,7 +13,14 @@ class Vehicle:
     inuits_vehicle_id: str
 
     def __init__(
-        self, type, brand, license_plate, construction_year, chassis_number="", trailer=VehicleTrailerOption.NO_TRAILER, inuits_vehicle_id=None
+        self,
+        type,
+        brand,
+        license_plate,
+        construction_year,
+        chassis_number="",
+        trailer=VehicleTrailerOption.NO_TRAILER,
+        inuits_vehicle_id=None,
     ):
         self.type = type
         self.brand = brand

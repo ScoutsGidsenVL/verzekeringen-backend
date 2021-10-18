@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.core.files.storage import default_storage
+
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from inuits.mail import Email, EmailAttachment, EmailService
 from inuits.utils import TextUtils

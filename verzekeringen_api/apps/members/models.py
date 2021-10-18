@@ -1,12 +1,12 @@
 import logging
 from datetime import datetime
+
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from . import enums
-from .managers import InuitsNonMemberManager
+from apps.members.managers import InuitsNonMemberManager
 from apps.locations.utils import PostcodeCity
-from .enums import Sex, SexHelper
+from inuits.enums import Gender, GenderHelper
 
 
 logger = logging.getLogger(__name__)
@@ -107,7 +107,7 @@ class InuitsNonMember(models.Model):
     comment = models.CharField(max_length=500, blank=True)
     # Keep group number
     group_number = models.CharField(max_length=6)
-    sex = models.CharField(max_length=1, null=True, blank=True, choices=enums.Sex.choices, default=enums.Sex.UNKNOWN)
+    gender = models.CharField(max_length=1, null=True, blank=True, choices=Gender.choices, default=Gender.UNKNOWN)
 
     @property
     def full_name(self):
@@ -124,8 +124,8 @@ class InuitsNonMember(models.Model):
         )
 
     @property
-    def get_sex(self):
-        gender = SexHelper.parse_sex(self.sex)
+    def get_gender(self):
+        gender = GenderHelper.parse_gender(self.gender)
 
         return gender
 
@@ -153,3 +153,6 @@ class NonMemberInuitsTemplate(models.Model):
         NonMember, on_delete=models.CASCADE, primary_key=True, db_constraint=models.UniqueConstraint
     )
     inuits_non_member = models.ForeignKey(InuitsNonMember, on_delete=models.CASCADE)
+
+    def get_gender(self):
+        return self.inuits_non_member.get_gender()

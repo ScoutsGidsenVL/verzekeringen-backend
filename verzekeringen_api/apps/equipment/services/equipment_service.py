@@ -1,11 +1,12 @@
-from datetime import datetime
 from decimal import Decimal
+
 from django.conf import settings
 from django.db import transaction
 from django.core.exceptions import ValidationError
+
 from apps.members.models import InuitsNonMember
 from apps.members.services import MemberService
-from ..models import Equipment, InuitsEquipment
+from apps.equipment.models import Equipment, InuitsEquipment
 
 
 def inuits_equipment_create(

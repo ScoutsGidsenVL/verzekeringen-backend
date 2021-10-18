@@ -1,9 +1,9 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
+
 from apps.locations.utils import PostcodeCity
-from .base_insurance import BaseInsurance
-from .enums import GroupSize
+from apps.insurances.models.base_insurance import BaseInsurance
+from apps.insurances.models.enums import GroupSize
 
 
 class ActivityInsurance(BaseInsurance):

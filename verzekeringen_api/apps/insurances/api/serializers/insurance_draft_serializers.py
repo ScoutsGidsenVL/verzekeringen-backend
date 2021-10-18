@@ -1,6 +1,7 @@
 from rest_framework import serializers
+
 from apps.insurances.models import InsuranceDraft, InsuranceType
-from . import InsuranceTypeOutputSerializer
+from apps.insurances.api.serializers import InsuranceTypeOutputSerializer
 
 
 class InsuranceDraftOutputSerializer(serializers.ModelSerializer):

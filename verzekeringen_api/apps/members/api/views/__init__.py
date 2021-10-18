@@ -1,2 +1,2 @@
 from .inuits_non_member_viewset import InuitsNonMemberViewSet
-from .group_admin_member_views import GroupAdminMemberSearch, GroupAdminMemberDetail
+from .persons_viewset import PersonSearch

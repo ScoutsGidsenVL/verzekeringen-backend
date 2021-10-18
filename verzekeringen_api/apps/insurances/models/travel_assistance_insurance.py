@@ -1,12 +1,14 @@
 from datetime import datetime
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
+
 from apps.members.models import NonMember
 from apps.equipment.utils import Vehicle
 from apps.equipment.enums import VehicleType, VehicleTrailerOption
 from apps.locations.models import Country
-from .base_insurance import BaseInsurance
+from apps.insurances.models import BaseInsurance
 
 
 class TravelAssistanceInsurance(BaseInsurance):

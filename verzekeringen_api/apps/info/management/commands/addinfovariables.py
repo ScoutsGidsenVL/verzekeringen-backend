@@ -1,8 +1,8 @@
 import os
 import yaml
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
-from ...models import InfoVariable
+from apps.info.models import InfoVariable
 
 
 class Command(BaseCommand):

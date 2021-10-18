@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
+
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
-from ..serializers import (
+from apps.insurances.api.serializers import (
     InsuranceCostOutputSerializer,
     InsuranceListOutputSerializer,
     ActivityInsuranceDetailOutputSerializer,
@@ -21,8 +22,7 @@ from ..serializers import (
     EquipmentInsuranceDetailOutputSerializer,
     EquipmentInsuranceCreateInputSerializer,
 )
-from ...models import (
-    InsuranceType,
+from apps.insurances.models import (
     BaseInsurance,
     ActivityInsurance,
     TemporaryInsurance,
@@ -31,7 +31,7 @@ from ...models import (
     EventInsurance,
     EquipmentInsurance,
 )
-from ...services import (
+from apps.insurances.services import (
     ActivityInsuranceService,
     TemporaryInsuranceService,
     TravelAssistanceInsuranceService,

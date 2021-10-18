@@ -6,7 +6,7 @@ from django.db import transaction
 from apps.equipment.utils import Vehicle
 from apps.members.services import MemberService
 from apps.insurances.models import TravelAssistanceInsurance, InsuranceType, CostVariable
-from . import BaseInsuranceService
+from apps.insurances.services import BaseInsuranceService
 
 
 class TravelAssistanceInsuranceService:

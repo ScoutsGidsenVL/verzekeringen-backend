@@ -1,11 +1,12 @@
-from rest_framework import viewsets, status, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
-from django_filters.rest_framework import DjangoFilterBackend
-from ..filters import CountryFilter
-from ...models import Country
-from ..serializers import CountryOutputSerializer
+
+from apps.locations.models import Country
+from apps.locations.api.filters import CountryFilter
+from apps.locations.api.serializers import CountryOutputSerializer
 
 
 class CountryViewSet(viewsets.GenericViewSet):

@@ -1,9 +1,10 @@
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
-from ..serializers import InsuranceDraftOutputSerializer, InsuranceDraftCreateInputSerializer
-from ...models import InsuranceDraft
-from ...services import InsuranceDraftService
+
+from apps.insurances.api.serializers import InsuranceDraftOutputSerializer, InsuranceDraftCreateInputSerializer
+from apps.insurances.models import InsuranceDraft
+from apps.insurances.services import InsuranceDraftService
 
 
 class InsuranceDraftViewSet(viewsets.GenericViewSet):

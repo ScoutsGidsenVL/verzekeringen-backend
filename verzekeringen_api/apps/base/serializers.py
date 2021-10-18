@@ -1,12 +1,9 @@
-import copy
-import inspect
+import copy, inspect
+
 from rest_framework import serializers
-from rest_framework.fields import empty
 from drf_yasg2 import openapi
+
 import pytz
-
-
-# Output
 
 
 class EnumOutputSerializer(serializers.Serializer):
@@ -61,10 +58,9 @@ class SerializerSwitchField(serializers.Field):
 
 
 class DateTimeTZField(serializers.DateTimeField):
-    '''Class to make output of a DateTime Field timezone aware
-    '''
+    """Class to make output of a DateTime Field timezone aware"""
+
     def to_representation(self, value):
         if value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
             value = pytz.utc.localize(value)
         return super(DateTimeTZField, self).to_representation(value)
-

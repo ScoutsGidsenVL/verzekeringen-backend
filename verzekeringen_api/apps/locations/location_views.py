@@ -7,7 +7,7 @@ from apps.locations.services import LocationService
 from scouts_auth.serializers import BelgianPostcodeCitySerializer
 
 
-class BelgianPostcodeCitySearch(views.APIView):
+class GroupAdminGroupServiceSearch(views.APIView):
     @swagger_auto_schema(responses={status.HTTP_200_OK: BelgianPostcodeCitySerializer})
     def get(self, request):
         search_term = self.request.GET.get("term", None)

@@ -1,7 +1,6 @@
 import django_filters
-from django.db.models.functions import Concat
-from django.db.models import Value, Q
-from ..models import Country
+
+from apps.locations.models import Country
 
 
 class CountryFilter(django_filters.FilterSet):

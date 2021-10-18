@@ -1,6 +1,11 @@
-from django.urls import path, include
 from rest_framework import routers
-from .api.views import VehicleTypeViewSet, VehicleViewSet, VehicleTrailerOptionViewSet, InuitsEquipmentViewSet
+
+from apps.equipment.api.views import (
+    VehicleTypeViewSet,
+    VehicleViewSet,
+    VehicleTrailerOptionViewSet,
+    InuitsEquipmentViewSet,
+)
 
 router = routers.SimpleRouter()
 router.register(r"vehicle_types", VehicleTypeViewSet, "VehicleType")

@@ -5,7 +5,7 @@ from django.db import transaction
 from apps.locations.utils import PostcodeCity
 from apps.insurances.models import ActivityInsurance, InsuranceType, CostVariable
 from apps.insurances.models.enums import GroupSize
-from . import BaseInsuranceService
+from apps.insurances.services import BaseInsuranceService
 
 
 class ActivityInsuranceService:

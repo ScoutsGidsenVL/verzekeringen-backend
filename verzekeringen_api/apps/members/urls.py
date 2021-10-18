@@ -1,9 +1,11 @@
 from django.urls import path
 from rest_framework import routers
-from .api.views import (
-    InuitsNonMemberViewSet,
-    GroupAdminMemberSearch,
-    GroupAdminMemberDetail,
+
+from apps.members.api.views import InuitsNonMemberViewSet
+
+from scouts_auth.views import (
+    GroupAdminMemberSearchView,
+    GroupAdminMemberDetailView,
 )
 from .api.views.persons_viewset import PersonSearch
 
@@ -15,7 +17,7 @@ urlpatterns = router.urls
 
 urlpatterns.extend(
     [
-        path("members_search/", GroupAdminMemberSearch.as_view()),
-        path("members/<str:id>", GroupAdminMemberDetail.as_view()),
+        path("members_search/", GroupAdminMemberSearchView.as_view()),
+        path("members/<str:id>", GroupAdminMemberDetailView.as_view()),
     ]
 )

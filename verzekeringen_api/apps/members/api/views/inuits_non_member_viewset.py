@@ -1,12 +1,12 @@
-from rest_framework import viewsets, status, permissions, filters
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from drf_yasg2.utils import swagger_auto_schema
 from django_filters.rest_framework import DjangoFilterBackend
-from ..serializers import InuitsNonMemberOutputSerializer, InuitsNonMemberCreateInputSerializer
-from ..filters import InuitsNonMemberFilter
-from ...services import InuitsMemberService
-from ...models import InuitsNonMember
+from rest_framework import viewsets, status, filters
+from rest_framework.response import Response
+from drf_yasg2.utils import swagger_auto_schema
+
+from apps.members.api.serializers import InuitsNonMemberOutputSerializer, InuitsNonMemberCreateInputSerializer
+from apps.members.api.filters import InuitsNonMemberFilter
+from apps.members.services import InuitsMemberService
+from apps.members.models import InuitsNonMember
 
 
 class InuitsNonMemberViewSet(viewsets.GenericViewSet):

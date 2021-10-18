@@ -1,11 +1,12 @@
 import logging
+
 from django.db import models
 
 
 logger = logging.getLogger(__name__)
 
 
-class Sex(models.TextChoices):
+class Gender(models.TextChoices):
     # alphabetically ordered
     FEMALE = "F", "Female"
     MALE = "M", "Male"
@@ -13,18 +14,18 @@ class Sex(models.TextChoices):
     UNKNOWN = "U", "Unknown"
 
 
-class SexHelper:
+class GenderHelper:
     @staticmethod
-    def parse_sex(value) -> Sex:
+    def parse_gender(value) -> Gender:
         if not value:
-            return Sex.UNKNOWN
+            return Gender.UNKNOWN
 
         value = value.strip().upper()
         if value in ["O", "OTHER", "ANDERE"]:
-            return Sex.OTHER
+            return Gender.OTHER
         if value in ["F", "FEMALE", "V", "VROUW"]:
-            return Sex.FEMALE
+            return Gender.FEMALE
         if value in ["M", "MALE", "MAN"]:
-            return Sex.MALE
+            return Gender.MALE
 
-        return Sex.UNKNOWN
+        return Gender.UNKNOWN

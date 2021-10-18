@@ -1,7 +1,7 @@
 import django_filters
 from django.db.models import Q
 from django.db.models.constants import LOOKUP_SEP
-from .fields import BaseQueryArrayField
+from apps.base.fields import BaseQueryArrayField
 
 
 class MultipleUUIDFilter(django_filters.BaseCSVFilter, django_filters.UUIDFilter):

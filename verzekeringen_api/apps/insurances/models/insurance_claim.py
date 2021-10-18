@@ -1,18 +1,16 @@
 import logging
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from jsonfield import JSONField
 
 from apps.locations.utils import PostcodeCity, Address
-from apps.members.enums import Sex
 from apps.members.models import InuitsNonMember
-from apps.members.services.group_admin_member_service import group_admin_member_detail
-from apps.members.utils import GroupAdminMember
 from scouts_auth.models import User
-from scouts_auth.services import GroupAdminService
-
-from verzekeringen_api import settings
+from scouts_auth.services import GroupAdminMemberService, GroupAdminGroupService
+from scouts_auth.models import GroupAdminMember
+from inuits.enums import Gender
 
 
 logger = logging.getLogger(__name__)
@@ -30,7 +28,7 @@ class InsuranceClaimVictim(models.Model):
     postcode = models.IntegerField()
     city = models.CharField(max_length=40)
     email = models.EmailField(max_length=60, blank=True)
-    sex = models.CharField(max_length=1, null=True, blank=True, choices=Sex.choices, default=Sex.UNKNOWN)
+    gender = models.CharField(max_length=1, null=True, blank=True, choices=Gender.choices, default=Gender.UNKNOWN)
     legal_representative = models.CharField(max_length=128, null=True, blank=True)
 
     group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
@@ -48,7 +46,7 @@ class InsuranceClaimVictim(models.Model):
     def get_member_number(self, active_user: settings.AUTH_USER_MODEL):
         if self.group_admin_id:
             if not self._member_detail:
-                self._member_detail = group_admin_member_detail(
+                self._member_detail = GroupAdminMemberService().group_admin_member_detail(
                     active_user=active_user, group_admin_id=str(self.group_admin_id)
                 )
             return self._member_detail.membership_number
@@ -64,8 +62,8 @@ class InsuranceClaimVictim(models.Model):
             street=self.street, number=self.number, letter_box=self.letter_box, postcode_city=self.postcode_city
         )
 
-    def get_sex(self):
-        return self.sex
+    def get_gender(self):
+        return self.gender
 
     def clean(self):
         if self.non_member and self.group_admin_id:
@@ -113,7 +111,7 @@ class InsuranceClaim(models.Model):
 
     @property
     def group(self):
-        return GroupAdminService().get_group_by_number(self.group_number)
+        return GroupAdminGroupService().get_group_by_number(self.group_number)
 
     def has_attachment(self):
         return hasattr(self, "attachment")

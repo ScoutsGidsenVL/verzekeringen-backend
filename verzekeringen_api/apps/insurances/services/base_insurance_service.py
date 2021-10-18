@@ -4,7 +4,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-
 from apps.members.services import MemberService
 from apps.insurances.models import BaseInsurance, InsuranceType
 from apps.insurances.models.enums import InsuranceStatus

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from ..models import InfoVariable
+
+from apps.info.models import InfoVariable
 
 
 class InfoVariableOutputSerializer(serializers.ModelSerializer):

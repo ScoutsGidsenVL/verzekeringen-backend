@@ -4,8 +4,7 @@ from django.db import transaction
 
 from apps.locations.utils import PostcodeCity
 from apps.insurances.models import EventInsurance, InsuranceType, CostVariable
-from apps.insurances.models.enums import EventSize
-from . import BaseInsuranceService
+from apps.insurances.services import BaseInsuranceService
 
 
 class EventInsuranceService:

@@ -3,7 +3,6 @@ import logging
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
-from rest_framework.parsers import MultiPartParser
 from rest_framework import status, serializers, viewsets
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema

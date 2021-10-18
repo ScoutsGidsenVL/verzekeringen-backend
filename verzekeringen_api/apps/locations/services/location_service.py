@@ -1,6 +1,8 @@
 import requests
+
 from django.conf import settings
-from ..utils import PostcodeCity
+
+from apps.locations.utils import PostcodeCity
 
 
 def belgian_postcode_city_search(term: str) -> list:

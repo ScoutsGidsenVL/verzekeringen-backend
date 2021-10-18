@@ -1,24 +1,12 @@
-from rest_framework import serializers
-from drf_yasg2.utils import swagger_serializer_method
 from django.conf import settings
 from django.db.models import Q
-from apps.base.serializers import EnumOutputSerializer
+from rest_framework import serializers
+from drf_yasg2.utils import swagger_serializer_method
+
+from apps.base.serializers import EnumOutputSerializer, DateTimeTZField
 from apps.base.helpers import parse_choice_to_tuple
+
 from apps.equipment.models import InuitsVehicle
-from scouts_auth.serializers import ScoutsAuthGroupSerializer
-from apps.members.api.serializers import (
-    MemberNestedOutputSerializer,
-    NonMemberNestedOutputSerializer,
-    NonMemberCompanyNestedOutputSerializer,
-    NonMemberCreateInputSerializer,
-    NonMemberOrCompanyCreateInputSerializer,
-)
-from apps.locations.api.serializers import (
-    BelgianPostcodeCityOutputSerializer,
-    BelgianPostcodeCityInputSerializer,
-    CountryOutputSerializer,
-)
-from apps.locations.models import Country
 from apps.equipment.api.serializers import (
     InuitsVehicleOutputSerializer,
     VehicleOutputSerializer,
@@ -27,9 +15,17 @@ from apps.equipment.api.serializers import (
     EquipmentNestedOutputSerializer,
     EquipmentInputSerializer,
 )
-
-from apps.base.serializers import DateTimeTZField
-from .insurance_type_serializers import InsuranceTypeOutputSerializer
+from apps.members.api.serializers import (
+    MemberNestedOutputSerializer,
+    NonMemberNestedOutputSerializer,
+    NonMemberCompanyNestedOutputSerializer,
+    NonMemberCreateInputSerializer,
+    NonMemberOrCompanyCreateInputSerializer,
+)
+from apps.locations.api.serializers import (
+    CountryOutputSerializer,
+)
+from apps.locations.models import Country
 from apps.insurances.models import (
     BaseInsurance,
     ActivityInsurance,
@@ -46,7 +42,11 @@ from apps.insurances.models.enums import (
     TemporaryVehicleInsuranceOptionApi,
     TemporaryVehicleInsuranceCoverageOption,
 )
-from apps.equipment.models import InuitsVehicle
+from apps.insurances.api.serializers import InsuranceTypeOutputSerializer
+from scouts_auth.serializers import (
+    ScoutsGroupSerializer,
+    BelgianPostcodeCitySerializer,
+)
 
 
 # Output
@@ -57,7 +57,7 @@ class InsuranceCostOutputSerializer(serializers.Serializer):
 class InsuranceListOutputSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     type = InsuranceTypeOutputSerializer(read_only=True)
-    group = ScoutsAuthGroupSerializer(read_only=True)
+    group = ScoutsGroupSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
     start_date = DateTimeTZField()
     end_date = DateTimeTZField()
@@ -92,7 +92,7 @@ base_insurance_detail_fields = (
 class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     type = InsuranceTypeOutputSerializer(read_only=True)
-    group = ScoutsAuthGroupSerializer(read_only=True)
+    group = ScoutsGroupSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
     start_date = DateTimeTZField()
     end_date = DateTimeTZField()
@@ -105,7 +105,7 @@ class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
 
 
 class ActivityInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    location = BelgianPostcodeCityOutputSerializer(source="postcode_city")
+    location = BelgianPostcodeCitySerializer(source="postcode_city")
     group_size = serializers.SerializerMethodField()
 
     class Meta:
@@ -118,7 +118,7 @@ class ActivityInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerialize
 
 
 class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    postcode_city = BelgianPostcodeCityOutputSerializer()
+    postcode_city = BelgianPostcodeCitySerializer()
     non_members = NonMemberNestedOutputSerializer(many=True)
     country = CountryOutputSerializer()
 
@@ -189,7 +189,7 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
 
 
 class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    location = BelgianPostcodeCityOutputSerializer(source="postcode_city")
+    location = BelgianPostcodeCitySerializer(source="postcode_city")
     event_size = serializers.SerializerMethodField()
 
     class Meta:
@@ -202,7 +202,7 @@ class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
 
 
 class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    postcode_city = BelgianPostcodeCityOutputSerializer()
+    postcode_city = BelgianPostcodeCitySerializer()
     equipment = EquipmentNestedOutputSerializer(many=True)
     country = CountryOutputSerializer()
 
@@ -223,13 +223,13 @@ class BaseInsuranceCreateInputSerializer(serializers.Serializer):
 class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
     group_size = serializers.ChoiceField(choices=GroupSize.choices)
-    location = BelgianPostcodeCityInputSerializer()
+    location = BelgianPostcodeCitySerializer()
 
 
 class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
     country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2), required=False)
-    postcode_city = BelgianPostcodeCityInputSerializer(required=False)
+    postcode_city = BelgianPostcodeCitySerializer(required=False)
     non_members = NonMemberCreateInputSerializer(many=True)
 
     def validate_non_members(self, value):
@@ -292,13 +292,13 @@ class TravelAssistanceInsuranceCreateInputSerializer(BaseInsuranceCreateInputSer
 class EventInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
     event_size = serializers.ChoiceField(choices=EventSize.choices)
-    location = BelgianPostcodeCityInputSerializer()
+    location = BelgianPostcodeCitySerializer()
 
 
 class EquipmentInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
     country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2), required=False)
-    postcode_city = BelgianPostcodeCityInputSerializer(required=False)
+    postcode_city = BelgianPostcodeCitySerializer(required=False)
     equipment = EquipmentInputSerializer(many=True)
 
     def validate_equipment(self, value):

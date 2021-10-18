@@ -1,5 +1,6 @@
-from django.core.management.base import BaseCommand, CommandError
-from ...models import InsuranceType
+from django.core.management.base import BaseCommand
+
+from apps.insurances.models import InsuranceType
 
 
 class Command(BaseCommand):

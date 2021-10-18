@@ -1,7 +1,8 @@
 from decimal import Decimal
-from django.core.management.base import BaseCommand, CommandError
-from ...models import InsuranceType, CostVariable
-from ...models.enums import EventSize
+from django.core.management.base import BaseCommand
+
+from apps.insurances.models import InsuranceType, CostVariable
+from apps.insurances.models.enums import EventSize
 
 
 class Command(BaseCommand):

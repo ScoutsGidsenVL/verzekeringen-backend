@@ -1,6 +1,5 @@
-from django.urls import path, include
 from rest_framework import routers
-from .api.views import (
+from apps.insurances.api.views import (
     InsuranceClaimViewSet,
     InsuranceClaimAttachmentViewSet,
     InsuranceTypeViewSet,

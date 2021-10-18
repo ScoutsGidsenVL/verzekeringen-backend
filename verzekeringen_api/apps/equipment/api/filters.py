@@ -1,7 +1,8 @@
 import django_filters
 from django.db.models.functions import Concat
 from django.db.models import Value, Q
-from ..models import InuitsVehicle, InuitsEquipment
+
+from apps.equipment.models import InuitsVehicle, InuitsEquipment
 
 
 class InuitsVehicleFilter(django_filters.FilterSet):

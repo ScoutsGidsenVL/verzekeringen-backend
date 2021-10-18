@@ -1,8 +1,10 @@
 from datetime import datetime
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from ..models import InuitsVehicle
-from ..utils import VehicleTrailerOption
+
+from apps.equipment.models import InuitsVehicle
+from apps.equipment.utils import VehicleTrailerOption
 
 
 def inuits_vehicle_create(

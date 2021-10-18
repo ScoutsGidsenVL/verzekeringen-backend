@@ -1,6 +1,7 @@
 import copy, inspect
+
 from rest_framework import serializers
-from rest_framework.fields import empty
+
 
 class PermissionRequiredField(serializers.Field):
     field = None
@@ -13,7 +14,7 @@ class PermissionRequiredField(serializers.Field):
         assert not inspect.isclass(self.field), "`field` has not been instantiated."
         assert self.permission is not None, "`permission` is a required argument."
         super().__init__(*args, **kwargs)
-    
+
     def to_representation(self, value):
         request = self.context.get("request")
         if not request:
@@ -21,8 +22,8 @@ class PermissionRequiredField(serializers.Field):
                 "Make sure request has been given to the context of the serializer,"
                 "otherwise PermissionRequiredField won't work"
             )
-        
+
         if request.user.has_perm(self.permission):
             return super().to_representation(value)
-        
+
         return None

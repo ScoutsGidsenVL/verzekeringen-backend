@@ -5,7 +5,7 @@ from django.db import transaction
 from apps.locations.utils import PostcodeCity
 from apps.members.services import MemberService
 from apps.insurances.models import TemporaryInsurance, InsuranceType, CostVariable
-from . import BaseInsuranceService
+from apps.insurances.services import BaseInsuranceService
 
 
 class TemporaryInsuranceService:

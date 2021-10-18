@@ -6,11 +6,11 @@ from django.core.files.storage import default_storage, FileSystemStorage
 
 from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 
-from apps.members.utils import GroupAdminMember
-from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from apps.insurances.utils import InsuranceClaimFileUtils
 from inuits.files import FileUtils
+from scouts_auth.models import GroupAdminMember
+from scouts_auth.services import GroupAdminMemberService
 
 
 logger = logging.getLogger(__name__)
@@ -22,9 +22,10 @@ class InsuranceClaimReportService:
 
     local_storage = FileSystemStorage()
     default_storage = default_storage
+    group_admin_service = GroupAdminMemberService()
 
     def generate_pdf(self, claim: InsuranceClaim):
-        owner: GroupAdminMember = group_admin_member_detail(
+        owner: GroupAdminMember = self.group_admin_service.group_admin_member_detail(
             active_user=claim.declarant, group_admin_id=claim.declarant.group_admin_id
         )
         victim: InsuranceClaimVictim = claim.victim
@@ -43,7 +44,7 @@ class InsuranceClaimReportService:
             "(Gemeente_2)": victim.address.postcode_city.name,
             "(Bus_2)": victim.address.letter_box,
             "(Land_2)": "België",
-            "(Geslacht_2)": victim.sex,
+            "(Geslacht_2)": victim.gender,
             "(Taal)": "N",
             "(Geboorte_Dag)": f"{victim.birth_date.day:02d}",
             "(Geboorte_Maand)": f"{victim.birth_date.month:02d}",

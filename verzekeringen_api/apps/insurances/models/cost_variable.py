@@ -1,7 +1,9 @@
 from decimal import Decimal
+
 from django.db import models
 from django.core.validators import MinValueValidator
-from .insurance_type import InsuranceType
+
+from apps.insurances.models import InsuranceType
 
 
 class CostVariableQuerySet(models.QuerySet):
