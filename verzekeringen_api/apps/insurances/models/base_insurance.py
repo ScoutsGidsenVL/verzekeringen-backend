@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
 from apps.members.models import Member
-from apps.scouts_auth.utils import Group
+from scouts_auth.models import ScoutsAuthGroup
 from .insurance_type import InsuranceType
 from .enums import InsuranceStatus
 
@@ -73,11 +73,11 @@ class BaseInsurance(models.Model):
     # Special group getter that returns group class to make it seem like normal model
     @property
     def group(self):
-        return Group(self._group_number, self._group_name, self._group_location)
+        return ScoutsAuthGroup(self._group_number, self._group_name, self._group_location)
 
     # Special group setter that accepts group class
     @group.setter
-    def group(self, value: Group):
+    def group(self, value: ScoutsAuthGroup):
         self._group_number = value.id
         self._group_name = value.name
         self._group_location = value.location

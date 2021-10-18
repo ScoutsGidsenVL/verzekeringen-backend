@@ -121,6 +121,12 @@ LOGGING = {
 logging.config.dictConfig(LOGGING)
 
 
+def correct_url(prefix, url):
+    if not url.startswith("http"):
+        return prefix + url
+    return url
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -143,8 +149,7 @@ SILENCED_SYSTEM_CHECKS = ["fields.W342"]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
-    "mozilla_django_oidc",
-    "apps.scouts_auth",
+    "scouts_auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -161,6 +166,15 @@ INSTALLED_APPS = [
     "apps.info",
 ]
 
+MIGRATION_MODULES = {
+    "apps.base": "migrations",
+    "apps.equipment": "migrations",
+    "apps.info": "migrations",
+    "apps.insurances": "migrations",
+    "apps.locations": "migrations",
+    "apps.members": "migrations",
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -168,6 +182,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "mozilla_django_oidc.middleware.SessionRefresh",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -210,7 +225,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
+django_pw_validation = "django.contrib.auth.password_validation."
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -242,7 +257,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 # Rest framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "apps.oidc.auth.InuitsOIDCAuthentication",
+        "scouts_auth.oidc.InuitsOIDCAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -258,20 +273,17 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 # OIDC
 AUTH_USER_MODEL = "scouts_auth.User"
 AUTHENTICATION_BACKENDS = {
-    "apps.oidc.auth.InuitsOIDCAuthenticationBackend",
+    "scouts_auth.oidc.InuitsOIDCAuthenticationBackend",
 }
-OIDC_DRF_AUTH_BACKEND = "apps.oidc.auth.InuitsOIDCAuthenticationBackend"
-OIDC_RP_SIGN_ALGO = "RS256"
-
-OIDC_OP_JWKS_ENDPOINT = env.str("OIDC_OP_ISSUER") + env.str("OIDC_OP_JWKS_ENDPOINT")
-OIDC_OP_TOKEN_ENDPOINT = env.str("OIDC_OP_ISSUER") + env.str("OIDC_OP_TOKEN_ENDPOINT")
-if env.str("OIDC_OP_USER_ENDPOINT").startswith("http"):
-    OIDC_OP_USER_ENDPOINT = env.str("OIDC_OP_USER_ENDPOINT")
-else:
-    OIDC_OP_USER_ENDPOINT = env.str("OIDC_OP_ISSUER") + env.str("OIDC_OP_USER_ENDPOINT")
-
+OIDC_OP_ISSUER = env.str("OIDC_OP_ISSUER")
+OIDC_OP_AUTHORIZATION_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_AUTHORIZATION_ENDPOINT"))
+OIDC_OP_TOKEN_ENDPOINT = OIDC_OP_ISSUER + env.str("OIDC_OP_TOKEN_ENDPOINT")
+OIDC_OP_USER_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_USER_ENDPOINT"))
 OIDC_RP_CLIENT_ID = env.str("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")
+OIDC_RP_SIGN_ALGO = env.str("OIDC_RP_SIGN_ALGO", default="RS256")
+OIDC_DRF_AUTH_BACKEND = "scouts_auth.oidc.InuitsOIDCAuthenticationBackend"
+OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOINT"))
 
 GROUP_ADMIN_BASE_URL = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga"
 BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"

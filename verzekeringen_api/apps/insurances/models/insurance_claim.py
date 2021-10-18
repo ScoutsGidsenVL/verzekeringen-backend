@@ -9,8 +9,8 @@ from apps.members.enums import Sex
 from apps.members.models import InuitsNonMember
 from apps.members.services.group_admin_member_service import group_admin_member_detail
 from apps.members.utils import GroupAdminMember
-from apps.scouts_auth.models import User
-from apps.scouts_auth.services.group_admin_service import get_group_by_number
+from scouts_auth.models import User
+from scouts_auth.services import GroupAdminService
 
 from verzekeringen_api import settings
 
@@ -113,7 +113,7 @@ class InsuranceClaim(models.Model):
 
     @property
     def group(self):
-        return get_group_by_number(self.group_number)
+        return GroupAdminService().get_group_by_number(self.group_number)
 
     def has_attachment(self):
         return hasattr(self, "attachment")

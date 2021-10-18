@@ -5,7 +5,7 @@ from django.db.models import Q
 from apps.base.serializers import EnumOutputSerializer
 from apps.base.helpers import parse_choice_to_tuple
 from apps.equipment.models import InuitsVehicle
-from apps.scouts_auth.api.serializers import GroupOutputSerializer
+from scouts_auth.serializers import ScoutsAuthGroupSerializer
 from apps.members.api.serializers import (
     MemberNestedOutputSerializer,
     NonMemberNestedOutputSerializer,
@@ -57,7 +57,7 @@ class InsuranceCostOutputSerializer(serializers.Serializer):
 class InsuranceListOutputSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     type = InsuranceTypeOutputSerializer(read_only=True)
-    group = GroupOutputSerializer(read_only=True)
+    group = ScoutsAuthGroupSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
     start_date = DateTimeTZField()
     end_date = DateTimeTZField()
@@ -92,7 +92,7 @@ base_insurance_detail_fields = (
 class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     type = InsuranceTypeOutputSerializer(read_only=True)
-    group = GroupOutputSerializer(read_only=True)
+    group = ScoutsAuthGroupSerializer(read_only=True)
     responsible_member = MemberNestedOutputSerializer(read_only=True)
     start_date = DateTimeTZField()
     end_date = DateTimeTZField()

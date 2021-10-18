@@ -2,13 +2,12 @@
 name = "verzekeringen.api"
 version = "0.1.0"
 description = "The api for scouts verzekeringen"
-authors = ["Jonas Elst <jonas.elst@inuits.eu>"]
+authors = ["Jonas Elst <jonas.elst@inuits.eu>", "Stijn Verholen <boro@inuits.eu>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
 Django = "^3.2.2"
 djangorestframework = "^3.12.4"
-mozilla-django-oidc = "^1.2.4"
 django-cors-headers = "^3.7.0"
 django-filter = "^2.4.0"
 environs = "^9.3.2"
@@ -22,6 +21,7 @@ psycopg2-binary = "^2.9.1"
 django-storages = "^1.11.1"
 boto3 = "^1.18.9"
 pdfrw = "^0.4"
+scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

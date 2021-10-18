@@ -10,11 +10,9 @@ from apps.members.api.serializers import GroupAdminMemberListOutputSerializer
 from apps.members.enums import Sex
 from apps.members.models import InuitsNonMember
 from apps.members.services import GroupAdminMemberService
-from apps.members.services.group_admin_member_service import group_admin_member_detail
-from apps.scouts_auth.api.serializers import GroupOutputSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
-from apps.insurances.api.serializers import InsuranceClaimAttachmentUploadSerializer
 from . import InsuranceClaimAdmistrativeFieldsMixin
+from scouts_auth.serializers import ScoutsAuthGroupSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +34,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
     date_of_accident = DateTimeTZField()
     activity_type = serializers.JSONField()
     victim = InsuranceClaimVictimOutputListSerializer()
-    group = GroupOutputSerializer()
+    group = ScoutsAuthGroupSerializer()
     declarant = serializers.SerializerMethodField()
 
     class Meta:
