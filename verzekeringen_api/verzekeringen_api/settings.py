@@ -62,9 +62,6 @@ env.read_env()
 #             except Exception:
 #                 pass
 
-LOGGING_LEVEL = env.str("LOGGING_LEVEL", "INFO")
-LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "ERROR")
-
 
 LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "INFO")

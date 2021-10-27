@@ -28,6 +28,13 @@ class GroupAdmin:
         SettingsHelper.get_group_admin_member_search_endpoint() + "/gelijkaardig?voornaam={0}&achternaam={1}"
     )
 
+    def auth_request(self, endpoint: str, payload: dict) -> str:
+        response = requests.post(endpoint, data=payload)
+
+        response.raise_for_status()
+
+        return response.json()
+
     def request(self, active_user: User, href: str):
         """Makes a request to the GA with the given url and returns the response as json."""
         response = requests.get(href, headers={"Authorization": "Bearer {0}".format(active_user.access_token)})
@@ -142,6 +149,8 @@ class GroupAdmin:
         - Accept: */* or Accept: application/json returns a json list
         - Accept: text/csv returns a csv file
         - Accept: application/pdf returns a pdf file
+
+        A
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#ledenlijst-ledenlijst-get
         """

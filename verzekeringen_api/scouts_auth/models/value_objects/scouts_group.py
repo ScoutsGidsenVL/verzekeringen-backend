@@ -8,6 +8,9 @@ class ScoutsGroupContact:
 
     member: str
     function: str
+    name: str
+    phone: str
+    email: str
     links: List[GroupAdminLink]
 
 
@@ -48,3 +51,6 @@ class ScoutsGroup:
         self.website = website if website else ""
         self.info = info if info else ""
         self.contacts = contacts if contacts else []
+    
+    def __str__(self):
+        return ("% (%) - %") % (self.name, self.number, self.website)

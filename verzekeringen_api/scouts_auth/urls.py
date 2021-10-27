@@ -39,6 +39,7 @@ from scouts_auth.views import (
 urlpatterns = [
     path("ga/members/list/", GroupAdminMemberListView.as_view(), name="ga_member_list"),
     path("ga/groups/", GroupAdminGroupView.as_view(), name="ga_groups"),
+    # The infamous "me" call
     path("auth/me/", CurrentUserView.as_view(), name="me"),
     # Authenticate with OIDC
     path("oidc/token/", OIDCAuthCodeView.as_view(), name="token"),

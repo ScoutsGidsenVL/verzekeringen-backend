@@ -8,7 +8,7 @@ from jsonfield import JSONField
 from apps.locations.utils import PostcodeCity, Address
 from apps.members.models import InuitsNonMember
 from scouts_auth.models import User
-from scouts_auth.services import GroupAdminMemberService, GroupAdminGroupService
+from scouts_auth.services import GroupAdmin
 from scouts_auth.models import GroupAdminMember
 from inuits.enums import Gender
 
@@ -46,7 +46,7 @@ class InsuranceClaimVictim(models.Model):
     def get_member_number(self, active_user: settings.AUTH_USER_MODEL):
         if self.group_admin_id:
             if not self._member_detail:
-                self._member_detail = GroupAdminMemberService().group_admin_member_detail(
+                self._member_detail = GroupAdmin().group_admin_member_detail(
                     active_user=active_user, group_admin_id=str(self.group_admin_id)
                 )
             return self._member_detail.membership_number
@@ -111,7 +111,7 @@ class InsuranceClaim(models.Model):
 
     @property
     def group(self):
-        return GroupAdminGroupService().get_group_by_number(self.group_number)
+        return GroupAdmin().get_group(self.group_number)
 
     def has_attachment(self):
         return hasattr(self, "attachment")

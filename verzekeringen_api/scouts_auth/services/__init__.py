@@ -1,5 +1,5 @@
 from .group_admin_group_service import GroupAdminGroupService
 from .group_admin_member_service import GroupAdminMemberService
-from .oidc_service import OIDCService
 from .permission_service import PermissionService
 from .group_admin import GroupAdmin
+from .oidc_service import OIDCService

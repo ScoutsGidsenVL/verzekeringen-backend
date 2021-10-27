@@ -31,10 +31,3 @@ class GroupAdminGroupService:
             partial_group.href,
             addresses[0].get("gemeente") if addresses else None,
         )
-
-    def get_group_by_number(self, group_number: str) -> ScoutsGroup:
-        url = "%s/groep/%s" % (SettingsHelper.get_group_admin_base_url(), group_number)
-        response = requests.get(url)
-        if response.ok:
-            data = response.json()
-            return ScoutsGroup(identifier=data["id"], name=data["naam"], location=None)

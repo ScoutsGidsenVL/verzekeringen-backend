@@ -86,19 +86,20 @@ class User(AbstractUser):
             (", ".join(self.partial_scouts_groups) if self.partial_scouts_groups and isinstance(self.scouts_groups, list) else "[]"),
             (", ".join(self.scouts_groups) if self.scouts_groups and isinstance(self.scouts_groups, list) else "[]"))
 
-    def fetch_detailed_group_info(self):
-        # Importing here, to avoid a circular import error
-        from scouts_auth.services import GroupAdminGroupService
+    #@TODO
+    # def fetch_detailed_group_info(self):
+    #     # Importing here, to avoid a circular import error
+    #     from scouts_auth.services import GroupAdminGroupService
 
-        groups = dict()
-        group_links = []
-        # refs: #79675 - distinct members groups
-        for partial_group in self.partial_scouts_groups:
-            group_links.append(partial_group.href)
+    #     groups = dict()
+    #     group_links = []
+    #     # refs: #79675 - distinct members groups
+    #     for partial_group in self.partial_scouts_groups:
+    #         group_links.append(partial_group.href)
 
-            if not partial_group in groups:
-                groups[partial_group.id] = GroupAdminGroupService().get_detailed_group(
-                    partial_group
-                )
-        self.scouts_groups = groups.values()
-        self.partial_scouts_groups = group_links
+    #         if not partial_group in groups:
+    #             groups[partial_group.id] = GroupAdminGroupService().get_detailed_group(
+    #                 partial_group
+    #             )
+    #     self.scouts_groups = groups.values()
+    #     self.partial_scouts_groups = group_links

@@ -3,6 +3,7 @@ import logging, requests
 from django.conf import settings
 
 from scouts_auth.util import SettingsHelper
+from scouts_auth.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
@@ -14,12 +15,7 @@ class OIDCService:
     oidc_rp_client_id = SettingsHelper.get_oidc_rp_client_id()
     oidc_rp_client_secret = SettingsHelper.get_oidc_rp_client_secret()
 
-    def _post_token_request(self, payload: dict) -> dict:
-        response = requests.post(self.oidc_endpoint, data=payload)
-
-        response.raise_for_status()
-
-        return response.json()
+    service = GroupAdmin()
 
     def get_tokens_by_auth_code(self, auth_code: str, redirect_uri: str) -> dict:
         payload = {
@@ -30,7 +26,8 @@ class OIDCService:
             "redirect_uri": redirect_uri,
         }
         logger.debug("SCOUTS_AUTH: OIDC - sending authentication token")
-        return self._post_token_request(payload)
+
+        return self.service.auth_request(self.oidc_endpoint, payload)
 
     def get_tokens_by_refresh_token(self, refresh_token: str) -> dict:
         payload = {
@@ -40,4 +37,5 @@ class OIDCService:
             "client_secret": self.oidc_rp_client_secret,
         }
         logger.debug("SCOUTS_AUTH: OIDC - refreshing authentication")
-        return self._post_token_request(payload)
+
+        return self.service.auth_request(self.oidc_endpoint, payload)
