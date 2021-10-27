@@ -1,0 +1,4 @@
+
+
+class ScoutsFunction:
+    pass

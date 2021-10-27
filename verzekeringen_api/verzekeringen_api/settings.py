@@ -67,7 +67,8 @@ LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "ERROR")
 
 
 LOGGING_CONFIG = None
-LOGGING_LEVEL = "DEBUG" if env.str("DEBUG") else "INFO"
+LOGGING_LEVEL = env.str("LOGGING_LEVEL", "INFO")
+LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "ERROR")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -93,7 +94,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": "INFO",
+        "level": LOGGING_LEVEL_ROOT,
     },
     "loggers": {
         "mozilla_django_oidc": {
@@ -103,7 +104,13 @@ LOGGING = {
         },
         "scouts-auth": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        # @TODO
+        "scouts_auth": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
             "propagate": False,
         },
         "apps": {
@@ -119,6 +126,9 @@ LOGGING = {
     },
 }
 logging.config.dictConfig(LOGGING)
+
+logging.info("LOGGING_LEVEL: %s", LOGGING_LEVEL)
+logging.info("LOGGING_LEVEL_ROOT: %s", LOGGING_LEVEL_ROOT)
 
 
 def correct_url(prefix, url):
