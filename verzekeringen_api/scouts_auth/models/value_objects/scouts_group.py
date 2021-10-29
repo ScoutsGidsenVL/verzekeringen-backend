@@ -1,17 +1,11 @@
 from typing import List
 from datetime import date
 
-from scouts_auth.models.value_objects import GroupAdminAddress, GroupAdminLink
+from scouts_auth.models.value_objects import GroupAdminAddress
+from scouts_auth.models.value_objects import GroupAdminContact
 
 
-class ScoutsGroupContact:
 
-    member: str
-    function: str
-    name: str
-    phone: str
-    email: str
-    links: List[GroupAdminLink]
 
 
 class ScoutsGroup:
@@ -26,7 +20,7 @@ class ScoutsGroup:
     email: str
     website: str
     info: str
-    contacts: List[ScoutsGroupContact]
+    contacts: List[GroupAdminContact]
 
     def __init__(
         self,
@@ -39,7 +33,7 @@ class ScoutsGroup:
         email: str = None,
         website: str = None,
         info: str = None,
-        contacts: List[ScoutsGroupContact] = None,
+        contacts: List[GroupAdminContact] = None,
     ):
         self.id = id if id else ""
         self.name = name if name else ""

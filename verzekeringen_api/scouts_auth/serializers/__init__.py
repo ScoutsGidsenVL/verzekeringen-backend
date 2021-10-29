@@ -3,7 +3,7 @@ from .ga_address_serializer import GroupAdminAddressSerializer
 from .auth_code_serializer import AuthCodeSerializer
 from .refresh_serializer import RefreshSerializer
 from .token_serializer import TokenSerializer
-from .scouts_group_serializer import ScoutsGroupContactSerializer
+from .ga_contact_serializer import GroupAdminContactSerializer
 from .scouts_group_serializer import ScoutsGroupSerializer
 from .user_serializer import UserSerializer
 from .belgian_postcode_city_serializer import BelgianPostcodeCitySerializer
@@ -14,4 +14,4 @@ from .ga_member_list_serializer import MemberListMemberSerializer
 from .ga_member_list_serializer import MemberListSerializer
 from .scouts_function_serializer import ScoutsFunctionSerializer
 from .member_medical_flash_card_serializer import MemberMedicalFlashCardSerializer
-from .member_serializer import MemberSerializer
+from .member_serializer import GroupAdminMemberSerializer

@@ -3,6 +3,7 @@ from scouts_auth.models.value_objects import PostcodeCity
 
 class GroupAdminAddress:
 
+    id: str
     street: str
     number: str
     letter_box: str
@@ -19,6 +20,7 @@ class GroupAdminAddress:
 
     def __init__(
         self,
+        id: str = None,
         street: str = None,
         number: str = None,
         letter_box: str = None,
@@ -33,6 +35,7 @@ class GroupAdminAddress:
         giscode: str = None,
         description: str = None,
     ):
+        self.id = id if id else ""
         self.street = street if street else ""
         self.number = number if number else ""
         self.letter_box = letter_box if letter_box else ""

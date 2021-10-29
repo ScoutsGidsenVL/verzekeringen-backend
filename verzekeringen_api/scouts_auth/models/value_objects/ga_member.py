@@ -1,7 +1,8 @@
+from typing import List
 from datetime import datetime
 
 from scouts_auth.models.enums import Gender, GenderHelper
-from scouts_auth.models.value_objects import GroupAdminAddress
+from scouts_auth.models.value_objects import GroupAdminAddress, GroupAdminContact, ScoutsFunction
 
 
 class GroupAdminMember:
@@ -13,7 +14,10 @@ class GroupAdminMember:
     email: str
     group_admin_id: str
     membership_number: int
-    address: GroupAdminAddress
+    username: str
+    addresses: List[GroupAdminAddress]
+    contacts: List[GroupAdminContact]
+    functions: List[ScoutsFunction]
 
     def __init__(
         self,
@@ -25,7 +29,10 @@ class GroupAdminMember:
         email: str = None,
         group_admin_id: str = None,
         membership_number: str = None,
-        address: GroupAdminAddress = None,
+        username: str = None,
+        addresses: List[GroupAdminAddress] = None,
+        contacts: List[GroupAdminContact] = None,
+        functions: List[ScoutsFunction] = None,
     ):
         if not first_name or not last_name or not group_admin_id:
             raise ValueError("first_name, last_name and group_admin_id can not be empty")
@@ -38,7 +45,10 @@ class GroupAdminMember:
         self.email = email if email else ""
         self.group_admin_id = group_admin_id if group_admin_id else ""
         self.membership_number = membership_number if membership_number else ""
-        self.address = address
+        self.username = username if username else ""
+        self.addresses = addresses if addresses else []
+        self.contacts = contacts if contacts else []
+        self.functions = functions if functions else []
 
     def get_gender(self):
         return self.gender

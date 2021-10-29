@@ -66,6 +66,8 @@ env.read_env()
 LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "INFO")
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "ERROR")
+# LOGGING_LEVEL = "DEBUG"
+# LOGGING_LEVEL_ROOT = "DEBUG"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -95,18 +97,18 @@ LOGGING = {
     },
     "loggers": {
         "mozilla_django_oidc": {
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
         "scouts-auth": {
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
         # @TODO
         "scouts_auth": {
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": LOGGING_LEVEL,
             "propagate": False,
         },

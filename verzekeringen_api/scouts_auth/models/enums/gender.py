@@ -2,6 +2,8 @@ import logging
 
 from django.db import models
 
+from rest_framework import serializers
+
 
 logger = logging.getLogger(__name__)
 
@@ -29,3 +31,4 @@ class GenderHelper:
             return Gender.MALE
 
         return Gender.UNKNOWN
+

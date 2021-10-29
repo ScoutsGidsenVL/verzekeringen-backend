@@ -38,6 +38,7 @@ from scouts_auth.views import (
 
 urlpatterns = [
     path("ga/members/list/", GroupAdminMemberListView.as_view(), name="ga_member_list"),
+    path("ga/member/<str:group_admin_id>", GroupAdminMemberView.as_view(), name="ga_member"),
     path("ga/groups/", GroupAdminGroupView.as_view(), name="ga_groups"),
     # The infamous "me" call
     path("auth/me/", CurrentUserView.as_view(), name="me"),

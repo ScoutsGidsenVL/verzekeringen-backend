@@ -61,7 +61,7 @@ class GroupAdminMemberService:
             phone_number=member_data.get("persoonsgegevens", {}).get("gsm", ""),
             group_admin_id=group_admin_id,
             membership_number=member_data.get("verbondsgegevens", {}).get("lidnummer", ""),
-            address=address,
+            addresses=[address],
         )
 
         logger.debug(

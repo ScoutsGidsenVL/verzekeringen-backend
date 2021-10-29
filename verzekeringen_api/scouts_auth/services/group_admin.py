@@ -49,7 +49,7 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#leden-lid-get
         """
-        json = self.request(active_user, self.member_info.format(group_admin_id))
+        json = self.request(active_user, self.url_member_info.format(group_admin_id))
 
         logger.debug("GA CALL: %s", "get_member_info")
         logger.debug("GA RESPONSE: %s", json)
