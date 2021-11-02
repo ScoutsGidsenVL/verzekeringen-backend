@@ -27,7 +27,7 @@ class OIDCService:
         }
         logger.debug("SCOUTS_AUTH: OIDC - sending authentication token")
 
-        return self.service.auth_request(self.oidc_endpoint, payload)
+        return self.service.post(self.oidc_endpoint, payload)
 
     def get_tokens_by_refresh_token(self, refresh_token: str) -> dict:
         payload = {
@@ -38,4 +38,4 @@ class OIDCService:
         }
         logger.debug("SCOUTS_AUTH: OIDC - refreshing authentication")
 
-        return self.service.auth_request(self.oidc_endpoint, payload)
+        return self.service.post(self.oidc_endpoint, payload)

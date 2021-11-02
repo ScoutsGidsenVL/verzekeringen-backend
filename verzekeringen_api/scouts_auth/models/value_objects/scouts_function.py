@@ -3,13 +3,17 @@ from datetime import datetime
 
 from scouts_auth.models.value_objects import GroupAdminLink
 
-class ScoutsFunction:
-    
-    group: str
-    function: str
-    begin: datetime
-    code: str
-    description: str
+from inuits.models import AbstractModel
+from inuits.models.fields import OptionalCharField, OptionalDateTimeField
+
+
+class ScoutsFunction(AbstractModel):
+
+    group: str = OptionalCharField()
+    function: str = OptionalCharField()
+    begin: datetime = OptionalDateTimeField()
+    code: str = OptionalCharField()
+    description: str = OptionalCharField()
     links: List[GroupAdminLink]
 
     def __init__(
@@ -27,3 +31,13 @@ class ScoutsFunction:
         self.code = code
         self.description = description
         self.links = links if links else []
+
+    def __str__(self):
+        return "group({}), function({}), begin({}), code({}), description({}), links({})".format(
+            self.group,
+            self.function,
+            self.begin,
+            self.code,
+            self.description,
+            ", ".join(str(link) for link in self.links),
+        )

@@ -10,6 +10,6 @@ class PartialScoutsGroup:
     def __init__(self, identifier: str, href: str):
         self.id = identifier
         self.href = href
-    
+
     def __str__(self):
-        return self.id + " (" + self.href + ")"
+        return "id(%s), href(%s)".format(self.id, self.href)

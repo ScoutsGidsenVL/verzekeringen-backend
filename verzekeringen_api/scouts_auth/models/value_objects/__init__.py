@@ -1,5 +1,5 @@
 from .postcode_city import PostcodeCity
-from .address import GroupAdminAddress
+from .ga_address import GroupAdminAddress
 from .partial_scouts_group import PartialScoutsGroup
 from .ga_link import GroupAdminLink
 from .scouts_function import ScoutsFunction
