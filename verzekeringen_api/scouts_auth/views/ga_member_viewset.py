@@ -27,7 +27,7 @@ class GroupAdminMemberView(viewsets.ViewSet):
     service = GroupAdmin()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: GroupAdminMemberListResponseSerializer})
-    @action(methods=["GET"], url_path="", detail=True, permissions_classes=perm_authenticated)
+    @action(methods=["GET"], url_path="", detail=True)
     def view_member_list(self, request) -> Response:
         logger.debug("GA: Received request for member list")
 
