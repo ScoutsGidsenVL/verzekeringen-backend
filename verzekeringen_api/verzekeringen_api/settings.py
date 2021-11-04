@@ -272,7 +272,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "verzekeringen_api.pagination.PageNumberPagination",
-    "EXCEPTION_HANDLER": "apps.base.utils.exception_handler",
+    "EXCEPTION_HANDLER": "inuits.exceptions.drf_exception_handler",
 }
 
 
@@ -295,6 +295,8 @@ OIDC_DRF_AUTH_BACKEND = "scouts_auth.oidc.InuitsOIDCAuthenticationBackend"
 OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOINT"))
 
 GROUP_ADMIN_BASE_URL = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga"
+GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT = GROUP_ADMIN_BASE_URL
+GROUP_ADMIN_PROFILE_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid/profiel"
 BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"
 GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/zoeken"
 GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid"
