@@ -1,27 +1,22 @@
-from django.db import models
-
 from scouts_auth.models.value_objects import PostcodeCity
 
-from inuits.models import AbstractModel
-from inuits.models.fields import OptionalCharField
 
+class GroupAdminAddress:
 
-class GroupAdminAddress(AbstractModel):
-
-    group_admin_id: str = OptionalCharField()
-    street: str = OptionalCharField()
-    number: str = OptionalCharField()
-    letter_box: str = OptionalCharField()
-    postcode_city: PostcodeCity = None
-    postal_code: str = OptionalCharField()
-    city: str = OptionalCharField()
-    country: str = OptionalCharField()
-    phone: str = OptionalCharField()
-    postal_address: bool = models.BooleanField
-    status: str = OptionalCharField()
-    position: dict = None
-    giscode: str = OptionalCharField()
-    description: str = OptionalCharField()
+    group_admin_id: str
+    street: str
+    number: str
+    letter_box: str
+    postcode_city: PostcodeCity
+    postal_code: str
+    city: str
+    country: str
+    phone: str
+    postal_address: bool
+    status: str
+    position: dict
+    giscode: str
+    description: str
 
     def __init__(
         self,

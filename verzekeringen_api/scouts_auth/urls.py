@@ -1,5 +1,5 @@
 import requests
-from django.urls import path, include
+from django.urls import path, re_path, include
 from rest_framework import routers
 
 from scouts_auth.apps import ScoutsAuthConfig
@@ -9,8 +9,9 @@ from scouts_auth.views import (
     OIDCRefreshView,
     GroupAdminFunctionView,
     GroupAdminGroupView,
-    GroupAdminMemberMedicalFlashCardView,
     GroupAdminMemberView,
+    GroupAdminMemberMedicalFlashCardView,
+    GroupAdminMemberListView,
     GroupAdminPartialMemberView,
 )
 
@@ -36,15 +37,19 @@ from scouts_auth.views import (
 # ]
 
 view_member_list = GroupAdminMemberView.as_view({"get": "view_member_list"})
+view_search_members = GroupAdminMemberView.as_view({"get": "search_members"})
 view_member = GroupAdminMemberView.as_view({"get": "view_member_info"})
 view_group_list = GroupAdminGroupView.as_view({"get": "view_groups"})
 view_accountable_group_list = GroupAdminGroupView.as_view({"get": "view_accountable_groups"})
 view_group = GroupAdminGroupView.as_view({"get": "view_group"})
 view_function_list = GroupAdminFunctionView.as_view({"get": "view_function_list"})
+view_member_list_members = GroupAdminMemberListView.as_view({"get": "view_member_list_members"})
+view_member_list_member_detail = GroupAdminMemberListView.as_view({"get": "view_member_list_member_detail"})
 
 urlpatterns = [
     path("ga/members/list/", view_member_list, name="ga_member_list"),
-    path("ga/member/<str:group_admin_id>", view_member, name="ga_member"),
+    re_path(r"^ga/members/search?(?P<term>\w+)(?:/(?P<group>\w+))?", view_search_members, name="ga_search_members"),
+    path("ga/members/<str:group_admin_id>", view_member, name="ga_member"),
     # path("ga/groups/", GroupAdminGroupListView.as_view(), name="ga_groups"),
     # path("ga/groups/accountable/", GroupAdminAccountableGroupListView.as_view(), name="ga_groups"),
     # path("ga/groups/<str:group_number>", GroupAdminGroupView.as_view(), name="ga_group"),

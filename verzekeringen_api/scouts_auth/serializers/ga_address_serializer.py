@@ -1,53 +1,59 @@
 import logging
+from typing import List
 
 from rest_framework import serializers
 
 from scouts_auth.models import GroupAdminAddress
 
+from inuits.serializers import NonModelSerializer
+
 
 logger = logging.getLogger(__name__)
 
 
-class GroupAdminAddressSerializer(serializers.Serializer):
+class GroupAdminAddressSerializer(NonModelSerializer):
+    def to_internal_value(self, data) -> dict:
+        validated_data = {
+            "id": data.pop("id", ""),
+            "street": data.pop("straat", ""),
+            "number": data.pop("nummer", ""),
+            "letter_box": data.pop("bus", ""),
+            "postal_code": data.pop("postcode", ""),
+            "city": data.pop("gemeente", ""),
+            "country": data.pop("land", ""),
+            "phone": data.pop("telefoon", ""),
+            "postal_address": data.pop("postadres", False),
+            "status": data.pop("status", ""),
+            "position": data.pop("positie", ""),
+            "giscode": data.pop("giscode", ""),
+            "description": data.pop("omschrijving", ""),
+        }
 
-    id: str = serializers.CharField(default="")
-    street: str = serializers.CharField(source="straat", default="")
-    number: str = serializers.CharField(source="nummer", default="")
-    letter_box: str = serializers.CharField(source="bus", default="")
-    postcode_city = None
-    postal_code: str = serializers.CharField(source="postcode", default="")
-    city: str = serializers.CharField(source="gemeente", default="")
-    country: str = serializers.CharField(source="land", default="")
-    phone: str = serializers.CharField(source="telefoon", default="")
-    postal_address: bool = serializers.BooleanField(source="postadres", default=False)
-    status: str = serializers.CharField(default="")
-    position: dict = None
-    giscode: str = serializers.CharField(default="")
-    description: str = serializers.CharField(source="omschrijving", default="")
+        remaining_keys = data.keys()
+        if len(remaining_keys) > 0:
+            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
-    class Meta:
-        model = GroupAdminAddress
-        fields = "__all__"
+        return validated_data
 
     def save(self) -> GroupAdminAddress:
         return self.create(self.validated_data)
 
-    def create(self, **validated_data) -> GroupAdminAddress:
+    def create(self, validated_data) -> GroupAdminAddress:
         instance = GroupAdminAddress()
 
         instance.group_admin_id = validated_data.pop("id", "")
-        instance.street = validated_data.pop("straat", "")
-        instance.number = validated_data.pop("nummer", "")
-        instance.letter_box = validated_data.pop("", "")
-        instance.postal_code = validated_data.pop("postcode", "")
-        instance.city = validated_data.pop("gemeente", "")
-        instance.country = validated_data.pop("land", "")
-        instance.phone = validated_data.pop("telefoon", "")
-        instance.postal_address = validated_data.pop("postadres", False)
+        instance.street = validated_data.pop("street", "")
+        instance.number = validated_data.pop("number", "")
+        instance.letter_box = validated_data.pop("letter_box", "")
+        instance.postal_code = validated_data.pop("postal_code", "")
+        instance.city = validated_data.pop("city", "")
+        instance.country = validated_data.pop("country", "")
+        instance.phone = validated_data.pop("phone", "")
+        instance.postal_address = validated_data.pop("postal_address", False)
         instance.status = validated_data.pop("status", "")
-        instance.position = validated_data.pop("", "")
+        instance.position = validated_data.pop("position", "")
         instance.giscode = validated_data.pop("giscode", "")
-        instance.description = validated_data.pop("omschrijving", "")
+        instance.description = validated_data.pop("description", "")
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

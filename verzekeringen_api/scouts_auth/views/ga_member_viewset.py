@@ -1,34 +1,60 @@
 import logging
 
-from rest_framework import status, viewsets, mixins
+from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import ValidationError
 from drf_yasg2.utils import swagger_auto_schema
 
-from scouts_auth.models import GroupAdminMember, MemberList
-from scouts_auth.serializers import MemberListSerializer, GroupAdminMemberSerializer
+from scouts_auth.models import (
+    GroupAdminMember,
+    GroupAdminMemberListResponse,
+    GroupAdminMemberSearchResponse,
+)
+from scouts_auth.serializers import (
+    GroupAdminMemberSerializer,
+    GroupAdminMemberListResponseSerializer,
+    GroupAdminMemberSearchResponseSerializer,
+)
 from scouts_auth.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
 
 
-class GroupAdminMemberView(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
-
-    perm_authenticated = [IsAuthenticated]
+class GroupAdminMemberView(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     service = GroupAdmin()
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: MemberListSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: GroupAdminMemberListResponseSerializer})
     @action(methods=["GET"], url_path="", detail=True, permissions_classes=perm_authenticated)
     def view_member_list(self, request) -> Response:
         logger.debug("GA: Received request for member list")
 
-        member_list: MemberList = self.service.get_member_list(request.user)
+        response: GroupAdminMemberListResponse = self.service.get_member_list(request.user)
 
-        serializer = MemberListSerializer(member_list)
+        serializer = GroupAdminMemberListResponseSerializer(response)
 
-        logger.debug("member list: %s", member_list)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: GroupAdminMemberListResponseSerializer})
+    @action(
+        methods=["GET"],
+        url_path=r"(?:/(?P<term>\w+))?(?:/(?P<group>\w+))?",
+        detail=True,
+    )
+    def search_members(self, request, term: str, group: str = None) -> Response:
+        logger.debug("GA: Received request to search for members")
+        logger.debug(
+            "GA: Member search parameters: term(%s) - group(%s)", term if term else "", group if group else ""
+        )
+
+        if not term:
+            raise ValidationError("Url param 'term' is a required filter")
+
+        response: GroupAdminMemberSearchResponse = self.service.search_member(request.user, term=term, group=group)
+
+        serializer = GroupAdminMemberSearchResponseSerializer(response)
 
         return Response(serializer.data)
 
@@ -37,16 +63,12 @@ class GroupAdminMemberView(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
         methods=["GET"],
         url_path=r"(?P<group_admin_id>\w+)",
         detail=False,
-        permissions_classes=perm_authenticated,
     )
-    def view_member_info(self, request, group_admin_id: str):
+    def view_member_info(self, request, group_admin_id: str) -> Response:
         logger.debug("GA: Received request for member info (group_admin_id: %s)", group_admin_id)
 
         member: GroupAdminMember = self.service.get_member_info(request.user, group_admin_id)
-        logger.debug("MEMBER: %s", str(member))
 
         serializer = GroupAdminMemberSerializer(member)
-        logger.debug("HIER")
-        logger.debug("MEMBER: %s", str(member))
 
         return Response(serializer.data)

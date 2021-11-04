@@ -1,8 +1,7 @@
 from .oidc_auth_code_view import OIDCAuthCodeView
 from .oidc_refresh_view import OIDCRefreshView
 from .current_user_view import CurrentUserView
-from .group_admin_member_detail_view import GroupAdminMemberDetailView
-from .group_admin_member_search_view import GroupAdminMemberSearchView
+from .ga_member_list_viewset import GroupAdminMemberListView
 
 from .ga_function_view import GroupAdminFunctionView
 from .ga_group_viewset import GroupAdminGroupView

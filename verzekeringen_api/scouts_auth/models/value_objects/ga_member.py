@@ -1,27 +1,48 @@
 from typing import List
-from datetime import datetime
-
-from django.db import models
+from datetime import date, datetime
 
 from scouts_auth.models.enums import Gender, GenderHelper
 from scouts_auth.models.value_objects import GroupAdminAddress, GroupAdminContact, ScoutsFunction, GroupAdminLink
 
-from inuits.models import AbstractModel
-from inuits.models.fields import OptionalCharField, OptionalDateField, OptionalIntegerField
+
+class GroupAdminMemberGroupAdminData:
+    first_name: str
+    last_name: str
+    birth_date: date
+
+    def __init__(self, first_name: str = "", last_name: str = "", birth_date: date = None):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.birth_date = birth_date
+
+    def __str__(self):
+        return "first_name({}), last_name({}), birth_date({})".format(self.first_name, self.last_name, self.birth_date)
 
 
-class GroupAdminMember(AbstractModel):
+class GroupAdminMemberScoutsData:
+    membership_number: str
+    customer_number: str
 
-    gender: Gender = models.CharField(max_length=1, choices=Gender.choices, default=Gender.UNKNOWN)
-    phone_number: str = OptionalCharField()
-    first_name: str = OptionalCharField()
-    last_name: str = OptionalCharField()
-    birth_date: datetime.date = OptionalDateField()
-    membership_number: str = OptionalCharField()
-    customer_number: str = OptionalCharField()
-    email: str = OptionalCharField()
-    username: str = OptionalCharField()
-    group_admin_id: str = OptionalCharField()
+    def __init__(self, membership_number: str = "", customer_number: str = ""):
+        self.membership_number = membership_number
+        self.customer_number = customer_number
+
+    def __str__(self):
+        return "membership_number({}), customer_number({})".format(self.customer_number, self.membership_number)
+
+
+class GroupAdminMember:
+
+    gender: Gender
+    phone_number: str
+    first_name: str
+    last_name: str
+    birth_date: datetime.date
+    membership_number: str
+    customer_number: str
+    email: str
+    username: str
+    group_admin_id: str
     addresses: List[GroupAdminAddress]
     contacts: List[GroupAdminContact]
     functions: List[ScoutsFunction]

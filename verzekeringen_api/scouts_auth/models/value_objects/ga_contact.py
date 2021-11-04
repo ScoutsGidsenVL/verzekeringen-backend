@@ -2,17 +2,14 @@ from typing import List
 
 from scouts_auth.models.value_objects import GroupAdminLink
 
-from inuits.models import AbstractModel
-from inuits.models.fields import OptionalCharField
 
+class GroupAdminContact:
 
-class GroupAdminContact(AbstractModel):
-
-    member: str = OptionalCharField()
-    function: str = OptionalCharField()
-    name: str = OptionalCharField()
-    phone: str = OptionalCharField()
-    email: str = OptionalCharField()
+    member: str
+    function: str
+    name: str
+    phone: str
+    email: str
     links: List[GroupAdminLink]
 
     def __init__(

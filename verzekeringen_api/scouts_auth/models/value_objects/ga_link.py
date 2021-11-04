@@ -1,16 +1,10 @@
-from django.db import models
-
-from inuits.models import AbstractModel
-from inuits.models.fields import OptionalCharField
-
-
-class GroupAdminLink(AbstractModel):
+class GroupAdminLink:
     """This class captures the data returned by GroupAdmin containing links to the full references info."""
 
-    rel: str = OptionalCharField()
-    href: str = OptionalCharField()
-    method: str = OptionalCharField()
-    sections: list = None
+    rel: str
+    href: str
+    method: str
+    sections: list
 
     def __init__(self, rel: str = "", href: str = "", method: str = "", sections: list = None):
         self.rel = rel

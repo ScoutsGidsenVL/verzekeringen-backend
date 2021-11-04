@@ -24,7 +24,47 @@ from scouts_auth.serializers import (
 logger = logging.getLogger(__name__)
 
 
-class GroupAdminMemberSerializer(serializers.ModelSerializer):
+class GroupAdminMemberPersonalDataSerializer(serializers.BaseSerializer):
+    def to_internal_value(self, data: dict) -> dict:
+        validated_data: dict = {"gender": data.pop("geslacht", ""), "phone": data.pop("gsm", "")}
+
+        remaining_keys = data.keys()
+        if len(remaining_keys) > 0:
+            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+
+        return validated_data
+
+
+class GroupAdminMemberGroupAdminDataserializer(serializers.BaseSerializer):
+    def to_internal_value(self, data: dict) -> dict:
+        validated_data: dict = {
+            "first_name": data.pop("voornaam", ""),
+            "last_name": data.pop("achternaam", ""),
+            "birth_date": data.pop("geboortedatum", None),
+        }
+
+        remaining_keys = data.keys()
+        if len(remaining_keys) > 0:
+            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+
+        return validated_data
+
+
+class GroupAdminMemberScoutsDataSerializer(serializers.BaseSerializer):
+    def to_internal_value(self, data: dict) -> dict:
+        validated_data: dict = {
+            "membership_number": data.pop("lidnummer", ""),
+            "customer_number": data.pop("klantnummer", ""),
+        }
+
+        remaining_keys = data.keys()
+        if len(remaining_keys) > 0:
+            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+
+        return validated_data
+
+
+class GroupAdminMemberSerializer(serializers.BaseSerializer):
 
     # gender: Gender = None
     # phone_number: str = serializers.CharField(source="gsm", required=False)
@@ -39,9 +79,30 @@ class GroupAdminMemberSerializer(serializers.ModelSerializer):
     functions: List[ScoutsFunction] = ScoutsFunctionSerializer(source="functies", many=True, default=[])
     links: List[GroupAdminLink] = GroupAdminLinkSerializer(many=True, default=[])
 
-    class Meta:
-        model = GroupAdminMember
-        fields = "__all__"
+    def to_internal_value(self, data: dict) -> dict:
+        validated_data: dict = {
+            "group_admin_id": data.pop("id", ""),
+            "gender": data.pop("id", ""),
+            "phone_number": data.pop("groepsnummer", ""),
+            "name": data.pop("naam", ""),
+            "date_of_foundation": data.pop("opgericht", None),
+            "bank_account": data.pop("rekeningnummer", ""),
+            "email": data.pop("email", ""),
+            "website": data.pop("website", ""),
+            "info": data.pop("vrijeInfo", ""),
+            "type": data.pop("soort", ""),
+            "only_leaders": bool(data.pop("enkelLeiding", False)),
+            "show_members_improved": bool(data.pop("ledenVerbeterdTonen", False)),
+            "addresses": GroupAdminAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
+            "contacts": GroupAdminContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
+            "links": GroupAdminLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+        }
+
+        remaining_keys = data.keys()
+        if len(remaining_keys) > 0:
+            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+
+        return validated_data
 
     def save(self) -> GroupAdminMember:
         return self.create(self.validated_data)

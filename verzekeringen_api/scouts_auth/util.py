@@ -52,21 +52,29 @@ class SettingsHelper:
         return getattr(settings, "GROUP_ADMIN_BASE_URL", default_value)
 
     @staticmethod
+    def get_group_admin_allowed_calls_endpoint(default_value=None):
+        return getattr(settings, "GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT", default_value)
+
+    @staticmethod
+    def get_group_admin_profile_endpoint(default_value=None):
+        return getattr(settings, "GROUP_ADMIN_PROFILE_ENDPOINT", default_value)
+
+    @staticmethod
     def get_group_admin_member_search_endpoint(default_value=None):
         return getattr(settings, "GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT", default_value)
 
     @staticmethod
     def get_group_admin_member_detail_endpoint(default_value=None):
         return getattr(settings, "GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT", default_value)
-    
+
     @staticmethod
     def get_group_admin_group_endpoint(default_value=None):
         return getattr(settings, "GROUP_ADMIN_GROUP_ENDPOINT", default_value)
-    
+
     @staticmethod
     def get_group_admin_functions_endpoint(default_value=None):
         return getattr(settings, "GROUP_ADMIN_FUNCTIONS_ENDPOINT", default_value)
-    
+
     @staticmethod
     def get_group_admin_member_list_endpoint(default_value=None):
         return getattr(settings, "GROUP_ADMIN_MEMBER_LIST_ENDPOINT", default_value)

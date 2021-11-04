@@ -1,10 +1,9 @@
 import logging
 from typing import List
 
-from rest_framework import status, viewsets, mixins
+from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from drf_yasg2.utils import swagger_auto_schema
 
 from scouts_auth.models import (
@@ -19,9 +18,8 @@ from scouts_auth.services import GroupAdmin
 logger = logging.getLogger(__name__)
 
 
-class GroupAdminFunctionView(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
-
-    perm_authenticated = [IsAuthenticated]
+class GroupAdminFunctionView(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     service = GroupAdmin()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsFunctionSerializer})
@@ -29,7 +27,6 @@ class GroupAdminFunctionView(viewsets.GenericViewSet, mixins.RetrieveModelMixin)
         methods=["GET"],
         url_path=r"group/(?P<group_number_fragment>\w+)",
         detail=False,
-        permissions_classes=perm_authenticated,
     )
     def view_function_list(self, request, group_number_fragment: str):
         logger.debug("GA: Received request for list of functions (group_number_fragment: %s)", group_number_fragment)
@@ -45,7 +42,6 @@ class GroupAdminFunctionView(viewsets.GenericViewSet, mixins.RetrieveModelMixin)
         methods=["GET"],
         url_path=r"(?P<function_id>\w+)",
         detail=True,
-        permissions_classes=perm_authenticated,
     )
     def view_function(self, request, function_id: str):
         logger.debug("GA: Received request for function info (function_id: %s)", function_id)
