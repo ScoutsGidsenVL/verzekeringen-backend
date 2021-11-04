@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
@@ -42,6 +42,7 @@ from apps.insurances.services import (
 
 
 class InsuranceViewSet(viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     search_fields = ["_group_number"]
     ordering_fields = ["created_on"]

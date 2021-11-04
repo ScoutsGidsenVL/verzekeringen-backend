@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
@@ -13,6 +13,8 @@ from apps.insurances.models.enums import (
 
 
 class GroupSizeViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: EnumOutputSerializer})
     def list(self, request):
         serializer = EnumOutputSerializer(GroupSize.choices, many=True)
@@ -20,6 +22,8 @@ class GroupSizeViewSet(viewsets.ViewSet):
 
 
 class EventSizeViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: EnumOutputSerializer})
     def list(self, request):
         serializer = EnumOutputSerializer(EventSize.choices, many=True)
@@ -27,6 +31,8 @@ class EventSizeViewSet(viewsets.ViewSet):
 
 
 class InsuranceStatusViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: EnumOutputSerializer})
     def list(self, request):
         serializer = EnumOutputSerializer(InsuranceStatus.choices, many=True)
@@ -34,6 +40,8 @@ class InsuranceStatusViewSet(viewsets.ViewSet):
 
 
 class TemporaryVehicleInsuranceCoverageOptionViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: EnumOutputSerializer})
     def list(self, request):
         serializer = EnumOutputSerializer(TemporaryVehicleInsuranceCoverageOption.choices, many=True)

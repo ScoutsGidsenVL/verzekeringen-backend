@@ -1,4 +1,4 @@
-from rest_framework import views, status
+from rest_framework import views, status, permissions
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from drf_yasg2.utils import swagger_auto_schema
@@ -8,6 +8,8 @@ from scouts_auth.serializers import BelgianPostcodeCitySerializer
 
 
 class BelgianPostcodeCitySearch(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     @swagger_auto_schema(responses={status.HTTP_200_OK: BelgianPostcodeCitySerializer})
     def get(self, request):
         search_term = self.request.GET.get("term", None)

@@ -2,7 +2,7 @@ import logging
 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import ValidationError
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class PersonSearch(viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = InuitsNonMemberFilter
     ordering_fields = ["id"]

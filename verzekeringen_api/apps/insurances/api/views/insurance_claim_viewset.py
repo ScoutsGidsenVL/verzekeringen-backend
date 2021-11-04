@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status, filters, parsers
+from rest_framework import viewsets, status, filters, parsers, permissions
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = InsuranceClaim.objects.all()
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]

@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
@@ -7,6 +7,8 @@ from apps.info.models import InfoVariable
 
 
 class InfoVariableViewSet(viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get_queryset(self):
         return InfoVariable.objects.all()
 

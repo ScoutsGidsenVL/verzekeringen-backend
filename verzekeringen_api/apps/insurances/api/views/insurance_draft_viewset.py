@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
@@ -8,6 +8,7 @@ from apps.insurances.services import InsuranceDraftService
 
 
 class InsuranceDraftViewSet(viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
