@@ -7,3 +7,4 @@ from .fields import (
     OptionalDateField,
     OptionalDateTimeField,
 )
+from .non_model_serializer import NonModelSerializer
