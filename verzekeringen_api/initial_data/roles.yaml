@@ -1,0 +1,16 @@
+role_leader:
+  - insurances.can_add_claim   # Add a claim
+  - insurances.can_view_claim  # View a specific claim
+  - insurances.can_list_claims # View the list of claims
+role_group_leader:
+  - insurances.can_add_claim
+  - insurances.can_list_claims              # https://redmine.inuits.eu/issues/79995
+role_administrator:
+  - insurances.can_view_claim
+  - insurances.can_list_claims
+  - insurances.can_add_comment              # https://redmine.inuits.eu/issues/78579
+  - insurances.can_view_comment             # https://redmine.inuits.eu/issues/78579
+  - insurances.can_add_case_number          # https://redmine.inuits.eu/issues/78579
+  - insurances.can_view_case_number         # https://redmine.inuits.eu/issues/78579
+  - insurances.can_view_attachment_filename # https://redmine.inuits.eu/issues/82927
+role_super_admin: [] # Doesn't need permissions because is made super user in django

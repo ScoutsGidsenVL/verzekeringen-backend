@@ -1,12 +1,15 @@
+from typing import List
+
+
 class ScoutsLink:
     """This class captures the data returned by GroupAdmin containing links to the full references info."""
 
     rel: str
     href: str
     method: str
-    sections: list
+    sections: List[str]
 
-    def __init__(self, rel: str = "", href: str = "", method: str = "", sections: list = None):
+    def __init__(self, rel: str = "", href: str = "", method: str = "", sections: List[str] = None):
         self.rel = rel
         self.href = href
         self.method = method

@@ -1,6 +1,5 @@
 import logging, yaml, importlib
 
-from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -14,16 +13,23 @@ class PermissionService:
     def _add_permission_by_name(self, group, permission_name):
         try:
             permission_name = permission_name.split(".")
-            permission = Permission.objects.get(
-                codename=permission_name[1], content_type__app_label=permission_name[0]
-            )
+            codename = permission_name[1]
+            app_label = permission_name[0]
+            permission = Permission.objects.get(codename=codename, content_type__app_label=app_label)
             group.permissions.add(permission)
         except ObjectDoesNotExist:
-            logger.error("Permission %s doesn't exist", permission_name)
+            logger.error("Permission with codename %s doesn't exist for app_label %s", codename, app_label)
 
-    def populate_roles(self, sender, **kwargs):
+    def populate_roles(self, **kwargs):
         # Will populate groups and add permissions to them, won't create permissions
         # these need to be created in models
+        #
+        # The roles.yaml file that links the permissions to the roles, is structured as this:
+        # role_<name of role>:
+        # - <app_label as defined in apps>.<name of permission>
+        #
+        # The permission names should be defined in the Meta class of a Model.
+        # After a makemigrations and migrate, you can then specify the particular permissions that apply in the viewset
         import importlib.resources as pkg_resources
 
         roles_package = SettingsHelper.get_authorization_roles_config_package()

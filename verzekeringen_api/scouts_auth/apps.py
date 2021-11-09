@@ -2,7 +2,8 @@ import logging
 
 
 from django.apps import AppConfig
-from django.db.models.signals import post_migrate
+
+from scouts_auth.signals import ScoutsAuthSignalHandler
 
 
 logger = logging.getLogger(__name__)
@@ -11,8 +12,7 @@ logger = logging.getLogger(__name__)
 class ScoutsAuthConfig(AppConfig):
     name = "scouts_auth"
 
-    def ready(self):
-        from scouts_auth.services import PermissionService
+    handler = ScoutsAuthSignalHandler()
 
-        logger.debug("SCOUTS_AUTH: Populating permissions groups")
-        post_migrate.connect(PermissionService().populate_roles, sender=self)
+    def ready(self):
+        self.handler.app_ready()

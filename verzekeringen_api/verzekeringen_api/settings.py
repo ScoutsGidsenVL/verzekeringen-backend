@@ -286,7 +286,10 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 
 # OIDC
+
 AUTH_USER_MODEL = "scouts_auth.User"
+AUTHORIZATION_ROLES_CONFIG_PACKAGE = "initial_data"
+AUTHORIZATION_ROLES_CONFIG_YAML = "roles.yaml"
 AUTHENTICATION_BACKENDS = {
     "scouts_auth.oidc.InuitsOIDCAuthenticationBackend",
 }
@@ -415,3 +418,7 @@ TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}
 
 setup_mail()
+
+from .signal_catcher import ScoutsAuthSignalCatcher
+
+ScoutsAuthSignalCatcher()

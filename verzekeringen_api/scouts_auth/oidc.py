@@ -9,6 +9,7 @@ from requests.exceptions import HTTPError
 
 from scouts_auth.models import UserHelper
 from scouts_auth.utils import SettingsHelper
+from scouts_auth.signals import ScoutsAuthSignalHandler
 
 
 logger = logging.getLogger(__name__)
@@ -139,7 +140,15 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
         try:
             logger.debug("Authenticating user with OIDC backend")
 
-            return super().authenticate(request)
+            result = super().authenticate(request)
+
+            if result is None:
+                logger.error("SCOUTS-AUTH: Authentication failed")
+
+            if isinstance(result, tuple):
+                (user, token) = result
+                ScoutsAuthSignalHandler().authenticated(user=user, token=token)
+                return result
         except HTTPError as exc:
             logging.exception("SCOUTS-AUTH: Authentication error: %s", exc.response.json())
 
