@@ -9,7 +9,7 @@ from apps.members.models import InuitsNonMember
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from apps.insurances.api.serializers import InsuranceClaimAdmistrativeFieldsMixin
 
-from groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberListSerializer
+from groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberSerializer
 from groupadmin.services import GroupAdmin
 
 from inuits.models import Gender
@@ -55,10 +55,10 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
         )
 
     def get_declarant(self, object: InsuranceClaim):
-        data = GroupAdminMemberService().group_admin_member_detail(
+        data = GroupAdmin().get_member_info(
             active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
         )
-        return GroupAdminMemberListSerializer(data).data
+        return ScoutsMemberSerializer(data).data
 
 
 class InsuranceClaimVictimOutputDetailSerializer(serializers.ModelSerializer):
@@ -98,7 +98,7 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
         request = self.context.get("request", None)
         try:
             if value:
-                GroupAdminMemberService().group_admin_member_detail(active_user=request.user, group_admin_id=value)
+                GroupAdmin().get_member_info(active_user=request.user, group_admin_id=value)
         except:
             raise serializers.ValidationError("Invalid member id given")
         return value

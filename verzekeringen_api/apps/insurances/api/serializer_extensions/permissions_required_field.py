@@ -23,7 +23,7 @@ class PermissionRequiredField(serializers.Field):
                 "otherwise PermissionRequiredField won't work"
             )
 
-        if request.user.has_perm(self.permission):
+        if self.permission and request.user.has_perm(self.permission):
             return super().to_representation(value)
 
         return None

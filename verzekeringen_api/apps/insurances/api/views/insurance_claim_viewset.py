@@ -15,6 +15,9 @@ from apps.insurances.api.serializers import (
 from apps.insurances.api.filters import InsuranceClaimFilter
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.services import InsuranceClaimService
+
+from scouts_auth.permissions import ExtendedDjangoModelPermissions, CustomDjangoPermission
+
 from inuits.utils import MultipartJsonParser
 from inuits.aws import S3StorageService
 
@@ -46,6 +49,17 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
             context.update({"attachments": self.request.FILES})
 
         return context
+
+    def get_permissions(self):
+        current_permissions = super().get_permissions()
+        if self.action in ("create", "partial_update"):
+            current_permissions.append(CustomDjangoPermission("insurances.can_add_claim"))
+        if self.action == "retrieve":
+            current_permissions.append(CustomDjangoPermission("insurances.can_view_claim"))
+        if self.action == "list":
+            current_permissions.append(CustomDjangoPermission("insurances.can_list_claims"))
+
+        return current_permissions
 
     @swagger_auto_schema(
         request_body=InsuranceClaimInputSerializer,
