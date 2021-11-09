@@ -1,10 +1,3 @@
 from .oidc_auth_code_view import OIDCAuthCodeView
 from .oidc_refresh_view import OIDCRefreshView
 from .current_user_view import CurrentUserView
-from .ga_member_list_viewset import GroupAdminMemberListView
-
-from .ga_function_view import GroupAdminFunctionView
-from .ga_group_viewset import GroupAdminGroupView
-from .ga_member_viewset import GroupAdminMemberView
-from .ga_member_medical_flash_card_view import GroupAdminMemberMedicalFlashCardView
-from .ga_partial_member_view import GroupAdminPartialMemberView

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
-from scouts_auth.util import SettingsHelper
+from scouts_auth.utils import SettingsHelper
 
 
 logger = logging.getLogger(__name__)

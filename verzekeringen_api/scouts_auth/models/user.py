@@ -6,25 +6,19 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 
-from scouts_auth.models.value_objects import partial_scouts_group
-
 
 logger = logging.getLogger(__name__)
 
 
 class User(AbstractUser):
     id = models.AutoField(primary_key=True, editable=False)
-    uuid = models.UUIDField(
-        primary_key=False, editable=False, default=uuid.uuid4, unique=True
-    )
+    uuid = models.UUIDField(primary_key=False, editable=False, default=uuid.uuid4, unique=True)
     # The scout id in group admin
     group_admin_id = models.CharField(blank=True, db_column="ga_id", max_length=255)
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField(default=False)
-    username = models.CharField(
-        max_length=150, unique=True, validators=[UnicodeUsernameValidator]
-    )
+    username = models.CharField(max_length=150, unique=True, validators=[UnicodeUsernameValidator])
     first_name = models.CharField(blank=True, max_length=150)
     last_name = models.CharField(blank=True, max_length=150)
     email = models.EmailField(blank=True, max_length=254)
@@ -63,7 +57,8 @@ class User(AbstractUser):
         permissions = (("access_disabled_entities", "Access disabled entities"),)
 
     def __str__(self):
-        return ("User object: \
+        return (
+            "User object: \
             id(%s), \
             uuid(%s), \
             username(%s), \
@@ -79,14 +74,28 @@ class User(AbstractUser):
             groups(%s), \
             partial_scouts_groups(%s), \
             scouts_groups(%s)",
-            str(self.id), str(self.uuid), str(self.username), str(self.email), str(self.first_name),
-            str(self.last_name), str(self.group_admin_id), str(self.is_superuser),
-            str(self.is_staff), str(self.is_active), str(self.last_login), str(self.date_joined),
+            str(self.id),
+            str(self.uuid),
+            str(self.username),
+            str(self.email),
+            str(self.first_name),
+            str(self.last_name),
+            str(self.group_admin_id),
+            str(self.is_superuser),
+            str(self.is_staff),
+            str(self.is_active),
+            str(self.last_login),
+            str(self.date_joined),
             (", ".join(self.groups) if self.groups and isinstance(self.groups, list) else "[]"),
-            (", ".join(self.partial_scouts_groups) if self.partial_scouts_groups and isinstance(self.scouts_groups, list) else "[]"),
-            (", ".join(self.scouts_groups) if self.scouts_groups and isinstance(self.scouts_groups, list) else "[]"))
+            (
+                ", ".join(self.partial_scouts_groups)
+                if self.partial_scouts_groups and isinstance(self.scouts_groups, list)
+                else "[]"
+            ),
+            (", ".join(self.scouts_groups) if self.scouts_groups and isinstance(self.scouts_groups, list) else "[]"),
+        )
 
-    #@TODO
+    # @TODO
     # def fetch_detailed_group_info(self):
     #     # Importing here, to avoid a circular import error
     #     from scouts_auth.services import GroupAdminGroupService

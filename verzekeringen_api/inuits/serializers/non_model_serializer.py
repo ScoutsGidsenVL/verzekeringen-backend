@@ -1,4 +1,4 @@
-import logging
+import logging, inspect
 
 from rest_framework import serializers
 
@@ -30,15 +30,30 @@ class NonModelSerializer(serializers.BaseSerializer):
             elif hasattr(attribute, "__call__"):
                 # Ignore methods and other callables.
                 pass
-            elif isinstance(attribute, (str, int, bool, float, type(None))):
+            elif isinstance(attribute, type(None)):
+                # Ignore attributes that were set to None in the serializers
+                pass
+            elif isinstance(attribute, str):
+                # Ignore empty strings
+                if len(attribute) > 0:
+                    output[attribute_name] = attribute
+            elif isinstance(attribute, (int, float, bool)):
                 # Primitive types can be passed through unmodified.
                 output[attribute_name] = attribute
             elif isinstance(attribute, list):
-                # Recursively deal with items in lists.
-                output[attribute_name] = [self.to_representation(item) for item in attribute]
+                # Ignore lists that contain no elements
+                if len(attribute) > 0:
+                    # Recursively deal with items in lists.
+                    output[attribute_name] = [self.to_representation(item) for item in attribute]
             elif isinstance(attribute, dict):
-                # Recursively deal with items in dictionaries.
-                output[attribute_name] = {str(key): self.to_representation(value) for key, value in attribute.items()}
+                # Ignore empty dictionaries
+                if len(attribute.keys()) > 0:
+                    # Recursively deal with items in dictionaries.
+                    output[attribute_name] = {
+                        str(key): self.to_representation(value) for key, value in attribute.items()
+                    }
+            elif hasattr(attribute, "__class__"):
+                output[attribute_name] = self.to_representation(attribute)
             else:
                 # Force anything else to its string representation.
                 output[attribute_name] = str(attribute)

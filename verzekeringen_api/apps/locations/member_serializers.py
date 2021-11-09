@@ -5,7 +5,7 @@ from rest_framework import serializers
 from apps.members.models import Member, NonMember, InuitsNonMember, NonMemberInuitsTemplate
 from scouts_auth.models import GroupAdminMember
 from scouts_auth.serializers import BelgianPostcodeCitySerializer
-from inuits.enums import Gender
+from inuits.models import Gender
 
 
 logger = logging.getLogger(__name__)

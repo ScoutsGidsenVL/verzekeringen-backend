@@ -8,7 +8,7 @@ from rest_framework import exceptions
 from requests.exceptions import HTTPError
 
 from scouts_auth.models import UserHelper
-from scouts_auth.util import SettingsHelper
+from scouts_auth.utils import SettingsHelper
 
 
 logger = logging.getLogger(__name__)
@@ -23,8 +23,7 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         """
 
         logger.debug(
-            "User info requested with access_token %s, "
-            + ", id_token %s and payload %s",
+            "User info requested with access_token %s, " + ", id_token %s and payload %s",
             access_token,
             id_token,
             payload,
@@ -81,9 +80,7 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         map_user_with_userinfo_claims.
         """
 
-        if settings.OIDC_OP_USER_ENDPOINT.startswith(
-            "https://groepsadmin.scoutsengidsenvlaanderen.be"
-        ):
+        if settings.OIDC_OP_USER_ENDPOINT.startswith("https://groepsadmin.scoutsengidsenvlaanderen.be"):
             return self.map_user_with_scouts_claims(user, claims)
         else:
             return self.map_user_with_userinfo_claims(user, claims)
@@ -92,9 +89,7 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         user.first_name = claims.get("given_name", user.first_name)
         user.last_name = claims.get("family_name", user.last_name)
 
-        logger.debug(
-            "Mapping user %s %s with local claims", user.first_name, user.last_name
-        )
+        logger.debug("Mapping user %s %s with local claims", user.first_name, user.last_name)
 
         roles = claims.get(settings.OIDC_RP_CLIENT_ID, {}).get("roles", [])
         user = self.map_user_roles(user, roles)
@@ -102,9 +97,7 @@ class InuitsOIDCAuthenticationBackend(OIDCAuthenticationBackend):
         return user
 
     def map_user_with_scouts_claims(self, user, claims):
-        logger.debug(
-            "Mapping user %s %s with scouts claims", user.first_name, user.last_name
-        )
+        logger.debug("Mapping user %s %s with scouts claims", user.first_name, user.last_name)
 
         helper = UserHelper()
 
@@ -148,17 +141,13 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
 
             return super().authenticate(request)
         except HTTPError as exc:
-            logging.exception(
-                "SCOUTS-AUTH: Authentication error: %s", exc.response.json()
-            )
+            logging.exception("SCOUTS-AUTH: Authentication error: %s", exc.response.json())
 
             response = exc.response
             # If oidc returns 401 return auth failed error
             if response.status_code == 401:
                 logging.error("SCOUTS-AUTH: 401 Unable to authenticate")
 
-                raise exceptions.AuthenticationFailed(
-                    response.json().get("error_description", response.text)
-                )
+                raise exceptions.AuthenticationFailed(response.json().get("error_description", response.text))
 
             raise

@@ -12,7 +12,8 @@ from apps.members.api.serializers import (
     PersonOutputSerializer,
 )
 from apps.members.models import InuitsNonMember
-from scouts_auth.services import GroupAdminMemberService
+
+from groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,7 @@ class PersonSearch(viewsets.GenericViewSet):
     filterset_class = InuitsNonMemberFilter
     ordering_fields = ["id"]
     ordering = ["id"]
+    service = GroupAdmin()
 
     def get_queryset(self):
         return InuitsNonMember.objects.all().allowed(self.request.user)
@@ -46,7 +48,7 @@ class PersonSearch(viewsets.GenericViewSet):
 
         logger.debug("Searching for member with search term %s", search_term)
 
-        members = GroupAdminMemberService().group_admin_member_search(
+        members = self.service.search_member(
             active_user=request.user, term=search_term, include_inactive=include_inactive
         )
         non_members = self.filter_queryset(self.get_queryset())

@@ -1,8 +1,10 @@
 from typing import Tuple
 from datetime import datetime
 
-from scouts_auth.models import User, PartialScoutsGroup
-from scouts_auth.util import SettingsHelper
+from scouts_auth.models import User
+from scouts_auth.utils import SettingsHelper
+
+from groupadmin.models import PartialScoutsGroup
 
 
 class UserHelper:
@@ -29,15 +31,9 @@ class UserHelper:
 
         return user
 
-    def map_roles(
-        self, scouts_user: User, claims: dict, roles=[], is_admin=False
-    ) -> Tuple[User, list]:
+    def map_roles(self, scouts_user: User, claims: dict, roles=[], is_admin=False) -> Tuple[User, list]:
         # Loop over active groups, check for admin and get more group info
-        scouts_groups = [
-            group_obj
-            for group_obj in scouts_user.roles
-            if not group_obj.get("einde", False)
-        ]
+        scouts_groups = [group_obj for group_obj in scouts_user.roles if not group_obj.get("einde", False)]
         user_groups = []
         for group_obj in scouts_groups:
             group_id = group_obj.get("groep", "")

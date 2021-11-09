@@ -6,7 +6,8 @@ from django.core.exceptions import ValidationError
 from apps.members.models import Member
 from apps.insurances.models import InsuranceType
 from apps.insurances.models.enums import InsuranceStatus
-from scouts_auth.models import ScoutsGroup
+
+from groupadmin.models import ScoutsGroup
 
 
 class BaseInsuranceQuerySet(models.QuerySet):

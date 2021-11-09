@@ -3,9 +3,9 @@ import logging
 from rest_framework import serializers
 
 from apps.members.models import Member, NonMember, InuitsNonMember, NonMemberInuitsTemplate
-from scouts_auth.models import GroupAdminMember
-from scouts_auth.serializers import BelgianPostcodeCitySerializer
-from inuits.enums import Gender
+from groupadmin.models import ScoutsMember
+from groupadmin.serializers import BelgianPostcodeCitySerializer
+from inuits.models import Gender
 
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class PersonOutputSerializer(serializers.Serializer):
     is_member = serializers.SerializerMethodField()
 
     def get_is_member(self, obj) -> bool:
-        return type(obj.__class__) == GroupAdminMember.__class__
+        return type(obj.__class__) == ScoutsMember.__class__
 
     def get_gender(self, obj) -> str:
         if self.get_is_member(obj):

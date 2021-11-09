@@ -97,18 +97,23 @@ LOGGING = {
     },
     "loggers": {
         "mozilla_django_oidc": {
-            "handlers": ["console", "file"],
+            "handlers": ["console"],
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
         "scouts-auth": {
-            "handlers": ["console", "file"],
+            "handlers": ["console"],
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
         # @TODO
         "scouts_auth": {
-            "handlers": ["console", "file"],
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "groupadmin": {
+            "handlers": ["console"],
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
@@ -168,6 +173,7 @@ INSTALLED_APPS = [
     "drf_yasg2",
     "corsheaders",
     "inuits",
+    "groupadmin",
     "apps.members",
     "apps.equipment",
     "apps.locations",
@@ -294,15 +300,17 @@ OIDC_RP_SIGN_ALGO = env.str("OIDC_RP_SIGN_ALGO", default="RS256")
 OIDC_DRF_AUTH_BACKEND = "scouts_auth.oidc.InuitsOIDCAuthenticationBackend"
 OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOINT"))
 
-GROUP_ADMIN_BASE_URL = "https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga"
-GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT = GROUP_ADMIN_BASE_URL
+
+# SCOUTS
+GROUP_ADMIN_BASE_URL = env.str("GROUP_ADMIN_BASE_URL")
+GROUP_ADMIN_ALLOWED_CALLS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/"
 GROUP_ADMIN_PROFILE_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid/profiel"
-BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"
 GROUP_ADMIN_MEMBER_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/zoeken"
 GROUP_ADMIN_MEMBER_DETAIL_ENDPOINT = GROUP_ADMIN_BASE_URL + "/lid"
+GROUP_ADMIN_MEMBER_LIST_ENDPOINT = GROUP_ADMIN_BASE_URL + "/ledenlijst"
 GROUP_ADMIN_GROUP_ENDPOINT = GROUP_ADMIN_BASE_URL + "/groep"
 GROUP_ADMIN_FUNCTIONS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/functie"
-GROUP_ADMIN_MEMBER_LIST_ENDPOINT = GROUP_ADMIN_BASE_URL + "/ledenlijst"
+BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"
 COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 
 

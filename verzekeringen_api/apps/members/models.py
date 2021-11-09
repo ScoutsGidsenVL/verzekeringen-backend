@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 
 from apps.members.managers import InuitsNonMemberManager
 from apps.locations.utils import PostcodeCity
-from inuits.enums import Gender, GenderHelper
+from inuits.models import Gender, GenderHelper
 
 
 logger = logging.getLogger(__name__)

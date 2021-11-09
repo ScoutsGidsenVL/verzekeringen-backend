@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from scouts_auth.models import User
-from scouts_auth.serializers import ScoutsGroupSerializer
+
+from groupadmin.serializers import ScoutsGroupSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):

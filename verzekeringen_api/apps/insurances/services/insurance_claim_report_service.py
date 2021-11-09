@@ -9,8 +9,8 @@ from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from apps.insurances.utils import InsuranceClaimFileUtils
 from inuits.files import FileUtils
-from scouts_auth.models import GroupAdminMember
-from scouts_auth.services import GroupAdminMemberService
+from groupadmin.models import ScoutsMember
+from groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
@@ -22,10 +22,10 @@ class InsuranceClaimReportService:
 
     local_storage = FileSystemStorage()
     default_storage = default_storage
-    group_admin_service = GroupAdminMemberService()
+    group_admin_service = GroupAdmin()
 
     def generate_pdf(self, claim: InsuranceClaim):
-        owner: GroupAdminMember = self.group_admin_service.group_admin_member_detail(
+        owner: ScoutsMember = self.group_admin_service.get_member_info(
             active_user=claim.declarant, group_admin_id=claim.declarant.group_admin_id
         )
         victim: InsuranceClaimVictim = claim.victim

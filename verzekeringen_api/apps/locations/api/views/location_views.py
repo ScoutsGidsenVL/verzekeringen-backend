@@ -4,7 +4,8 @@ from rest_framework.exceptions import ValidationError
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.locations.services import LocationService
-from scouts_auth.serializers import BelgianPostcodeCitySerializer
+
+from groupadmin.serializers import BelgianPostcodeCitySerializer
 
 
 class BelgianPostcodeCitySearch(views.APIView):

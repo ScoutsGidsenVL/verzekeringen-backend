@@ -1,7 +1,8 @@
 from requests.exceptions import HTTPError
 
-from rest_framework import views, permissions
+from rest_framework import status, views, permissions
 from rest_framework.response import Response
+from drf_yasg2.utils import swagger_auto_schema
 
 from scouts_auth.services import OIDCService
 from scouts_auth.serializers import (
@@ -15,6 +16,10 @@ class OIDCAuthCodeView(views.APIView):
     permission_classes = [permissions.AllowAny]
     service = OIDCService()
 
+    @swagger_auto_schema(
+        request_body=AuthCodeSerializer,
+        responses={status.HTTP_202_ACCEPTED: TokenSerializer},
+    )
     def post(self, request) -> Response:
         serializer = AuthCodeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

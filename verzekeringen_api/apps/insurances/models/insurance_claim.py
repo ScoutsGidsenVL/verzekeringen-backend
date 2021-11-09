@@ -7,10 +7,13 @@ from jsonfield import JSONField
 
 from apps.locations.utils import PostcodeCity, Address
 from apps.members.models import InuitsNonMember
+
 from scouts_auth.models import User
-from scouts_auth.services import GroupAdmin
-from scouts_auth.models import GroupAdminMember
-from inuits.enums import Gender
+
+from groupadmin.models import ScoutsMember
+from groupadmin.services import GroupAdmin
+
+from inuits.models import Gender
 
 
 logger = logging.getLogger(__name__)
@@ -41,7 +44,7 @@ class InsuranceClaimVictim(models.Model):
         on_delete=models.SET_NULL,
     )
 
-    _member_detail: GroupAdminMember = None
+    _member_detail: ScoutsMember = None
 
     def get_member_number(self, active_user: settings.AUTH_USER_MODEL):
         if self.group_admin_id:

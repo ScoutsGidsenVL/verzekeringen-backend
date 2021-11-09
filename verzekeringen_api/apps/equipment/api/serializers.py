@@ -14,8 +14,9 @@ from apps.members.models import InuitsNonMember
 from apps.equipment.models import InuitsVehicle, InuitsEquipment, Equipment, VehicleInuitsTemplate
 from apps.equipment.enums import VehicleType, VehicleTrailerOption
 from apps.equipment.utils import Vehicle
-from scouts_auth.serializers import GroupAdminMemberDetailSerializer
-from scouts_auth.services import GroupAdminMemberService
+
+from groupadmin.serializers import ScoutsMemberDetailSerializer
+from groupadmin.services import GroupAdmin
 
 
 # Output
@@ -123,15 +124,13 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             "owner_member",
         )
 
-    @swagger_serializer_method(serializer_or_field=GroupAdminMemberDetailSerializer)
+    @swagger_serializer_method(serializer_or_field=ScoutsMemberDetailSerializer)
     def get_owner_member(self, obj):
         if not obj.owner_member_group_admin_id:
             return None
         request = self.context.get("request", None)
-        return GroupAdminMemberDetailSerializer(
-            GroupAdminMemberService().group_admin_member_detail(
-                active_user=request.user, group_admin_id=obj.owner_member_group_admin_id
-            )
+        return ScoutsMemberDetailSerializer(
+            GroupAdmin().get_member_info(active_user=request.user, group_admin_id=obj.owner_member_group_admin_id)
         ).data
 
 
@@ -198,7 +197,7 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
         request = self.context.get("request", None)
         try:
             if value:
-                GroupAdminMemberService().group_admin_member_detail(active_user=request.user, group_admin_id=value)
+                GroupAdmin().get_member_info(active_user=request.user, group_admin_id=value)
         except:
             raise serializers.ValidationError("Invalid member id given")
         return value

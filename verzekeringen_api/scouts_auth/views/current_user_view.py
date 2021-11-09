@@ -5,9 +5,13 @@ from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
-from scouts_auth.models import ScoutsGroup, User
-from scouts_auth.serializers import ScoutsGroupSerializer, UserSerializer
-from scouts_auth.services import GroupAdmin
+from scouts_auth.models import User
+from scouts_auth.serializers import UserSerializer
+
+
+from groupadmin.models import ScoutsGroup
+from groupadmin.serializers import ScoutsGroupSerializer
+from groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)

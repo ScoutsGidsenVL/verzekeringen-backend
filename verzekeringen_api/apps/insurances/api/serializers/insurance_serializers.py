@@ -43,7 +43,7 @@ from apps.insurances.models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
 )
 from apps.insurances.api.serializers import InsuranceTypeOutputSerializer
-from scouts_auth.serializers import (
+from groupadmin.serializers import (
     ScoutsGroupSerializer,
     BelgianPostcodeCitySerializer,
 )

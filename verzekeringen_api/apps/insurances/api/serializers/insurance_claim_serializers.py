@@ -8,9 +8,11 @@ from apps.base.serializers import DateTimeTZField
 from apps.members.models import InuitsNonMember
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 from apps.insurances.api.serializers import InsuranceClaimAdmistrativeFieldsMixin
-from scouts_auth.services import GroupAdminMemberService
-from scouts_auth.serializers import ScoutsGroupSerializer, GroupAdminMemberListSerializer
-from inuits.enums import Gender
+
+from groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberListSerializer
+from groupadmin.services import GroupAdmin
+
+from inuits.models import Gender
 
 
 logger = logging.getLogger(__name__)

@@ -2,8 +2,8 @@ import logging, requests
 
 from django.conf import settings
 
-from scouts_auth.util import SettingsHelper
-from scouts_auth.services import GroupAdmin
+from scouts_auth.utils import SettingsHelper
+from groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
