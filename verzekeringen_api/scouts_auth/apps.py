@@ -12,3 +12,7 @@ class ScoutsAuthConfig(AppConfig):
 
     def ready(self):
         logger.debug("SCOUTS-AUTH: app is ready")
+
+        from scouts_auth.services import PermissionService
+
+        PermissionService().populate_roles()

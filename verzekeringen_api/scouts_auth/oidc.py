@@ -146,10 +146,10 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
 
                 return None
 
-            (user, token) = result
+            if isinstance(result, tuple):
+                (user, token) = result
 
-            logger.debug("USER: %s", user)
-            logger.debug("USER: %s", dir(user))
+                logger.debug("USER: %s", dir(user))
 
             return result
         except HTTPError as exc:

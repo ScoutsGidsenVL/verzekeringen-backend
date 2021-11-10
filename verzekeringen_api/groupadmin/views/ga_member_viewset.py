@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
@@ -7,12 +8,14 @@ from rest_framework.exceptions import ValidationError
 from drf_yasg2.utils import swagger_auto_schema
 
 from groupadmin.models import (
+    ScoutsGroup,
     ScoutsMember,
     ScoutsMemberListResponse,
     ScoutsMemberSearchResponse,
 )
 from groupadmin.serializers import (
     ScoutsMemberSerializer,
+    ScoutsMemberFrontendSerializer,
     ScoutsMemberListResponseSerializer,
     ScoutsMemberSearchResponseSerializer,
 )
@@ -73,7 +76,22 @@ class ScoutsMemberView(viewsets.ViewSet):
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberListResponseSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSerializer})
+    @action(
+        methods=["GET"],
+        url_path="",
+        detail=True,
+    )
+    def view_member_profile_internal(self, request) -> Response:
+        logger.debug("GA: Received request for current user profile")
+
+        member: ScoutsMember = self.service.get_member_profile(request.user)
+
+        serializer = ScoutsMemberSerializer(member)
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberFrontendSerializer})
     @action(
         methods=["GET"],
         url_path="",
@@ -83,7 +101,10 @@ class ScoutsMemberView(viewsets.ViewSet):
         logger.debug("GA: Received request for current user profile")
 
         member: ScoutsMember = self.service.get_member_profile(request.user)
+        groups: List[ScoutsGroup] = self.service.get_groups(request.user)
 
-        serializer = ScoutsMemberSerializer(member)
+        member.groups = groups
 
-        return Response(serializer.data)
+        serializer = ScoutsMemberFrontendSerializer(member)
+
+        return Response(serializer.to_representation(member))

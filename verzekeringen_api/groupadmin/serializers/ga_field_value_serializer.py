@@ -17,7 +17,7 @@ class ScoutsValueSerializer(NonModelSerializer):
             (key, value) = data
             validated_data = {"key": key, "value": value}
         else:
-            validated_data = None
+            validated_data = {}
 
         return validated_data
 

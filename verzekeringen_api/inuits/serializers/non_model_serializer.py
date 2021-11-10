@@ -44,16 +44,16 @@ class NonModelSerializer(serializers.BaseSerializer):
                 # Ignore lists that contain no elements
                 if len(attribute) > 0:
                     # Recursively deal with items in lists.
-                    output[attribute_name] = [self.to_representation(item) for item in attribute]
+                    output[attribute_name] = [NonModelSerializer().to_representation(item) for item in attribute]
             elif isinstance(attribute, dict):
                 # Ignore empty dictionaries
                 if len(attribute.keys()) > 0:
                     # Recursively deal with items in dictionaries.
                     output[attribute_name] = {
-                        str(key): self.to_representation(value) for key, value in attribute.items()
+                        str(key): NonModelSerializer().to_representation(value) for key, value in attribute.items()
                     }
             elif hasattr(attribute, "__class__"):
-                output[attribute_name] = self.to_representation(attribute)
+                output[attribute_name] = NonModelSerializer().to_representation(attribute)
             else:
                 # Force anything else to its string representation.
                 output[attribute_name] = str(attribute)

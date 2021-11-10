@@ -11,6 +11,7 @@ from groupadmin.serializers import (
     ScoutsContactSerializer,
     ScoutsAddressSerializer,
     ScoutsFunctionSerializer,
+    ScoutsGroupSerializer,
     ScoutsGroupSpecificFieldSerializer,
 )
 
@@ -143,21 +144,6 @@ class ScoutsMemberSerializer(NonModelSerializer):
         if data is None:
             return None
 
-        # validated_data: dict = {
-        #     "personal_data": ScoutsMemberPersonalDataSerializer().to_internal_value(data.pop("persoonsgegevens", {})),
-        #     "group_admin_data": ScoutsMemberGroupAdminDataSerializer().to_internal_value(data.pop("vgagegevens", {})),
-        #     "scouts_data": ScoutsMemberScoutsDataSerializer().to_internal_value(data.pop("verbondsgegevens", {})),
-        #     "email": data.pop("email", ""),
-        #     "username": data.pop("gebruikersnaam", ""),
-        #     "group_admin_id": data.pop("id", ""),
-        #     "addresses": ScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
-        #     "contacts": ScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
-        #     "functions": ScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
-        #     "group_specific_fields": ScoutsGroupSpecificFieldSerializer().to_internal_value(
-        #         data.pop("groepseigenVelden", {})
-        #     ),
-        #     "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
-        # }
         validated_data: dict = {
             "personal_data": ScoutsMemberPersonalDataSerializer().to_internal_value(
                 data.pop("persoonsgegevens", None)
@@ -172,8 +158,9 @@ class ScoutsMemberSerializer(NonModelSerializer):
             "addresses": ScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
             "contacts": ScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
             "functions": ScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
+            "groups": ScoutsGroupSerializer(many=True).to_internal_value(data.pop("groups", [])),
             "group_specific_fields": ScoutsGroupSpecificFieldSerializer().to_internal_value(
-                data.pop("groepseigenVelden", None)
+                data.pop("groepseigenVelden", {})
             ),
             "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
@@ -204,8 +191,9 @@ class ScoutsMemberSerializer(NonModelSerializer):
         instance.addresses = ScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
         instance.contacts = ScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
         instance.functions = ScoutsFunctionSerializer(many=True).create(validated_data.pop("functions", []))
+        instance.groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("groups", []))
         instance.group_specific_fields = ScoutsGroupSpecificFieldSerializer().create(
-            validated_data.pop("group_specific_fields", None)
+            validated_data.pop("group_specific_fields", {})
         )
         instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
@@ -214,3 +202,24 @@ class ScoutsMemberSerializer(NonModelSerializer):
             logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance
+
+
+class ScoutsMemberFrontendSerializer(NonModelSerializer):
+    def to_representation(self, instance: ScoutsMember) -> dict:
+        logger.debug("instance: %s", instance)
+        serialized: dict = super().to_representation(instance)
+        logger.debug("serialized: %s", serialized)
+
+        personal_data = serialized.pop("personal_data")
+        group_admin_data = serialized.pop("group_admin_data")
+        scouts_data = serialized.pop("scouts_data")
+
+        serialized["gender"] = instance.personal_data.gender
+        serialized["phone"] = instance.personal_data.phone
+        serialized["first_name"] = instance.group_admin_data.first_name
+        serialized["last_name"] = instance.group_admin_data.last_name
+        serialized["birth_date"] = instance.group_admin_data.birth_date
+        serialized["membership_number"] = instance.scouts_data.membership_number
+        serialized["customer_number"] = instance.scouts_data.customer_number
+
+        return serialized

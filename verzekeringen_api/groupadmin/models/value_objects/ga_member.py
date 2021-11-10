@@ -6,6 +6,7 @@ from groupadmin.models.value_objects import (
     ScoutsContact,
     ScoutsFunction,
     ScoutsLink,
+    ScoutsGroup,
     ScoutsGroupSpecificField,
 )
 
@@ -64,6 +65,7 @@ class ScoutsMember:
     addresses: List[ScoutsAddress]
     contacts: List[ScoutsContact]
     functions: List[ScoutsFunction]
+    groups: List[ScoutsGroup]
     group_specific_fields: List[ScoutsGroupSpecificField]
     links: List[ScoutsLink]
 
@@ -78,6 +80,7 @@ class ScoutsMember:
         addresses: List[ScoutsAddress] = None,
         contacts: List[ScoutsContact] = None,
         functions: List[ScoutsFunction] = None,
+        groups: List[ScoutsGroup] = None,
         group_specific_fields: List[ScoutsGroupSpecificField] = None,
         links: List[ScoutsLink] = None,
     ):
@@ -90,6 +93,7 @@ class ScoutsMember:
         self.addresses = addresses if addresses else []
         self.contacts = contacts if contacts else []
         self.functions = functions if functions else []
+        self.groups = groups if groups else []
         self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
 
@@ -111,6 +115,7 @@ class ScoutsMember:
             ", ".join(str(address) for address in self.addresses),
             ", ".join(str(contact) for contact in self.contacts),
             ", ".join(str(function) for function in self.functions),
+            ", ".join(str(group) for group in self.groups),
             ", ".join(str(field) for field in self.group_specific_fields),
             ", ".join(str(link) for link in self.links),
         )

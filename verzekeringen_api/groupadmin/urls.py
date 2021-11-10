@@ -9,6 +9,7 @@ from groupadmin.views import (
 )
 
 view_allowed_calls = ScoutsAllowedCallsView.as_view({"get": "view_allowed_calls"})
+view_member_profile_internal = ScoutsMemberView.as_view({"get": "view_member_profile_internal"})
 view_member_profile = ScoutsMemberView.as_view({"get": "view_member_profile"})
 view_member_list = ScoutsMemberView.as_view({"get": "view_member_list"})
 view_search_members = ScoutsMemberView.as_view({"get": "search_members"})
@@ -27,6 +28,7 @@ urlpatterns = [
     path("ga/members/search/<str:term>/", view_search_members, name="ga_search_members"),
     path("ga/members/search/<str:term>/<str:group>/", view_search_members, name="ga_search_members_with_group"),
     path("ga/members/info/<str:group_admin_id>", view_member, name="ga_member"),
+    path("ga/members/profile/internal", view_member_profile_internal, name="ga_member_profile_internal"),
     path("ga/members/profile", view_member_profile, name="ga_member_profile"),
     path("ga/groups/", view_group_list, name="ga_groups"),
     path("ga/groups/accountable/", view_accountable_group_list, name="ga_groups"),

@@ -1,2 +1,1 @@
-
-default_app_config = 'scouts_auth.apps.ScoutsAuthConfig'
+default_app_config = "scouts_auth.apps.ScoutsAuthConfig"

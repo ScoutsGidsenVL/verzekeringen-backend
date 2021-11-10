@@ -24,7 +24,7 @@ class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
 
             validated["group"] = group
             validated["schema"] = group_data.pop("schema", None)
-            validated["values"] = ScoutsValueSerializer().to_internal_value(group_data.pop("waarden", {}))
+            # validated["values"] = ScoutsValueSerializer().to_internal_value(group_data.pop("waarden", {}))
 
             validated_data.append(validated)
 
@@ -43,7 +43,7 @@ class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
 
             instance.group = data.pop("group", None)
             instance.schema = data.pop("schema", None)
-            instance.values = ScoutsValueSerializer().create(data.pop("values", {}))
+            # instance.values = ScoutsValueSerializer().create(data.pop("values", {}))
 
             fields.append(instance)
 

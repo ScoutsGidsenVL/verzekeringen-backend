@@ -15,6 +15,7 @@ from .ga_member_serializer import (
     ScoutsMemberGroupAdminDataSerializer,
     ScoutsMemberScoutsDataSerializer,
     ScoutsMemberSerializer,
+    ScoutsMemberFrontendSerializer,
 )
 from .ga_response_group_list_serializer import ScoutsGroupListResponseSerializer
 from .ga_response_function_list_serializer import ScoutsFunctionListResponseSerializer
