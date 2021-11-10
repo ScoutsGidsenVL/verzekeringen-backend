@@ -144,6 +144,8 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
             if result is None:
                 logger.error("SCOUTS-AUTH: Authentication failed")
 
+                return None
+
             (user, token) = result
 
             logger.debug("USER: %s", user)
