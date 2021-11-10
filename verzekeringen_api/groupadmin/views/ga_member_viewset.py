@@ -46,7 +46,7 @@ class ScoutsMemberView(viewsets.ViewSet):
         url_path=r"(?P<group_admin_id>\w+)",
         detail=False,
     )
-    def view_member_info(self, request, group_admin_id: str) -> Response:
+    def view_member_info_internal(self, request, group_admin_id: str) -> Response:
         logger.debug("GA: Received request for member info (group_admin_id: %s)", group_admin_id)
 
         member: ScoutsMember = self.service.get_member_info(request.user, group_admin_id)
@@ -54,6 +54,21 @@ class ScoutsMemberView(viewsets.ViewSet):
         serializer = ScoutsMemberSerializer(member)
 
         return Response(serializer.data)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberFrontendSerializer})
+    @action(
+        methods=["GET"],
+        url_path=r"(?P<group_admin_id>\w+)",
+        detail=False,
+    )
+    def view_member_info(self, request, group_admin_id: str) -> Response:
+        logger.debug("GA: Received request for member info (group_admin_id: %s)", group_admin_id)
+
+        member: ScoutsMember = self.service.get_member_info(request.user, group_admin_id)
+
+        serializer = ScoutsMemberFrontendSerializer(member)
+
+        return Response(serializer.to_representation(member))
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberListResponseSerializer})
     @action(
