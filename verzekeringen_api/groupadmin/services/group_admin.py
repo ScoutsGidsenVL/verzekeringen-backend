@@ -92,7 +92,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_allowed_calls, active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_allowed_calls", self.url_allowed_calls)
+        logger.info("GA CALL: %s (%s)", "get_allowed_calls", self.url_allowed_calls)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -119,7 +119,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_groups, active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_groups", self.url_groups)
+        logger.info("GA CALL: %s (%s)", "get_groups", self.url_groups)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -143,7 +143,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_groups_vga, active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_accountable_groups", self.url_groups_vga)
+        logger.info("GA CALL: %s (%s)", "get_accountable_groups", self.url_groups_vga)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -167,7 +167,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_group.format(group_number), active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_group", self.url_group)
+        logger.info("GA CALL: %s (%s)", "get_group", self.url_group)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -193,7 +193,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_functions.format(group_number_fragment), active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_functions", self.url_functions)
+        logger.info("GA CALL: %s (%s)", "get_functions", self.url_functions)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -217,7 +217,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_function.format(function_id), active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_function", self.url_function)
+        logger.info("GA CALL: %s (%s)", "get_function", self.url_function)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -241,7 +241,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_profile, active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_member_profile", self.url_function)
+        logger.info("GA CALL: %s (%s)", "get_member_profile", self.url_function)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -265,7 +265,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_info.format(group_admin_id), active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_member_info", self.url_member_info)
+        logger.info("GA CALL: %s (%s)", "get_member_info", self.url_member_info)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -306,7 +306,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_list, active_user)
 
-        logger.debug("GA CALL: %s (%s)", "get_member_list", self.url_member_list)
+        logger.info("GA CALL: %s (%s)", "get_member_list", self.url_member_list)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -330,7 +330,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_search.format(term), active_user)
 
-        logger.debug("GA CALL: %s (%s)", "search_member", self.url_member_search)
+        logger.info("GA CALL: %s (%s)", "search_member", self.url_member_search)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -354,7 +354,7 @@ class GroupAdmin:
         """
         json_data = self.get(self.url_member_search_similar.format(first_name, last_name), active_user)
 
-        logger.debug("GA CALL: %s (%s)", "search_similar_member", self.url_member_search_similar)
+        logger.info("GA CALL: %s (%s)", "search_similar_member", self.url_member_search_similar)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data

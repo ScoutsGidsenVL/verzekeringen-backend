@@ -28,10 +28,6 @@ class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
 
             validated_data.append(validated)
 
-        remaining_keys = data.keys()
-        if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
-
         return validated_data
 
     def save(self) -> ScoutsGroupSpecificField:
@@ -48,10 +44,6 @@ class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
             instance.group = data.pop("group", None)
             instance.schema = data.pop("schema", None)
             instance.values = ScoutsValueSerializer().create(data.pop("values", {}))
-
-            remaining_keys = len(validated_data)
-            if remaining_keys > 0:
-                logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
 
             fields.append(instance)
 

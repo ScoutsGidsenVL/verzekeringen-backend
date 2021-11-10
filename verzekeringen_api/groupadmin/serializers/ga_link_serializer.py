@@ -16,8 +16,6 @@ class ScoutsLinkSectionSerializer(NonModelSerializer):
         if data is None:
             return None
 
-        logger.debug("SECTIONS: %s", data)
-
         return data
 
     def save(self) -> List[str]:
@@ -26,8 +24,6 @@ class ScoutsLinkSectionSerializer(NonModelSerializer):
     def create(self, validated_data: List[str]) -> List[str]:
         if validated_data is None:
             return None
-
-        logger.debug("SECTIONS: %s", validated_data)
 
         return validated_data
 

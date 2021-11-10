@@ -16,7 +16,7 @@ from apps.insurances.api.filters import InsuranceClaimFilter
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.services import InsuranceClaimService
 
-from scouts_auth.permissions import ExtendedDjangoModelPermissions, CustomDjangoPermission
+from scouts_auth.permissions import CustomDjangoPermission
 
 from inuits.utils import MultipartJsonParser
 from inuits.aws import S3StorageService

@@ -418,7 +418,3 @@ TMP_FOLDER = RESOURCES_PATH + "temp"
 ANYMAIL = {}
 
 setup_mail()
-
-from .signal_catcher import ScoutsAuthSignalCatcher
-
-ScoutsAuthSignalCatcher()

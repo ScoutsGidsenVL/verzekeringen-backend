@@ -29,7 +29,6 @@ class ScoutsValueSerializer(NonModelSerializer):
             return None
 
         instance = ScoutsValue()
-        logger.debug("TYPE: %s", type(validated_data))
 
         instance.key = validated_data.pop("key", None)
         instance.value = validated_data.pop("value", None)
