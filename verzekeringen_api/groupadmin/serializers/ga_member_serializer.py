@@ -221,5 +221,9 @@ class ScoutsMemberFrontendSerializer(NonModelSerializer):
         serialized["birth_date"] = instance.group_admin_data.birth_date
         serialized["membership_number"] = instance.scouts_data.membership_number
         serialized["customer_number"] = instance.scouts_data.customer_number
+        serialized["postcode_city"] = {
+            "city": instance.addresses[0].city,
+            "postcode": instance.addresses[0].postal_code,
+        }
 
         return serialized
