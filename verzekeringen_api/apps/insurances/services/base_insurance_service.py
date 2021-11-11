@@ -24,7 +24,7 @@ class BaseInsuranceService:
     ) -> dict:
         # validate group
         group_object = next(
-            (scouts_group for scouts_group in created_by.scouts_groups if scouts_group.id == group_id), None
+            (scouts_group for scouts_group in created_by.groups if scouts_group.group_admin_id == group_id), None
         )
         if not group_object:
             raise ValidationError("Given group %s is not a valid group of user" % group_id)
