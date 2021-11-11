@@ -31,9 +31,9 @@ class ScoutsUser(User):
     #
     # Fields inherited from scouts_auth.models.User that may need to be updated after a call to groupadmin
     #
-    first_name = models.CharField(max_length=124, blank=True)
-    last_name = models.CharField(max_length=124, blank=True)
-    email = models.EmailField(blank=True)
+    # first_name = models.CharField(max_length=124, blank=True)
+    # last_name = models.CharField(max_length=124, blank=True)
+    # email = models.EmailField(blank=True)
 
     #
     # Locally cached, non-persisted fields

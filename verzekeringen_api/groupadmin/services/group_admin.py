@@ -1,10 +1,9 @@
 import logging, requests
 
+from django.conf import settings
 from django.http import Http404
 from rest_framework import status
 from drf_yasg2.utils import swagger_auto_schema
-
-from scouts_auth.models import User
 
 from groupadmin.models import (
     ScoutsAllowedCalls,
@@ -15,6 +14,7 @@ from groupadmin.models import (
     ScoutsMemberSearchResponse,
     ScoutsMember,
     ScoutsMemberListResponse,
+    ScoutsUser,
 )
 from groupadmin.serializers import (
     ScoutsAllowedCallsSerializer,
@@ -25,6 +25,7 @@ from groupadmin.serializers import (
     ScoutsMemberSearchResponseSerializer,
     ScoutsMemberListResponseSerializer,
     ScoutsMemberSerializer,
+    ScoutsUserSerializer,
 )
 
 from groupadmin.utils import SettingsHelper
@@ -70,7 +71,7 @@ class GroupAdmin:
 
         return response.json()
 
-    def get(self, endpoint: str, active_user: User):
+    def get(self, endpoint: str, active_user: settings.AUTH_USER_MODEL):
         """Makes a request to the GA with the given url and returns the response as json_data."""
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
         try:
@@ -84,7 +85,7 @@ class GroupAdmin:
         return response.json()
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
-    def get_allowed_calls_raw(self, active_user: User) -> str:
+    def get_allowed_calls_raw(self, active_user: settings.AUTH_USER_MODEL) -> str:
         """
         Fetches a list of all groupadmin calls that the authenticated user can make
 
@@ -100,7 +101,7 @@ class GroupAdmin:
     @swagger_auto_schema(
         responses={status.HTTP_200_OK: ScoutsAllowedCallsSerializer},
     )
-    def get_allowed_calls(self, active_user: User) -> ScoutsAllowedCalls:
+    def get_allowed_calls(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsAllowedCalls:
         json_data = self.get_allowed_calls_raw(active_user)
 
         serializer = ScoutsAllowedCallsSerializer(data=json_data)
@@ -111,7 +112,7 @@ class GroupAdmin:
         return allowed_calls
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep
-    def get_groups_raw(self, active_user: User) -> str:
+    def get_groups_raw(self, active_user: settings.AUTH_USER_MODEL) -> str:
         """
         Fetches a list of all groups for which the authenticated user has rights.
 
@@ -124,7 +125,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_groups(self, active_user: User) -> ScoutsGroupListResponse:
+    def get_groups(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsGroupListResponse:
         json_data = self.get_groups_raw(active_user)
 
         serializer = ScoutsGroupListResponseSerializer(data=json_data)
@@ -135,7 +136,7 @@ class GroupAdmin:
         return groups_response
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/vga
-    def get_accountable_groups_raw(self, active_user: User) -> str:
+    def get_accountable_groups_raw(self, active_user: settings.AUTH_USER_MODEL) -> str:
         """
         Fetches a list of all groups for which the authenticated user is a leader (VGA).
 
@@ -148,7 +149,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_accountable_groups(self, active_user: User) -> ScoutsGroupListResponse:
+    def get_accountable_groups(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsGroupListResponse:
         json_data = self.get_accountable_groups_raw(active_user)
 
         serializer = ScoutsGroupListResponseSerializer(data=json_data)
@@ -159,7 +160,7 @@ class GroupAdmin:
         return groups_response
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/{group_number}
-    def get_group_raw(self, active_user: User, group_number: str) -> str:
+    def get_group_raw(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> str:
         """
         Fetches info of a specific group.
 
@@ -172,7 +173,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_group(self, active_user: User, group_number: str) -> ScoutsGroup:
+    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> ScoutsGroup:
         json_data = self.get_group_raw(active_user, group_number)
 
         serializer = ScoutsGroupSerializer(data=json_data)
@@ -183,7 +184,7 @@ class GroupAdmin:
         return group
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_number_fragment_start}
-    def get_functions_raw(self, active_user: User, group_number_fragment: str) -> str:
+    def get_functions_raw(self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str) -> str:
         """
         Fetches a list of functions of the authenticated user for each group.
 
@@ -198,7 +199,9 @@ class GroupAdmin:
 
         return json_data
 
-    def get_functions(self, active_user: User, group_number_fragment: str) -> ScoutsFunctionListResponse:
+    def get_functions(
+        self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str
+    ) -> ScoutsFunctionListResponse:
         json_data = self.get_functions_raw(active_user, group_number_fragment)
 
         serializer = ScoutsFunctionListResponseSerializer(data=json_data)
@@ -209,7 +212,7 @@ class GroupAdmin:
         return function_response
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie/{function_id}
-    def get_function_raw(self, active_user: User, function_id: str) -> str:
+    def get_function_raw(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> str:
         """
         Fetches info of a specific function.
 
@@ -222,7 +225,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_function(self, active_user: User, function_id: str) -> ScoutsFunction:
+    def get_function(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> ScoutsFunction:
         json_data = self.get_function_raw(active_user, function_id)
 
         serializer = ScoutsFunctionSerializer(data=json_data)
@@ -233,7 +236,7 @@ class GroupAdmin:
         return function
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
-    def get_member_profile_raw(self, active_user: User) -> str:
+    def get_member_profile_raw(self, active_user: settings.AUTH_USER_MODEL) -> str:
         """
         Fetches the profile information of the current user.
 
@@ -246,7 +249,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_profile(self, active_user: User) -> ScoutsMember:
+    def get_member_profile(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsMember:
         json_data = self.get_member_profile_raw(active_user)
 
         serializer = ScoutsMemberSerializer(data=json_data)
@@ -256,8 +259,18 @@ class GroupAdmin:
 
         return member
 
+    def get_user(self, active_user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+        json_data = self.get_member_profile_raw(active_user)
+
+        serializer = ScoutsUserSerializer(data=json_data)
+        serializer.is_valid(raise_exception=True)
+
+        user: settings.AUTH_USER_MODEL = serializer.save()
+
+        return user
+
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}
-    def get_member_info_raw(self, active_user: User, group_admin_id: str) -> str:
+    def get_member_info_raw(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:
         """
         Fetches member info for a member for which the authenticated user has read rights.
 
@@ -270,7 +283,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_info(self, active_user: User, group_admin_id: str) -> ScoutsMember:
+    def get_member_info(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> ScoutsMember:
         json_data = self.get_member_info_raw(active_user, group_admin_id)
 
         serializer = ScoutsMemberSerializer(data=json_data)
@@ -281,7 +294,7 @@ class GroupAdmin:
         return member
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}/steekkaart
-    def get_member_medical_flash_card(self, active_user: User, group_admin_id: str) -> str:
+    def get_member_medical_flash_card(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:
         """
         Fetches the medical flash card of a member for which the authenticated user has read rights.
 
@@ -290,7 +303,7 @@ class GroupAdmin:
         raise NotImplementedError("Fetching the medical flash card of a member has not been implemented yet")
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst
-    def get_member_list_raw(self, active_user: User, offset: int = 0) -> str:
+    def get_member_list_raw(self, active_user: settings.AUTH_USER_MODEL, offset: int = 0) -> str:
         """
         Fetches a list of members.
 
@@ -311,7 +324,7 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_list(self, active_user: User, offset: int = 0) -> ScoutsMemberListResponse:
+    def get_member_list(self, active_user: settings.AUTH_USER_MODEL, offset: int = 0) -> ScoutsMemberListResponse:
         json_data = self.get_member_list_raw(active_user, offset)
 
         serializer = ScoutsMemberListResponseSerializer(data=json_data)
@@ -322,7 +335,7 @@ class GroupAdmin:
         return member_list
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken/query={query}
-    def search_member_raw(self, active_user: User, term: str) -> str:
+    def search_member_raw(self, active_user: settings.AUTH_USER_MODEL, term: str) -> str:
         """
         Fetches a list of members that have info similar to the search term.
 
@@ -335,7 +348,9 @@ class GroupAdmin:
 
         return json_data
 
-    def search_member(self, active_user: User, term: str, group: str = None) -> ScoutsMemberSearchResponse:
+    def search_member(
+        self, active_user: settings.AUTH_USER_MODEL, term: str, group: str = None
+    ) -> ScoutsMemberSearchResponse:
         json_data = self.search_member_raw(active_user, term)
 
         serializer = ScoutsMemberSearchResponseSerializer(data=json_data)
@@ -346,7 +361,7 @@ class GroupAdmin:
         return member_list
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/zoeken/gelijkaardig?voornaam={first_name}&achternaam={last_name}
-    def search_similar_member(self, active_user: User, first_name: str, last_name: str) -> str:
+    def search_similar_member(self, active_user: settings.AUTH_USER_MODEL, first_name: str, last_name: str) -> str:
         """
         Fetches a list of members that have a name similar to the first_name and last_name arguments.
 
