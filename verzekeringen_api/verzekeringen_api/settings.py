@@ -88,7 +88,7 @@ LOGGING = {
         "file": {
             "class": "logging.FileHandler",
             "level": LOGGING_LEVEL,
-            "filename": "scouts-kampvisum.debug.log",
+            "filename": "verzekeringen-api.debug.log",
         },
     },
     "root": {
@@ -361,7 +361,7 @@ INSURANCE_CLAIM_FILE_NAME_SUFFIX = env.str("INSURANCE_CLAIM_FILE_NAME_SUFFIX")
 STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING = env.bool("STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING")
 
 # EMAIL
-# We are going to use anymail which maps multiple providers like sendinblue with default django mailing
+# We are going to use anymail which maps multiple providers like sendinblue with default django mailing code
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
 def setup_mail():
     global EMAIL_BACKEND

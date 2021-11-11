@@ -31,3 +31,4 @@ from .ga_member_medical_flash_card_serializer import ScoutsMedicalFlashCardSeria
 
 from .group_admin_list_serializer import ScoutsMemberListSerializer
 from .group_admin_detail_serializer import ScoutsMemberDetailSerializer
+from .scouts_user_serializer import ScoutsUserSerializer

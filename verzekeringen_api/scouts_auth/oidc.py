@@ -150,9 +150,6 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
             if isinstance(result, tuple):
                 (user, token) = result
 
-                logger.debug("USER: %s", dir(user))
-                logger.debug("USER date joined: %s", user.date_joined)
-
                 ScoutsAuthSignalSender().send_authenticated(user)
 
             return result
