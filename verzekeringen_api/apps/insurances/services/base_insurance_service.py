@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from django.conf import settings
@@ -7,6 +8,9 @@ from django.utils import timezone
 from apps.members.services import MemberService
 from apps.insurances.models import BaseInsurance, InsuranceType
 from apps.insurances.models.enums import InsuranceStatus
+
+
+logger = logging.getLogger(__name__)
 
 
 class BaseInsuranceService:
@@ -23,6 +27,8 @@ class BaseInsuranceService:
         id: str = None,
     ) -> dict:
         # validate group
+        logger.debug("GROUP_ID: %s", group_id)
+        logger.debug("GROUPS: %s", created_by.scouts_groups)
         group_object = next(
             (scouts_group for scouts_group in created_by.scouts_groups if scouts_group.group_admin_id == group_id),
             None,

@@ -88,5 +88,6 @@ class User(AbstractUser):
             str(self.last_login),
             str(self.is_superuser),
             ", ".join(self.groups) if self.groups and isinstance(self.groups, list) else "[]",
-            ", ".join(str(permission) for permission in self.permissions),
+            "[]",
+            # ", ".join((permission.codename + "(" + permission.name + ")") for permission in self.user_permissions),
         )

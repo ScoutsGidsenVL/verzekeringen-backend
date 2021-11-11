@@ -1,11 +1,14 @@
 import requests, logging
+from requests.exceptions import HTTPError
+
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from mozilla_django_oidc.contrib.drf import OIDCAuthentication
+
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
+
 from rest_framework import exceptions
-from requests.exceptions import HTTPError
 
 from scouts_auth.models import UserHelper
 from scouts_auth.utils import SettingsHelper

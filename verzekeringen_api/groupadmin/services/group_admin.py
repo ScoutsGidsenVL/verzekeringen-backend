@@ -25,6 +25,7 @@ from groupadmin.serializers import (
     ScoutsMemberSearchResponseSerializer,
     ScoutsMemberListResponseSerializer,
     ScoutsMemberSerializer,
+    ScoutsMemberFrontendSerializer,
     ScoutsUserSerializer,
 )
 
@@ -262,12 +263,30 @@ class GroupAdmin:
     def get_user(self, active_user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
         json_data = self.get_member_profile_raw(active_user)
 
-        serializer = ScoutsUserSerializer(data=json_data)
+        serializer = ScoutsMemberSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        user: settings.AUTH_USER_MODEL = serializer.save()
+        member: ScoutsMember = serializer.save()
 
-        return user
+        active_user.group_admin_id = member.group_admin_id
+        active_user.gender = member.personal_data.gender
+        active_user.phone = member.personal_data.phone
+        active_user.membership_number = member.scouts_data.membership_number
+        active_user.customer_number = member.scouts_data.customer_number
+        active_user.birth_date = member.group_admin_data.birth_date
+        active_user.first_name = member.group_admin_data.first_name
+        active_user.last_name = member.group_admin_data.last_name
+        active_user.email = member.email
+
+        active_user.scouts_groups = member.groups
+        active_user.addresses = member.addresses
+        active_user.functions = member.functions
+        active_user.group_specific_fields = member.group_specific_fields
+        active_user.links = member.links
+
+        active_user.save()
+
+        return active_user
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}
     def get_member_info_raw(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:

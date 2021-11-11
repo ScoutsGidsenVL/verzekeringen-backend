@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from django.conf import settings
 from django.dispatch import receiver
@@ -6,6 +7,7 @@ from django.dispatch import receiver
 from scouts_auth.signals import ScoutsAuthSignalSender, app_ready, authenticated
 from scouts_auth.services import PermissionService
 
+from groupadmin.models import ScoutsGroup
 from groupadmin.services import GroupAdmin
 
 
@@ -27,21 +29,15 @@ class InsuranceSignalHandler:
     @receiver(
         authenticated, sender=ScoutsAuthSignalSender.sender, dispatch_uid=ScoutsAuthSignalSender.authenticated_uid
     )
-    def handle_authenticated(user: settings.AUTH_USER_MODEL, **kwargs):
+    def handle_authenticated(user: settings.AUTH_USER_MODEL, **kwargs) -> settings.AUTH_USER_MODEL:
         logger.debug("SIGNAL received: 'authenticated' from %s", ScoutsAuthSignalSender.sender)
 
-        updated_user: settings.AUTH_USER_MODEL = GroupAdmin().get_member_profile(active_user=user)
+        service = GroupAdmin()
 
-        user.group_admin_id = updated_user.group_admin_id
-        user.gender = updated_user.personal_data.gender
-        user.phone = updated_user.personal_data.phone
-        user.membership_number = updated_user.scouts_data.membership_number
-        user.customer_number = updated_user.scouts_data.customer_number
-        user.birth_date = updated_user.group_admin_data.birth_date
-        user.first_name = updated_user.group_admin_data.first_name
-        user.last_name = updated_user.group_admin_data.last_name
-        user.email = updated_user.email
+        updated_user: settings.AUTH_USER_MODEL = service.get_user(active_user=user)
+        scouts_groups: List[ScoutsGroup] = service.get_groups(active_user=user).groups
 
-        user.save()
+        updated_user.scouts_groups = scouts_groups
+        logger.debug("AUTH: GROUPS: %s", updated_user.scouts_groups)
 
-        return user
+        return updated_user
