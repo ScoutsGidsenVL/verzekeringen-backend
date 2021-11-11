@@ -58,7 +58,7 @@ class MemberService:
         last_name: str,
         first_name: str,
         phone_number: str,
-        birth_date: datetime.date,
+        birth_date: datetime.date = None,
         street: str,
         number: str,
         postcode_city: PostcodeCity,
