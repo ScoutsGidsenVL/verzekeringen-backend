@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from scouts_auth.signals import ScoutsAuthSignalSender, app_ready, authenticated
 from scouts_auth.services import PermissionService
 
+from groupadmin.models import ScoutsUser
 from groupadmin.services import GroupAdmin
 
 
@@ -33,13 +34,13 @@ class InsuranceSignalHandler:
         updated_user: settings.AUTH_USER_MODEL = GroupAdmin().get_member_profile(active_user=user)
 
         user.group_admin_id = updated_user.group_admin_id
-        user.gender = updated_user.personal_data.gender
-        user.phone = updated_user.personal_data.phone
-        user.membership_number = updated_user.scouts_data.membership_number
-        user.customer_number = updated_user.scouts_data.customer_number
-        user.birth_date = updated_user.group_admin_data.birth_date
-        user.first_name = updated_user.group_admin_data.first_name
-        user.last_name = updated_user.group_admin_data.last_name
+        user.gender = updated_user.gender
+        user.phone = updated_user.phone
+        user.membership_number = updated_user.membership_number
+        user.customer_number = updated_user.customer_number
+        user.birth_date = updated_user.birth_date
+        user.first_name = updated_user.first_name
+        user.last_name = updated_user.last_name
         user.email = updated_user.email
 
         user.save()

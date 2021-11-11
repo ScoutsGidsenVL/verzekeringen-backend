@@ -20,6 +20,7 @@ class User(AbstractUser):
     # Fields inherited from django.contrib.auth.models.AbstractUser
     #
     username = models.CharField(
+        name="username",
         max_length=150,
         unique=True,
         help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
@@ -28,34 +29,38 @@ class User(AbstractUser):
             "unique": "A user with that username already exists.",
         },
     )
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(blank=True)
+    first_name = models.CharField(name="first name", max_length=150, blank=True)
+    last_name = models.CharField(name="last name", max_length=150, blank=True)
+    email = models.EmailField(name="email address", blank=True)
     is_staff = models.BooleanField(
+        name="staff status",
         default=False,
         help_text="Designates whether the user can log into this admin site.",
     )
     is_active = models.BooleanField(
+        name="active",
         default=True,
         help_text="Designates whether this user should be treated as active. "
         "Unselect this instead of deleting accounts.",
     )
-    date_joined = models.DateTimeField(default=timezone.now)
+    date_joined = models.DateTimeField(name="date joined", default=timezone.now)
 
     #
     # Fields inherited from django.contrib.auth.AbstractBaseUser
     #
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
+    password = models.CharField(name="password", max_length=128)
+    last_login = models.DateTimeField(name="last login", blank=True, null=True)
 
     #
     # Fields inherited from django.contrib.auth.models.PermissionsMixin
     #
     is_superuser = models.BooleanField(
+        name="superuser status",
         default=False,
-        help_text="Designates that this user has all permissions without explicitly assigning them.",
+        help_text="Designates that this user has all permissions without " "explicitly assigning them.",
     )
     groups = models.ManyToManyField(
+        verbose_name="groups",
         blank=True,
         help_text="The groups this user belongs to. A user will get all permissions "
         "granted to each of their groups.",
@@ -64,6 +69,7 @@ class User(AbstractUser):
         to="auth.group",
     )
     user_permissions = models.ManyToManyField(
+        verbose_name="user permissions",
         blank=True,
         help_text="Specific permissions for this user.",
         related_name="user_permissions",
