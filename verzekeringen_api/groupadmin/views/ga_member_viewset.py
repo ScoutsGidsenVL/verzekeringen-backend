@@ -9,6 +9,7 @@ from drf_yasg2.utils import swagger_auto_schema
 
 from groupadmin.models import (
     ScoutsGroup,
+    ScoutsGroupListResponse,
     ScoutsMember,
     ScoutsMemberListResponse,
     ScoutsMemberSearchResponse,
@@ -116,9 +117,19 @@ class ScoutsMemberView(viewsets.ViewSet):
         logger.debug("GA: Received request for current user profile")
 
         member: ScoutsMember = self.service.get_member_profile(request.user)
-        groups: List[ScoutsGroup] = self.service.get_groups(request.user)
+        groups_response: ScoutsGroupListResponse = self.service.get_groups(request.user)
 
-        member.groups = groups
+        member.groups = groups_response.groups
+
+        from scouts_auth.utils import SettingsHelper
+
+        known_admin_groups = SettingsHelper.get_known_admin_groups()
+
+        member_groups = [group.group_admin_id for group in member.groups]
+        logger.debug("member groups: %s", member_groups)
+
+        if any(group in member_groups for group in known_admin_groups):
+            logger.debug("User is in known_admin_groups")
 
         serializer = ScoutsMemberFrontendSerializer(member)
 

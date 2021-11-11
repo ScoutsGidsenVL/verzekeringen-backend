@@ -52,5 +52,5 @@ class PermissionService:
                 for permission_name in permissions:
                     self._add_permission_by_name(group, permission_name)
                 group.save()
-        except yaml.YamlError as exc:
+        except yaml.YAMLError as exc:
             logger.error("Error while importing permissions groups", exc)

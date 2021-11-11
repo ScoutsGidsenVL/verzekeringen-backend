@@ -1,6 +1,5 @@
 import logging
 
-
 from django.apps import AppConfig
 
 
@@ -11,8 +10,6 @@ class ScoutsAuthConfig(AppConfig):
     name = "scouts_auth"
 
     def ready(self):
-        logger.debug("SCOUTS-AUTH: app is ready")
+        from scouts_auth.signals import ScoutsAuthSignalSender
 
-        from scouts_auth.services import PermissionService
-
-        PermissionService().populate_roles()
+        ScoutsAuthSignalSender().send_app_ready()

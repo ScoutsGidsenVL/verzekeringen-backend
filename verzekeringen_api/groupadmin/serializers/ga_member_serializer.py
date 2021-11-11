@@ -206,9 +206,7 @@ class ScoutsMemberSerializer(NonModelSerializer):
 
 class ScoutsMemberFrontendSerializer(NonModelSerializer):
     def to_representation(self, instance: ScoutsMember) -> dict:
-        logger.debug("instance: %s", instance)
         serialized: dict = super().to_representation(instance)
-        logger.debug("serialized: %s", serialized)
 
         personal_data = serialized.pop("personal_data")
         group_admin_data = serialized.pop("group_admin_data")

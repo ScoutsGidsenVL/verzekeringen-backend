@@ -25,3 +25,4 @@ from .value_objects import (
     ScoutsMember,
     ScoutsMedicalFlashCard,
 )
+from .scouts_user import ScoutsUser

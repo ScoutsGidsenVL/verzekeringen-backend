@@ -2,5 +2,4 @@ from django.apps import AppConfig
 
 
 class GroupadminConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'groupadmin'
+    name = "groupadmin"

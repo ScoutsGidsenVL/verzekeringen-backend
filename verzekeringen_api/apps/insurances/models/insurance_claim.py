@@ -8,9 +8,7 @@ from jsonfield import JSONField
 from apps.locations.utils import PostcodeCity, Address
 from apps.members.models import InuitsNonMember
 
-from scouts_auth.models import User
-
-from groupadmin.models import ScoutsMember
+from groupadmin.models import ScoutsUser, ScoutsMember
 from groupadmin.services import GroupAdmin
 
 from inuits.models import Gender
@@ -76,7 +74,7 @@ class InsuranceClaimVictim(models.Model):
 class InsuranceClaim(models.Model):
     group_number = models.CharField(max_length=6, null=True)
     date = models.DateTimeField(blank=True)
-    declarant = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
+    declarant = models.ForeignKey(ScoutsUser, on_delete=models.SET_NULL, null=True, blank=False)
     declarant_city = models.CharField(max_length=30, null=True, blank=True)
     victim = models.ForeignKey(InsuranceClaimVictim, on_delete=models.SET_NULL, null=True, blank=False)
     bank_account = models.CharField(max_length=30, null=True, blank=True)

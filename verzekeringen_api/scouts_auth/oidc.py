@@ -9,6 +9,7 @@ from requests.exceptions import HTTPError
 
 from scouts_auth.models import UserHelper
 from scouts_auth.utils import SettingsHelper
+from scouts_auth.signals import ScoutsAuthSignalSender
 
 
 logger = logging.getLogger(__name__)
@@ -150,6 +151,9 @@ class InuitsOIDCAuthentication(OIDCAuthentication):
                 (user, token) = result
 
                 logger.debug("USER: %s", dir(user))
+                logger.debug("USER date joined: %s", user.date_joined)
+
+                ScoutsAuthSignalSender().send_authenticated(user)
 
             return result
         except HTTPError as exc:

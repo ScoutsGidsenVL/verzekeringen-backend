@@ -23,7 +23,6 @@ class BaseInsuranceService:
         id: str = None,
     ) -> dict:
         # validate group
-        created_by.fetch_detailed_group_info()
         group_object = next(
             (scouts_group for scouts_group in created_by.scouts_groups if scouts_group.id == group_id), None
         )

@@ -161,6 +161,7 @@ SILENCED_SYSTEM_CHECKS = ["fields.W342"]
 # Application definition
 
 INSTALLED_APPS = [
+    "apps.signals",
     "django.contrib.admin",
     "django.contrib.auth",
     "scouts_auth",
@@ -287,7 +288,7 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 
 # OIDC
 
-AUTH_USER_MODEL = "scouts_auth.User"
+AUTH_USER_MODEL = "groupadmin.ScoutsUser"
 AUTHORIZATION_ROLES_CONFIG_PACKAGE = "initial_data"
 AUTHORIZATION_ROLES_CONFIG_YAML = "roles.yaml"
 AUTHENTICATION_BACKENDS = {
