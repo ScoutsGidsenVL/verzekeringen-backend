@@ -18,7 +18,7 @@ class BaseInsuranceService:
         self,
         *,
         type: InsuranceType,
-        group_id: str,
+        group_admin_id: str,
         start_date: datetime,
         end_date: datetime,
         responsible_phone_number: str,
@@ -27,14 +27,16 @@ class BaseInsuranceService:
         id: str = None,
     ) -> dict:
         # validate group
-        logger.debug("GROUP_ID: %s", group_id)
-        logger.debug("GROUPS: %s", created_by.scouts_groups)
         group_object = next(
-            (scouts_group for scouts_group in created_by.scouts_groups if scouts_group.group_admin_id == group_id),
+            (
+                scouts_group
+                for scouts_group in created_by.scouts_groups
+                if scouts_group.group_admin_id == group_admin_id
+            ),
             None,
         )
         if not group_object:
-            raise ValidationError("Given group %s is not a valid group of user" % group_id)
+            raise ValidationError("Given group %s is not a valid group of user" % group_admin_id)
         member = MemberService.member_create_from_user(user=created_by, phone_number=responsible_phone_number)
         fields = {
             "status": InsuranceStatus.NEW,

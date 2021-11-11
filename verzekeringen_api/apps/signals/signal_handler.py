@@ -38,6 +38,5 @@ class InsuranceSignalHandler:
         scouts_groups: List[ScoutsGroup] = service.get_groups(active_user=user).groups
 
         updated_user.scouts_groups = scouts_groups
-        logger.debug("AUTH: GROUPS: %s", updated_user.scouts_groups)
 
         return updated_user

@@ -7,7 +7,7 @@ from apps.members.models import Member
 from apps.insurances.models import InsuranceType
 from apps.insurances.models.enums import InsuranceStatus
 
-from groupadmin.models import ScoutsGroup
+from groupadmin.models import ScoutsGroup, ScoutsAddress
 
 
 class BaseInsuranceQuerySet(models.QuerySet):
@@ -76,14 +76,18 @@ class BaseInsurance(models.Model):
     # Special group getter that returns group class to make it seem like normal model
     @property
     def group(self):
-        return ScoutsGroup(self._group_number, self._group_name, "", self._group_location)
+        return ScoutsGroup(
+            group_admin_id=self._group_number,
+            name=self._group_name,
+            addresses=[ScoutsAddress(city=self._group_location)],
+        )
 
     # Special group setter that accepts group class
     @group.setter
     def group(self, value: ScoutsGroup):
-        self._group_number = value.id
+        self._group_number = value.group_admin_id
         self._group_name = value.name
-        self._group_location = value.location
+        self._group_location = value.addresses[0].city
 
     # Parse status int to actual string
     @property
