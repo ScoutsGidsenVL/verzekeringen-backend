@@ -100,6 +100,9 @@ class ScoutsMember:
     def get_gender(self):
         return self.gender
 
+    def get_function_codes(self) -> List[str]:
+        return [function.code for function in self.functions]
+
     def __str__(self):
         return (
             self.personal_data.__str__()

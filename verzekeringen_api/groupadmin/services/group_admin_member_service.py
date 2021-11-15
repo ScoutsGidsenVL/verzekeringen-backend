@@ -21,7 +21,6 @@ class GroupAdminMemberService:
             group_admin_id (str): foreign id
 
         Returns: GroupAdminMember
-
         """
         response = requests.get(
             "{0}/{1}".format(SettingsHelper.get_group_admin_member_detail_endpoint(), group_admin_id),

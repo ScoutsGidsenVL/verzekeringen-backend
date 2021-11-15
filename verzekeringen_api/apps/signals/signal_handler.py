@@ -34,9 +34,9 @@ class InsuranceSignalHandler:
 
         service = GroupAdmin()
 
-        updated_user: settings.AUTH_USER_MODEL = service.get_user(active_user=user)
+        # updated_user: settings.AUTH_USER_MODEL = service.get_user(active_user=user)
         scouts_groups: List[ScoutsGroup] = service.get_groups(active_user=user).groups
 
-        updated_user.scouts_groups = scouts_groups
+        user.scouts_groups = scouts_groups
 
-        return updated_user
+        return user

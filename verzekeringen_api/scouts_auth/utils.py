@@ -1,9 +1,6 @@
 from django.conf import settings
 
 
-known_admin_scouts_groups = ["X0001G", "X0002G", "X0015G", "X1027G"]
-
-
 class SettingsHelper:
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
@@ -46,12 +43,3 @@ class SettingsHelper:
     @staticmethod
     def get_oidc_proxy(default_value=None):
         return getattr(settings, "OIDC_PROXY", default_value)
-
-    @staticmethod
-    def get_known_admin_groups(default_value=None) -> list:
-        try:
-            return settings.KNOWN_ADMIN_GROUPS
-        except Exception:
-            pass
-
-        return ["X0001G", "X0002G", "X0015G", "X1027G"]

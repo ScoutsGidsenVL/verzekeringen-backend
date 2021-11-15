@@ -9,5 +9,5 @@ class ScoutsGroupListResponse:
     links: List[ScoutsLink]
 
     def __init__(self, groups: List[ScoutsGroup] = None, links: List[ScoutsLink] = None):
-        self.groups = groups if groups else []
+        self.groups = groups.sort(key=lambda group: group.group_admin_id) if groups else []
         self.links = links if links else []

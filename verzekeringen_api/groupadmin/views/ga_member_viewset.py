@@ -21,6 +21,7 @@ from groupadmin.serializers import (
     ScoutsMemberSearchResponseSerializer,
 )
 from groupadmin.services import GroupAdmin
+from groupadmin.utils import SettingsHelper
 
 
 logger = logging.getLogger(__name__)
@@ -121,9 +122,7 @@ class ScoutsMemberView(viewsets.ViewSet):
 
         member.groups = groups_response.groups
 
-        from scouts_auth.utils import SettingsHelper
-
-        known_admin_groups = SettingsHelper.get_known_admin_groups()
+        known_admin_groups = SettingsHelper.get_administrator_groups()
 
         member_groups = [group.group_admin_id for group in member.groups]
         logger.debug("member groups: %s", member_groups)

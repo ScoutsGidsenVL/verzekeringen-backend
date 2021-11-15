@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from jsonfield import JSONField
 
+from apps.insurances.managers import InsuranceClaimManager
+
 from apps.locations.utils import PostcodeCity, Address
 from apps.members.models import InuitsNonMember
 
@@ -101,6 +103,8 @@ class InsuranceClaim(models.Model):
 
     note = models.CharField(max_length=1024, null=True, blank=True)
     case_number = models.CharField(max_length=30, null=True, blank=True)
+
+    objects = InsuranceClaimManager()
 
     class Meta:
         permissions = [

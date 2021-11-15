@@ -44,7 +44,8 @@ class GroupAdmin:
     url_groups_vga = SettingsHelper.get_group_admin_group_endpoint() + "/vga"
     url_group = SettingsHelper.get_group_admin_group_endpoint() + "/{}"
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_number_start_fragment}
-    url_functions = SettingsHelper.get_group_admin_functions_endpoint() + "?groep={}"
+    url_functions = SettingsHelper.get_group_admin_functions_endpoint()
+    url_functions_for_group = SettingsHelper.get_group_admin_functions_endpoint() + "?groep={}"
     url_function = SettingsHelper.get_group_admin_functions_endpoint() + "/{}"
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/profiel
     url_member_profile = SettingsHelper.get_group_admin_profile_endpoint()
@@ -185,7 +186,7 @@ class GroupAdmin:
         return group
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_number_fragment_start}
-    def get_functions_raw(self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str) -> str:
+    def get_functions_raw(self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str = None) -> str:
         """
         Fetches a list of functions of the authenticated user for each group.
 
@@ -193,15 +194,20 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#functies-functielijst-get
         """
-        json_data = self.get(self.url_functions.format(group_number_fragment), active_user)
+        if group_number_fragment:
+            url = self.url_functions_for_group.format(group_number_fragment)
+        else:
+            url = self.url_functions
 
-        logger.info("GA CALL: %s (%s)", "get_functions", self.url_functions)
+        json_data = self.get(url, active_user)
+
+        logger.info("GA CALL: %s (%s)", "get_functions", url)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
 
     def get_functions(
-        self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str
+        self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str = None
     ) -> ScoutsFunctionListResponse:
         json_data = self.get_functions_raw(active_user, group_number_fragment)
 
@@ -259,34 +265,6 @@ class GroupAdmin:
         member: ScoutsMember = serializer.save()
 
         return member
-
-    def get_user(self, active_user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        json_data = self.get_member_profile_raw(active_user)
-
-        serializer = ScoutsMemberSerializer(data=json_data)
-        serializer.is_valid(raise_exception=True)
-
-        member: ScoutsMember = serializer.save()
-
-        active_user.group_admin_id = member.group_admin_id
-        active_user.gender = member.personal_data.gender
-        active_user.phone = member.personal_data.phone
-        active_user.membership_number = member.scouts_data.membership_number
-        active_user.customer_number = member.scouts_data.customer_number
-        active_user.birth_date = member.group_admin_data.birth_date
-        active_user.first_name = member.group_admin_data.first_name
-        active_user.last_name = member.group_admin_data.last_name
-        active_user.email = member.email
-
-        active_user.scouts_groups = member.groups
-        active_user.addresses = member.addresses
-        active_user.functions = member.functions
-        active_user.group_specific_fields = member.group_specific_fields
-        active_user.links = member.links
-
-        active_user.save()
-
-        return active_user
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}
     def get_member_info_raw(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:

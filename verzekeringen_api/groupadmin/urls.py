@@ -18,6 +18,7 @@ view_member = ScoutsMemberView.as_view({"get": "view_member_info"})
 view_group_list = ScoutsGroupView.as_view({"get": "view_groups"})
 view_accountable_group_list = ScoutsGroupView.as_view({"get": "view_accountable_groups"})
 view_group = ScoutsGroupView.as_view({"get": "view_group"})
+view_functions = ScoutsFunctionView.as_view({"get": "view_functions"})
 view_function_list = ScoutsFunctionView.as_view({"get": "view_function_list"})
 view_function = ScoutsFunctionView.as_view({"get": "view_function"})
 view_member_list_members = ScoutsMemberListView.as_view({"get": "view_member_list_members"})
@@ -35,6 +36,7 @@ urlpatterns = [
     path("ga/groups/", view_group_list, name="ga_groups"),
     path("ga/groups/accountable/", view_accountable_group_list, name="ga_groups"),
     path("ga/groups/<str:group_number>", view_group, name="ga_group"),
-    path("ga/functions/group/<str:group_number_fragment>", view_function_list, name="ga_functions"),
+    path("ga/functions", view_functions, name="ga_functions"),
+    path("ga/functions/group/<str:group_number_fragment>", view_function_list, name="ga_functions_for_group"),
     path("ga/functions/<str:function_id>", view_function, name="ga_function"),
 ]

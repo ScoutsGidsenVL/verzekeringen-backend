@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from groupadmin.models.value_objects import ScoutsFunction, ScoutsLink
 
@@ -11,6 +11,12 @@ class ScoutsFunctionListResponse:
     def __init__(self, functions: List[ScoutsFunction] = None, links: List[ScoutsLink] = None):
         self.functions = functions if functions else []
         self.links = links if links else []
+
+    def get_function_codes(self) -> List[str]:
+        return [function.code for function in self.functions]
+
+    def get_descriptive_function_codes(self) -> List[Tuple]:
+        return [(function.code, function.description) for function in self.functions]
 
     def __str__(self):
         return "functions({}), links({})".format(

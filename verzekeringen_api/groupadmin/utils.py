@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from django.conf import settings
 
@@ -42,3 +43,11 @@ class SettingsHelper:
         attr = getattr(settings, "GROUP_ADMIN_MEMBER_LIST_ENDPOINT", default_value)
         logger.debug("ENDPOINT: %s", attr)
         return attr
+
+    @staticmethod
+    def get_administrator_groups() -> List[str]:
+        return settings.KNOWN_ADMIN_GROUPS
+
+    @staticmethod
+    def get_roles() -> List[str]:
+        return settings.KNOWN_ROLES

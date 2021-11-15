@@ -2,6 +2,8 @@ from typing import List
 from datetime import date, datetime
 
 from groupadmin.models.value_objects import ScoutsGroup, ScoutsGrouping, ScoutsLink
+from groupadmin.models.enums import ScoutsFunctionCode
+from groupadmin.utils import SettingsHelper
 
 
 class ScoutsFunction:
@@ -17,7 +19,10 @@ class ScoutsFunction:
     max_birth_date: date
     code: str
     description: str
+    adjunct: str
     links: List[ScoutsLink]
+
+    _scouts_function_code: ScoutsFunctionCode = None
 
     def __init__(
         self,
@@ -32,6 +37,7 @@ class ScoutsFunction:
         max_birth_date: date = None,
         code: str = "",
         description: str = "",
+        adjunct: str = "",
         links: List[ScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
@@ -45,10 +51,11 @@ class ScoutsFunction:
         self.max_birth_date = max_birth_date
         self.code = code
         self.description = description
+        self.adjunct = adjunct
         self.links = links if links else []
 
     def __str__(self):
-        return "group_admin_id ({}), type ({}), group({}), function({}), groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), links({})".format(
+        return "group_admin_id ({}), type ({}), group({}), function({}), groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
             self.group_admin_id,
             self.type,
             str(self.group),
@@ -60,5 +67,20 @@ class ScoutsFunction:
             self.max_birth_date,
             self.code,
             self.description,
+            self.adjunct,
             ", ".join(str(link) for link in self.links),
         )
+
+    def _parse_function_code(self):
+        if self._scouts_function_code is None:
+            self._scouts_function_code = ScoutsFunctionCode(self.code)
+        return self._scouts_function_code
+
+    def is_district_commissioner(self) -> bool:
+        return self._parse_function_code().is_district_commissioner()
+
+    def is_group_leader(self, group: ScoutsGroup) -> bool:
+        return self._parse_function_code().is_group_leader() and self.group.group_admin_id == group.group_admin_id
+
+    def is_leader(self, group: ScoutsGroup) -> bool:
+        return self._parse_function_code().is_leader() and self.group.group_admin_id == group.group_admin_id
