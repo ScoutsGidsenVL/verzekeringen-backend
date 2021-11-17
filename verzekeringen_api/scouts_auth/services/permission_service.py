@@ -11,17 +11,27 @@ logger = logging.getLogger(__name__)
 
 
 class PermissionService:
-    def _purge_group_permissions(self, group: Group, group_permissions: List[Permission], permissions: List[str]):
+    def _purge_group_permissions(
+        self, group: Group, group_permissions: List[Permission], permissions: List[str]
+    ) -> List[dict]:
+        """
+        Removes revoked and already existing permissions.
+
+        Returns a list of dict with keys permission, codename and app_label.
+        """
         # Avoid clearing the table and adding the same permission over and over again,
         # but avoid even more to keep a permission that was revoked.
         parsed_permissions: List[dict] = []
         for permission in permissions:
             permission_parts = permission.split(".")
-            parsed_permissions.append({"codename": permission_parts[1], "app_label": permission_parts[0]})
+            parsed_permissions.append(
+                {"permission": permission, "codename": permission_parts[1], "app_label": permission_parts[0]}
+            )
 
         # Remove group permissions that have been revoked and keep only new permissions
-        remove_permissions = []
+        remove_permissions: List[str] = []
         for group_permission in group_permissions:
+            remove_permission = True
             for parsed_permission in parsed_permissions:
                 if (
                     parsed_permission.get("codename") == group_permission.codename
@@ -29,26 +39,33 @@ class PermissionService:
                 ):
                     # The group already has this permission, remove it from the list
                     remove_permissions.append(parsed_permission)
+                    remove_permission = False
                     break
 
             # If we're here, then the group permission has been revoked
-            logger.debug(
-                "Removing permission %s.%s from group %s",
-                group_permission.content_type.app_label,
-                group_permission.codename,
-                group.name,
-            )
-            group_permission.delete()
+            if remove_permission:
+                logger.debug(
+                    "Removing permission %s.%s from group %s",
+                    group_permission.content_type.app_label,
+                    group_permission.codename,
+                    group.name,
+                )
+                group_permission.delete()
+
+        for remove_permission in remove_permissions:
+            parsed_permissions.remove(remove_permission)
 
         # Return a list of permissions
         return parsed_permissions
 
-    def _add_permission_by_name(self, group: Group, codename: str, app_label: str):
+    def _add_permission_by_name(self, group: Group, permission: str, codename: str, app_label: str):
         try:
             permission = Permission.objects.get(codename=codename, content_type__app_label=app_label)
             group.permissions.add(permission)
         except ObjectDoesNotExist:
-            logger.error("Permission with codename %s doesn't exist for app_label %s", codename, app_label)
+            logger.error(
+                "Permission %s with codename %s doesn't exist for app_label %s", permission, codename, app_label
+            )
 
     def populate_roles(self, **kwargs):
         # Will populate groups and add permissions to them, won't create permissions
@@ -84,7 +101,12 @@ class PermissionService:
 
                 logger.debug("Adding %d PERMISSIONS to group %s", len(permissions), group_name)
                 for permission in permissions:
-                    self._add_permission_by_name(group, permission.get("codename"), permission.get("app_label"))
+                    self._add_permission_by_name(
+                        group,
+                        permission.get("permission"),
+                        permission.get("codename"),
+                        permission.get("app_label"),
+                    )
                 group.save()
         except yaml.YAMLError as exc:
             logger.error("Error while importing permissions groups", exc)
