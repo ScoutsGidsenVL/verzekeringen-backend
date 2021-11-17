@@ -53,6 +53,8 @@ class ScoutsUser(User):
     #
     # Some shortcut fields
     #
+    is_administrator = False
+    is_district_commissioner = False
 
     def __str__(self):
         return "group_admin_id({}), ".format(self.group_admin_id) + super().__str__()
@@ -63,30 +65,29 @@ class ScoutsUser(User):
     def get_group_functions(self) -> List[Tuple]:
         return [(function.group.group_admin_id, function.code) for function in self.functions]
 
-    @property
-    def is_administrator(self) -> bool:
-        return any(
-            name in [group.group_admin_id for group in self.scouts_groups]
-            for name in SettingsHelper.get_administrator_groups()
-        )
+    def get_group_names(self) -> List[str]:
+        return [group.group_admin_id for group in self.scouts_groups]
 
-    @property
-    def is_district_commissioner(self) -> bool:
+    def has_role_administrator(self) -> bool:
+        if any(name in self.get_group_names() for name in SettingsHelper.get_administrator_groups()):
+            self.is_administrator = True
+        return self.is_administrator
+
+    def has_role_district_commissioner(self) -> bool:
         for function in self.functions:
             if function.is_district_commissioner():
-                return True
-        return False
+                self.is_district_commissioner = True
+                break
+        return self.is_district_commissioner
 
     def is_group_leader(self, group: ScoutsGroup) -> bool:
         for function in self.functions:
-            if function.is_group_leader():
-                self.group_leader = True
-                break
-        return self.group_leader
+            if function.is_group_leader() and function.group.group_admin_id == group.group_admin_id:
+                return True
+        return False
 
     def is_leader(self, group: ScoutsGroup) -> bool:
         for function in self.functions:
-            if function.is_leader():
-                self.leader = True
-                break
-        return self.leader
+            if function.is_leader() and function.group.group_admin_id == group.group_admin_id:
+                return True
+        return False

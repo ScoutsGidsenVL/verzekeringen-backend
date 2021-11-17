@@ -35,6 +35,25 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return user
 
+    def update_user_scouts_groups(self, user: ScoutsUser) -> ScoutsUser:
+        """
+        Updates the authenticated user with the groups he/she belongs to.
+
+        The groupadmin call for groups can only be made after the user has been authenticated.
+        """
+        user: ScoutsUser = self.map_user_with_claims(user)
+
+        user.full_clean()
+        user.save()
+
+        permissions = user.get_all_permissions()
+        logger.debug("ROLES: %s", permissions)
+        logger.debug("GROUPS: %s", user.groups)
+        logger.debug("ADMINISTRATOR ?: %s", user.is_administrator)
+        logger.debug("DISTRICT_COMMISSIONER ?: %s", user.is_district_commissioner)
+
+        return user
+
     def load_member_data(self, data: dict) -> ScoutsMember:
         serializer = ScoutsMemberSerializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -61,19 +80,21 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user.links = member.links
 
         user.access_token = claims.get("access_token")
-        user = self.map_user_with_claims(user, member)
+        user = self.map_user_with_claims(user)
 
         user.full_clean()
         user.save()
 
         return user
 
-    def map_user_with_claims(self, user: ScoutsUser, member: ScoutsMember):
+    def map_user_with_claims(self, user: ScoutsUser):
         """
         Override the mapping in InuitsOIDCAuthenticationBackend to handle scouts-specific data.
         """
         # Everybody gets role user and assume the user is not an admin
         roles = ["role_user"]
+        # ROLE: role_district_commissioner -> The user is a district commissioner
+        role_district_commissioner = "role_district_commissioner"
         # ROLE: role_leader -> The user is a leader
         role_leader = "role_leader"
         # ROLE: role_group_leader -> The user is a group leader
@@ -81,20 +102,25 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         # ROLE: role_administrator -> The user belongs to an administrative group
         role_administrator = "role_administrator"
 
+        user.has_role_administrator()
+        user.has_role_district_commissioner()
+
         if user.is_administrator:
             roles.append(role_administrator)
+        if user.is_district_commissioner:
+            roles.append(role_district_commissioner)
 
         user = self.map_user_roles(user, roles)
 
         return user
 
-    def map_user_roles(self, user: ScoutsUser, claim_roles):
+    def map_user_roles(self, user: ScoutsUser, roles: list):
         # First clear all groups from user and set superuser false
         user.is_superuser = False
 
         user.groups.clear()
 
-        for role in claim_roles:
+        for role in roles:
             try:
                 group = Group.objects.get(name=role)
                 user.groups.add(group)

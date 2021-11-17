@@ -51,25 +51,26 @@ class User(AbstractUser):
     #
     # Fields inherited from django.contrib.auth.models.PermissionsMixin
     #
-    is_superuser = models.BooleanField(
-        default=False,
-        help_text="Designates that this user has all permissions without explicitly assigning them.",
-    )
-    groups = models.ManyToManyField(
-        blank=True,
-        help_text="The groups this user belongs to. A user will get all permissions "
-        "granted to each of their groups.",
-        related_name="user_groups",
-        related_query_name="user",
-        to="auth.group",
-    )
-    user_permissions = models.ManyToManyField(
-        blank=True,
-        help_text="Specific permissions for this user.",
-        related_name="user_permissions",
-        related_query_name="user",
-        to="auth.permission",
-    )
+
+    # is_superuser = models.BooleanField(
+    #     default=False,
+    #     help_text="Designates that this user has all permissions without explicitly assigning them.",
+    # )
+    # groups = models.ManyToManyField(
+    #     blank=True,
+    #     help_text="The groups this user belongs to. A user will get all permissions "
+    #     "granted to each of their groups.",
+    #     related_name="user_groups",
+    #     related_query_name="user",
+    #     to="auth.group",
+    # )
+    # user_permissions = models.ManyToManyField(
+    #     blank=True,
+    #     help_text="Specific permissions for this user.",
+    #     related_name="user_permissions",
+    #     related_query_name="user",
+    #     to="auth.permission",
+    # )
 
     class Meta:
         permissions = (("access_disabled_entities", "Access disabled entities"),)

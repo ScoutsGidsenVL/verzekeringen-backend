@@ -1,4 +1,5 @@
 import logging, yaml, importlib
+from typing import List
 
 from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,11 +11,40 @@ logger = logging.getLogger(__name__)
 
 
 class PermissionService:
-    def _add_permission_by_name(self, group, permission_name):
+    def _purge_group_permissions(self, group: Group, group_permissions: List[Permission], permissions: List[str]):
+        # Avoid clearing the table and adding the same permission over and over again,
+        # but avoid even more to keep a permission that was revoked.
+        parsed_permissions: List[dict] = []
+        for permission in permissions:
+            permission_parts = permission.split(".")
+            parsed_permissions.append({"codename": permission_parts[1], "app_label": permission_parts[0]})
+
+        # Remove group permissions that have been revoked and keep only new permissions
+        remove_permissions = []
+        for group_permission in group_permissions:
+            for parsed_permission in parsed_permissions:
+                if (
+                    parsed_permission.get("codename") == group_permission.codename
+                    and parsed_permission.get("app_label") == group_permission.content_type.app_label
+                ):
+                    # The group already has this permission, remove it from the list
+                    remove_permissions.append(parsed_permission)
+                    break
+
+            # If we're here, then the group permission has been revoked
+            logger.debug(
+                "Removing permission %s.%s from group %s",
+                group_permission.content_type.app_label,
+                group_permission.codename,
+                group.name,
+            )
+            group_permission.delete()
+
+        # Return a list of permissions
+        return parsed_permissions
+
+    def _add_permission_by_name(self, group: Group, codename: str, app_label: str):
         try:
-            permission_name = permission_name.split(".")
-            codename = permission_name[1]
-            app_label = permission_name[0]
             permission = Permission.objects.get(codename=codename, content_type__app_label=app_label)
             group.permissions.add(permission)
         except ObjectDoesNotExist:
@@ -47,10 +77,14 @@ class PermissionService:
         try:
             groups = yaml.safe_load(yaml_data)
             for group_name, permissions in groups.items():
-                group = Group.objects.get_or_create(name=group_name)[0]
-                group.permissions.clear()
-                for permission_name in permissions:
-                    self._add_permission_by_name(group, permission_name)
+                group: Group = Group.objects.get_or_create(name=group_name)[0]
+                group_permissions = group.permissions.all()
+
+                permissions = self._purge_group_permissions(group, group_permissions, permissions)
+
+                logger.debug("Adding %d PERMISSIONS to group %s", len(permissions), group_name)
+                for permission in permissions:
+                    self._add_permission_by_name(group, permission.get("codename"), permission.get("app_label"))
                 group.save()
         except yaml.YAMLError as exc:
             logger.error("Error while importing permissions groups", exc)

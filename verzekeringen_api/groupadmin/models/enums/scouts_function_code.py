@@ -1,7 +1,4 @@
-from enum import Enum
-
-
-class ScoutsFunctionCode(Enum):
+class ScoutsFunctionCode:
 
     GROUP_LEADER = "GRL"
     ADJUNCT_GROUP_LEADER = "AGRL"
@@ -14,6 +11,15 @@ class ScoutsFunctionCode(Enum):
     LEADER = ""
 
     MATERIAL_MASTER = "MM"
+
+    UNKNOWN = ""
+
+    code: str
+
+    def __init__(self, code: str = None):
+        if not code or len(code) == 0:
+            code = self.UNKNOWN
+        self.code = code
 
     def is_district_commissioner(self):
         return self in (

@@ -122,14 +122,6 @@ class ScoutsMemberView(viewsets.ViewSet):
 
         member.groups = groups_response.groups
 
-        known_admin_groups = SettingsHelper.get_administrator_groups()
-
-        member_groups = [group.group_admin_id for group in member.groups]
-        logger.debug("member groups: %s", member_groups)
-
-        if any(group in member_groups for group in known_admin_groups):
-            logger.debug("User is in known_admin_groups")
-
         serializer = ScoutsMemberFrontendSerializer(member)
 
         return Response(serializer.to_representation(member))
