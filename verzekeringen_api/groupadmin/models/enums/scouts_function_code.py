@@ -8,9 +8,10 @@ class ScoutsFunctionCode:
     ADJUNCT_DISCTRICT_COMMISSIONER = "ADC"
     DISTRICT_COMMISSIONER_TEAM = "DPL"
 
-    LEADER = ""
+    SECTION_LEADER = ""
 
-    MATERIAL_MASTER = "MM"
+    # MATERIAL_MASTER = "MM"
+    # ADJUNCT_MATERIAL_MASTER = "AMM"
 
     UNKNOWN = ""
 
@@ -21,15 +22,15 @@ class ScoutsFunctionCode:
             code = self.UNKNOWN
         self.code = code
 
+    def is_section_leader(self):
+        return self in (self.SECTION_LEADER)
+
+    def is_group_leader(self):
+        return self in (self.GROUP_LEADER, self.ADJUNCT_GROUP_LEADER, self.GROUP_LEADER_TEAM)
+
     def is_district_commissioner(self):
         return self in (
             self.DISTRICT_COMMISSIONER,
             self.ADJUNCT_DISCTRICT_COMMISSIONER,
             self.DISTRICT_COMMISSIONER_TEAM,
         )
-
-    def is_group_leader(self):
-        return self in (self.GROUP_LEADER, self.ADJUNCT_GROUP_LEADER, self.GROUP_LEADER_TEAM)
-
-    def is_leader(self):
-        return self in (self.LEADER)

@@ -68,26 +68,43 @@ class ScoutsUser(User):
     def get_group_names(self) -> List[str]:
         return [group.group_admin_id for group in self.scouts_groups]
 
-    def has_role_administrator(self) -> bool:
-        if any(name in self.get_group_names() for name in SettingsHelper.get_administrator_groups()):
-            self.is_administrator = True
-        return self.is_administrator
+    def has_role_section_leader(self, group: ScoutsGroup) -> bool:
+        """
+        Determines if the user is a section leader based on a function in the specified group
+        """
+        for function in self.functions:
+            if function.is_section_leader() and function.group.group_admin_id == group.group_admin_id:
+                return True
+        return False
+
+    def has_role_group_leader(self, group: ScoutsGroup) -> bool:
+        """
+        Determines if the user is a group leader based on a function in the specified group
+        """
+        for function in self.functions:
+            if function.is_group_leader() and function.group.group_admin_id == group.group_admin_id:
+                return True
+        return False
 
     def has_role_district_commissioner(self) -> bool:
+        """
+        Determines if the user is a district commissioner based on a function code
+        """
         for function in self.functions:
             if function.is_district_commissioner():
                 self.is_district_commissioner = True
                 break
         return self.is_district_commissioner
 
-    def is_group_leader(self, group: ScoutsGroup) -> bool:
-        for function in self.functions:
-            if function.is_group_leader() and function.group.group_admin_id == group.group_admin_id:
-                return True
-        return False
+    def has_role_administrator(self) -> bool:
+        """
+        Determines if the user as an administrative worker based on the membership in an administrative group
+        """
+        if any(name in self.get_group_names() for name in SettingsHelper.get_administrator_groups()):
+            self.is_administrator = True
+        return self.is_administrator
 
-    def is_leader(self, group: ScoutsGroup) -> bool:
-        for function in self.functions:
-            if function.is_leader() and function.group.group_admin_id == group.group_admin_id:
-                return True
-        return False
+    @property
+    def permissions(self):
+        # return self.get_all_permissions()
+        return self.get_group_permissions()

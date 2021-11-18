@@ -1,3 +1,4 @@
 from .group_admin_member_service import GroupAdminMemberService
 from .group_admin import GroupAdmin
+from .scouts_authorization_service import ScoutsAuthorizationService
 from .scouts_oidc import ScoutsOIDCAuthenticationBackend

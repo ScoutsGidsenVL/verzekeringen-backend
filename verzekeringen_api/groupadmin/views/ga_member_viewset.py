@@ -1,5 +1,6 @@
 import logging
-from typing import List
+
+from django.conf import settings
 
 from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
@@ -8,7 +9,6 @@ from rest_framework.exceptions import ValidationError
 from drf_yasg2.utils import swagger_auto_schema
 
 from groupadmin.models import (
-    ScoutsGroup,
     ScoutsGroupListResponse,
     ScoutsMember,
     ScoutsMemberListResponse,
@@ -19,9 +19,9 @@ from groupadmin.serializers import (
     ScoutsMemberFrontendSerializer,
     ScoutsMemberListResponseSerializer,
     ScoutsMemberSearchResponseSerializer,
+    ScoutsUserSerializer,
 )
 from groupadmin.services import GroupAdmin
-from groupadmin.utils import SettingsHelper
 
 
 logger = logging.getLogger(__name__)
@@ -100,7 +100,7 @@ class ScoutsMemberView(viewsets.ViewSet):
         detail=True,
     )
     def view_member_profile_internal(self, request) -> Response:
-        logger.debug("GA: Received request for current user profile")
+        logger.debug("GA: Received request for current user GA member profile")
 
         member: ScoutsMember = self.service.get_member_profile(request.user)
 
@@ -115,7 +115,7 @@ class ScoutsMemberView(viewsets.ViewSet):
         detail=True,
     )
     def view_member_profile(self, request) -> Response:
-        logger.debug("GA: Received request for current user profile")
+        logger.debug("GA: Received request for current user GA member profile")
 
         member: ScoutsMember = self.service.get_member_profile(request.user)
         groups_response: ScoutsGroupListResponse = self.service.get_groups(request.user)
@@ -125,3 +125,18 @@ class ScoutsMemberView(viewsets.ViewSet):
         serializer = ScoutsMemberFrontendSerializer(member)
 
         return Response(serializer.to_representation(member))
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberFrontendSerializer})
+    @action(
+        methods=["GET"],
+        url_path="",
+        detail=True,
+    )
+    def view_user(self, request) -> Response:
+        logger.debug("GA: Received request for current user profile")
+
+        user: settings.AUTH_USER_MODEL = request.user
+
+        serializer = ScoutsUserSerializer(user)
+
+        return Response(serializer.data)

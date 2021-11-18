@@ -1,10 +1,9 @@
+from django.conf import settings
 from django.db import models
-
-from groupadmin.models import ScoutsUser
 
 
 class InsuranceClaimQuerySet(models.QuerySet):
-    def allowed(self, user: ScoutsUser):
+    def allowed(self, user: settings.AUTH_USER_MODEL):
         pass
 
 

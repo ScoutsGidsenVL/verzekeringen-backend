@@ -1,4 +1,4 @@
-role_leader:
+role_section_leader:
   - insurances.list_insuranceclaims                   # View the list of claims
 role_group_leader:
   - insurances.list_insuranceclaims                   # https://redmine.inuits.eu/issues/79995

@@ -11,6 +11,10 @@ class SettingsHelper:
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
     @staticmethod
+    def is_debug() -> List[str]:
+        return getattr(settings, "DEBUG", False)
+
+    @staticmethod
     def get_group_admin_base_url(default_value=None):
         return getattr(settings, "GROUP_ADMIN_BASE_URL", default_value)
 
@@ -47,6 +51,10 @@ class SettingsHelper:
     @staticmethod
     def get_administrator_groups() -> List[str]:
         return settings.KNOWN_ADMIN_GROUPS
+
+    @staticmethod
+    def get_test_groups() -> List[str]:
+        return settings.KNOWN_TEST_GROUPS
 
     @staticmethod
     def get_roles() -> List[str]:

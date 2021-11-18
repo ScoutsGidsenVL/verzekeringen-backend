@@ -140,7 +140,7 @@ class GroupAdmin:
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/vga
     def get_accountable_groups_raw(self, active_user: settings.AUTH_USER_MODEL) -> str:
         """
-        Fetches a list of all groups for which the authenticated user is a leader (VGA).
+        Fetches a list of all groups for which the authenticated user is a groupadmin manager (VGA).
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#groepen-groepen-get-1
         """

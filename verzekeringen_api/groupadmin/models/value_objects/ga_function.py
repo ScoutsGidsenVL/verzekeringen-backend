@@ -76,11 +76,11 @@ class ScoutsFunction:
             self._scouts_function_code = ScoutsFunctionCode(self.code)
         return self._scouts_function_code
 
-    def is_district_commissioner(self) -> bool:
-        return self._parse_function_code().is_district_commissioner()
+    def is_leader(self, group: ScoutsGroup) -> bool:
+        return self._parse_function_code().is_leader() and self.group.group_admin_id == group.group_admin_id
 
     def is_group_leader(self, group: ScoutsGroup) -> bool:
         return self._parse_function_code().is_group_leader() and self.group.group_admin_id == group.group_admin_id
 
-    def is_leader(self, group: ScoutsGroup) -> bool:
-        return self._parse_function_code().is_leader() and self.group.group_admin_id == group.group_admin_id
+    def is_district_commissioner(self) -> bool:
+        return self._parse_function_code().is_district_commissioner()

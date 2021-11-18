@@ -11,6 +11,51 @@ logger = logging.getLogger(__name__)
 
 
 class PermissionService:
+    def populate_roles(self, **kwargs):
+        # Will populate groups and add permissions to them, won't create permissions
+        # these need to be created in models
+        #
+        # The roles.yaml file that links the permissions to the roles, is structured as this:
+        # role_<name of role>:
+        # - <app_label as defined in apps>.<name of permission>
+        #
+        # The permission names should be defined in the Meta class of a Model.
+        # After a makemigrations and migrate, you can then specify the particular permissions that apply in the viewset
+        import importlib.resources as pkg_resources
+
+        roles_package = SettingsHelper.get_authorization_roles_config_package()
+        roles_yaml = SettingsHelper.get_authorization_roles_config_yaml()
+
+        logger.debug(
+            "SCOUTS_AUTH: importing roles and permissions from %s/%s",
+            roles_package,
+            roles_yaml,
+        )
+
+        importlib.import_module(roles_package)
+        yaml_data = pkg_resources.read_text(roles_package, roles_yaml)
+
+        try:
+            groups = yaml.safe_load(yaml_data)
+            for group_name, permissions in groups.items():
+                # @TODO clean groups that no longer have permissions attached
+                group: Group = Group.objects.get_or_create(name=group_name)[0]
+                group_permissions = group.permissions.all()
+
+                permissions = self._purge_group_permissions(group, group_permissions, permissions)
+
+                logger.debug("Adding %d PERMISSIONS to group %s", len(permissions), group_name)
+                for permission in permissions:
+                    self._add_permission_by_name(
+                        group,
+                        permission.get("permission"),
+                        permission.get("codename"),
+                        permission.get("app_label"),
+                    )
+                group.save()
+        except yaml.YAMLError as exc:
+            logger.error("Error while importing permissions groups", exc)
+
     def _purge_group_permissions(
         self, group: Group, group_permissions: List[Permission], permissions: List[str]
     ) -> List[dict]:
@@ -66,47 +111,3 @@ class PermissionService:
             logger.error(
                 "Permission %s with codename %s doesn't exist for app_label %s", permission, codename, app_label
             )
-
-    def populate_roles(self, **kwargs):
-        # Will populate groups and add permissions to them, won't create permissions
-        # these need to be created in models
-        #
-        # The roles.yaml file that links the permissions to the roles, is structured as this:
-        # role_<name of role>:
-        # - <app_label as defined in apps>.<name of permission>
-        #
-        # The permission names should be defined in the Meta class of a Model.
-        # After a makemigrations and migrate, you can then specify the particular permissions that apply in the viewset
-        import importlib.resources as pkg_resources
-
-        roles_package = SettingsHelper.get_authorization_roles_config_package()
-        roles_yaml = SettingsHelper.get_authorization_roles_config_yaml()
-
-        logger.debug(
-            "SCOUTS_AUTH: importing roles and permissions from %s/%s",
-            roles_package,
-            roles_yaml,
-        )
-
-        importlib.import_module(roles_package)
-        yaml_data = pkg_resources.read_text(roles_package, roles_yaml)
-
-        try:
-            groups = yaml.safe_load(yaml_data)
-            for group_name, permissions in groups.items():
-                group: Group = Group.objects.get_or_create(name=group_name)[0]
-                group_permissions = group.permissions.all()
-
-                permissions = self._purge_group_permissions(group, group_permissions, permissions)
-
-                logger.debug("Adding %d PERMISSIONS to group %s", len(permissions), group_name)
-                for permission in permissions:
-                    self._add_permission_by_name(
-                        group,
-                        permission.get("permission"),
-                        permission.get("codename"),
-                        permission.get("app_label"),
-                    )
-                group.save()
-        except yaml.YAMLError as exc:
-            logger.error("Error while importing permissions groups", exc)
