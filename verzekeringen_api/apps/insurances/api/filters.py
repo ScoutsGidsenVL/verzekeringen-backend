@@ -18,7 +18,7 @@ class InsuranceClaimFilter(filters.FilterSet):
 
         year_of_accident = self.request.query_params.get("year", None)
         # 83797
-        groups: list = [group.identifier for group in self.request.user.scouts_groups]
+        groups: list = [group.group_admin_id for group in self.request.user.scouts_groups]
         logger.debug("user: %s", self.request.user)
         logger.debug("user groups: %s", self.request.user.groups)
         logger.debug("groups: [%s]", ", ".join(groups))
