@@ -24,7 +24,7 @@ class ScoutsUser(User):
     #
     group_admin_id: str = models.CharField(max_length=48, db_column="ga_id", blank=True)
     gender: Gender = models.CharField(max_length=16, choices=Gender.choices, default=Gender.UNKNOWN)
-    phone: str = models.CharField(max_length=48, blank=True)
+    phone_number: str = models.CharField(max_length=48, blank=True)
     membership_number: str = models.CharField(max_length=48, blank=True)
     customer_number: str = models.CharField(max_length=48, blank=True)
     birth_date: date = models.DateField(blank=True, null=True)

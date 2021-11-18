@@ -18,7 +18,7 @@ class ScoutsContactSerializer(NonModelSerializer):
             "member": data.pop("oidLid", data.pop("lid", None)),
             "function": data.pop("oidFunctie", data.pop("functie", None)),
             "name": data.pop("naam", None),
-            "phone": data.pop("tel", None),
+            "phone_number": data.pop("tel", None),
             "email": data.pop("email", None),
             "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
@@ -41,7 +41,7 @@ class ScoutsContactSerializer(NonModelSerializer):
         instance.member = validated_data.pop("member", None)
         instance.function = validated_data.pop("function", None)
         instance.name = validated_data.pop("name", None)
-        instance.phone = validated_data.pop("phone", None)
+        instance.phone_number = validated_data.pop("phone_number", None)
         instance.email = validated_data.pop("email", None)
         instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
