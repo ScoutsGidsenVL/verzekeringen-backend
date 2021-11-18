@@ -106,5 +106,4 @@ class ScoutsUser(User):
 
     @property
     def permissions(self):
-        # return self.get_all_permissions()
-        return self.get_group_permissions()
+        return self.get_all_permissions()
