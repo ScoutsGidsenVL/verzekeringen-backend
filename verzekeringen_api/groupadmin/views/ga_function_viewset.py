@@ -32,6 +32,8 @@ class ScoutsFunctionView(viewsets.ViewSet):
         # logger.debug("FUNCTIONS:")
         # for (code, description) in functions_response.get_descriptive_function_codes():
         #     logger.debug("{}: {}".format(code, description))
+        logger.debug("FUNCTIONS:")
+        print(functions_response.get_printable_descriptive_function_codes())
 
         serializer = ScoutsFunctionListResponseSerializer(functions_response)
 

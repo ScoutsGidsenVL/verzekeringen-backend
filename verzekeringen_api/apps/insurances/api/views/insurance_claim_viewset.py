@@ -52,6 +52,9 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         current_permissions = super().get_permissions()
+        logger.debug("CURRENT PERMISSIONS: %s", current_permissions)
+        if self.action == "create":
+            pass
         if self.action == "list":
             current_permissions.append(CustomDjangoPermission("insurances.list_insuranceclaims"))
 

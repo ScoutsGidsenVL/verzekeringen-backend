@@ -107,6 +107,7 @@ class InsuranceClaim(models.Model):
     objects = InsuranceClaimManager()
 
     class Meta:
+        # Basic permissions for claims are added by ExtendedDjangoModelPermission
         permissions = [
             ("add_insuranceclaim_note", "User can add a note to a claim"),
             ("view_insuranceclaim_note", "Administrative users can view a claim note"),
