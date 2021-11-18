@@ -19,7 +19,7 @@ def inuits_vehicle_create(
     trailer: str = VehicleTrailerOption.NO_TRAILER,
 ) -> InuitsVehicle:
     # validate group
-    if group_id not in (group.id for group in created_by.partial_scouts_groups):
+    if group_id not in (group.group_admin_id for group in created_by.scouts_groups):
         raise ValidationError("Given group %s is not a valid group of user" % group_id)
     vehicle = InuitsVehicle(
         type=type,

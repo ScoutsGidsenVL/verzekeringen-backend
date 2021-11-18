@@ -49,7 +49,7 @@ class InsuranceClaimService:
         file=None,
     ) -> InsuranceClaim:
         # validate if person have rights to create claim for this group
-        if group_id not in (group.id for group in created_by.partial_scouts_groups):
+        if group_id not in (group.group_admin_id for group in created_by.scouts_groups):
             raise ValidationError("Given group %s is not a valid group of user" % group_id)
 
         # Assuming that the group_admin_id has been loaded when adding the victim to the claim

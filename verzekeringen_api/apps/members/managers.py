@@ -4,7 +4,7 @@ from django.db import models
 class InuitsNonMemberQuerySet(models.QuerySet):
     # @TODO: is this necessary ?
     def allowed(self, user):
-        user_group_ids = [group.id for group in user.partial_scouts_groups]
+        user_group_ids = [group.group_admin_id for group in user.scouts_groups]
         return self.filter(group_number__in=user_group_ids)
 
 

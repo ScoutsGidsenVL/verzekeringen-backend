@@ -12,7 +12,7 @@ from groupadmin.models import ScoutsGroup, ScoutsAddress
 
 class BaseInsuranceQuerySet(models.QuerySet):
     def allowed(self, user):
-        user_group_ids = [group.id for group in user.partial_scouts_groups]
+        user_group_ids = [group.group_admin_id for group in user.scouts_groups]
         return self.filter(_group_number__in=user_group_ids)
 
     def editable(self):
