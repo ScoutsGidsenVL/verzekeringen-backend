@@ -22,7 +22,7 @@ class ScoutsAddressSerializer(NonModelSerializer):
             "postal_code": data.pop("postcode", None),
             "city": data.pop("gemeente", None),
             "country": data.pop("land", None),
-            "phone": data.pop("telefoon", None),
+            "phone_number": data.pop("telefoon", None),
             "postal_address": data.pop("postadres", None),
             "status": data.pop("status", None),
             "position": ScoutsPositionSerializer().to_internal_value(data.pop("positie", None)),
@@ -52,7 +52,7 @@ class ScoutsAddressSerializer(NonModelSerializer):
         instance.postal_code = validated_data.pop("postal_code", None)
         instance.city = validated_data.pop("city", None)
         instance.country = validated_data.pop("country", None)
-        instance.phone = validated_data.pop("phone", None)
+        instance.phone_number = validated_data.pop("phone_number", None)
         instance.postal_address = validated_data.pop("postal_address", None)
         instance.status = validated_data.pop("status", None)
         instance.position = ScoutsPositionSerializer().create(validated_data.pop("position", None))

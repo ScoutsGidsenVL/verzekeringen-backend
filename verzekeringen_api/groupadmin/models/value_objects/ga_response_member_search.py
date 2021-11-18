@@ -3,6 +3,8 @@ from datetime import date
 
 from groupadmin.models.value_objects import ScoutsResponse, ScoutsLink
 
+from inuits.models import Gender
+
 
 class ScoutsMemberSearchMember:
 
@@ -11,7 +13,8 @@ class ScoutsMemberSearchMember:
     last_name: str
     birth_date: date
     email: str
-    phone: str
+    phone_number: str
+    gender: Gender
     links: List[ScoutsLink]
 
     def __init__(
@@ -21,7 +24,7 @@ class ScoutsMemberSearchMember:
         last_name: str = "",
         birth_date: date = None,
         email: str = "",
-        phone: str = "",
+        phone_number: str = "",
         links: List[ScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
@@ -29,17 +32,20 @@ class ScoutsMemberSearchMember:
         self.last_name = last_name
         self.birth_date = birth_date
         self.email = email
-        self.phone = phone
+        self.phone_number = phone_number
         self.links = links if links else []
 
+    def get_gender(self):
+        return self.gender
+
     def __str__(self):
-        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone({}), links({})".format(
+        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), links({})".format(
             self.group_admin_id,
             self.first_name,
             self.last_name,
             self.birth_date,
             self.email,
-            self.phone,
+            self.phone_number,
             ", ".join(str(link) for link in self.links),
         )
 

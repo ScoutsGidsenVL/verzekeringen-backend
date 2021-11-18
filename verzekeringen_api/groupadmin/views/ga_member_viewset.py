@@ -21,7 +21,7 @@ from groupadmin.serializers import (
     ScoutsMemberSearchResponseSerializer,
     ScoutsUserSerializer,
 )
-from groupadmin.services import GroupAdmin
+from groupadmin.services import GroupAdminMemberService
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 class ScoutsMemberView(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    service = GroupAdmin()
+    service = GroupAdminMemberService()
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberListResponseSerializer})
     @action(methods=["GET"], url_path="", detail=True)
@@ -87,7 +87,9 @@ class ScoutsMemberView(viewsets.ViewSet):
         if not term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        response: ScoutsMemberSearchResponse = self.service.search_member(request.user, term=term, group=group)
+        response: ScoutsMemberSearchResponse = self.service.search_member_filtered(
+            request.user, term=term, group=group
+        )
 
         serializer = ScoutsMemberSearchResponseSerializer(response)
 

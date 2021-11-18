@@ -20,7 +20,7 @@ class ScoutsMemberSearchMemberSerializer(NonModelSerializer):
             "last_name": data.pop("achternaam", None),
             "birth_date": data.pop("geboortedatum", None),
             "email": data.pop("email", None),
-            "phone": data.pop("gsm", None),
+            "phone_number": data.pop("gsm", None),
             "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", None)),
         }
 
@@ -44,7 +44,7 @@ class ScoutsMemberSearchMemberSerializer(NonModelSerializer):
         instance.last_name = validated_data.pop("last_name", None)
         instance.birth_date = validated_data.pop("birth_date", None)
         instance.email = validated_data.pop("email", None)
-        instance.phone = validated_data.pop("phone", None)
+        instance.phone_number = validated_data.pop("phone_number", None)
         instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", None))
 
         remaining_keys = validated_data.keys()

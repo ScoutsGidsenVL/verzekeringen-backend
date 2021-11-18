@@ -1,4 +1,5 @@
 import logging
+from datetime import date, datetime, timedelta
 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import ValidationError
@@ -13,7 +14,8 @@ from apps.members.api.serializers import (
 )
 from apps.members.models import InuitsNonMember
 
-from groupadmin.services import GroupAdmin
+from groupadmin.models import ScoutsMemberSearchResponse
+from groupadmin.services import GroupAdminMemberService
 
 
 logger = logging.getLogger(__name__)
@@ -25,7 +27,7 @@ class PersonSearch(viewsets.GenericViewSet):
     filterset_class = InuitsNonMemberFilter
     ordering_fields = ["id"]
     ordering = ["id"]
-    service = GroupAdmin()
+    service = GroupAdminMemberService()
 
     def get_queryset(self):
         return InuitsNonMember.objects.all().allowed(self.request.user)
@@ -48,8 +50,8 @@ class PersonSearch(viewsets.GenericViewSet):
 
         logger.debug("Searching for member with search term %s", search_term)
 
-        members = self.service.search_member(
-            active_user=request.user, term=search_term, include_inactive=include_inactive
+        members: ScoutsMemberSearchResponse = self.service.search_member_filtered(
+            active_user=request.user, term=search_term
         )
         non_members = self.filter_queryset(self.get_queryset())
         results = [*members, *non_members]

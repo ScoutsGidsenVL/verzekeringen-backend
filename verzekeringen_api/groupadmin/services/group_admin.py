@@ -345,9 +345,7 @@ class GroupAdmin:
 
         return json_data
 
-    def search_member(
-        self, active_user: settings.AUTH_USER_MODEL, term: str, group: str = None
-    ) -> ScoutsMemberSearchResponse:
+    def search_member(self, active_user: settings.AUTH_USER_MODEL, term: str) -> ScoutsMemberSearchResponse:
         json_data = self.search_member_raw(active_user, term)
 
         serializer = ScoutsMemberSearchResponseSerializer(data=json_data)

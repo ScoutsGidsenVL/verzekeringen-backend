@@ -8,6 +8,7 @@ from groupadmin.models.value_objects import (
     ScoutsLink,
     ScoutsGroup,
     ScoutsGroupSpecificField,
+    ScoutsMemberSearchMember,
 )
 
 from inuits.models import Gender, GenderHelper
@@ -16,14 +17,14 @@ from inuits.models import Gender, GenderHelper
 class ScoutsMemberPersonalData:
 
     gender: Gender
-    phone: str
+    phone_number: str
 
-    def __init__(self, gender: Gender = None, phone: str = ""):
+    def __init__(self, gender: Gender = None, phone_number: str = ""):
         self.gender = gender if gender and isinstance(gender, Gender) else GenderHelper.parse_gender(gender)
-        self.phone = phone
+        self.phone_number = phone_number
 
     def __str__(self):
-        return "gender({}), phone({})".format(self.gender, self.phone)
+        return "gender({}), phone_number({})".format(self.gender, self.phone_number)
 
 
 class ScoutsMemberGroupAdminData:
@@ -98,7 +99,7 @@ class ScoutsMember:
         self.links = links if links else []
 
     def get_gender(self):
-        return self.gender
+        return self.personal_data.gender
 
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]
@@ -122,3 +123,18 @@ class ScoutsMember:
             ", ".join(str(field) for field in self.group_specific_fields),
             ", ".join(str(link) for link in self.links),
         )
+
+    def to_search_member(self) -> ScoutsMemberSearchMember:
+        member = ScoutsMemberSearchMember(
+            group_admin_id=self.group_admin_id,
+            first_name=self.group_admin_data.first_name,
+            last_name=self.group_admin_data.last_name,
+            birth_date=self.group_admin_data.birth_date,
+            email=self.email,
+            phone_number=self.personal_data.phone_number,
+            links=self.links,
+        )
+
+        member.gender = self.get_gender()
+
+        return member

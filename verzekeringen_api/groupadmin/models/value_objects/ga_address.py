@@ -11,7 +11,7 @@ class ScoutsAddress:
     postal_code: str
     city: str
     country: str
-    phone: str
+    phone_number: str
     postal_address: bool
     status: str
     position: ScoutsPosition
@@ -28,7 +28,7 @@ class ScoutsAddress:
         postal_code: str = "",
         city: str = "",
         country: str = "",
-        phone: str = "",
+        phone_number: str = "",
         postal_address: bool = False,
         status: str = "",
         position: ScoutsPosition = None,
@@ -43,7 +43,7 @@ class ScoutsAddress:
         self.postal_code = postal_code
         self.city = city
         self.country = country
-        self.phone = phone
+        self.phone_number = phone_number
         self.postal_address = postal_address
         self.status = status
         self.position = position
@@ -51,7 +51,7 @@ class ScoutsAddress:
         self.description = description
 
     def __str__(self):
-        return "group_admin_id({}), street({}), number({}), letter_box({}), postcode_city({}), postal_code({}), city({}), country({}), phone({}), postal_address({}), status({}), position({}), giscode({}), description({})".format(
+        return "group_admin_id({}), street({}), number({}), letter_box({}), postcode_city({}), postal_code({}), city({}), country({}), phone_number({}), postal_address({}), status({}), position({}), giscode({}), description({})".format(
             self.group_admin_id,
             self.street,
             self.number,
@@ -60,7 +60,7 @@ class ScoutsAddress:
             self.postal_code,
             self.city,
             self.country,
-            self.phone,
+            self.phone_number,
             self.postal_address,
             self.status,
             str(self.position),

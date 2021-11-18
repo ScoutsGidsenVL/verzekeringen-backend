@@ -3,7 +3,6 @@ from .enums import (
 )
 from .value_objects import (
     PostcodeCity,
-    PartialScoutsGroup,
     ScoutsGeoCoordinate,
     ScoutsPosition,
     ScoutsValue,

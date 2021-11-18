@@ -56,7 +56,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
     ) -> settings.AUTH_USER_MODEL:
         user.group_admin_id = member.group_admin_id
         user.gender = member.personal_data.gender
-        user.phone = member.personal_data.phone
+        user.phone_number = member.personal_data.phone_number
         user.membership_number = member.scouts_data.membership_number
         user.customer_number = member.scouts_data.customer_number
         user.birth_date = member.group_admin_data.birth_date

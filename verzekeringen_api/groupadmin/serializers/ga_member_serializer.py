@@ -27,7 +27,7 @@ class ScoutsMemberPersonalDataSerializer(NonModelSerializer):
         if data is None:
             return None
 
-        validated_data: dict = {"gender": data.pop("geslacht", None), "phone": data.pop("gsm", None)}
+        validated_data: dict = {"gender": data.pop("geslacht", None), "phone_number": data.pop("gsm", None)}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
@@ -51,7 +51,7 @@ class ScoutsMemberPersonalDataSerializer(NonModelSerializer):
         instance = ScoutsMemberPersonalData()
 
         instance.gender = GenderHelper.parse_gender(validated_data.pop("gender", None))
-        instance.phone = validated_data.pop("phone", None)
+        instance.phone_number = validated_data.pop("phone_number", None)
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
@@ -208,12 +208,8 @@ class ScoutsMemberFrontendSerializer(NonModelSerializer):
     def to_representation(self, instance: ScoutsMember) -> dict:
         serialized: dict = super().to_representation(instance)
 
-        personal_data = serialized.pop("personal_data")
-        group_admin_data = serialized.pop("group_admin_data")
-        scouts_data = serialized.pop("scouts_data")
-
         serialized["gender"] = instance.personal_data.gender
-        serialized["phone"] = instance.personal_data.phone
+        serialized["phone_number"] = instance.personal_data.phone_number
         serialized["first_name"] = instance.group_admin_data.first_name
         serialized["last_name"] = instance.group_admin_data.last_name
         serialized["birth_date"] = instance.group_admin_data.birth_date

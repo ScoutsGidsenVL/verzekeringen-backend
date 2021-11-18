@@ -1,5 +1,4 @@
 from .postcode_city import PostcodeCity
-from .partial_scouts_group import PartialScoutsGroup
 from .ga_position import ScoutsGeoCoordinate, ScoutsPosition
 from .ga_fields_value import ScoutsValue
 from .ga_link import ScoutsLink
@@ -11,6 +10,10 @@ from .ga_grouping import ScoutsGrouping
 from .ga_function import ScoutsFunction
 from .ga_allowed_calls import ScoutsAllowedCalls
 from .ga_response import ScoutsResponse
+from .ga_response_member_search import (
+    ScoutsMemberSearchMember,
+    ScoutsMemberSearchResponse,
+)
 from .ga_member import (
     ScoutsMemberPersonalData,
     ScoutsMemberGroupAdminData,
@@ -23,5 +26,4 @@ from .ga_response_member_list import (
     ScoutsMemberListMember,
     ScoutsMemberListResponse,
 )
-from .ga_response_member_search import ScoutsMemberSearchMember, ScoutsMemberSearchResponse
 from .ga_medical_flash_card import ScoutsMedicalFlashCard
