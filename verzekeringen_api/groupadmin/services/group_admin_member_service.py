@@ -18,13 +18,17 @@ class GroupAdminMemberService(GroupAdmin):
         term: str,
         group: str = None,
         include_inactive: bool = False,
-    ) -> List[ScoutsMemberSearchMember]:
+    ) -> ScoutsMemberSearchResponse:
         response: ScoutsMemberSearchResponse = self.search_member(active_user, term)
 
         if group:
-            return self.search_member_filtered_by_group(active_user, response, group, include_inactive)
+            return ScoutsMemberSearchResponse(
+                members=self.search_member_filtered_by_group(active_user, response, group, include_inactive)
+            )
         else:
-            return self.search_member_filtered_by_activity(active_user, response, include_inactive)
+            return ScoutsMemberSearchResponse(
+                members=self.search_member_filtered_by_activity(active_user, response, include_inactive)
+            )
 
         if group:
             return self._parse_search_results_for_group(active_user, json, group, include_inactive=include_inactive)
@@ -45,6 +49,8 @@ class GroupAdminMemberService(GroupAdmin):
             for function in member.functions:
                 if function.group == group:
                     results.append(member)
+
+        logger.debug("Found %d member(s) for group %s and include_inactive %s", len(results), group, include_inactive)
 
         return [member.to_search_member() for member in results]
 
@@ -94,6 +100,8 @@ class GroupAdminMemberService(GroupAdmin):
             # The member is still active
             if end_of_activity_period_counter == 0:
                 results.append(member)
+
+        logger.debug("Found %d member(s) with include_inactive %s", len(results), include_inactive)
 
         return [member.to_search_member() for member in results]
 

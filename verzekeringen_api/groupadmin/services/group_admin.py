@@ -165,9 +165,10 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#groepen-groep-get
         """
-        json_data = self.get(self.url_group.format(group_number), active_user)
+        url = self.url_group.format(group_number)
+        json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_group", self.url_group)
+        logger.info("GA CALL: %s (%s)", "get_group", url)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -222,9 +223,10 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#functies-functie-get
         """
-        json_data = self.get(self.url_function.format(function_id), active_user)
+        url = self.url_function.format(function_id)
+        json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_function", self.url_function)
+        logger.info("GA CALL: %s (%s)", "get_function", url)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -270,9 +272,10 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#leden-lid-get
         """
-        json_data = self.get(self.url_member_info.format(group_admin_id), active_user)
+        url = self.url_member_info.format(group_admin_id)
+        json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "get_member_info", self.url_member_info)
+        logger.info("GA CALL: %s (%s)", "get_member_info", url)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -335,9 +338,10 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#zoeken-zoeken-get
         """
-        json_data = self.get(self.url_member_search.format(term), active_user)
+        url = self.url_member_search.format(term)
+        json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "search_member", self.url_member_search)
+        logger.info("GA CALL: %s (%s)", "search_member", url)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data
@@ -359,9 +363,10 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#zoeken-gelijkaardig-zoeken-get
         """
-        json_data = self.get(self.url_member_search_similar.format(first_name, last_name), active_user)
+        url = self.url_member_search_similar.format(first_name, last_name)
+        json_data = self.get(url, active_user)
 
-        logger.info("GA CALL: %s (%s)", "search_similar_member", self.url_member_search_similar)
+        logger.info("GA CALL: %s (%s)", "search_similar_member", url)
         logger.debug("GA RESPONSE: %s", json_data)
 
         return json_data

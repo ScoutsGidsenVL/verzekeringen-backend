@@ -5,8 +5,9 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from apps.members.managers import InuitsNonMemberManager
-from groupadmin.models import PostcodeCity
 from inuits.models import Gender, GenderHelper
+
+from groupadmin.models import PostcodeCity
 
 
 logger = logging.getLogger(__name__)
