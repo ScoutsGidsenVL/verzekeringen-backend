@@ -22,27 +22,6 @@ class InuitsNonMemberTemplateOutputSerializer(serializers.ModelSerializer):
         return obj.get_gender()
 
 
-class PersonOutputSerializer(serializers.Serializer):
-    id = serializers.CharField(required=False)
-    last_name = serializers.CharField()
-    first_name = serializers.CharField()
-    gender = serializers.SerializerMethodField()
-    phone_number = serializers.CharField()
-    email = serializers.EmailField(required=False)
-    birth_date = serializers.DateField()
-    group_admin_id = serializers.CharField(required=False)
-    is_member = serializers.SerializerMethodField()
-
-    def get_is_member(self, obj) -> bool:
-        return type(obj.__class__) in (ScoutsMember.__class__, ScoutsMemberSearchMember.__class__)
-
-    def get_gender(self, obj) -> str:
-        if self.get_is_member(obj):
-            return obj.get_gender()
-        else:
-            return obj.gender
-
-
 # Output
 class MemberNestedOutputSerializer(serializers.ModelSerializer):
     class Meta:

@@ -9,13 +9,11 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.members.api.filters import InuitsNonMemberFilter
-from apps.members.api.serializers import (
-    PersonOutputSerializer,
-)
 from apps.members.models import InuitsNonMember
 
 from groupadmin.models import ScoutsMemberSearchResponse
 from groupadmin.services import GroupAdminMemberService
+from groupadmin.serializers import ScoutsMemberSearchFrontendSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -32,12 +30,12 @@ class PersonSearch(viewsets.GenericViewSet):
     def get_queryset(self):
         return InuitsNonMember.objects.all().allowed(self.request.user)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: PersonOutputSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer})
     def list(self, request):
         return self._list(request=request)
 
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: PersonOutputSerializer},
+        responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer},
     )
     @action(methods=["get"], detail=False, url_path="/inactive")
     def list_with_previous_members(self, request):
@@ -55,6 +53,6 @@ class PersonSearch(viewsets.GenericViewSet):
         )
         non_members = self.filter_queryset(self.get_queryset())
         results = [*members, *non_members]
-        output_serializer = PersonOutputSerializer(results, many=True)
+        output_serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
 
         return Response(output_serializer.data)
