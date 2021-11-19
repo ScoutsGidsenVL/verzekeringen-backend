@@ -29,7 +29,9 @@ urlpatterns = [
     path("ga/allowed_calls", view_allowed_calls, name="ga_allowed_calls"),
     path("ga/members/list/", view_member_list, name="ga_member_list"),
     path("ga/members/search/<str:term>/", view_search_members, name="ga_search_members"),
-    path("ga/members/search/<str:term>/<str:group>/", view_search_members, name="ga_search_members_with_group"),
+    path(
+        "ga/members/search/<str:term>/<str:group_admin_id>/", view_search_members, name="ga_search_members_with_group"
+    ),
     path("ga/members/info/internal/<str:group_admin_id>", view_member_internal, name="ga_member_internal"),
     path("ga/members/info/<str:group_admin_id>", view_member, name="ga_member"),
     path("ga/members/profile/internal", view_member_profile_internal, name="ga_member_profile_internal"),

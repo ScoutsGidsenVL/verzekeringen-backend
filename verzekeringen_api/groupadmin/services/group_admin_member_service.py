@@ -16,30 +16,25 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         active_user: settings.AUTH_USER_MODEL,
         term: str,
-        group: str = None,
+        group_admin_id: str = None,
         include_inactive: bool = False,
     ) -> ScoutsMemberSearchResponse:
         response: ScoutsMemberSearchResponse = self.search_member(active_user, term)
 
-        if group:
+        if group_admin_id:
             return ScoutsMemberSearchResponse(
-                members=self.search_member_filtered_by_group(active_user, response, group, include_inactive)
+                members=self.search_member_filtered_by_group(active_user, response, group_admin_id, include_inactive)
             )
         else:
             return ScoutsMemberSearchResponse(
                 members=self.search_member_filtered_by_activity(active_user, response, include_inactive)
             )
 
-        if group:
-            return self._parse_search_results_for_group(active_user, json, group, include_inactive=include_inactive)
-        else:
-            return self._parse_search_results(active_user, json, include_inactive=include_inactive)
-
     def search_member_filtered_by_group(
         self,
         active_user: settings.AUTH_USER_MODEL,
         response: ScoutsMemberSearchResponse,
-        group: str,
+        group_admin_id: str,
         include_inactive: bool = False,
     ) -> List[ScoutsMemberSearchMember]:
         results = []
@@ -47,10 +42,15 @@ class GroupAdminMemberService(GroupAdmin):
             member: ScoutsMember = self.get_member_info(active_user, partial_member.group_admin_id)
 
             for function in member.functions:
-                if function.group == group:
+                if function.group.group_admin_id == group_admin_id:
                     results.append(member)
 
-        logger.debug("Found %d member(s) for group %s and include_inactive %s", len(results), group, include_inactive)
+        logger.debug(
+            "Found %d member(s) for group_admin_id %s and include_inactive %s",
+            len(results),
+            group_admin_id,
+            include_inactive,
+        )
 
         return [member.to_search_member() for member in results]
 
