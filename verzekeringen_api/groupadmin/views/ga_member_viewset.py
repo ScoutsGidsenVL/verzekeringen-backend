@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from django.conf import settings
 
@@ -12,13 +13,12 @@ from groupadmin.models import (
     ScoutsGroupListResponse,
     ScoutsMember,
     ScoutsMemberListResponse,
-    ScoutsMemberSearchResponse,
 )
 from groupadmin.serializers import (
     ScoutsMemberSerializer,
     ScoutsMemberFrontendSerializer,
+    ScoutsMemberSearchFrontendSerializer,
     ScoutsMemberListResponseSerializer,
-    ScoutsMemberSearchResponseSerializer,
     ScoutsUserSerializer,
 )
 from groupadmin.services import GroupAdminMemberService
@@ -89,11 +89,11 @@ class ScoutsMemberView(viewsets.ViewSet):
         if not term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        response: ScoutsMemberSearchResponse = self.service.search_member_filtered(
+        results: List[ScoutsMember] = self.service.search_member_filtered(
             request.user, term=term, group_admin_id=group_admin_id
         )
 
-        serializer = ScoutsMemberSearchResponseSerializer(response)
+        serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
 
         return Response(serializer.data)
 

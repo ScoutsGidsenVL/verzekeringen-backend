@@ -5,6 +5,7 @@ from groupadmin.models import (
     ScoutsMemberGroupAdminData,
     ScoutsMemberScoutsData,
     ScoutsMember,
+    ScoutsAddress,
 )
 from groupadmin.serializers import (
     ScoutsLinkSerializer,
@@ -204,20 +205,59 @@ class ScoutsMemberSerializer(NonModelSerializer):
         return instance
 
 
-class ScoutsMemberFrontendSerializer(NonModelSerializer):
+class ScoutsMemberSearchFrontendSerializer(NonModelSerializer):
     def to_representation(self, instance: ScoutsMember) -> dict:
-        serialized: dict = super().to_representation(instance)
+        serialized = {}
 
+        serialized["group_admin_id"] = instance.group_admin_id
         serialized["gender"] = instance.personal_data.gender
+        serialized["email"] = instance.email
         serialized["phone_number"] = instance.personal_data.phone_number
         serialized["first_name"] = instance.group_admin_data.first_name
         serialized["last_name"] = instance.group_admin_data.last_name
         serialized["birth_date"] = instance.group_admin_data.birth_date
         serialized["membership_number"] = instance.scouts_data.membership_number
         serialized["customer_number"] = instance.scouts_data.customer_number
-        serialized["postcode_city"] = {
-            "city": instance.addresses[0].city,
-            "postcode": instance.addresses[0].postal_code,
-        }
+
+        if instance.addresses and len(instance.addresses) > 0:
+            address: ScoutsAddress = instance.addresses[0]
+            serialized["street"] = address.street
+            serialized["number"] = address.number
+            serialized["letter_box"] = address.letter_box
+            serialized["postcode_city"] = {
+                "city": address.city,
+                "postcode": address.postal_code,
+            }
+        # @TODO this should not be here
+        serialized["is_member"] = True
+
+        return serialized
+
+
+class ScoutsMemberFrontendSerializer(NonModelSerializer):
+    def to_representation(self, instance: ScoutsMember) -> dict:
+        serialized: dict = super().to_representation(instance)
+
+        serialized["group_admin_id"] = instance.group_admin_id
+        serialized["gender"] = instance.personal_data.gender
+        serialized["email"] = instance.email
+        serialized["phone_number"] = instance.personal_data.phone_number
+        serialized["first_name"] = instance.group_admin_data.first_name
+        serialized["last_name"] = instance.group_admin_data.last_name
+        serialized["birth_date"] = instance.group_admin_data.birth_date
+        serialized["membership_number"] = instance.scouts_data.membership_number
+        serialized["customer_number"] = instance.scouts_data.customer_number
+
+        if instance.addresses and len(instance.addresses) > 0:
+            address: ScoutsAddress = instance.addresses[0]
+            serialized["street"] = address.street
+            serialized["number"] = address.number
+            serialized["letter_box"] = address.letter_box
+            serialized["postcode_city"] = {
+                "city": address.city,
+                "postcode": address.postal_code,
+            }
+        # @TODO this should not be here
+        serialized["is_member"] = True
 
         return serialized
