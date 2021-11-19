@@ -3,7 +3,6 @@ from datetime import date, datetime
 
 from groupadmin.models.value_objects import ScoutsGroup, ScoutsGrouping, ScoutsLink
 from groupadmin.models.enums import ScoutsFunctionCode
-from groupadmin.utils import SettingsHelper
 
 
 class ScoutsFunction:

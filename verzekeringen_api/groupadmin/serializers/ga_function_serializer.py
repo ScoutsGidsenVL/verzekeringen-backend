@@ -4,6 +4,7 @@ from groupadmin.models import ScoutsFunction
 from groupadmin.serializers import ScoutsLinkSerializer, ScoutsGroupSerializer, ScoutsGroupingSerializer
 
 from inuits.serializers import NonModelSerializer
+from inuits.utils import DateUtils
 
 
 logger = logging.getLogger(__name__)
@@ -23,8 +24,8 @@ class ScoutsFunctionSerializer(NonModelSerializer):
                 [{"id": group} for group in data.pop("groepen", [])]
             ),
             "groupings": ScoutsGroupingSerializer(many=True).to_internal_value(data.pop("groeperingen", [])),
-            "begin": data.pop("begin", None),
-            "end": data.pop("einde", None),
+            "begin": DateUtils.datetime_from_isoformat(data.pop("begin", None)),
+            "end": DateUtils.datetime_from_isoformat(data.pop("einde", None)),
             "max_birth_date": data.pop("uiterstegeboortedatum", None),
             "code": data.pop("code", None),
             "description": data.pop("omschrijving", data.pop("beschrijving", None)),
@@ -55,9 +56,11 @@ class ScoutsFunctionSerializer(NonModelSerializer):
         instance.function = validated_data.pop("function", None)
         instance.groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("groups", []))
         instance.groupings = ScoutsGroupingSerializer(many=True).create(validated_data.pop("groupings", []))
+        # instance.begin = DateUtils.datetime_from_isoformat(validated_data.pop("begin", None))
+        # instance.end = DateUtils.datetime_from_isoformat(validated_data.pop("end", None))
         instance.begin = validated_data.pop("begin", None)
         instance.end = validated_data.pop("end", None)
-        instance.max_birth_date = validated_data.pop("max_birth_date", None)
+        instance.max_birth_date = DateUtils.date_from_isoformat(validated_data.pop("max_birth_date", None))
         instance.code = validated_data.pop("code", None)
         instance.description = validated_data.pop("description", None)
         instance.adjunct = validated_data.pop("adjunct", None)

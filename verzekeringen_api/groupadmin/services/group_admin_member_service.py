@@ -68,12 +68,18 @@ class GroupAdminMemberService(GroupAdmin):
                 if was_active:
                     break
 
-                end_of_activity_period = function.end
+                end_of_activity_period: datetime = function.end
 
                 # Member has ended an activity for at least one function, examine
                 if end_of_activity_period:
                     # An end date of a function was registered in the member record
                     end_of_activity_period_counter = end_of_activity_period_counter + 1
+                    from inuits.utils import DateUtils
+
+                    logger.debug("DATE: %s", isinstance(end_of_activity_period, date))
+                    logger.debug("DATETIME: %s", isinstance(end_of_activity_period, datetime))
+
+                    # end_of_activity_period = DateUtils.datetime_from_isoformat(end_of_activity_period).date()
                     end_of_activity_period = end_of_activity_period.date()
 
                     # Was the end date of the activity after the activity epoch ?

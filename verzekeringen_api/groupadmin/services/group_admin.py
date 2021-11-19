@@ -14,7 +14,6 @@ from groupadmin.models import (
     ScoutsMemberSearchResponse,
     ScoutsMember,
     ScoutsMemberListResponse,
-    ScoutsUser,
 )
 from groupadmin.serializers import (
     ScoutsAllowedCallsSerializer,
@@ -25,8 +24,6 @@ from groupadmin.serializers import (
     ScoutsMemberSearchResponseSerializer,
     ScoutsMemberListResponseSerializer,
     ScoutsMemberSerializer,
-    ScoutsMemberFrontendSerializer,
-    ScoutsUserSerializer,
 )
 
 from groupadmin.utils import SettingsHelper

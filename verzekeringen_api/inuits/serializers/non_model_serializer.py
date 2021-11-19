@@ -1,4 +1,5 @@
-import logging, inspect
+import logging
+from datetime import date, datetime
 
 from rest_framework import serializers
 
@@ -52,6 +53,8 @@ class NonModelSerializer(serializers.BaseSerializer):
                     output[attribute_name] = {
                         str(key): NonModelSerializer().to_representation(value) for key, value in attribute.items()
                     }
+            elif isinstance(attribute, date) or isinstance(attribute, datetime):
+                output[attribute_name] = str(attribute)
             elif hasattr(attribute, "__class__"):
                 output[attribute_name] = NonModelSerializer().to_representation(attribute)
             else:
