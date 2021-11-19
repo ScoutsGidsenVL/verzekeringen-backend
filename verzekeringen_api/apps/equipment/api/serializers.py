@@ -15,7 +15,7 @@ from apps.equipment.models import InuitsVehicle, InuitsEquipment, Equipment, Veh
 from apps.equipment.enums import VehicleType, VehicleTrailerOption
 from apps.equipment.utils import Vehicle
 
-from groupadmin.serializers import ScoutsMemberDetailSerializer
+from groupadmin.serializers import ScoutsMemberSearchFrontendSerializer
 from groupadmin.services import GroupAdmin
 
 
@@ -124,12 +124,12 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             "owner_member",
         )
 
-    @swagger_serializer_method(serializer_or_field=ScoutsMemberDetailSerializer)
+    @swagger_serializer_method(serializer_or_field=ScoutsMemberSearchFrontendSerializer)
     def get_owner_member(self, obj):
         if not obj.owner_member_group_admin_id:
             return None
         request = self.context.get("request", None)
-        return ScoutsMemberDetailSerializer(
+        return ScoutsMemberSearchFrontendSerializer(
             GroupAdmin().get_member_info(active_user=request.user, group_admin_id=obj.owner_member_group_admin_id)
         ).data
 
