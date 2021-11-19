@@ -5,7 +5,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 from apps.members.managers import InuitsNonMemberManager
-from apps.locations.utils import PostcodeCity
+from groupadmin.models import PostcodeCity
 from inuits.models import Gender, GenderHelper
 
 

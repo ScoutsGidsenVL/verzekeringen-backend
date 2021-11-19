@@ -2,8 +2,9 @@ from datetime import datetime
 
 from django.conf import settings
 
-from apps.locations.utils import PostcodeCity
 from apps.members.models import Member, NonMember, NonMemberInuitsTemplate, InuitsNonMember
+
+from groupadmin.models import PostcodeCity
 
 
 class MemberService:

@@ -2,10 +2,11 @@ from decimal import Decimal
 
 from django.db import transaction
 
-from apps.locations.utils import PostcodeCity
 from apps.insurances.models import ActivityInsurance, InsuranceType, CostVariable
 from apps.insurances.models.enums import GroupSize
 from apps.insurances.services import BaseInsuranceService
+
+from groupadmin.models import PostcodeCity
 
 
 class ActivityInsuranceService:

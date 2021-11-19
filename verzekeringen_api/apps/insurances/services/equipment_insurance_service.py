@@ -4,9 +4,10 @@ from django.db import transaction
 
 from apps.equipment.services import EquipmentService
 from apps.equipment.models import Equipment
-from apps.locations.utils import PostcodeCity
 from apps.insurances.models import EquipmentInsurance, InsuranceType, CostVariable
 from apps.insurances.services import BaseInsuranceService
+
+from groupadmin.models import PostcodeCity
 
 
 class EquipmentInsuranceService:

@@ -1,8 +1,9 @@
 from django.db import models
 
-from apps.locations.utils import PostcodeCity
 from apps.insurances.models.base_insurance import BaseInsurance
 from apps.insurances.models.enums import EventSize
+
+from groupadmin.models import PostcodeCity
 
 
 class EventInsurance(BaseInsurance):

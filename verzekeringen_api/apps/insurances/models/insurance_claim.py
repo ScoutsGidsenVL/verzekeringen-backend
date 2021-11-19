@@ -7,10 +7,9 @@ from jsonfield import JSONField
 
 from apps.insurances.managers import InsuranceClaimManager
 
-from apps.locations.utils import PostcodeCity, Address
 from apps.members.models import InuitsNonMember
 
-from groupadmin.models import ScoutsUser, ScoutsMember
+from groupadmin.models import ScoutsUser, ScoutsMember, PostcodeCity, ScoutsAddress
 from groupadmin.services import GroupAdmin
 
 from inuits.models import Gender
@@ -61,7 +60,7 @@ class InsuranceClaimVictim(models.Model):
 
     @property
     def address(self):
-        return Address(
+        return ScoutsAddress(
             street=self.street, number=self.number, letter_box=self.letter_box, postcode_city=self.postcode_city
         )
 

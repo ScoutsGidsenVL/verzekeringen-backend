@@ -56,7 +56,7 @@ class ScoutsAddress:
             self.street,
             self.number,
             self.letter_box,
-            self.postcode_city,
+            str(self.postcode_city),
             self.postal_code,
             self.city,
             self.country,

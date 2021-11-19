@@ -3,8 +3,9 @@ from datetime import datetime
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from apps.locations.utils import PostcodeCity
 from apps.members.models import InuitsNonMember
+
+from groupadmin.models import PostcodeCity
 
 
 class InuitsMemberService:

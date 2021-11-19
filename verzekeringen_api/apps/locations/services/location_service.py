@@ -2,7 +2,7 @@ import requests
 
 from django.conf import settings
 
-from apps.locations.utils import PostcodeCity
+from groupadmin.models import PostcodeCity
 
 
 def belgian_postcode_city_search(term: str) -> list:

@@ -1,7 +1,9 @@
 import logging
 
-from groupadmin.models import ScoutsAddress
-from groupadmin.serializers import ScoutsPositionSerializer
+from groupadmin.models import ScoutsAddress, PostcodeCity
+
+# @TODO remove PostcodeCity crap
+from groupadmin.serializers import ScoutsPositionSerializer, BelgianPostcodeCitySerializer
 
 from inuits.serializers import NonModelSerializer
 
@@ -29,6 +31,10 @@ class ScoutsAddressSerializer(NonModelSerializer):
             "giscode": data.pop("giscode", None),
             "description": data.pop("omschrijving", None),
         }
+
+        validated_data["postcode_city"] = BelgianPostcodeCitySerializer(
+            {"postcode": validated_data.get("postal_code"), "city": validated_data.get("city")}
+        )
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
@@ -58,6 +64,8 @@ class ScoutsAddressSerializer(NonModelSerializer):
         instance.position = ScoutsPositionSerializer().create(validated_data.pop("position", None))
         instance.giscode = validated_data.pop("giscode", None)
         instance.description = validated_data.pop("description", None)
+
+        instance.postcode_city = PostcodeCity(postcode=instance.postal_code, name=instance.city)
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -3,8 +3,9 @@ from django.core.exceptions import ValidationError
 
 from apps.members.models import NonMember
 from apps.locations.models import Country
-from apps.locations.utils import PostcodeCity
 from apps.insurances.models import BaseInsurance
+
+from groupadmin.models import PostcodeCity
 
 
 class TemporaryInsurance(BaseInsurance):
