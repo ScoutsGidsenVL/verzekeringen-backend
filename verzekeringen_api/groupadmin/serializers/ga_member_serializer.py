@@ -228,6 +228,11 @@ class ScoutsMemberSearchFrontendSerializer(NonModelSerializer):
                 "city": address.city,
                 "postcode": address.postal_code,
             }
+        else:
+            serialized["street"] = None
+            serialized["number"] = None
+            serialized["letter_box"] = None
+            serialized["postcode_city"] = None
         # @TODO this should not be here
         serialized["is_member"] = True
 
