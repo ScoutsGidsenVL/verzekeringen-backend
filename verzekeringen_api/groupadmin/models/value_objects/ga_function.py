@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from datetime import date, datetime
 
 from groupadmin.models.value_objects import ScoutsGroup, ScoutsGrouping, ScoutsLink
@@ -22,6 +22,9 @@ class ScoutsFunction:
     links: List[ScoutsLink]
 
     _scouts_function_code: ScoutsFunctionCode = None
+    groups_section_leader: Dict[str,bool]
+    groups_group_leader: Dict[str,bool]
+    is_district_commissioner: bool = False
 
     def __init__(
         self,
@@ -38,6 +41,8 @@ class ScoutsFunction:
         description: str = "",
         adjunct: str = "",
         links: List[ScoutsLink] = None,
+        groups_section_leader: Dict[str,bool] = None,
+        groups_group_leader: Dict[str,bool] = None,
     ):
         self.group_admin_id = group_admin_id
         self.type = type
@@ -52,6 +57,8 @@ class ScoutsFunction:
         self.description = description
         self.adjunct = adjunct
         self.links = links if links else []
+        self.groups_section_leader = groups_section_leader if groups_section_leader else {}
+        self.groups_group_leader = groups_group_leader if groups_group_leader else {}
 
     def __str__(self):
         return "group_admin_id ({}), type ({}), group({}), function({}), groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
@@ -76,8 +83,8 @@ class ScoutsFunction:
         return self._scouts_function_code
 
     def is_section_leader(self, group: ScoutsGroup) -> bool:
-        return self._parse_function_code().is_section_leader() and self.group.group_admin_id == group.group_admin_id
-
+        return self.groups_section_leader.get(group.group_admin_id, False)
+    
     def is_group_leader(self, group: ScoutsGroup) -> bool:
         return self._parse_function_code().is_group_leader() and self.group.group_admin_id == group.group_admin_id
 

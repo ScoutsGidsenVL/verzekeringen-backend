@@ -344,6 +344,14 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(
+        request_body=,
+        response={status.HTTP_201_CREATED: }
+    )
+    @action(methods=["post"], detail=False, url_path="event")
+    def add_participant_list_to_event(self, request):
+        pass
+
+    @swagger_auto_schema(
         request_body=EventInsuranceCreateInputSerializer,
         responses={status.HTTP_201_CREATED: InsuranceCostOutputSerializer},
     )

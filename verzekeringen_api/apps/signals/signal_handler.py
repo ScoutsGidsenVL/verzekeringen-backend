@@ -36,7 +36,12 @@ class InsuranceSignalHandler:
         This method handles a signal for the basic oidc authentication, then makes the necessary additional calls.
         """
         logger.debug("SIGNAL received: 'authenticated' from %s", ScoutsAuthSignalSender.sender)
+        
+        service = ScoutsAuthorizationService()
 
-        ScoutsAuthorizationService().load_user_scouts_groups(user)
+        logger.debug("SIGNAL handling for 'authenticated' -> Loading additional user groups")
+        service.load_user_scouts_groups(user)
+        logger.debug("SIGNAL handling for 'authenticated' -> Loading scouts functions")
+        service.load_user_functions(user)
 
         return user

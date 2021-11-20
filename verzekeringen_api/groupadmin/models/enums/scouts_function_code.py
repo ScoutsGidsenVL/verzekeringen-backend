@@ -8,11 +8,6 @@ class ScoutsFunctionCode:
     ADJUNCT_DISCTRICT_COMMISSIONER = "ADC"
     DISTRICT_COMMISSIONER_TEAM = "DPL"
 
-    SECTION_LEADER = ""
-
-    # MATERIAL_MASTER = "MM"
-    # ADJUNCT_MATERIAL_MASTER = "AMM"
-
     UNKNOWN = ""
 
     code: str
@@ -21,9 +16,6 @@ class ScoutsFunctionCode:
         if not code or len(code) == 0:
             code = self.UNKNOWN
         self.code = code
-
-    def is_section_leader(self):
-        return self in (self.SECTION_LEADER)
 
     def is_group_leader(self):
         return self in (self.GROUP_LEADER, self.ADJUNCT_GROUP_LEADER, self.GROUP_LEADER_TEAM)

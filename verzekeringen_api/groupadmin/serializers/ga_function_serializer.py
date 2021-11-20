@@ -56,8 +56,6 @@ class ScoutsFunctionSerializer(NonModelSerializer):
         instance.function = validated_data.pop("function", None)
         instance.groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("groups", []))
         instance.groupings = ScoutsGroupingSerializer(many=True).create(validated_data.pop("groupings", []))
-        # instance.begin = DateUtils.datetime_from_isoformat(validated_data.pop("begin", None))
-        # instance.end = DateUtils.datetime_from_isoformat(validated_data.pop("end", None))
         instance.begin = validated_data.pop("begin", None)
         instance.end = validated_data.pop("end", None)
         instance.max_birth_date = DateUtils.date_from_isoformat(validated_data.pop("max_birth_date", None))

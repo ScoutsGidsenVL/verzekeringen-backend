@@ -73,7 +73,7 @@ class ScoutsUser(User):
         Determines if the user is a section leader based on a function in the specified group
         """
         for function in self.functions:
-            if function.is_section_leader() and function.group.group_admin_id == group.group_admin_id:
+            if function.is_section_leader(group):
                 return True
         return False
 
@@ -82,7 +82,7 @@ class ScoutsUser(User):
         Determines if the user is a group leader based on a function in the specified group
         """
         for function in self.functions:
-            if function.is_group_leader() and function.group.group_admin_id == group.group_admin_id:
+            if function.is_group_leader(group):
                 return True
         return False
 
@@ -92,9 +92,8 @@ class ScoutsUser(User):
         """
         for function in self.functions:
             if function.is_district_commissioner():
-                self.is_district_commissioner = True
-                break
-        return self.is_district_commissioner
+                return True
+        return False
 
     def has_role_administrator(self) -> bool:
         """

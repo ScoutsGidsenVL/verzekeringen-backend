@@ -30,6 +30,7 @@ router.register(
     TemporaryVehicleInsuranceOptionApiViewSet,
     "VehicleInsuranceOption",
 )
+router.register(r"events/participants", InsuranceEvent)
 router.register(r"files", InsuranceClaimAttachmentViewSet, "Files")
 
 

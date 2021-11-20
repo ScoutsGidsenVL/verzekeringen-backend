@@ -5,8 +5,8 @@ from django.conf import settings
 
 from scouts_auth.services import AuthorizationService
 
-from groupadmin.models import ScoutsGroup
-from groupadmin.services import GroupAdmin
+from groupadmin.models import ScoutsGroup, ScoutsFunction
+from groupadmin.services import GroupAdminMemberService
 from groupadmin.utils import SettingsHelper
 
 
@@ -14,6 +14,20 @@ logger = logging.getLogger(__name__)
 
 
 class ScoutsAuthorizationService(AuthorizationService):
+    """
+    Fetches additional information from groupadmin, required to finetune user permissions.
+
+    For a scouts user, the following sources are required for full authorization:
+    0) Successfull authentication (provides partial scouts groups)
+    1) Full user information, after a groupadmin call to /profiel (the "me" call)
+    2) BASIC PERMISSIONS: Membership of groups, defined in roles.yaml and loaded by PermissionService, after successfull authentication
+        -> load_user_scouts_groups
+    3) ADMINISTRATOR: Membership of administrator groups, after a groupadmin call to /groep
+    4) SECTION LEADER: Section leader status, loaded after a groupadmin call for every function
+        -> load_user_functions
+    5) GROUP LEADER: Group leader status, from the function code in the profile response in 1)
+    6) DISCTRICT COMMISSIONER: District commissioner status, from the function code in the profile response in 1)
+    """
 
     USER = "role_user"
     SECTION_LEADER = "role_section_leader"
@@ -22,11 +36,11 @@ class ScoutsAuthorizationService(AuthorizationService):
     ADMINISTRATOR = "role_administrator"
 
     known_roles = [USER, SECTION_LEADER, GROUP_LEADER, DISTRICT_COMMISSIONER, ADMINISTRATOR]
+    
+    service = GroupAdminMemberService()
 
     def load_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        service = GroupAdmin()
-
-        scouts_groups: List[ScoutsGroup] = service.get_groups(active_user=user).groups
+        scouts_groups: List[ScoutsGroup] = self.service.get_groups(active_user=user).groups
 
         user.scouts_groups = scouts_groups
 
@@ -44,7 +58,7 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         user.full_clean()
         user.save()
-
+        
         permissions = user.get_all_permissions()
         logger.debug("PERMISSIONS: %s", permissions)
         logger.debug("GROUPS: %s", user.groups.all())
@@ -81,4 +95,19 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         super().add_user_to_group(user, group_name=role)
 
+        return user
+
+    def load_user_functions(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+        functions: List[ScoutsFunction] = self.service.get_functions(active_user=user).functions
+        for user_function in user.functions:
+            for function in functions:
+                if function.id == user_function.function:
+                    for grouping in function.groupings:
+                        if grouping.name == SettingsHelper.get_section_leader_identifier():
+                            logger.debug("Setting user as section leader for group %s", user_function.group.group_admin_id)
+                            user_function.groups_section_leader[user_function.group.group_admin_id: True]
+        
+        user.full_clean()
+        user.save()
+        
         return user
