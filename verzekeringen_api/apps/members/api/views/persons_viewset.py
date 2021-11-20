@@ -40,8 +40,12 @@ class PersonSearch(viewsets.GenericViewSet):
     @action(methods=["get"], detail=False, url_path="/inactive")
     def list_with_previous_members(self, request):
         return self._list(request=request, include_inactive=True)
+    
+    @action(methods=["get"], detail=False, url_path="insured/(?P<start>\w+)(?P<end>\w+")
+    def list_insured_non_members(self, request):
+        pass
 
-    def _list(self, request, include_inactive: bool = False):
+    def _list(self, request, start: datetime, end: datetime):
         search_term = self.request.GET.get("term", None)
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")

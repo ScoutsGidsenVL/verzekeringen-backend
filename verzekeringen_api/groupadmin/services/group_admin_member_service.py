@@ -16,23 +16,23 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         active_user: settings.AUTH_USER_MODEL,
         term: str,
-        group_admin_id: str = None,
+        group_group_admin_id: str = None,
         include_inactive: bool = False,
     ) -> List[ScoutsMember]:
         response: ScoutsMemberSearchResponse = self.search_member(active_user, term)
 
         logger.debug("GA returned a list of %d member(s) for search term %s", len(response.members), term)
 
-        if group_admin_id:
+        if group_group_admin_id:
             members: List[ScoutsMember] = self.search_member_filtered_by_group(
-                active_user, response, group_admin_id, include_inactive
+                active_user, response, group_group_admin_id, include_inactive
             )
 
             logger.debug(
                 "Found %d member(s) for search term %s, group_admin_id %s and include_inactive %s",
                 len(members),
                 term,
-                group_admin_id,
+                group_group_admin_id,
                 include_inactive,
             )
 
@@ -46,7 +46,7 @@ class GroupAdminMemberService(GroupAdmin):
                 "Found %d member(s) for search_term %s, group_admin_id %s and include_inactive %s",
                 len(members),
                 term,
-                group_admin_id,
+                group_group_admin_id,
                 include_inactive,
             )
 
@@ -56,7 +56,7 @@ class GroupAdminMemberService(GroupAdmin):
         self,
         active_user: settings.AUTH_USER_MODEL,
         response: ScoutsMemberSearchResponse,
-        group_admin_id: str,
+        group_group_admin_id: str,
         include_inactive: bool = False,
     ) -> List[ScoutsMember]:
         results = []
@@ -64,11 +64,10 @@ class GroupAdminMemberService(GroupAdmin):
             member: ScoutsMember = self.get_member_info(active_user, partial_member.group_admin_id)
 
             for function in member.functions:
-                if function.group.group_admin_id == group_admin_id:
+                if function.group.group_admin_id == group_group_admin_id:
                     results.append(member)
                     break
 
-        # return [member.to_search_member() for member in results]
         return results
 
     def search_member_filtered_by_activity(
@@ -118,7 +117,6 @@ class GroupAdminMemberService(GroupAdmin):
             if end_of_activity_period_counter == 0:
                 results.append(member)
 
-        # return [member.to_search_member() for member in results]
         return results
 
     def _calculate_activity_epoch(self, current_date: date, number_of_years: int) -> date:
