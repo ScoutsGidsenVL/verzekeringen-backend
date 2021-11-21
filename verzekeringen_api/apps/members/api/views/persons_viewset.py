@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.members.api.filters import InuitsNonMemberFilter
-from apps.members.models import InuitsNonMember
+from apps.members.models import InuitsNonMember, InuitsNonMemberTemplate
 
 from groupadmin.models import ScoutsMemberSearchResponse
 from groupadmin.services import GroupAdminMemberService
@@ -28,7 +28,8 @@ class PersonSearch(viewsets.GenericViewSet):
     service = GroupAdminMemberService()
 
     def get_queryset(self):
-        return InuitsNonMember.objects.all().allowed(self.request.user)
+        # return InuitsNonMember.objects.all().allowed(self.request.user)
+        return InuitsNonMemberTemplate.objects.all().allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer})
     def list(self, request):
@@ -40,8 +41,8 @@ class PersonSearch(viewsets.GenericViewSet):
     @action(methods=["get"], detail=False, url_path="/inactive")
     def list_with_previous_members(self, request):
         return self._list(request=request, include_inactive=True)
-    
-    @action(methods=["get"], detail=False, url_path="insured/(?P<start>\w+)(?P<end>\w+")
+
+    @action(methods=["get"], detail=False, url_path="insured/(?P<start>\w+)(?P<end>\w+)")
     def list_insured_non_members(self, request):
         pass
 
@@ -55,6 +56,7 @@ class PersonSearch(viewsets.GenericViewSet):
         members: ScoutsMemberSearchResponse = self.service.search_member_filtered(
             active_user=request.user, term=search_term
         )
+        # Include non-members with a running insurance in the search results
         non_members = self.filter_queryset(self.get_queryset())
         results = [*members, *non_members]
         output_serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
