@@ -7,7 +7,7 @@ from django.core.files.storage import default_storage, FileSystemStorage
 from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
-from apps.insurances.utils import InsuranceClaimFileUtils
+from apps.insurances.utils import InsuranceAttachmentUtils
 from inuits.files import FileUtils
 from groupadmin.models import ScoutsMember
 from groupadmin.services import GroupAdmin
@@ -177,14 +177,14 @@ class InsuranceClaimReportService:
                         property.update(PdfDict(AS=PdfName("087_Andere"), V=PdfName("087_Andere")))
                         property["/Kids"][3].update(PdfDict(AS=PdfName("087_Andere"), V=PdfName("087_Andere")))
 
-        report_filename = InsuranceClaimFileUtils.generate_claim_report_temp_file_name(claim)
+        report_filename = InsuranceAttachmentUtils.generate_claim_report_temp_file_name(claim)
         filename = FileUtils.get_temp_file(filename=report_filename)
         logger.debug("Generating pdf report for claim(%d) and saving it to %s", claim.id, filename)
 
         PdfWriter().write(filename, template)
 
         if self.store_report:
-            report_filename = InsuranceClaimFileUtils.get_claim_base_path() + report_filename
+            report_filename = InsuranceAttachmentUtils.get_claim_base_path() + report_filename
             logger.debug(
                 "STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING is set to True, saving the report (%s) with default_storage to %s",
                 filename,

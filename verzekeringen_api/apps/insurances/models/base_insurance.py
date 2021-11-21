@@ -98,6 +98,9 @@ class BaseInsurance(models.Model):
     def status(self, value):
         self._status = value.value
 
+    def is_accepted(self):
+        return self.status == InsuranceStatus.ACCEPTED or self.status == InsuranceStatus.BILLED
+
     # Create property getter and setters for the boolean charfields so we can use them properly
     @property
     def printed(self):

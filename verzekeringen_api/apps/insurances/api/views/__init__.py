@@ -4,3 +4,4 @@ from .insurance_draft_viewset import InsuranceDraftViewSet
 from .insurance_claim_viewset import InsuranceClaimViewSet
 from .insurance_claim_attachment_viewset import InsuranceClaimAttachmentViewSet
 from .enum_viewsets import *
+from .event_insurance_attachment_viewset import EventInsuranceAttachmentViewSet

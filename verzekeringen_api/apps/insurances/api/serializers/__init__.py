@@ -33,3 +33,7 @@ from .insurance_claim_serializers import (
     InsuranceClaimDetailOutputSerializer,
     InsuranceClaimInputSerializer,
 )
+from .event_insurance_attachment_serializers import (
+    EventInsuranceAttachmentUploadSerializer,
+    EventInsuranceAttachmentSerializer,
+)
