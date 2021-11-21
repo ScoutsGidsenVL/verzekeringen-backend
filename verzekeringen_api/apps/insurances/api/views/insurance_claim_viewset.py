@@ -27,7 +27,6 @@ logger = logging.getLogger(__name__)
 
 class InsuranceClaimViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = InsuranceClaim.objects.all()
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]
     ordering_fields = ["date"]
@@ -40,6 +39,9 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
 
     serializer_class = InsuranceClaimInputSerializer
     parser_classes = [MultipartJsonParser, parsers.JSONParser]
+
+    def get_queryset(self):
+        return InsuranceClaim.objects.all().allowed(self.request.user)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
