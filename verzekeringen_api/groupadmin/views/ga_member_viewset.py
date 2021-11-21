@@ -75,22 +75,22 @@ class ScoutsMemberView(viewsets.ViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberListResponseSerializer})
     @action(
         methods=["GET"],
-        url_path=r"(?:/(?P<term>\w+))?(?:/(?P<group_admin_id>\w+))?",
+        url_path=r"(?:/(?P<term>\w+))?(?:/(?P<group_group_admin_id>\w+))?",
         detail=True,
     )
-    def search_members(self, request, term: str, group_admin_id: str = None) -> Response:
+    def search_members(self, request, term: str, group_group_admin_id: str = None) -> Response:
         logger.debug("GA: Received request to search for members")
         logger.debug(
-            "GA: Member search parameters: term(%s) - group_admin_id(%s)",
+            "GA: Member search parameters: term(%s) - group_group_admin_id(%s)",
             term if term else "",
-            group_admin_id if group_admin_id else "",
+            group_group_admin_id if group_group_admin_id else "",
         )
 
         if not term:
             raise ValidationError("Url param 'term' is a required filter")
 
         results: List[ScoutsMember] = self.service.search_member_filtered(
-            request.user, term=term, group_admin_id=group_admin_id
+            request.user, term=term, group_group_admin_id=group_group_admin_id
         )
 
         serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)

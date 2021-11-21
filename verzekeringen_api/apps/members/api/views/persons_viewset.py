@@ -28,6 +28,7 @@ class PersonSearch(viewsets.GenericViewSet):
     service = GroupAdminMemberService()
 
     def get_queryset(self):
+        # return InuitsNonMember.objects.all().allowed(self.request.user)
         return InuitsNonMember.objects.all().allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer})
@@ -41,17 +42,27 @@ class PersonSearch(viewsets.GenericViewSet):
     def list_with_previous_members(self, request):
         return self._list(request=request, include_inactive=True)
 
-    def _list(self, request, include_inactive: bool = False):
+    @action(methods=["get"], detail=False, url_path="insured/(?P<start>\w+)(?P<end>\w+)")
+    def list_insured_non_members(self, request):
+        pass
+
+    def _list(self, request, start: datetime = None, end: datetime = None):
         search_term = self.request.GET.get("term", None)
+        group = self.request.GET.get("group", None)
+
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        logger.debug("Searching for member with search term %s", search_term)
+        if not group:
+            logger.debug("Searching for members and non-members with search term %s", search_term)
+        else:
+            logger.debug("Searching for members and non-members with term and group %s", group)
 
         members: ScoutsMemberSearchResponse = self.service.search_member_filtered(
-            active_user=request.user, term=search_term
+            active_user=request.user, term=search_term, group_group_admin_id=group
         )
-        non_members = self.filter_queryset(self.get_queryset())
+        # Include non-members with a running insurance in the search results
+        non_members = self.filter_queryset(self.get_queryset().with_group(group))
         results = [*members, *non_members]
         output_serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
 
