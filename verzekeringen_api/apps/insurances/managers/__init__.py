@@ -1,1 +1,1 @@
-from .insurance_claim_managers import InsuranceClaimManager
+from .insurance_claim_manager import InsuranceClaimManager

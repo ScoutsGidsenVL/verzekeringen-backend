@@ -4,16 +4,8 @@ from django.db import models
 
 class InsuranceClaimQuerySet(models.QuerySet):
     def allowed(self, user: settings.AUTH_USER_MODEL):
-        pass
-    
-    def allowed_for_section_leaders(self, user: settings.AUTH_USER_MODEL):
-        pass
-    
-    def allowed_for_group_leaders(self, user: settings.AUTH_USER_MODEL):
-        pass
-    
-    def allowed_for_administrators(self, user: settings.AUTH_USER_MODEL):
-        pass
+        user_group_ids = [group.group_admin_id for group in user.scouts_groups]
+        return self.filter(group_number__in=user_group_ids)
 
 
 class InsuranceClaimManager(models.Manager):
