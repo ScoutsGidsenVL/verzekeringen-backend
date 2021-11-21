@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.members.api.filters import InuitsNonMemberFilter
-from apps.members.models import InuitsNonMember, InuitsNonMemberTemplate
+from apps.members.models import InuitsNonMember
 
 from groupadmin.models import ScoutsMemberSearchResponse
 from groupadmin.services import GroupAdminMemberService
@@ -29,7 +29,7 @@ class PersonSearch(viewsets.GenericViewSet):
 
     def get_queryset(self):
         # return InuitsNonMember.objects.all().allowed(self.request.user)
-        return InuitsNonMemberTemplate.objects.all().allowed(self.request.user)
+        return InuitsNonMember.objects.all().allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer})
     def list(self, request):
@@ -46,18 +46,23 @@ class PersonSearch(viewsets.GenericViewSet):
     def list_insured_non_members(self, request):
         pass
 
-    def _list(self, request, start: datetime, end: datetime):
+    def _list(self, request, start: datetime = None, end: datetime = None):
         search_term = self.request.GET.get("term", None)
+        group = self.request.GET.get("group", None)
+
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        logger.debug("Searching for member with search term %s", search_term)
+        if not group:
+            logger.debug("Searching for members and non-members with search term %s", search_term)
+        else:
+            logger.debug("Searching for members and non-members with term and group %s", group)
 
         members: ScoutsMemberSearchResponse = self.service.search_member_filtered(
-            active_user=request.user, term=search_term
+            active_user=request.user, term=search_term, group_group_admin_id=group
         )
         # Include non-members with a running insurance in the search results
-        non_members = self.filter_queryset(self.get_queryset())
+        non_members = self.filter_queryset(self.get_queryset().with_group(group))
         results = [*members, *non_members]
         output_serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
 

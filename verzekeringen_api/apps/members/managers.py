@@ -10,6 +10,9 @@ class InuitsNonMemberQuerySet(models.QuerySet):
         user_group_ids = [group.group_admin_id for group in user.scouts_groups]
         return self.filter(group_number__in=user_group_ids)
 
+    def with_group(self, group: str):
+        return self.filter(group_number=group)
+
 
 class InuitsNonMemberManager(models.Manager):
     def get_queryset(self):

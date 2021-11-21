@@ -26,9 +26,9 @@ class InuitsNonMemberFilter(FilterSet):
             .annotate(full_name_2=Concat("last_name", Value(" "), "first_name"))
             .filter(Q(full_name_1__icontains=value) | Q(full_name_2__icontains=value))
         )
-    
+
     def search_insurance_start_filter(self, queryset, name, value):
-        pass
-    
+        logger.debug("Filtering non_members with an insurance that started on %s", value)
+
     def search_insurance_end_filter(self, queryset, name, value):
-        logger.debug("Filtering non_members")
+        logger.debug("Filtering non_members with an insurance that ended on %s", value)
