@@ -128,7 +128,7 @@ class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, seria
 
     class Meta:
         model = InsuranceClaim
-        exclude = ("date", "declarant", "group_group_admin_id")
+        exclude = ("date", "declarant")
 
     def create(self, validated_data):
         # Create insurance claim
