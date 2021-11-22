@@ -64,7 +64,7 @@ class GroupAdminMemberService(GroupAdmin):
             member: ScoutsMember = self.get_member_info(active_user, partial_member.group_admin_id)
 
             for function in member.functions:
-                if function.group.group_admin_id == group_group_admin_id:
+                if function.scouts_group.group_admin_id == group_group_admin_id:
                     results.append(member)
                     break
 
