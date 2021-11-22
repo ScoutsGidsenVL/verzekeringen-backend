@@ -77,7 +77,7 @@ base_insurance_detail_fields = (
     "id",
     "status",
     "type",
-    "group",
+    "scouts_group",
     "responsible_member",
     "start_date",
     "end_date",
