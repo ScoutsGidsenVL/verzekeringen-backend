@@ -85,6 +85,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
     victim = InsuranceClaimVictimOutputListSerializer()
     group_group_admin_id = serializers.CharField()
     declarant = serializers.SerializerMethodField()
+    group = serializers.SerializerMethodField()
 
     class Meta:
         model = InsuranceClaim
@@ -106,6 +107,11 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
             active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
         )
         return ScoutsMemberSerializer(data).data
+
+    def get_group(self, obj: InsuranceClaim):
+        return ScoutsGroupSerializer(
+            GroupAdmin().get_group(self.context.get("request").user, obj.group_group_admin_id)
+        ).data
 
 
 class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
