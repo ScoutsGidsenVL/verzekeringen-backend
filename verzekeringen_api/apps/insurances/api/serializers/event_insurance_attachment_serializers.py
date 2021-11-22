@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 class EventInsuranceAttachmentUploadSerializer(serializers.Serializer):
     file = serializers.FileField(required=False)
+    event_insurance = serializers.IntegerField(source="insurance", required=False)
 
     class Meta:
         model = EventInsuranceAttachment
-        fields = ["file", "insurance"]
-        extra_kwargs = {"insurance": {"required": False}}
+        fields = ["file", "event_insurance"]
 
     def validate(self, attrs):
         # There can be only one
