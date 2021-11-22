@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class EventInsuranceAttachmentUploadSerializer(serializers.Serializer):
     file = serializers.FileField(required=False)
-    event_insurance = serializers.IntegerField(source="insurance", required=False)
+    event_insurance = serializers.IntegerField(required=False)
 
     class Meta:
         model = EventInsuranceAttachment
