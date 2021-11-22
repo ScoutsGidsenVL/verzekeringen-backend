@@ -34,6 +34,7 @@ from apps.insurances.models import (
     TemporaryVehicleInsurance,
     EquipmentInsurance,
     EventInsurance,
+    EventInsuranceAttachment,
 )
 from apps.insurances.models.enums import (
     InsuranceStatus,
@@ -42,7 +43,7 @@ from apps.insurances.models.enums import (
     TemporaryVehicleInsuranceOptionApi,
     TemporaryVehicleInsuranceCoverageOption,
 )
-from apps.insurances.api.serializers import InsuranceTypeOutputSerializer
+from apps.insurances.api.serializers import InsuranceTypeOutputSerializer, EventInsuranceAttachmentSerializer
 from groupadmin.serializers import (
     ScoutsGroupSerializer,
     BelgianPostcodeCitySerializer,
@@ -188,19 +189,6 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
         return InuitsVehicleOutputSerializer(vehicle).data
 
 
-class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    location = BelgianPostcodeCitySerializer(source="postcode_city")
-    event_size = serializers.SerializerMethodField()
-
-    class Meta:
-        model = EventInsurance
-        fields = base_insurance_detail_fields + ("nature", "event_size", "location")
-
-    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
-    def get_event_size(self, obj):
-        return EnumOutputSerializer(parse_choice_to_tuple(EventSize(obj.event_size))).data
-
-
 class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     postcode_city = BelgianPostcodeCitySerializer()
     equipment = EquipmentNestedOutputSerializer(many=True)
@@ -293,6 +281,25 @@ class EventInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
     event_size = serializers.ChoiceField(choices=EventSize.choices)
     location = BelgianPostcodeCitySerializer()
+
+
+class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    location = BelgianPostcodeCitySerializer(source="postcode_city")
+    event_size = serializers.SerializerMethodField()
+    participant_list_file = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EventInsurance
+        fields = base_insurance_detail_fields + ("nature", "event_size", "location")
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_event_size(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(EventSize(obj.event_size))).data
+
+    @swagger_serializer_method(serializer_or_field=EventInsuranceAttachmentSerializer)
+    def get_participant_list_file(self, obj):
+        attachment: EventInsuranceAttachment = obj.attachment
+        return EventInsuranceAttachmentSerializer(attachment).data
 
 
 class EquipmentInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
