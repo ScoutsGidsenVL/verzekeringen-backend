@@ -30,7 +30,7 @@ class ScoutsFunction:
         self,
         group_admin_id: str = "",
         type: str = "",
-        scouts_group: ScoutsGroup = "",
+        scouts_group: ScoutsGroup = None,
         function: str = "",
         scouts_groups: List[ScoutsGroup] = None,
         groupings: List[ScoutsGrouping] = None,
@@ -46,8 +46,8 @@ class ScoutsFunction:
     ):
         self.group_admin_id = group_admin_id
         self.type = type
-        self.scouts_group = scouts_group
         self.function = function
+        self.scouts_group = scouts_group
         self.scouts_groups = scouts_groups
         self.groupings = groupings
         self.begin = begin
@@ -77,11 +77,11 @@ class ScoutsFunction:
         return self._parse_function_code().is_district_commissioner()
 
     def __str__(self):
-        return "group_admin_id ({}), type ({}), scouts_group({}), function({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
+        return "group_admin_id ({}), type ({}), function({}), scouts_group({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
             self.group_admin_id,
             self.type,
-            str(self.scouts_group),
             self.function,
+            str(self.scouts_group),
             ", ".join(str(group) for group in self.scouts_groups),
             ", ".join(str(grouping) for grouping in self.groupings),
             self.begin,

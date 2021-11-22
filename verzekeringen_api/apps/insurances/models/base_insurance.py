@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.db import models
+from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from apps.members.models import Member
@@ -11,7 +12,7 @@ from groupadmin.models import ScoutsGroup, ScoutsAddress
 
 
 class BaseInsuranceQuerySet(models.QuerySet):
-    def allowed(self, user):
+    def allowed(self, user: settings.AUTH_USER_MODEL):
         user_group_ids = [group.group_admin_id for group in user.scouts_groups]
         return self.filter(_group_group_admin_id__in=user_group_ids)
 

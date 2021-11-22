@@ -18,7 +18,7 @@ class ScoutsFunctionSerializer(NonModelSerializer):
         validated_data = {
             "group_admin_id": data.pop("id", None),
             "type": data.pop("type", None),
-            "group": ScoutsGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
+            "scouts_group": ScoutsGroupSerializer().to_internal_value({"group_admin_id": data.pop("groep", None)}),
             "function": data.pop("functie", None),
             "scouts_groups": ScoutsGroupSerializer(many=True).to_internal_value(
                 [{"id": group} for group in data.pop("groepen", [])]

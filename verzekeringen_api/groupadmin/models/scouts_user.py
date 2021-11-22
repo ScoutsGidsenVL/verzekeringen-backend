@@ -146,6 +146,7 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # functions
             "{:<24}: {}\n"  # permissions
             "{:<24}: {}\n"  # auth groups
+            "{:<24}: {}\n"  # scouts groups
             "{:<24}: {}\n"  # administrator ?
             "{:<24}: {}\n"  # district commissioner ?
             "{:<24}: {}\n"  # group leader
@@ -180,7 +181,9 @@ class ScoutsUser(User):
             "PERMISSIONS",
             ", ".join(permission for permission in self.get_all_permissions()),
             "AUTH GROUPS",
-            ", ".join(group.name for group in self.scouts_groups.all()),
+            ", ".join(group.name for group in self.groups.all()),
+            "SCOUTS GROUPS",
+            ", ".join((group.name + "(" + group.group_admin_id + ")") for group in self.scouts_groups),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER ?",
