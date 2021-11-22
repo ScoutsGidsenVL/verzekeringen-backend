@@ -83,7 +83,14 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         insurance_claim = self.service.create(
             created_by=request.user, file=file_serializer.validated_data, **serializer.validated_data
         )
-        self.service.email_claim(insurance_claim)
+        try:
+            self.service.email_claim(insurance_claim)
+        except Exception as exc:
+            logger.error("Error while sending insurance claim emails", exc)
+            raise ValidationError(
+                message={"mail": "Error while sending insurance claim emails"},
+                code=406,
+            )
 
         headers = self.get_success_headers(serializer.data)
 

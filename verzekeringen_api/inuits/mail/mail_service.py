@@ -160,6 +160,8 @@ class EmailService:
             # https://redmine.inuits.eu/issues/83311
             logger.error("Mail could not be sent", exc)
 
+            raise exc
+
     def send_send_in_blue_email(
         self,
         subject: str = "",
@@ -188,7 +190,11 @@ class EmailService:
         #     logger.debug("Using template with id %s for SendInBlue mail", template_id)
         #     message.template_id = template_id
 
-        message.send()
+        try:
+            message.send()
+        except Exception as exc:
+            logger.error("Mail could not be sent through SendInBlue", exc)
+            raise exc
 
         # logger.debug("Mail status: %s", message.anymail_status)
         # logger.debug("TYPE: %s", type(message.anymail_status))
