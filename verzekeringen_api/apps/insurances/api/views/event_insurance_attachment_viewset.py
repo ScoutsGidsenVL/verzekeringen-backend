@@ -47,7 +47,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         if not event_insurance_id:
             return HttpResponse(404, "Event insurance instance id not supplied with file upload !")
 
-        event_insurance = EventInsurance.objects.filter(pk=event_insurance_id)
+        event_insurance = EventInsurance.objects.get(pk=event_insurance_id)
         if not event_insurance:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
