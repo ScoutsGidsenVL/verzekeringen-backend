@@ -48,6 +48,8 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         logger.debug("USER PERMISSIONS: %s", user.user_permissions)
 
+        return user
+
     def update_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
         """
         Updates the authenticated user with the groups he/she belongs to.
@@ -58,12 +60,6 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         user.full_clean()
         user.save()
-
-        permissions = user.get_all_permissions()
-        logger.debug("PERMISSIONS: %s", permissions)
-        logger.debug("GROUPS: %s", user.groups.all())
-        logger.debug("ADMINISTRATOR ?: %s", user.is_administrator)
-        logger.debug("DISTRICT_COMMISSIONER ?: %s", user.is_district_commissioner)
 
         return user
 

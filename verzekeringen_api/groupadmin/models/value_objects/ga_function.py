@@ -22,8 +22,8 @@ class ScoutsFunction:
     links: List[ScoutsLink]
 
     _scouts_function_code: ScoutsFunctionCode = None
-    groups_section_leader: Dict[str,bool]
-    groups_group_leader: Dict[str,bool]
+    groups_section_leader: Dict[str, bool]
+    groups_group_leader: Dict[str, bool]
     is_district_commissioner: bool = False
 
     def __init__(
@@ -41,8 +41,8 @@ class ScoutsFunction:
         description: str = "",
         adjunct: str = "",
         links: List[ScoutsLink] = None,
-        groups_section_leader: Dict[str,bool] = None,
-        groups_group_leader: Dict[str,bool] = None,
+        groups_section_leader: Dict[str, bool] = None,
+        groups_group_leader: Dict[str, bool] = None,
     ):
         self.group_admin_id = group_admin_id
         self.type = type
@@ -59,6 +59,20 @@ class ScoutsFunction:
         self.links = links if links else []
         self.groups_section_leader = groups_section_leader if groups_section_leader else {}
         self.groups_group_leader = groups_group_leader if groups_group_leader else {}
+
+    def _parse_function_code(self):
+        if self._scouts_function_code is None:
+            self._scouts_function_code = ScoutsFunctionCode(self.code)
+        return self._scouts_function_code
+
+    def is_section_leader(self, group: ScoutsGroup) -> bool:
+        return self.groups_section_leader.get(group.group_admin_id, False)
+
+    def is_group_leader(self, group: ScoutsGroup) -> bool:
+        return self._parse_function_code().is_group_leader() and self.group.group_admin_id == group.group_admin_id
+
+    def is_district_commissioner(self) -> bool:
+        return self._parse_function_code().is_district_commissioner()
 
     def __str__(self):
         return "group_admin_id ({}), type ({}), group({}), function({}), groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
@@ -77,16 +91,5 @@ class ScoutsFunction:
             ", ".join(str(link) for link in self.links),
         )
 
-    def _parse_function_code(self):
-        if self._scouts_function_code is None:
-            self._scouts_function_code = ScoutsFunctionCode(self.code)
-        return self._scouts_function_code
-
-    def is_section_leader(self, group: ScoutsGroup) -> bool:
-        return self.groups_section_leader.get(group.group_admin_id, False)
-    
-    def is_group_leader(self, group: ScoutsGroup) -> bool:
-        return self._parse_function_code().is_group_leader() and self.group.group_admin_id == group.group_admin_id
-
-    def is_district_commissioner(self) -> bool:
-        return self._parse_function_code().is_district_commissioner()
+    def to_descriptive_string(self):
+        return "{} -> {} ({})".format(self.group.group_admin_id, self.code, self.description)

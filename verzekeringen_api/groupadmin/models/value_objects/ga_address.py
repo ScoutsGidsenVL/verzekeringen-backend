@@ -67,3 +67,8 @@ class ScoutsAddress:
             self.giscode,
             self.description,
         )
+
+    def to_descriptive_string(self):
+        return "{} {} {}, {} {}, {}, {}".format(
+            self.street, self.number, self.letter_box, self.postal_code, self.city, self.country, self.phone_number
+        )
