@@ -30,37 +30,6 @@ class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
         fields = ["id", "first_name", "last_name"]
 
 
-class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
-    date_of_accident = DateTimeTZField()
-    activity_type = serializers.JSONField()
-    victim = InsuranceClaimVictimOutputListSerializer()
-    group = ScoutsGroupSerializer()
-    declarant = serializers.SerializerMethodField()
-
-    class Meta:
-        model = InsuranceClaim
-        fields = (
-            "id",
-            "group_number",
-            "date",
-            "declarant",
-            "declarant",
-            "date_of_accident",
-            "activity",
-            "activity_type",
-            "victim",
-            "group",
-            "note",
-            "case_number",
-        )
-
-    def get_declarant(self, object: InsuranceClaim):
-        data = GroupAdmin().get_member_info(
-            active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
-        )
-        return ScoutsMemberSerializer(data).data
-
-
 class InsuranceClaimVictimOutputDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaimVictim
@@ -110,6 +79,37 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
         return InsuranceClaimVictim(**data)
 
 
+class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
+    date_of_accident = DateTimeTZField()
+    activity_type = serializers.JSONField()
+    victim = InsuranceClaimVictimOutputListSerializer()
+    group = ScoutsGroupSerializer()
+    declarant = serializers.SerializerMethodField()
+
+    class Meta:
+        model = InsuranceClaim
+        fields = (
+            "id",
+            "group_number",
+            "date",
+            "declarant",
+            "declarant",
+            "date_of_accident",
+            "activity",
+            "activity_type",
+            "victim",
+            "group",
+            "note",
+            "case_number",
+        )
+
+    def get_declarant(self, object: InsuranceClaim):
+        data = GroupAdmin().get_member_info(
+            active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
+        )
+        return ScoutsMemberSerializer(data).data
+
+
 class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
     date = DateTimeTZField()
     date_of_accident = DateTimeTZField()
@@ -121,7 +121,7 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
         fields = "__all__"
 
 
-class InsuranceClaimInputSerializer(serializers.ModelSerializer):
+class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
 
     group = serializers.CharField(source="group_id")
     activity_type = serializers.JSONField()
