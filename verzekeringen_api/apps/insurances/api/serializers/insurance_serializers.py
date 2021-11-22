@@ -201,7 +201,7 @@ class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializ
 
 # Input
 class BaseInsuranceCreateInputSerializer(serializers.Serializer):
-    group_admin_id = serializers.CharField(max_length=6)
+    group_group_admin_id = serializers.CharField(max_length=6)
     start_date = DateTimeTZField()
     end_date = DateTimeTZField()
     comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
