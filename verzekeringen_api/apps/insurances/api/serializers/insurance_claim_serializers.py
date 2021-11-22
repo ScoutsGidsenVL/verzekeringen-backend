@@ -100,6 +100,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
             "group_group_admin_id",
             "note",
             "case_number",
+            "group",
         )
 
     def get_declarant(self, object: InsuranceClaim):
