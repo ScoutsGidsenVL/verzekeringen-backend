@@ -8,10 +8,10 @@ class InuitsNonMemberQuerySet(models.QuerySet):
     # @TODO: is this necessary ?
     def allowed(self, user: settings.AUTH_USER_MODEL):
         user_group_ids = [group.group_admin_id for group in user.scouts_groups]
-        return self.filter(group_number__in=user_group_ids)
+        return self.filter(group_group_admin_id__in=user_group_ids)
 
     def with_group(self, group: str):
-        return self.filter(group_number=group)
+        return self.filter(group_group_admin_id=group)
 
 
 class InuitsNonMemberManager(models.Manager):

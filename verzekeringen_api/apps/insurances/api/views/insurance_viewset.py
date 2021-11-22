@@ -44,7 +44,7 @@ from apps.insurances.services import (
 class InsuranceViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    search_fields = ["_group_number"]
+    search_fields = ["_group_group_admin_id"]
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
 

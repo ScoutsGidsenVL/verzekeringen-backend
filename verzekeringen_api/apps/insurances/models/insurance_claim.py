@@ -73,7 +73,7 @@ class InsuranceClaimVictim(models.Model):
 
 
 class InsuranceClaim(models.Model):
-    group_number = models.CharField(max_length=6, null=True)
+    group_group_admin_id = models.CharField(max_length=6, null=True)
     date = models.DateTimeField(blank=True)
     declarant = models.ForeignKey(ScoutsUser, on_delete=models.SET_NULL, null=True, blank=False)
     declarant_city = models.CharField(max_length=30, null=True, blank=True)
@@ -118,7 +118,7 @@ class InsuranceClaim(models.Model):
 
     @property
     def group(self):
-        return GroupAdmin().get_group(self.group_number)
+        return GroupAdmin().get_group(self.group_group_admin_id)
 
     def has_attachment(self):
         return hasattr(self, "attachment")

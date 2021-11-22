@@ -19,14 +19,16 @@ class InuitsMemberService:
         street: str,
         number: str,
         postcode_city: PostcodeCity,
-        group_id: str,
+        group_group_admin_id: str,
         created_by: settings.AUTH_USER_MODEL,
         letter_box: str = "",
         comment: str = "",
     ) -> InuitsNonMember:
         # validate group
-        if group_id not in (group.group_admin_id for group in created_by.scouts_groups):
-            raise ValidationError("Given group %s is not a valid group of user" % group_id)
+        if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
+            raise ValidationError(
+                "Given group {} is not a valid group of user {}", group_group_admin_id, created_by.username
+            )
         non_member = InuitsNonMember(
             last_name=last_name,
             first_name=first_name,
@@ -36,7 +38,7 @@ class InuitsMemberService:
             number=number,
             postcode=int(postcode_city.postcode),
             city=postcode_city.name,
-            group_number=group_id,
+            group_group_admin_id=group_group_admin_id,
             letter_box=letter_box,
             comment=comment,
         )
@@ -55,6 +57,7 @@ class InuitsMemberService:
         non_member.number = fields.get("number", non_member.number)
         non_member.letter_box = fields.get("letter_box", non_member.letter_box)
         non_member.comment = fields.get("comment", non_member.comment)
+        non_member.group_group_admin_id = fields.get("group_group_admin_id", non_member.group_group_admin_id)
 
         if fields.get("postcode_city", None):
             postcode_city = fields.get("postcode_city")

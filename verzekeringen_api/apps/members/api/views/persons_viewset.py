@@ -48,21 +48,21 @@ class PersonSearch(viewsets.GenericViewSet):
 
     def _list(self, request, start: datetime = None, end: datetime = None):
         search_term = self.request.GET.get("term", None)
-        group = self.request.GET.get("group", None)
+        group_group_admin_id = self.request.GET.get("group", None)
 
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        if not group:
+        if not group_group_admin_id:
             logger.debug("Searching for members and non-members with search term %s", search_term)
         else:
-            logger.debug("Searching for members and non-members with term and group %s", group)
+            logger.debug("Searching for members and non-members with term and group %s", group_group_admin_id)
 
         members: ScoutsMemberSearchResponse = self.service.search_member_filtered(
-            active_user=request.user, term=search_term, group_group_admin_id=group
+            active_user=request.user, term=search_term, group_group_admin_id=group_group_admin_id
         )
         # Include non-members with a running insurance in the search results
-        non_members = self.filter_queryset(self.get_queryset().with_group(group))
+        non_members = self.filter_queryset(self.get_queryset().with_group(group_group_admin_id))
         results = [*members, *non_members]
         output_serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
 

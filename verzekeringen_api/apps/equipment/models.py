@@ -82,7 +82,8 @@ class InuitsEquipment(models.Model):
     # Save some group admin id of owner, all detailed info will be gotten from group admin
     owner_member_group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
 
-    group_number = models.CharField(max_length=6)
+    # GroupAdmin id of the group to which the equipment belongs
+    group_group_admin_id = models.CharField(max_length=6)
 
     def clean(self):
         if self.owner_non_member and self.owner_member_group_admin_id:
@@ -106,7 +107,9 @@ class InuitsVehicle(models.Model):
     construction_year = models.DateField()
     chassis_number = models.CharField(max_length=20)
     trailer = models.CharField(choices=VehicleTrailerOption.choices, max_length=1, default="0")
-    group_number = models.CharField(max_length=6)
+
+    # GroupAdmin id of the group to which the vehicle belongs
+    group_group_admin_id = models.CharField(max_length=6)
 
     class Meta:
         constraints = [

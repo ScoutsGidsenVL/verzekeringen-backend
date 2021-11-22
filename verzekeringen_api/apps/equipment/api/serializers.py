@@ -106,6 +106,7 @@ class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
             "nature",
             "description",
             "total_value",
+            "group_group_admin_id",
         )
 
 
@@ -122,6 +123,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             "total_value",
             "owner_non_member",
             "owner_member",
+            "group_group_admin_id",
         )
 
     @swagger_serializer_method(serializer_or_field=ScoutsMemberSearchFrontendSerializer)
@@ -161,7 +163,7 @@ class VehicleWithChassisInputSerializer(VehicleInputSerializer):
 
 
 class InuitsVehicleCreateInputSerializer(VehicleInputSerializer):
-    group = serializers.CharField(source="group_id")
+    group_group_admin_id = serializers.CharField(source="group_group_admin_id")
 
     def validate(self, data):
         return data
@@ -188,7 +190,7 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
             queryset = InuitsNonMember.objects.all().allowed(request.user)
             return queryset
 
-    group = serializers.CharField(source="group_id")
+    group_group_admin_id = serializers.CharField(source="group_group_admin_id")
     owner_member = serializers.CharField(source="owner_member_id", required=False, allow_null=True)
     owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
 

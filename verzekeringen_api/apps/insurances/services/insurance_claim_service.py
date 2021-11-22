@@ -28,7 +28,7 @@ class InsuranceClaimService:
         *,
         created_by: settings.AUTH_USER_MODEL,
         declarant_city: str = None,
-        group_id: str,
+        group_group_admin_id: str,
         bank_account: str = None,
         date_of_accident: datetime,
         activity: str = None,
@@ -49,8 +49,8 @@ class InsuranceClaimService:
         file=None,
     ) -> InsuranceClaim:
         # validate if person have rights to create claim for this group
-        if group_id not in (group.group_admin_id for group in created_by.scouts_groups):
-            raise ValidationError("Given group %s is not a valid group of user" % group_id)
+        if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
+            raise ValidationError("Given group %s is not a valid group of user" % group_group_admin_id)
 
         # Assuming that the group_admin_id has been loaded when adding the victim to the claim
         # @ricardo: check this please
@@ -62,7 +62,7 @@ class InsuranceClaimService:
             date=datetime.now(),
             declarant=created_by,
             declarant_city=declarant_city,
-            group_number=group_id,
+            group_group_admin_id=group_group_admin_id,
             bank_account=bank_account,
             date_of_accident=date_of_accident,
             activity=activity,

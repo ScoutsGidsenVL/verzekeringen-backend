@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 class InsuranceClaimViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
-    search_fields = ["victim__first_name", "victim__last_name", "group_number", "victim__group_admin_id"]
+    search_fields = ["victim__first_name", "victim__last_name", "group_group_admin_id", "victim__group_admin_id"]
     ordering_fields = ["date"]
     ordering = ["-date"]
 

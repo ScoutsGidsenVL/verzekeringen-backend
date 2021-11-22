@@ -107,7 +107,7 @@ class InuitsNonMember(models.Model):
     city = models.CharField(max_length=40)
     comment = models.CharField(max_length=500, blank=True)
     # Keep group number
-    group_number = models.CharField(max_length=6)
+    group_group_admin_id = models.CharField(max_length=6)
     gender = models.CharField(max_length=1, null=True, blank=True, choices=Gender.choices, default=Gender.UNKNOWN)
 
     @property

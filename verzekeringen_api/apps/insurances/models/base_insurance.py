@@ -13,7 +13,7 @@ from groupadmin.models import ScoutsGroup, ScoutsAddress
 class BaseInsuranceQuerySet(models.QuerySet):
     def allowed(self, user):
         user_group_ids = [group.group_admin_id for group in user.scouts_groups]
-        return self.filter(_group_number__in=user_group_ids)
+        return self.filter(_group_group_admin_id__in=user_group_ids)
 
     def editable(self):
         return self.filter(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
@@ -32,7 +32,7 @@ class BaseInsurance(models.Model):
     invoice_number = models.IntegerField(db_column="factuurnr", null=True, blank=True)
     invoice_date = models.DateTimeField(db_column="facturatiedatum", null=True, blank=True)
 
-    _group_number = models.CharField(db_column="groepsnr", max_length=6)
+    _group_group_admin_id = models.CharField(db_column="groepsnr", max_length=6)
     _group_name = models.CharField(db_column="groepsnaam", max_length=50)
     _group_location = models.CharField(db_column="groepsplaats", max_length=50)
 
@@ -77,7 +77,7 @@ class BaseInsurance(models.Model):
     @property
     def group(self):
         return ScoutsGroup(
-            group_admin_id=self._group_number,
+            group_admin_id=self._group_group_admin_id,
             name=self._group_name,
             addresses=[ScoutsAddress(city=self._group_location)],
         )
@@ -85,7 +85,7 @@ class BaseInsurance(models.Model):
     # Special group setter that accepts group class
     @group.setter
     def group(self, value: ScoutsGroup):
-        self._group_number = value.group_admin_id
+        self._group_group_admin_id = value.group_admin_id
         self._group_name = value.name
         self._group_location = value.addresses[0].city
 

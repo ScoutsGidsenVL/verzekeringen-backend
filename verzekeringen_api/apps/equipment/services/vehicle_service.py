@@ -14,20 +14,20 @@ def inuits_vehicle_create(
     license_plate: str,
     construction_year: datetime.date,
     chassis_number: str,
-    group_id: str,
+    group_group_admin_id: str,
     created_by: settings.AUTH_USER_MODEL,
     trailer: str = VehicleTrailerOption.NO_TRAILER,
 ) -> InuitsVehicle:
     # validate group
-    if group_id not in (group.group_admin_id for group in created_by.scouts_groups):
-        raise ValidationError("Given group %s is not a valid group of user" % group_id)
+    if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
+        raise ValidationError("Given group %s is not a valid group of user" % group_group_admin_id)
     vehicle = InuitsVehicle(
         type=type,
         brand=brand,
         license_plate=license_plate,
         construction_year=construction_year,
         chassis_number=chassis_number,
-        group_number=group_id,
+        group_group_admin_id=group_group_admin_id,
         trailer=trailer,
     )
     vehicle.full_clean()

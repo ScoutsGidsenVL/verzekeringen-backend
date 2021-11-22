@@ -90,9 +90,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
         model = InsuranceClaim
         fields = (
             "id",
-            "group_number",
             "date",
-            "declarant",
             "declarant",
             "date_of_accident",
             "activity",
@@ -123,14 +121,14 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
 
 class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
 
-    group = serializers.CharField(source="group_id")
+    group = serializers.CharField(source="group_group_admin_id")
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()
 
     class Meta:
         model = InsuranceClaim
-        exclude = ("date", "declarant", "group_number")
+        exclude = ("date", "declarant", "group_group_admin_id")
 
     def create(self, validated_data):
         # Create insurance claim
