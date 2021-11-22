@@ -1,5 +1,9 @@
 from .insurance_claim_mixin import InsuranceClaimAdmistrativeFieldsMixin
 from .insurance_type_serializers import InsuranceTypeOutputSerializer
+from .event_insurance_attachment_serializers import (
+    EventInsuranceAttachmentUploadSerializer,
+    EventInsuranceAttachmentSerializer,
+)
 from .insurance_serializers import (
     InsuranceCostOutputSerializer,
     InsuranceListOutputSerializer,
@@ -32,8 +36,4 @@ from .insurance_claim_serializers import (
     InsuranceClaimVictimInputSerializer,
     InsuranceClaimDetailOutputSerializer,
     InsuranceClaimInputSerializer,
-)
-from .event_insurance_attachment_serializers import (
-    EventInsuranceAttachmentUploadSerializer,
-    EventInsuranceAttachmentSerializer,
 )
