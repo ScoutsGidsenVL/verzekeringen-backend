@@ -32,7 +32,7 @@ router.register(
     "VehicleInsuranceOption",
 )
 router.register(r"files", InsuranceClaimAttachmentViewSet, "Files")
-router.register(r"insurances/participants", EventInsuranceAttachmentViewSet, "EventInsuranceFiles")
+router.register(r"participants", EventInsuranceAttachmentViewSet, "EventInsuranceFiles")
 
 
 urlpatterns = router.urls
