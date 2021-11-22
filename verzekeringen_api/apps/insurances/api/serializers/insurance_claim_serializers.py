@@ -95,7 +95,9 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
         permission="insurances.view_insuranceclaim_note", field=serializers.CharField(max_length=1024), required=False
     )
     case_number = PermissionRequiredField(
-        permission="view_insuranceclaim_case_number", field=serializers.CharField(max_length=30), required=False
+        permission="insurances.view_insuranceclaim_case_number",
+        field=serializers.CharField(max_length=30),
+        required=False,
     )
 
     class Meta:
@@ -109,9 +111,9 @@ class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
             "activity_type",
             "victim",
             "group_group_admin_id",
+            "group",
             "note",
             "case_number",
-            "group",
         )
 
     def get_declarant(self, object: InsuranceClaim):
@@ -132,6 +134,14 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()
+    note = PermissionRequiredField(
+        permission="insurances.view_insuranceclaim_note", field=serializers.CharField(max_length=1024), required=False
+    )
+    case_number = PermissionRequiredField(
+        permission="insurances.view_insuranceclaim_case_number",
+        field=serializers.CharField(max_length=30),
+        required=False,
+    )
 
     class Meta:
         model = InsuranceClaim
