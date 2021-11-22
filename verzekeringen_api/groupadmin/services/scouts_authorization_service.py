@@ -40,7 +40,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     service = GroupAdminMemberService()
 
     def load_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        scouts_groups: List[ScoutsGroup] = self.service.get_groups(active_user=user).groups
+        scouts_groups: List[ScoutsGroup] = self.service.get_groups(active_user=user).scouts_groups
 
         user.scouts_groups = scouts_groups
 
@@ -101,9 +101,10 @@ class ScoutsAuthorizationService(AuthorizationService):
                     for grouping in function.groupings:
                         if grouping.name == SettingsHelper.get_section_leader_identifier():
                             logger.debug(
-                                "Setting user as section leader for group %s", user_function.group.group_admin_id
+                                "Setting user as section leader for group %s",
+                                user_function.scouts_group.group_admin_id,
                             )
-                            user_function.groups_section_leader[user_function.group.group_admin_id] = True
+                            user_function.groups_section_leader[user_function.scouts_group.group_admin_id] = True
 
         user.full_clean()
         user.save()

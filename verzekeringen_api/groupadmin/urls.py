@@ -30,7 +30,9 @@ urlpatterns = [
     path("ga/members/list/", view_member_list, name="ga_member_list"),
     path("ga/members/search/<str:term>/", view_search_members, name="ga_search_members"),
     path(
-        "ga/members/search/<str:term>/<str:group_group_admin_id>/", view_search_members, name="ga_search_members_with_group"
+        "ga/members/search/<str:term>/<str:group_group_admin_id>/",
+        view_search_members,
+        name="ga_search_members_with_group",
     ),
     path("ga/members/info/internal/<str:group_admin_id>", view_member_internal, name="ga_member_internal"),
     path("ga/members/info/<str:group_admin_id>", view_member, name="ga_member"),
@@ -39,8 +41,8 @@ urlpatterns = [
     path("user", view_user, name="user"),
     path("ga/groups/", view_group_list, name="ga_groups"),
     path("ga/groups/accountable/", view_accountable_group_list, name="ga_groups"),
-    path("ga/groups/<str:group_number>", view_group, name="ga_group"),
+    path("ga/groups/<str:group_group_admin_id>", view_group, name="ga_group"),
     path("ga/functions", view_functions, name="ga_functions"),
-    path("ga/functions/group/<str:group_number_fragment>", view_function_list, name="ga_functions_for_group"),
+    path("ga/functions/group/<str:group_group_admin_id_fragment>", view_function_list, name="ga_functions_for_group"),
     path("ga/functions/<str:function_id>", view_function, name="ga_function"),
 ]

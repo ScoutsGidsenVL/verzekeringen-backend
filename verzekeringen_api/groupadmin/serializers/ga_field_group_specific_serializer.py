@@ -22,7 +22,7 @@ class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
             group_data: dict = data.get(group, None)
             validated = {}
 
-            validated["group"] = group
+            validated["scouts_group"] = group
             validated["schema"] = group_data.pop("schema", None)
             # validated["values"] = ScoutsValueSerializer().to_internal_value(group_data.pop("waarden", {}))
 
@@ -41,7 +41,7 @@ class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
         for data in validated_data:
             instance = ScoutsGroupSpecificField()
 
-            instance.group = data.pop("group", None)
+            instance.scouts_group = data.pop("scouts_group", None)
             instance.schema = data.pop("schema", None)
             # instance.values = ScoutsValueSerializer().create(data.pop("values", {}))
 

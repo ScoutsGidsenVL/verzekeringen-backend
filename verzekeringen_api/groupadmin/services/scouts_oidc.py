@@ -64,7 +64,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         user.last_name = member.group_admin_data.last_name
         user.email = member.email
 
-        user.scouts_groups = member.groups
+        user.scouts_groups = member.scouts_groups
         user.addresses = member.addresses
         user.functions = member.functions
         user.group_specific_fields = member.group_specific_fields

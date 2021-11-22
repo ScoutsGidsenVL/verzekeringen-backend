@@ -9,9 +9,9 @@ class ScoutsFunction:
 
     group_admin_id: str
     type: str
-    group: ScoutsGroup
+    scouts_group: ScoutsGroup
     function: str
-    groups: List[ScoutsGroup]
+    scouts_groups: List[ScoutsGroup]
     groupings: List[ScoutsGrouping]
     begin: datetime
     end: datetime
@@ -30,9 +30,9 @@ class ScoutsFunction:
         self,
         group_admin_id: str = "",
         type: str = "",
-        group: ScoutsGroup = "",
+        scouts_group: ScoutsGroup = "",
         function: str = "",
-        groups: List[ScoutsGroup] = None,
+        scouts_groups: List[ScoutsGroup] = None,
         groupings: List[ScoutsGrouping] = None,
         begin: datetime = None,
         end: datetime = None,
@@ -46,9 +46,9 @@ class ScoutsFunction:
     ):
         self.group_admin_id = group_admin_id
         self.type = type
-        self.group = group
+        self.scouts_group = scouts_group
         self.function = function
-        self.groups = groups
+        self.scouts_groups = scouts_groups
         self.groupings = groupings
         self.begin = begin
         self.end = end
@@ -69,18 +69,20 @@ class ScoutsFunction:
         return self.groups_section_leader.get(group.group_admin_id, False)
 
     def is_group_leader(self, group: ScoutsGroup) -> bool:
-        return self._parse_function_code().is_group_leader() and self.group.group_admin_id == group.group_admin_id
+        return (
+            self._parse_function_code().is_group_leader() and self.scouts_group.group_admin_id == group.group_admin_id
+        )
 
     def is_district_commissioner(self) -> bool:
         return self._parse_function_code().is_district_commissioner()
 
     def __str__(self):
-        return "group_admin_id ({}), type ({}), group({}), function({}), groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
+        return "group_admin_id ({}), type ({}), scouts_group({}), function({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(
             self.group_admin_id,
             self.type,
-            str(self.group),
+            str(self.scouts_group),
             self.function,
-            ", ".join(str(group) for group in self.groups),
+            ", ".join(str(group) for group in self.scouts_groups),
             ", ".join(str(grouping) for grouping in self.groupings),
             self.begin,
             self.end,
@@ -92,4 +94,4 @@ class ScoutsFunction:
         )
 
     def to_descriptive_string(self):
-        return "{} -> {} ({})".format(self.group.group_admin_id, self.code, self.description)
+        return "{} -> {} ({})".format(self.scouts_group.group_admin_id, self.code, self.description)

@@ -13,7 +13,7 @@ class ScoutsGroupListResponseSerializer(ScoutsResponseSerializer):
             return None
 
         validated_data = {
-            "groups": ScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
+            "scouts_groups": ScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
             "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
@@ -29,7 +29,7 @@ class ScoutsGroupListResponseSerializer(ScoutsResponseSerializer):
 
         instance = ScoutsGroupListResponse()
 
-        instance.groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("groups", []))
+        instance.scouts_groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("scouts_groups", []))
         instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()

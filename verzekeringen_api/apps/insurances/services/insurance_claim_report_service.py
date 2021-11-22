@@ -30,7 +30,7 @@ class InsuranceClaimReportService:
         )
         victim: InsuranceClaimVictim = claim.victim
         model = {
-            "(Benaming)": claim.group_number,
+            "(Benaming)": claim.group_group_admin_id,
             "(Naam_Verantwoordelijke)": owner.first_name,
             "(Voornnaam_Verantwoordelijke)": owner.last_name,
             "(E-mail)": owner.email,

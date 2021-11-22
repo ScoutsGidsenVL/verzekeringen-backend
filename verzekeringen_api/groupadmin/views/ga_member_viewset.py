@@ -124,7 +124,7 @@ class ScoutsMemberView(viewsets.ViewSet):
         member: ScoutsMember = self.service.get_member_profile(request.user)
         groups_response: ScoutsGroupListResponse = self.service.get_groups(request.user)
 
-        member.groups = groups_response.groups
+        member.scouts_groups = groups_response.scouts_groups
 
         serializer = ScoutsMemberFrontendSerializer(member)
 

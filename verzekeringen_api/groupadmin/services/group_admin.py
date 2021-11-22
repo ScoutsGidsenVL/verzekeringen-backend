@@ -40,7 +40,7 @@ class GroupAdmin:
     url_groups = SettingsHelper.get_group_admin_group_endpoint()
     url_groups_vga = SettingsHelper.get_group_admin_group_endpoint() + "/vga"
     url_group = SettingsHelper.get_group_admin_group_endpoint() + "/{}"
-    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_number_start_fragment}
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep={group_group_admin_id_start_fragment}
     url_functions = SettingsHelper.get_group_admin_functions_endpoint()
     url_functions_for_group = SettingsHelper.get_group_admin_functions_endpoint() + "?groep={}"
     url_function = SettingsHelper.get_group_admin_functions_endpoint() + "/{}"
@@ -158,14 +158,14 @@ class GroupAdmin:
 
         return groups_response
 
-    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/{group_number}
-    def get_group_raw(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> str:
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep/{group_group_admin_id}
+    def get_group_raw(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> str:
         """
         Fetches info of a specific group.
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#groepen-groep-get
         """
-        url = self.url_group.format(group_number)
+        url = self.url_group.format(group_group_admin_id)
         json_data = self.get(url, active_user)
 
         logger.info("GA CALL: %s (%s)", "get_group", url)
@@ -173,8 +173,8 @@ class GroupAdmin:
 
         return json_data
 
-    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_number: str) -> ScoutsGroup:
-        json_data = self.get_group_raw(active_user, group_number)
+    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> ScoutsGroup:
+        json_data = self.get_group_raw(active_user, group_group_admin_id)
 
         serializer = ScoutsGroupSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
@@ -183,8 +183,10 @@ class GroupAdmin:
 
         return group
 
-    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_number_fragment_start}
-    def get_functions_raw(self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str = None) -> str:
+    # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_group_admin_id_fragment_start}
+    def get_functions_raw(
+        self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id_fragment: str = None
+    ) -> str:
         """
         Fetches a list of functions of the authenticated user for each group.
 
@@ -192,8 +194,8 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#functies-functielijst-get
         """
-        if group_number_fragment:
-            url = self.url_functions_for_group.format(group_number_fragment)
+        if group_group_admin_id_fragment:
+            url = self.url_functions_for_group.format(group_group_admin_id_fragment)
         else:
             url = self.url_functions
 
@@ -205,9 +207,9 @@ class GroupAdmin:
         return json_data
 
     def get_functions(
-        self, active_user: settings.AUTH_USER_MODEL, group_number_fragment: str = None
+        self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id_fragment: str = None
     ) -> ScoutsFunctionListResponse:
-        json_data = self.get_functions_raw(active_user, group_number_fragment)
+        json_data = self.get_functions_raw(active_user, group_group_admin_id_fragment)
 
         serializer = ScoutsFunctionListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)

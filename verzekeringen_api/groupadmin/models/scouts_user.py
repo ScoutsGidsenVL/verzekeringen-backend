@@ -180,7 +180,7 @@ class ScoutsUser(User):
             "PERMISSIONS",
             ", ".join(permission for permission in self.get_all_permissions()),
             "AUTH GROUPS",
-            ", ".join(group.name for group in self.groups.all()),
+            ", ".join(group.name for group in self.scouts_groups.all()),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER ?",

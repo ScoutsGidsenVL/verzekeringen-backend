@@ -35,14 +35,17 @@ class ScoutsFunctionView(viewsets.ViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsFunctionListResponseSerializer})
     @action(
         methods=["GET"],
-        url_path=r"group/(?P<group_number_fragment>\w+)",
+        url_path=r"group/(?P<group_group_admin_id_fragment>\w+)",
         detail=False,
     )
-    def view_function_list(self, request, group_number_fragment: str) -> Response:
-        logger.debug("GA: Received request for list of functions (group_number_fragment: %s)", group_number_fragment)
+    def view_function_list(self, request, group_group_admin_id_fragment: str) -> Response:
+        logger.debug(
+            "GA: Received request for list of functions (group_group_admin_id_fragment: %s)",
+            group_group_admin_id_fragment,
+        )
 
         functions_response: ScoutsFunctionListResponse = self.service.get_functions(
-            request.user, group_number_fragment
+            request.user, group_group_admin_id_fragment
         )
 
         serializer = ScoutsFunctionListResponseSerializer(functions_response)

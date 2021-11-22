@@ -66,7 +66,7 @@ class ScoutsMember:
     addresses: List[ScoutsAddress]
     contacts: List[ScoutsContact]
     functions: List[ScoutsFunction]
-    groups: List[ScoutsGroup]
+    scouts_groups: List[ScoutsGroup]
     group_specific_fields: List[ScoutsGroupSpecificField]
     links: List[ScoutsLink]
 
@@ -81,7 +81,7 @@ class ScoutsMember:
         addresses: List[ScoutsAddress] = None,
         contacts: List[ScoutsContact] = None,
         functions: List[ScoutsFunction] = None,
-        groups: List[ScoutsGroup] = None,
+        scouts_groups: List[ScoutsGroup] = None,
         group_specific_fields: List[ScoutsGroupSpecificField] = None,
         links: List[ScoutsLink] = None,
     ):
@@ -94,7 +94,7 @@ class ScoutsMember:
         self.addresses = addresses if addresses else []
         self.contacts = contacts if contacts else []
         self.functions = functions if functions else []
-        self.groups = groups if groups else []
+        self.scouts_groups = scouts_groups if scouts_groups else []
         self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
 
@@ -111,7 +111,7 @@ class ScoutsMember:
             + self.group_admin_data.__str__()
             + ", "
             + self.scouts_data.__str__()
-            + ", email({}), username({}), group_admin_id({}), addresses({}), contacts({}), functions({}), group_specific_fields ({}), links({})"
+            + ", email({}), username({}), group_admin_id({}), addresses({}), contacts({}), functions({}), groups({}), group_specific_fields ({}), links({})"
         ).format(
             self.email,
             self.username,
@@ -119,7 +119,7 @@ class ScoutsMember:
             ", ".join(str(address) for address in self.addresses),
             ", ".join(str(contact) for contact in self.contacts),
             ", ".join(str(function) for function in self.functions),
-            ", ".join(str(group) for group in self.groups),
+            ", ".join(str(group) for group in self.scouts_groups),
             ", ".join(str(field) for field in self.group_specific_fields),
             ", ".join(str(link) for link in self.links),
         )

@@ -159,7 +159,7 @@ class ScoutsMemberSerializer(NonModelSerializer):
             "addresses": ScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
             "contacts": ScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
             "functions": ScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
-            "groups": ScoutsGroupSerializer(many=True).to_internal_value(data.pop("groups", [])),
+            "scouts_groups": ScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
             "group_specific_fields": ScoutsGroupSpecificFieldSerializer().to_internal_value(
                 data.pop("groepseigenVelden", {})
             ),
@@ -192,7 +192,7 @@ class ScoutsMemberSerializer(NonModelSerializer):
         instance.addresses = ScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
         instance.contacts = ScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
         instance.functions = ScoutsFunctionSerializer(many=True).create(validated_data.pop("functions", []))
-        instance.groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("groups", []))
+        instance.scouts_groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("scouts_groups", []))
         instance.group_specific_fields = ScoutsGroupSpecificFieldSerializer().create(
             validated_data.pop("group_specific_fields", {})
         )

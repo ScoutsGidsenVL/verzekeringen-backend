@@ -32,8 +32,8 @@ class CurrentUserView(views.APIView):
             group_serializer = ScoutsGroupSerializer(data=group_data, many=True)
             group_serializer.is_valid(raise_exception=True)
 
-            groups: List[ScoutsGroup] = group_serializer.validated_data
-            user.scouts_groups = groups
+            scouts_groups: List[ScoutsGroup] = group_serializer.validated_data
+            user.scouts_groups = scouts_groups
 
             serializer = UserSerializer(request.user)
             data = serializer.data

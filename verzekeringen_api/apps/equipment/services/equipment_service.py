@@ -26,7 +26,7 @@ def inuits_equipment_create(
         nature=nature,
         description=description,
         total_value=total_value,
-        group_number=group_group_admin_id,
+        group_group_admin_id=group_group_admin_id,
         owner_non_member=owner_non_member,
         owner_member_group_admin_id=owner_member_id,
     )

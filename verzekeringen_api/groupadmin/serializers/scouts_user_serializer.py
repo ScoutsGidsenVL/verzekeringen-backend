@@ -16,4 +16,4 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
         return obj.permissions
 
     def get_scouts_groups(self, obj: ScoutsUser):
-        return [{"group": group.group_admin_id, "name": group.name} for group in obj.scouts_groups]
+        return [{"group_group_admin_id": group.group_admin_id, "name": group.name} for group in obj.scouts_groups]

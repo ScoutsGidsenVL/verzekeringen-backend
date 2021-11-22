@@ -20,7 +20,7 @@ class ScoutsFunctionSerializer(NonModelSerializer):
             "type": data.pop("type", None),
             "group": ScoutsGroupSerializer().to_internal_value({"id": data.pop("groep", None)}),
             "function": data.pop("functie", None),
-            "groups": ScoutsGroupSerializer(many=True).to_internal_value(
+            "scouts_groups": ScoutsGroupSerializer(many=True).to_internal_value(
                 [{"id": group} for group in data.pop("groepen", [])]
             ),
             "groupings": ScoutsGroupingSerializer(many=True).to_internal_value(data.pop("groeperingen", [])),
@@ -52,9 +52,9 @@ class ScoutsFunctionSerializer(NonModelSerializer):
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.type = validated_data.pop("type", None)
-        instance.group = ScoutsGroupSerializer().create(validated_data.pop("group", None))
+        instance.scouts_group = ScoutsGroupSerializer().create(validated_data.pop("scouts_group", None))
         instance.function = validated_data.pop("function", None)
-        instance.groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("groups", []))
+        instance.scouts_groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("scouts_groups", []))
         instance.groupings = ScoutsGroupingSerializer(many=True).create(validated_data.pop("groupings", []))
         instance.begin = validated_data.pop("begin", None)
         instance.end = validated_data.pop("end", None)
