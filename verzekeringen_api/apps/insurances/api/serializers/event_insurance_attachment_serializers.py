@@ -21,7 +21,7 @@ class EventInsuranceAttachmentUploadSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         # There can be only one
-        if len(self.initial_data) > 1:
+        if len(self.initial_data.getlist("file")) > 1:
             raise ValidationError("An event insurance can have at most 1 participant list attachment")
 
         default_error_messages = {
