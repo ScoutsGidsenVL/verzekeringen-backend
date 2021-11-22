@@ -298,10 +298,11 @@ class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
 
     @swagger_serializer_method(serializer_or_field=EventInsuranceAttachmentSerializer)
     def get_participant_list_file(self, obj):
-        attachment: EventInsuranceAttachment = obj.attachment
+        if hasattr(obj, "attachment"):
+            attachment: EventInsuranceAttachment = obj.attachment
 
-        if attachment:
-            return EventInsuranceAttachmentSerializer(attachment).data
+            if attachment:
+                return EventInsuranceAttachmentSerializer(attachment).data
 
         return None
 
