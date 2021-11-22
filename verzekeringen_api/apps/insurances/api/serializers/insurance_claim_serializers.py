@@ -108,17 +108,6 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
         return ScoutsMemberSerializer(data).data
 
 
-class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
-    date = DateTimeTZField()
-    date_of_accident = DateTimeTZField()
-    # file = InsuranceClaimAttachmentSerializer()
-    victim = InsuranceClaimVictimOutputDetailSerializer()
-
-    class Meta:
-        model = InsuranceClaim
-        fields = "__all__"
-
-
 class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
 
     group_group_admin_id = serializers.CharField()
@@ -149,3 +138,20 @@ class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, seria
         if not re.match(pattern, value):
             raise serializers.ValidationError("Invalid bank account number format. It has to be: BE68539007547034")
         return value
+
+
+class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
+    date = DateTimeTZField()
+    date_of_accident = DateTimeTZField()
+    # file = InsuranceClaimAttachmentSerializer()
+    victim = InsuranceClaimVictimOutputDetailSerializer()
+    group = serializers.SerializerMethodField()
+
+    class Meta:
+        model = InsuranceClaim
+        fields = "__all__"
+
+    def get_group(self, obj: InsuranceClaim):
+        return ScoutsGroupSerializer(
+            GroupAdmin().get_group(self.context.get("request").user, obj.group_group_admin_id)
+        ).data
