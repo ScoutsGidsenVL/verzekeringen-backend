@@ -40,7 +40,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
-        event_insurance_id = data.get("insurance", None)
+        event_insurance_id = data.get("event_insurance", None)
 
         logger.debug("Received a file upload request for event insurance %s", event_insurance_id)
 
