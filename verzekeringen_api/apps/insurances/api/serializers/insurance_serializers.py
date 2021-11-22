@@ -118,16 +118,6 @@ class ActivityInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerialize
         return EnumOutputSerializer(parse_choice_to_tuple(GroupSize(obj.group_size))).data
 
 
-class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    postcode_city = BelgianPostcodeCitySerializer()
-    non_members = NonMemberNestedOutputSerializer(many=True)
-    country = CountryOutputSerializer()
-
-    class Meta:
-        model = TemporaryInsurance
-        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "non_members")
-
-
 class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     participants = NonMemberNestedOutputSerializer(many=True)
     vehicle = serializers.SerializerMethodField()
@@ -231,6 +221,16 @@ class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer
         elif data.get("postcode_city") and data.get("country"):
             raise serializers.ValidationError("Country and postcode_city are mutually exclusive fields")
         return data
+
+
+class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    postcode_city = BelgianPostcodeCitySerializer()
+    non_members = NonMemberNestedOutputSerializer(many=True)
+    country = CountryOutputSerializer()
+
+    class Meta:
+        model = TemporaryInsurance
+        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "non_members")
 
 
 class TemporaryVehicleInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):

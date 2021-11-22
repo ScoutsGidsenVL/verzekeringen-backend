@@ -163,7 +163,7 @@ class VehicleWithChassisInputSerializer(VehicleInputSerializer):
 
 
 class InuitsVehicleCreateInputSerializer(VehicleInputSerializer):
-    group_group_admin_id = serializers.CharField(source="group_group_admin_id")
+    group_group_admin_id = serializers.CharField()
 
     def validate(self, data):
         return data

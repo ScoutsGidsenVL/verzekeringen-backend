@@ -83,7 +83,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
     date_of_accident = DateTimeTZField()
     activity_type = serializers.JSONField()
     victim = InsuranceClaimVictimOutputListSerializer()
-    scouts_group = ScoutsGroupSerializer()
+    group_group_admin_id = serializers.CharField()
     declarant = serializers.SerializerMethodField()
 
     class Meta:
@@ -96,7 +96,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
             "activity",
             "activity_type",
             "victim",
-            "scouts_group",
+            "group_group_admin_id",
             "note",
             "case_number",
         )
@@ -121,7 +121,7 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
 
 class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
 
-    group_group_admin_id = serializers.CharField(source="group_group_admin_id")
+    group_group_admin_id = serializers.CharField()
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()
