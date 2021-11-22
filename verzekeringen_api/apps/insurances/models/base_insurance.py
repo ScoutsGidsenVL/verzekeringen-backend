@@ -76,7 +76,7 @@ class BaseInsurance(models.Model):
 
     # Special group getter that returns group class to make it seem like normal model
     @property
-    def group(self):
+    def scouts_group(self):
         return ScoutsGroup(
             group_admin_id=self._group_group_admin_id,
             name=self._group_name,
@@ -84,8 +84,8 @@ class BaseInsurance(models.Model):
         )
 
     # Special group setter that accepts group class
-    @group.setter
-    def group(self, value: ScoutsGroup):
+    @scouts_group.setter
+    def scouts_group(self, value: ScoutsGroup):
         self._group_group_admin_id = value.group_admin_id
         self._group_name = value.name
         self._group_location = value.addresses[0].city
