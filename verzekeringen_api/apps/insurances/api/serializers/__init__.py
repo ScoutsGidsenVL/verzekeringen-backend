@@ -29,6 +29,7 @@ from .insurance_claim_attachment_serializers import (
     FileDetailOutputSerializer,
 )
 from .insurance_claim_serializers import (
+    InsuranceClaimCreateDataSerializer,
     InsuranceClaimAttachmentSerializer,
     InsuranceClaimVictimOutputListSerializer,
     BaseInsuranceClaimSerializer,

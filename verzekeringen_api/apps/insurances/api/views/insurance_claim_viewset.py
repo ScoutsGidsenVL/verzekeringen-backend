@@ -1,12 +1,15 @@
 import logging
 
 from django.core.exceptions import ValidationError
+from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, parsers, permissions
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.insurances.api.serializers import (
+    InsuranceClaimCreateDataSerializer,
     InsuranceClaimAttachmentUploadSerializer,
     BaseInsuranceClaimSerializer,
     InsuranceClaimInputSerializer,
@@ -54,13 +57,23 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         current_permissions = super().get_permissions()
-        logger.debug("CURRENT PERMISSIONS: %s", current_permissions)
         if self.action == "create":
             pass
         if self.action == "list":
             current_permissions.append(CustomDjangoPermission("insurances.list_insuranceclaims"))
 
         return current_permissions
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimCreateDataSerializer})
+    @action(methods=["get"], detail=False, url_path="data")
+    def get_create_data(self, request, *args, **kwargs):
+        user: settings.AUTH_USER_MODEL = request.user
+        permitted_scouts_groups = user.get_section_leader_groups()
+
+        data = {"permitted_scouts_groups": permitted_scouts_groups}
+        serializer = InsuranceClaimCreateDataSerializer(data, context={"request": request})
+
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         request_body=InsuranceClaimInputSerializer,

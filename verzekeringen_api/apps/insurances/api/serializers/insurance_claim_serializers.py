@@ -7,7 +7,7 @@ from rest_framework import serializers
 from apps.base.serializers import DateTimeTZField
 from apps.members.models import InuitsNonMember
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
-from apps.insurances.api.serializers import InsuranceClaimAdmistrativeFieldsMixin
+from apps.insurances.api.serializer_extensions import PermissionRequiredField
 
 from groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberSerializer
 from groupadmin.services import GroupAdmin
@@ -16,6 +16,11 @@ from inuits.models import Gender
 
 
 logger = logging.getLogger(__name__)
+
+
+class InsuranceClaimCreateDataSerializer(serializers.Serializer):
+
+    permitted_scouts_groups = ScoutsGroupSerializer(many=True)
 
 
 class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
@@ -79,13 +84,19 @@ class InsuranceClaimVictimInputSerializer(serializers.Serializer):
         return InsuranceClaimVictim(**data)
 
 
-class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
+class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
     date_of_accident = DateTimeTZField()
     activity_type = serializers.JSONField()
     victim = InsuranceClaimVictimOutputListSerializer()
     group_group_admin_id = serializers.CharField()
     declarant = serializers.SerializerMethodField()
     group = serializers.SerializerMethodField()
+    note = PermissionRequiredField(
+        permission="insurances.view_insuranceclaim_note", field=serializers.CharField(max_length=1024), required=False
+    )
+    case_number = PermissionRequiredField(
+        permission="view_insuranceclaim_case_number", field=serializers.CharField(max_length=30), required=False
+    )
 
     class Meta:
         model = InsuranceClaim
@@ -115,7 +126,7 @@ class BaseInsuranceClaimSerializer(InsuranceClaimAdmistrativeFieldsMixin, serial
         ).data
 
 
-class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
+class InsuranceClaimInputSerializer(serializers.ModelSerializer):
 
     group_group_admin_id = serializers.CharField()
     activity_type = serializers.JSONField()

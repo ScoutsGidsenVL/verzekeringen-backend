@@ -87,6 +87,7 @@ class ScoutsUser(User):
         for function in self.functions:
             if function.is_group_leader(group):
                 return True
+
         return False
 
     def get_group_leader_groups(self) -> List[ScoutsGroup]:

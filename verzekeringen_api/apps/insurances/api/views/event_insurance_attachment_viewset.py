@@ -86,10 +86,13 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         tags=["Files"],
     )
     def retrieve(self, request, pk=None):
+        # attachement = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
+        # response = HttpResponse(attachement.file, content_type=attachement.content_type)
+        # response["Content-Disposition"] = "attachment; filename={}".format(attachement.file.name)
+        # return response
         attachement = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
-        response = HttpResponse(attachement.file, content_type=attachement.content_type)
-        response["Content-Disposition"] = "attachment; filename={}".format(attachement.file.name)
-        return response
+        url = request.build_absolute_uri("/api/files/download/" + str(result.id))
+        output_serializer = EventInsuranceAttachmentSerializer({"url": url, "id": str(result.id)})
 
     @swagger_auto_schema(
         responses={

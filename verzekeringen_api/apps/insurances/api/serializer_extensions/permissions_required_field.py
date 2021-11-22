@@ -15,6 +15,9 @@ class PermissionRequiredField(serializers.Field):
         assert self.permission is not None, "`permission` is a required argument."
         super().__init__(*args, **kwargs)
 
+    def to_internal_value(self, data: dict) -> dict:
+        return data
+
     def to_representation(self, value):
         request = self.context.get("request")
         if not request:
@@ -24,6 +27,6 @@ class PermissionRequiredField(serializers.Field):
             )
 
         if self.permission and request.user.has_perm(self.permission):
-            return super().to_representation(value)
+            return value
 
         return None
