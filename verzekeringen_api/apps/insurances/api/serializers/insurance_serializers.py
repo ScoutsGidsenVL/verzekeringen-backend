@@ -286,7 +286,7 @@ class EventInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
 class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
     location = BelgianPostcodeCitySerializer(source="postcode_city")
     event_size = serializers.SerializerMethodField()
-    participant_list_file = serializers.SerializerMethodField()
+    participant_list_file = serializers.SerializerMethodField(null=True, required=False)
 
     class Meta:
         model = EventInsurance
