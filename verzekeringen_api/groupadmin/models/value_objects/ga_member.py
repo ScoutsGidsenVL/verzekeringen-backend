@@ -104,6 +104,30 @@ class ScoutsMember:
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]
 
+    @property
+    def phone_number(self):
+        return self.personal_data.phone_number
+
+    @property
+    def first_name(self):
+        return self.group_admin_data.first_name
+
+    @property
+    def last_name(self):
+        return self.group_admin_data.last_name
+
+    @property
+    def birth_date(self):
+        return self.group_admin_data.birth_date
+
+    @property
+    def membership_number(self):
+        return self.scouts_data.membership_number
+
+    @property
+    def customer_number(self):
+        return self.scouts_data.customer_number
+
     def __str__(self):
         return (
             self.personal_data.__str__()
