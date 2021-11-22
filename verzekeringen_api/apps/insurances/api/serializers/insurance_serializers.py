@@ -290,7 +290,7 @@ class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
 
     class Meta:
         model = EventInsurance
-        fields = base_insurance_detail_fields + ("nature", "event_size", "location")
+        fields = base_insurance_detail_fields + ("nature", "event_size", "location", "participant_list_file")
 
     @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
     def get_event_size(self, obj):
