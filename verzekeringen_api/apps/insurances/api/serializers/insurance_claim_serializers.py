@@ -121,7 +121,7 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
 
 class InsuranceClaimInputSerializer(InsuranceClaimAdmistrativeFieldsMixin, serializers.ModelSerializer):
 
-    group = serializers.CharField(source="group_group_admin_id")
+    group_group_admin_id = serializers.CharField(source="group_group_admin_id")
     activity_type = serializers.JSONField()
     bank_account = serializers.CharField(required=False, allow_null=True)
     victim = InsuranceClaimVictimInputSerializer()

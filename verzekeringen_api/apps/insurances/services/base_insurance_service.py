@@ -41,7 +41,7 @@ class BaseInsuranceService:
         fields = {
             "status": InsuranceStatus.NEW,
             "type": type,
-            "group": group_object,
+            "scouts_group": group_object,
             "start_date": start_date,
             "end_date": end_date,
             "responsible_member": member,
