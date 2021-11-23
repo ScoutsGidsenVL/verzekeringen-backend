@@ -24,9 +24,15 @@ class InsuranceClaimCreateDataSerializer(serializers.Serializer):
 
 
 class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
+
+    filename = serializers.SerializerMethodField()
+
     class Meta:
         model = InsuranceClaimAttachment
         exclude = ("insurance_claim", "file")
+
+    def get_filename(self, obj: InsuranceClaimAttachment):
+        return obj.file.name
 
 
 class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
@@ -174,6 +180,7 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
     # file = InsuranceClaimAttachmentSerializer()
     victim = InsuranceClaimVictimOutputDetailSerializer()
     group = serializers.SerializerMethodField()
+    attachment = serializers.SerializerMethodField()
 
     class Meta:
         model = InsuranceClaim
@@ -183,3 +190,11 @@ class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
         return ScoutsGroupSerializer(
             GroupAdmin().get_group(self.context.get("request").user, obj.group_group_admin_id)
         ).data
+
+    def get_attachment(self, obj: InsuranceClaim):
+        attachment: InsuranceClaimAttachment = obj.attachment
+
+        if attachment:
+            return InsuranceClaimAttachmentSerializer(attachment).data
+
+        return None
