@@ -139,7 +139,7 @@ class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
     owner_member = MemberNestedOutputSerializer()
     inuits_equipment_id = serializers.SerializerMethodField()
 
-    def get_inuits_equipement_id(self, obj):
+    def get_inuits_equipment_id(self, obj):
         inuits_equipment = EquipmentInuitsTemplate.objects.filter(equipment=obj.id).first()
         if inuits_equipment:
             return inuits_equipment.inuits_equipment.id
@@ -155,6 +155,7 @@ class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
             "total_value",
             "owner_non_member",
             "owner_member",
+            "inuits_equipment_id",
         )
 
 
@@ -189,18 +190,24 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
 
 
 class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
+    inuits_equipment_id = serializers.SerializerMethodField()
+
     class Meta:
         model = InuitsEquipment
         fields = (
-            "id",
+            "inuits_equipment_id",
             "nature",
             "description",
             "total_value",
             "owner_group",
         )
 
+    def get_inuits_equipment_id(self, obj):
+        return obj.id
+
 
 class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
+    inuits_equipment_id = serializers.SerializerMethodField()
     owner_non_member = InuitsNonMemberOutputSerializer()
     owner_member = serializers.SerializerMethodField()
     owner_group = serializers.CharField(source="owner_group_group_admin_id")
@@ -208,7 +215,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InuitsEquipment
         fields = (
-            "id",
+            "inuits_equipment_id",
             "nature",
             "description",
             "total_value",
@@ -216,6 +223,9 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             "owner_member",
             "owner_group",
         )
+
+    def get_inuits_equipment_id(self, obj):
+        return obj.id
 
     @swagger_serializer_method(serializer_or_field=ScoutsMemberSearchFrontendSerializer)
     def get_owner_member(self, obj):

@@ -78,9 +78,7 @@ def equipment_create(
         if not inuits_equipment:
             raise ValidationError("Couldn't find InuitsEquipment instance with %s", str(inuits_equipment_id))
         else:
-            equipment_inuits_template = EquipmentInuitsTemplate.create(
-                equipment=equipment, inuits_equipment=inuits_equipment
-            )
+            equipment_inuits_template = EquipmentInuitsTemplate(equipment=equipment, inuits_equipment=inuits_equipment)
             equipment_inuits_template.full_clean()
             equipment_inuits_template.save()
 
