@@ -69,6 +69,6 @@ def equipment_create(
     equipment.full_clean()
     equipment.save()
 
-    equipment_inuits_template = EquipmentInuitsTemplate.create(equipment=equipment, inuits_equipment=)
+    # equipment_inuits_template = EquipmentInuitsTemplate.create(equipment=equipment, inuits_equipment=)
 
     return equipment
