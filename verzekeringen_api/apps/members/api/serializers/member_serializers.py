@@ -143,4 +143,4 @@ class NonMemberOrCompanyCreateInputSerializer(NonMemberCreateInputSerializer):
 
 
 class InuitsNonMemberCreateInputSerializer(NonMemberCreateInputSerializer):
-    group = serializers.CharField(source="group_id")
+    group_group_admin_id = serializers.CharField(source="group_group_admin_id")
