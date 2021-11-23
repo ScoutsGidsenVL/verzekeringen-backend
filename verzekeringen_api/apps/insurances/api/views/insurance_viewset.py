@@ -132,7 +132,9 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["put"], detail=False, url_path="activity/(?P<pk>\d+)")
     def update_activity(self, request, pk=None):
-        existing_insurance = get_object_or_404(ActivityInsurance.objects.all().editable().allowed(request.user), pk=pk)
+        existing_insurance = get_object_or_404(
+            ActivityInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
+        )
         input_serializer = ActivityInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
@@ -186,7 +188,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     @action(methods=["put"], detail=False, url_path="temporary/(?P<pk>\d+)")
     def update_temporary(self, request, pk=None):
         existing_insurance = get_object_or_404(
-            TemporaryInsurance.objects.all().editable().allowed(request.user), pk=pk
+            TemporaryInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
         input_serializer = TemporaryInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
@@ -245,7 +247,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     @action(methods=["put"], detail=False, url_path="travel_assistance/(?P<pk>\d+)")
     def update_travel_assistance(self, request, pk=None):
         existing_insurance = get_object_or_404(
-            TravelAssistanceInsurance.objects.all().editable().allowed(request.user), pk=pk
+            TravelAssistanceInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
         input_serializer = TravelAssistanceInsuranceCreateInputSerializer(
             data=request.data, context={"request": request}
@@ -308,7 +310,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     @action(methods=["put"], detail=False, url_path="temporary_vehicle/(?P<pk>\d+)")
     def update_temporary_vehicle(self, request, pk=None):
         existing_insurance = get_object_or_404(
-            TemporaryVehicleInsurance.objects.all().editable().allowed(request.user), pk=pk
+            TemporaryVehicleInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
         input_serializer = TemporaryVehicleInsuranceCreateInputSerializer(
             data=request.data, context={"request": request}
@@ -364,7 +366,9 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["put"], detail=False, url_path="event/(?P<pk>\d+)")
     def update_event(self, request, pk=None):
-        existing_insurance = get_object_or_404(EventInsurance.objects.all().editable().allowed(request.user), pk=pk)
+        existing_insurance = get_object_or_404(
+            EventInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
+        )
         input_serializer = EventInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
@@ -418,7 +422,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     @action(methods=["put"], detail=False, url_path="equipment/(?P<pk>\d+)")
     def update_equipment(self, request, pk=None):
         existing_insurance = get_object_or_404(
-            EquipmentInsurance.objects.all().editable().allowed(request.user), pk=pk
+            EquipmentInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
         input_serializer = EquipmentInsuranceCreateInputSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
