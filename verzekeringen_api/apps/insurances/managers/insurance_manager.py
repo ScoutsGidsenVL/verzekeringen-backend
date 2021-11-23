@@ -22,8 +22,10 @@ class BaseInsuranceQuerySet(models.QuerySet):
         groups = section_leader_groups + list(set(group_leader_groups) - set(section_leader_groups))
         return self.filter(_group_group_admin_id__in=groups)
 
-    def editable(self):
-        self.filter(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
+    def editable(self, user: settings.AUTH_USER_MODEL):
+        # Only section leaders can edit and only their own requests
+        # Insurance requests can't be edited after they've been approved or invoiced
+        self.filter(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING], responsible_member__id=user.id)
 
 
 class BaseInsuranceManager(models.Manager):
