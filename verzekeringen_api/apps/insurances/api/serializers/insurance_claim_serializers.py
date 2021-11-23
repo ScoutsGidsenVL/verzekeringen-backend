@@ -7,6 +7,7 @@ from rest_framework import serializers
 from apps.base.serializers import DateTimeTZField
 from apps.members.models import InuitsNonMember
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
+from apps.insurances.api.serializers import InsuranceClaimAttachmentSerializer
 from apps.insurances.api.serializer_extensions import PermissionRequiredField
 
 from groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberSerializer
@@ -165,7 +166,6 @@ class InsuranceClaimInputSerializer(serializers.ModelSerializer):
 class InsuranceClaimDetailOutputSerializer(BaseInsuranceClaimSerializer):
     date = DateTimeTZField()
     date_of_accident = DateTimeTZField()
-    # file = InsuranceClaimAttachmentSerializer()
     victim = InsuranceClaimVictimOutputDetailSerializer()
     group = serializers.SerializerMethodField()
     attachment = serializers.SerializerMethodField()
