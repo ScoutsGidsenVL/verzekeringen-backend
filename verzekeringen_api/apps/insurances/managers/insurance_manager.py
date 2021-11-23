@@ -25,7 +25,9 @@ class BaseInsuranceQuerySet(models.QuerySet):
     def editable(self, user: settings.AUTH_USER_MODEL):
         # Only section leaders can edit and only their own requests
         # Insurance requests can't be edited after they've been approved or invoiced
-        return self.filter(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING], responsible_member__id=user.id)
+        return self.filter(
+            _status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING], responsible_member__ga_id=user.id
+        )
 
 
 class BaseInsuranceManager(models.Manager):
