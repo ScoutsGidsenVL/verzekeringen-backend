@@ -73,7 +73,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         elif insurance.type.id == 6:
             serializer = EquipmentInsuranceDetailOutputSerializer(insurance.equipment_child)
         elif insurance.type.id == 10:
-            serializer = EventInsuranceDetailOutputSerializer(insurance.event_child)
+            serializer = EventInsuranceDetailOutputSerializer(insurance.event_child, context={"request": request})
         else:
             serializer = InsuranceListOutputSerializer(insurance)
 
@@ -339,7 +339,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             **input_serializer.validated_data, created_by=request.user
         )
 
-        output_serializer = EventInsuranceDetailOutputSerializer(created_insurance)
+        output_serializer = EventInsuranceDetailOutputSerializer(created_insurance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -376,7 +376,7 @@ class InsuranceViewSet(viewsets.GenericViewSet):
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
-        output_serializer = EventInsuranceDetailOutputSerializer(updated_insurance)
+        output_serializer = EventInsuranceDetailOutputSerializer(updated_insurance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 

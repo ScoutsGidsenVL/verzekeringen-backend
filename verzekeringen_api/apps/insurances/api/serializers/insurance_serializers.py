@@ -302,7 +302,7 @@ class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
             attachment: EventInsuranceAttachment = obj.attachment
 
             if attachment:
-                return EventInsuranceAttachmentSerializer(attachment).data
+                return EventInsuranceAttachmentSerializer(attachment, context=self.context).data
 
         return None
 

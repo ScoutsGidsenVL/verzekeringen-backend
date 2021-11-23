@@ -55,7 +55,7 @@ class InsuranceClaimAttachmentViewSet(viewsets.GenericViewSet):
         except ValidationError as e:
             raise serializers.ValidationError("; ".join(e.messages))
 
-        output_serializer = InsuranceClaimAttachmentSerializer(result)
+        output_serializer = InsuranceClaimAttachmentSerializer(result, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
