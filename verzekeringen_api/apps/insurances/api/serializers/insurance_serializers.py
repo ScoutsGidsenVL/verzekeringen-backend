@@ -131,12 +131,18 @@ class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
     def get_vehicle(self, obj):
         vehicle = obj.vehicle
 
-        inuits_vehicles = InuitsVehicle.objects.filter(Q(brand=vehicle.brand) | Q(license_plate=vehicle.license_plate))
+        if vehicle:
 
-        if inuits_vehicles.count() > 0:
-            return InuitsVehicleOutputSerializer(inuits_vehicles[0]).data
+            inuits_vehicles = InuitsVehicle.objects.filter(
+                Q(brand=vehicle.brand) | Q(license_plate=vehicle.license_plate)
+            )
 
-        return VehicleOutputSerializer(vehicle).data
+            if inuits_vehicles.count() > 0:
+                return InuitsVehicleOutputSerializer(inuits_vehicles[0]).data
+
+            return VehicleOutputSerializer(vehicle).data
+
+        return None
 
 
 class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
