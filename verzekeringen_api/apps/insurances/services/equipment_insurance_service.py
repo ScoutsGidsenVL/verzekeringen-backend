@@ -1,13 +1,19 @@
+import logging
 from decimal import Decimal
 
 from django.db import transaction
+from django.db.models import Q
 
 from apps.equipment.services import EquipmentService
-from apps.equipment.models import Equipment
+from apps.equipment.models import Equipment, EquipmentInuitsTemplate
 from apps.insurances.models import EquipmentInsurance, InsuranceType, CostVariable
+from apps.insurances.models.enums import InsuranceStatus
 from apps.insurances.services import BaseInsuranceService
 
 from groupadmin.models import PostcodeCity
+
+
+logger = logging.getLogger(__name__)
 
 
 class EquipmentInsuranceService:
@@ -99,9 +105,43 @@ class EquipmentInsuranceService:
 
     @transaction.atomic
     def equipment_insurance_update(self, *, insurance: EquipmentInsurance, **fields) -> EquipmentInsurance:
-        # For this update we just delete the old one and create a new one with the given fields (but same id)
-        # Bit of a cheat but it matches expectations of customer
-        old_id = insurance.id
-        self.equipment_insurance_delete(insurance=insurance)
-        new_insurance = self.equipment_insurance_create(**fields, id=old_id)
-        return new_insurance
+        # The equipment list contains instances that are already persisted in InuitsEquipment
+        # No need to update the InuitsEquipment instances.
+        insurance.start_date = fields.get("start_date", insurance.start_date)
+        insurance.end_date = fields.get("end_date", insurance.end_date)
+        insurance.nature = fields.get("nature", insurance.nature)
+        insurance.postcode = fields.get("postcode_city.postcode", insurance.postcode)
+        insurance.city = fields.get("postcode_city.city", insurance.city)
+
+        insurance.full_clean()
+        insurance.save()
+
+        # If a piece of equipment was remove from the list, also remove it from the database.
+        # Make sure the equipment is not part of an insurance request that is not new or waiting (i.e. already approved or billed).
+        existing_equipment_list = [
+            equipment.id
+            for equipment in Equipment.objects.filter(
+                Q(insurance=insurance)
+                | Q(insurance__insurance_parent___status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
+            )
+        ]
+
+        for equipment_data in fields.get("equipment", []):
+            equipment_id = equipment_data.get("id", None)
+            inuits_equipment_id = equipment_data.get("inuits_equipment_id", None)
+
+            equipment = EquipmentService.equipment_create_or_update(**equipment_data, insurance=insurance)
+
+            if equipment_id:
+                existing_equipment_list.remove(equipment.id)
+
+        for equipment_id in existing_equipment_list:
+            logger.debug("Deleting unused equipment %s from insurance %s", equipment_id, insurance.id)
+            equipment = Equipment.objects.get(pk=equipment_id)
+
+            EquipmentInuitsTemplate.objects.get(equipment=equipment).delete()
+            equipment.delete()
+
+        insurance.total_cost = self._calculate_total_cost(insurance)
+        insurance.full_clean()
+        insurance.save()

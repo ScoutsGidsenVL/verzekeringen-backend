@@ -37,4 +37,8 @@ class BaseInsuranceManager(models.Manager):
             BaseInsuranceQuerySet(self.model, using=self._db)
             .filter(created_on__gte=datetime.now() - timedelta(days=3 * 365))
             .order_by("created_on")
+            .order_by("_group_group_admin_id")
+            .order_by("_start_date")
+            .order_by("_end_date")
+            .order_by("type.name")
         )

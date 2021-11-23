@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
 
@@ -23,6 +25,9 @@ from apps.equipment.utils import Vehicle
 
 from groupadmin.serializers import ScoutsMemberSearchFrontendSerializer
 from groupadmin.services import GroupAdmin
+
+
+logger = logging.getLogger(__name__)
 
 
 # Output
@@ -127,6 +132,7 @@ class EquipmentInputSerializer(serializers.Serializer):
     owner_member = MemberNestedCreateInputSerializer(required=False)
     owner_non_member = NonMemberCreateInputSerializer(required=False)
     inuits_equipment_id = serializers.CharField(required=False)
+    id = serializers.CharField(required=False)
 
     def validate(self, data):
         if data.get("owner_member") and data.get("owner_non_member"):
@@ -170,6 +176,7 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
     owner_member = serializers.CharField(required=False, allow_null=True)
     owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
     owner_group = serializers.CharField()
+    inuits_equipment_id = serializers.SerializerMethodField()
 
     def validate_owner_member(self, value):
         # Validate wether membership number of member is valid
@@ -186,7 +193,17 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
             raise serializers.ValidationError("A piece of equipment needs an owner")
         if data.get("owner_member") and data.get("owner_non_member") and data.get("owner_group"):
             raise serializers.ValidationError("There can only be one owner of the piece of equipment")
+        if data.get("owner_group") and (data.get("owner_member") or data.get("owner_non_member")):
+            logger.warn(
+                "A piece of equipment either belongs to a person or to a scouts group - Removing group as owner"
+            )
+            data["owner_group"] = ""
         return data
+
+    def get_inuits_equipment_id(self, obj):
+        if obj and hasattr(obj, "id"):
+            return obj.id
+        return None
 
 
 class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
@@ -207,6 +224,7 @@ class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
 
 
 class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     inuits_equipment_id = serializers.SerializerMethodField()
     owner_non_member = InuitsNonMemberOutputSerializer()
     owner_member = serializers.SerializerMethodField()
@@ -215,6 +233,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InuitsEquipment
         fields = (
+            "id",
             "inuits_equipment_id",
             "nature",
             "description",
@@ -223,6 +242,14 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             "owner_member",
             "owner_group",
         )
+
+    def get_id(self, obj):
+        try:
+            equipment_inuits_template = EquipmentInuitsTemplate.objects.get(inuits_equipment=obj.id)
+
+            return equipment_inuits_template.equipment.id
+        except Exception:
+            return None
 
     def get_inuits_equipment_id(self, obj):
         return obj.id

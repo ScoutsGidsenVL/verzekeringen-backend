@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 
+from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -52,6 +53,7 @@ class BaseInsuranceService:
 
         return fields
 
+    @transaction.atomic
     def base_insurance_delete_relations(self, *, insurance: BaseInsurance):
         insurance.responsible_member.delete()
         return insurance

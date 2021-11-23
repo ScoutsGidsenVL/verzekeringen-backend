@@ -93,6 +93,13 @@ class InuitsEquipment(models.Model):
             raise ValidationError("A piece of equipment needs to have an owner")
 
 
+class EquipmentInuitsTemplate(models.Model):
+    equipment = models.OneToOneField(
+        Equipment, on_delete=models.CASCADE, primary_key=True, db_constraint=models.UniqueConstraint
+    )
+    inuits_equipment = models.ForeignKey(InuitsEquipment, on_delete=models.CASCADE)
+
+
 class InuitsVehicle(models.Model):
     """Extra vehicle class we can use to save and search unique vehicles"""
 
@@ -128,10 +135,3 @@ class VehicleInuitsTemplate(models.Model):
         TemporaryVehicleInsurance, on_delete=models.CASCADE, primary_key=True, db_constraint=models.UniqueConstraint
     )
     inuits_vehicle = models.ForeignKey(InuitsVehicle, on_delete=models.CASCADE)
-
-
-class EquipmentInuitsTemplate(models.Model):
-    equipment = models.OneToOneField(
-        Equipment, on_delete=models.CASCADE, primary_key=True, db_constraint=models.UniqueConstraint
-    )
-    inuits_equipment = models.ForeignKey(InuitsEquipment, on_delete=models.CASCADE)
