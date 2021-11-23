@@ -16,9 +16,11 @@ class BaseInsuranceQuerySet(models.QuerySet):
         if user.has_role_administrator():
             return self.qs
 
-        # Section leaders can view and change requests they made themselves
+        # Section and group leaders can view and change requests they made themselves
         section_leader_groups = [group.group_admin_id for group in user.get_section_leader_groups()]
-        return self.filter(_group_group_admin_id__in=section_leader_groups)
+        group_leader_groups = [group.group_admin_id for group in user.get_group_leader_groups()]
+        groups = section_leader_groups + list(set(group_leader_groups) - set(section_leader_groups))
+        return self.filter(_group_group_admin_id__in=groups)
 
     def editable(self):
         self.filter(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
