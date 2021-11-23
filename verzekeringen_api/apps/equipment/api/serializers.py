@@ -190,7 +190,7 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
             queryset = InuitsNonMember.objects.all().allowed(request.user)
             return queryset
 
-    group_group_admin_id = serializers.CharField(source="group_group_admin_id")
+    group_group_admin_id = serializers.CharField()
     owner_member = serializers.CharField(source="owner_member_id", required=False, allow_null=True)
     owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
 
