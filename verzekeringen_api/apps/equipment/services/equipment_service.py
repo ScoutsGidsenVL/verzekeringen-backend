@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 
 from apps.members.models import InuitsNonMember
 from apps.members.services import MemberService
-from apps.equipment.models import Equipment, InuitsEquipment
+from apps.equipment.models import Equipment, InuitsEquipment, EquipmentInuitsTemplate
 
 
 def inuits_equipment_create(
@@ -17,7 +17,7 @@ def inuits_equipment_create(
     nature: str = None,
     owner_group: str = None,
     owner_non_member: InuitsNonMember = None,
-    owner_member_id: str = None,
+    owner_member: str = None,
 ) -> InuitsEquipment:
     # validate group
     if owner_group not in (group.group_admin_id for group in created_by.scouts_groups):
@@ -28,7 +28,7 @@ def inuits_equipment_create(
         total_value=total_value,
         owner_group_group_admin_id=owner_group,
         owner_non_member=owner_non_member,
-        owner_member_group_admin_id=owner_member_id,
+        owner_member_group_admin_id=owner_member,
     )
 
     equipment.full_clean()
@@ -42,7 +42,7 @@ def inuits_equipment_update(*, equipment: InuitsEquipment, **fields) -> InuitsEq
     equipment.description = fields.get("description", equipment.description)
     equipment.total_value = fields.get("total_value", equipment.total_value)
     equipment.owner_non_member = fields.get("owner_non_member", equipment.owner_non_member)
-    equipment.owner_member_group_admin_id = fields.get("owner_member_id", equipment.owner_member_group_admin_id)
+    equipment.owner_member_group_admin_id = fields.get("owner_member", equipment.owner_member_group_admin_id)
     equipment.owner_group_group_admin_id = fields.get("owner_group", equipment.group_group_admin_id)
 
     equipment.full_clean()
@@ -68,5 +68,7 @@ def equipment_create(
         equipment.owner_member = MemberService.member_create(**owner_member)
     equipment.full_clean()
     equipment.save()
+
+    equipment_inuits_template = EquipmentInuitsTemplate.create(equipment=equipment, inuits_equipment=)
 
     return equipment
