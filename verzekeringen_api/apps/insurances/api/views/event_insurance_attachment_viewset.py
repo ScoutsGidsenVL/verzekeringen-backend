@@ -91,7 +91,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         # response["Content-Disposition"] = "attachment; filename={}".format(attachement.file.name)
         # return response
         attachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
-        output_serializer = EventInsuranceAttachmentSerializer(attachment)
+        output_serializer = EventInsuranceAttachmentSerializer(attachment, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
