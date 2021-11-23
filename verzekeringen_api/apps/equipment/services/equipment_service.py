@@ -60,6 +60,7 @@ def equipment_create(
     nature: str = None,
     owner_non_member: dict = None,
     owner_member: dict = None,
+    inuits_equipment_id=None,
 ) -> Equipment:
     equipment = Equipment(nature=nature, description=description, total_value=total_value, insurance=insurance)
     if owner_non_member:
@@ -69,6 +70,18 @@ def equipment_create(
     equipment.full_clean()
     equipment.save()
 
-    # equipment_inuits_template = EquipmentInuitsTemplate.create(equipment=equipment, inuits_equipment=)
+    if not inuits_equipment_id:
+        raise ValidationError("Inuits equipment id must be provided")
+    else:
+        inuits_equipment = InuitsEquipment.objects.all().get(pk=inuits_equipment_id)
+
+        if not inuits_equipment:
+            raise ValidationError("Couldn't find InuitsEquipment instance with %s", str(inuits_equipment_id))
+        else:
+            equipment_inuits_template = EquipmentInuitsTemplate.create(
+                equipment=equipment, inuits_equipment=inuits_equipment
+            )
+            equipment_inuits_template.full_clean()
+            equipment_inuits_template.save()
 
     return equipment
