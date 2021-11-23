@@ -1,7 +1,6 @@
 role_section_leader:
   - insurances.add_insuranceclaim
   - insurances.change_insuranceclaim
-  - insurances.view_insuranceclaim
   - insurances.list_insuranceclaims                   # View the list of claims
 role_group_leader:
   - insurances.list_insuranceclaims                   # https://redmine.inuits.eu/issues/79995
