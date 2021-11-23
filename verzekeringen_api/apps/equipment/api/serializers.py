@@ -13,9 +13,10 @@ from apps.members.api.serializers import (
 from apps.members.models import InuitsNonMember
 from apps.equipment.models import (
     InuitsVehicle,
-    InuitsEquipment,
-    Equipment,
     VehicleInuitsTemplate,
+    Equipment,
+    InuitsEquipment,
+    EquipmentInuitsTemplate,
 )
 from apps.equipment.enums import VehicleType, VehicleTrailerOption
 from apps.equipment.utils import Vehicle
@@ -87,61 +88,6 @@ class InuitsVehicleOutputSerializer(serializers.ModelSerializer):
         return EnumOutputSerializer(parse_choice_to_tuple(VehicleTrailerOption(obj.trailer))).data
 
 
-class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
-    owner_non_member = NonMemberNestedOutputSerializer()
-    owner_member = MemberNestedOutputSerializer()
-
-    class Meta:
-        model = Equipment
-        fields = (
-            "id",
-            "nature",
-            "description",
-            "total_value",
-            "owner_non_member",
-            "owner_member",
-        )
-
-
-class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = InuitsEquipment
-        fields = (
-            "id",
-            "nature",
-            "description",
-            "total_value",
-            "group_group_admin_id",
-        )
-
-
-class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
-    owner_non_member = InuitsNonMemberOutputSerializer()
-    owner_member = serializers.SerializerMethodField()
-
-    class Meta:
-        model = InuitsEquipment
-        fields = (
-            "id",
-            "nature",
-            "description",
-            "total_value",
-            "owner_non_member",
-            "owner_member",
-            "group_group_admin_id",
-        )
-
-    @swagger_serializer_method(serializer_or_field=ScoutsMemberSearchFrontendSerializer)
-    def get_owner_member(self, obj):
-        if not obj.owner_member_group_admin_id:
-            return None
-        request = self.context.get("request", None)
-        return ScoutsMemberSearchFrontendSerializer(
-            GroupAdmin().get_member_info(active_user=request.user, group_admin_id=obj.owner_member_group_admin_id)
-        ).data
-
-
-# Input
 class VehicleInputSerializer(serializers.Serializer):
     type = serializers.ChoiceField(choices=VehicleType.choices)
     brand = serializers.CharField(max_length=15)
@@ -213,3 +159,65 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
         if data.get("owner_member_id") and data.get("owner_non_member"):
             raise serializers.ValidationError("There can only be one max owner")
         return data
+
+
+class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
+    owner_non_member = NonMemberNestedOutputSerializer()
+    owner_member = MemberNestedOutputSerializer()
+    inuits_equipment_id = serializers.SerializerMethodField()
+
+    def get_inuits_equipement_id(self, obj):
+        inuits_equipment = EquipmentInuitsTemplate.objects.filter(equipment=obj.id).first()
+        if inuits_equipment:
+            return inuits_equipment.inuits_equipment.id
+
+        return None
+
+    class Meta:
+        model = Equipment
+        fields = (
+            "id",
+            "nature",
+            "description",
+            "total_value",
+            "owner_non_member",
+            "owner_member",
+        )
+
+
+class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InuitsEquipment
+        fields = (
+            "id",
+            "nature",
+            "description",
+            "total_value",
+            "group_group_admin_id",
+        )
+
+
+class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
+    owner_non_member = InuitsNonMemberOutputSerializer()
+    owner_member = serializers.SerializerMethodField()
+
+    class Meta:
+        model = InuitsEquipment
+        fields = (
+            "id",
+            "nature",
+            "description",
+            "total_value",
+            "owner_non_member",
+            "owner_member",
+            "group_group_admin_id",
+        )
+
+    @swagger_serializer_method(serializer_or_field=ScoutsMemberSearchFrontendSerializer)
+    def get_owner_member(self, obj):
+        if not obj.owner_member_group_admin_id:
+            return None
+        request = self.context.get("request", None)
+        return ScoutsMemberSearchFrontendSerializer(
+            GroupAdmin().get_member_info(active_user=request.user, group_admin_id=obj.owner_member_group_admin_id)
+        ).data
