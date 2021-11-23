@@ -10,7 +10,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ScoutsUser
-        fields = "__all__"
+        exclude = ["password"]
 
     def get_user_permissions(self, obj: ScoutsUser):
         return obj.permissions
