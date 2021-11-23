@@ -3,8 +3,11 @@ role_section_leader:
   - insurances.change_insuranceclaim
   - insurances.list_insuranceclaims                   # View the list of claims
 role_group_leader:
+  - insurances.add_insuranceclaim
+  - insurances.change_insuranceclaim
   - insurances.list_insuranceclaims                   # https://redmine.inuits.eu/issues/79995
 role_administrator:
+  - insurances.view_insurance_claim
   - insurances.list_insuranceclaims
   - insurances.add_insuranceclaim_note                # https://redmine.inuits.eu/issues/78579
   - insurances.view_insuranceclaim_note               # https://redmine.inuits.eu/issues/78579
