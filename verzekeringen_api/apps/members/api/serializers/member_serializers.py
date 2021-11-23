@@ -4,7 +4,6 @@ from rest_framework import serializers
 
 from apps.members.models import Member, NonMember, InuitsNonMember, NonMemberInuitsTemplate
 
-from groupadmin.models import ScoutsMember, ScoutsMemberSearchMember
 from groupadmin.serializers import BelgianPostcodeCitySerializer
 
 

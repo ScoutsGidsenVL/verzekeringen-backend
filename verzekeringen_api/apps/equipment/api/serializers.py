@@ -11,7 +11,12 @@ from apps.members.api.serializers import (
     NonMemberCreateInputSerializer,
 )
 from apps.members.models import InuitsNonMember
-from apps.equipment.models import InuitsVehicle, InuitsEquipment, Equipment, VehicleInuitsTemplate
+from apps.equipment.models import (
+    InuitsVehicle,
+    InuitsEquipment,
+    Equipment,
+    VehicleInuitsTemplate,
+)
 from apps.equipment.enums import VehicleType, VehicleTrailerOption
 from apps.equipment.utils import Vehicle
 

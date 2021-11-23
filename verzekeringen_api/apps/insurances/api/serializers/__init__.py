@@ -30,7 +30,6 @@ from .insurance_claim_attachment_serializers import (
 )
 from .insurance_claim_serializers import (
     InsuranceClaimCreateDataSerializer,
-    InsuranceClaimAttachmentSerializer,
     InsuranceClaimVictimOutputListSerializer,
     BaseInsuranceClaimSerializer,
     InsuranceClaimVictimOutputDetailSerializer,
