@@ -23,18 +23,6 @@ class InsuranceClaimCreateDataSerializer(serializers.Serializer):
     permitted_scouts_groups = ScoutsGroupSerializer(many=True)
 
 
-class InsuranceClaimAttachmentSerializer(serializers.ModelSerializer):
-
-    filename = serializers.SerializerMethodField()
-
-    class Meta:
-        model = InsuranceClaimAttachment
-        exclude = ("insurance_claim", "file")
-
-    def get_filename(self, obj: InsuranceClaimAttachment):
-        return obj.file.name
-
-
 class InsuranceClaimVictimOutputListSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaimVictim

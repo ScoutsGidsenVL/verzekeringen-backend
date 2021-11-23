@@ -37,8 +37,14 @@ class InsuranceClaimAttachmentUploadSerializer(serializers.Serializer):
 
 
 class InsuranceClaimAttachmentSerializer(serializers.Serializer):
-    id = serializers.CharField()
-    url = serializers.CharField()
+    filename = serializers.SerializerMethodField()
+
+    class Meta:
+        model = InsuranceClaimAttachment
+        exclude = ("insurance_claim", "file")
+
+    def get_filename(self, obj: InsuranceClaimAttachment):
+        return obj.file.name
 
 
 class FileDetailOutputSerializer(serializers.ModelSerializer):

@@ -3,7 +3,6 @@ import logging
 from django.forms import FileField as DjangoFileField
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
-from drf_yasg2.utils import swagger_serializer_method
 
 from apps.insurances.models import EventInsuranceAttachment
 
@@ -37,5 +36,11 @@ class EventInsuranceAttachmentUploadSerializer(serializers.Serializer):
 
 
 class EventInsuranceAttachmentSerializer(serializers.Serializer):
-    id = serializers.CharField()
-    url = serializers.CharField()
+    filename = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EventInsuranceAttachment
+        exclude = ("insurance_claim", "file")
+
+    def get_filename(self, obj: EventInsuranceAttachment):
+        return obj.file.name
