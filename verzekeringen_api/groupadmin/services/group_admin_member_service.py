@@ -4,7 +4,7 @@ from datetime import date, datetime, timedelta
 
 from django.conf import settings
 
-from groupadmin.models import ScoutsMember, ScoutsMemberSearchMember, ScoutsMemberSearchResponse
+from groupadmin.models import ScoutsMember, ScoutsMemberSearchResponse
 from groupadmin.services import GroupAdmin
 
 
