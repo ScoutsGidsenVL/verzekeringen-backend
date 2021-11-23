@@ -126,7 +126,7 @@ class EquipmentInputSerializer(serializers.Serializer):
     total_value = serializers.DecimalField(max_digits=7, decimal_places=2)
     owner_member = MemberNestedCreateInputSerializer(required=False)
     owner_non_member = NonMemberCreateInputSerializer(required=False)
-    inuits_equipment_id = serializers.CharField()
+    inuits_equipment_id = serializers.CharField(required=False)
 
     def validate(self, data):
         if data.get("owner_member") and data.get("owner_non_member"):
