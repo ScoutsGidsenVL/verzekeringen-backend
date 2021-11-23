@@ -21,11 +21,9 @@ class InsuranceClaimAttachmentService:
         name, extension = os.path.splitext(uploaded_file.name)
         file_name = InsuranceAttachmentUtils.generate_claim_attachment_file_name(claim, extension)
         logger.debug("Storing attachment for claim(%d) to %s", claim.id, file_name)
-        # stored_file_path = self.file_service.store_file(file_name, uploaded_file)
 
         attachment = InsuranceClaimAttachment()
         attachment.insurance_claim = claim
-        # attachment.file = stored_file_path
         attachment.file.save(name=file_name, content=uploaded_file)
         attachment.content_type = uploaded_file.content_type
         try:
