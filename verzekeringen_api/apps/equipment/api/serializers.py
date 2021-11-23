@@ -133,34 +133,6 @@ class EquipmentInputSerializer(serializers.Serializer):
         return data
 
 
-class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
-    # Special filter field so we can get allowed in queryset
-    class InuitsEquipmentNonMemberRelatedField(serializers.PrimaryKeyRelatedField):
-        def get_queryset(self):
-            request = self.context.get("request", None)
-            queryset = InuitsNonMember.objects.all().allowed(request.user)
-            return queryset
-
-    group_group_admin_id = serializers.CharField()
-    owner_member = serializers.CharField(source="owner_member_id", required=False, allow_null=True)
-    owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
-
-    def validate_owner_member(self, value):
-        # Validate wether membership number of member is valid
-        request = self.context.get("request", None)
-        try:
-            if value:
-                GroupAdmin().get_member_info(active_user=request.user, group_admin_id=value)
-        except:
-            raise serializers.ValidationError("Invalid member id given")
-        return value
-
-    def validate(self, data):
-        if data.get("owner_member_id") and data.get("owner_non_member"):
-            raise serializers.ValidationError("There can only be one max owner")
-        return data
-
-
 class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
     owner_non_member = NonMemberNestedOutputSerializer()
     owner_member = MemberNestedOutputSerializer()
@@ -185,6 +157,36 @@ class EquipmentNestedOutputSerializer(serializers.ModelSerializer):
         )
 
 
+class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
+    # Special filter field so we can get allowed in queryset
+    class InuitsEquipmentNonMemberRelatedField(serializers.PrimaryKeyRelatedField):
+        def get_queryset(self):
+            request = self.context.get("request", None)
+            queryset = InuitsNonMember.objects.all().allowed(request.user)
+            return queryset
+
+    owner_member = serializers.CharField(required=False, allow_null=True)
+    owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
+    owner_group = serializers.CharField()
+
+    def validate_owner_member(self, value):
+        # Validate wether membership number of member is valid
+        request = self.context.get("request", None)
+        try:
+            if value:
+                GroupAdmin().get_member_info(active_user=request.user, group_admin_id=value)
+        except:
+            raise serializers.ValidationError("Invalid member id given")
+        return value
+
+    def validate(self, data):
+        if not data.get("owner_member") and not data.get("owner_non_member") and not data.get("owner_group"):
+            raise serializers.ValidationError("A piece of equipment needs an owner")
+        if data.get("owner_member") and data.get("owner_non_member") and data.get("owner_group"):
+            raise serializers.ValidationError("There can only be one owner of the piece of equipment")
+        return data
+
+
 class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = InuitsEquipment
@@ -193,13 +195,14 @@ class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
             "nature",
             "description",
             "total_value",
-            "group_group_admin_id",
+            "owner_group",
         )
 
 
 class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
     owner_non_member = InuitsNonMemberOutputSerializer()
     owner_member = serializers.SerializerMethodField()
+    owner_group = serializers.CharField()
 
     class Meta:
         model = InuitsEquipment
@@ -210,7 +213,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
             "total_value",
             "owner_non_member",
             "owner_member",
-            "group_group_admin_id",
+            "owner_group",
         )
 
     @swagger_serializer_method(serializer_or_field=ScoutsMemberSearchFrontendSerializer)

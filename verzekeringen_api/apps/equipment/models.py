@@ -81,15 +81,16 @@ class InuitsEquipment(models.Model):
     )
     # Save some group admin id of owner, all detailed info will be gotten from group admin
     owner_member_group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
-
     # GroupAdmin id of the group to which the equipment belongs
-    group_group_admin_id = models.CharField(max_length=6)
+    owner_group_group_admin_id = models.CharField(max_length=6)
 
     def clean(self):
         if self.owner_non_member and self.owner_member_group_admin_id:
             raise ValidationError("There needs to be only one owner")
         if self.owner_member_group_admin_id and self.nature:
             raise ValidationError("If owner member then nature can not be given")
+        if not self.owner_non_member and not self.owner_member_group_admin_id and not self.owner_group_group_admin_id:
+            raise ValidationError("A piece of equipment needs to have an owner")
 
 
 class InuitsVehicle(models.Model):
