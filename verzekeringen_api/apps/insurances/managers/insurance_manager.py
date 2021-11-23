@@ -26,7 +26,7 @@ class BaseInsuranceQuerySet(models.QuerySet):
         # Only section leaders can edit and only their own requests
         # Insurance requests can't be edited after they've been approved or invoiced
         return self.filter(
-            _status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING], responsible_member__ga_id=user.id
+            _status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING], responsible_member__group_admin_id=user.id
         )
 
 
