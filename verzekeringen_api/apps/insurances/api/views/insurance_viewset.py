@@ -56,25 +56,23 @@ class InsuranceViewSet(viewsets.GenericViewSet):
     equipment_insurance_service = EquipmentInsuranceService()
 
     def get_queryset(self):
-        return BaseInsurance.objects.filter(created_on__gte=datetime.now() - timedelta(days=3 * 365)).allowed(
-            self.request.user
-        )
+        return BaseInsurance.objects.all().allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceListOutputSerializer})
     def retrieve(self, request, pk=None):
-        insurance = self.get_object()
+        insurance: BaseInsurance = get_object_or_404(self.get_queryset(), pk=pk)
 
-        if insurance.type_id == 1:
+        if insurance.type.id == 1:
             serializer = ActivityInsuranceDetailOutputSerializer(insurance.activity_child)
-        elif insurance.type_id == 2:
+        elif insurance.type.id == 2:
             serializer = TemporaryInsuranceDetailOutputSerializer(insurance.temporary_child)
-        elif insurance.type_id in (3, 4):
+        elif insurance.type.id in (3, 4):
             serializer = TravelAssistanceInsuranceDetailOutputSerializer(insurance.travel_assistance_child)
-        elif insurance.type_id == 5:
+        elif insurance.type.id == 5:
             serializer = TemporaryVehicleInsuranceDetailOutputSerializer(insurance.temporary_vehicle_child)
-        elif insurance.type_id == 6:
+        elif insurance.type.id == 6:
             serializer = EquipmentInsuranceDetailOutputSerializer(insurance.equipment_child)
-        elif insurance.type_id == 10:
+        elif insurance.type.id == 10:
             serializer = EventInsuranceDetailOutputSerializer(insurance.event_child)
         else:
             serializer = InsuranceListOutputSerializer(insurance)

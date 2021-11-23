@@ -7,22 +7,9 @@ from django.core.exceptions import ValidationError
 from apps.members.models import Member
 from apps.insurances.models import InsuranceType
 from apps.insurances.models.enums import InsuranceStatus
+from apps.insurances.managers import BaseInsuranceManager
 
 from groupadmin.models import ScoutsGroup, ScoutsAddress
-
-
-class BaseInsuranceQuerySet(models.QuerySet):
-    def allowed(self, user: settings.AUTH_USER_MODEL):
-        user_group_ids = [group.group_admin_id for group in user.scouts_groups]
-        return self.filter(_group_group_admin_id__in=user_group_ids)
-
-    def editable(self):
-        return self.filter(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
-
-
-class BaseInsuranceManager(models.Manager):
-    def get_queryset(self):
-        return BaseInsuranceQuerySet(self.model, using=self._db)
 
 
 class BaseInsurance(models.Model):
