@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from rest_framework import status, serializers, viewsets, permissions
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_FILE, TYPE_ARRAY
 
@@ -93,6 +94,22 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         output_serializer = EventInsuranceAttachmentSerializer(attachment, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        responses={
+            **responses,
+            status.HTTP_200_OK: Schema(
+                type=TYPE_FILE,
+            ),
+        },
+        tags=["Files"],
+    )
+    @action(methods=["get"], detail=True, url_path="download")
+    def download(self, request, pk=None):
+        attachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
+        response = HttpResponse(attachment.file, content_type=attachment.content_type)
+        response["Content-Disposition"] = "attachment; filename={}".format(attachment.file.name)
+        return response
 
     @swagger_auto_schema(
         responses={
