@@ -71,8 +71,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         except ValidationError as e:
             raise serializers.ValidationError("; ".join(e.messages))
 
-        url = request.build_absolute_uri("/api/files/download/" + str(result.id))
-        output_serializer = EventInsuranceAttachmentSerializer({"url": url, "id": str(result.id)})
+        output_serializer = EventInsuranceAttachmentSerializer(result, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -91,7 +90,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         # response["Content-Disposition"] = "attachment; filename={}".format(attachement.file.name)
         # return response
         attachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
-        output_serializer = EventInsuranceAttachmentSerializer(attachment)
+        output_serializer = EventInsuranceAttachmentSerializer(attachment, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
