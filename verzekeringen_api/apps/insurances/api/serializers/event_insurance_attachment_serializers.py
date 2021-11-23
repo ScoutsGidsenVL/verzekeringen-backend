@@ -36,11 +36,19 @@ class EventInsuranceAttachmentUploadSerializer(serializers.Serializer):
 
 
 class EventInsuranceAttachmentSerializer(serializers.Serializer):
+    id = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
     filename = serializers.SerializerMethodField()
 
     class Meta:
         model = EventInsuranceAttachment
-        exclude = ("insurance_claim", "file")
+        exclude = ("event_insurance", "file")
+
+    def get_id(self, obj: EventInsuranceAttachment):
+        return obj.id
+
+    def get_url(self, obj: EventInsuranceAttachment):
+        return self.context.get("request").build_absolute_uri("/api/files/download/" + str(obj.id))
 
     def get_filename(self, obj: EventInsuranceAttachment):
         return obj.file.name
