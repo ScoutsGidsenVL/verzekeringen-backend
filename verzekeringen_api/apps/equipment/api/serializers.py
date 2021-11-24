@@ -208,6 +208,7 @@ class InuitsEquipmentCreateInputSerializer(EquipmentInputSerializer):
 
 class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
     inuits_equipment_id = serializers.SerializerMethodField()
+    owner_group = serializers.SerializerMethodField()
 
     class Meta:
         model = InuitsEquipment
@@ -221,6 +222,9 @@ class InuitsEquipmentListOutputSerializer(serializers.ModelSerializer):
 
     def get_inuits_equipment_id(self, obj):
         return obj.id
+
+    def get_owner_group(self, obj):
+        return obj.owner_group_group_admin_id
 
 
 class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
