@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -39,6 +41,9 @@ from apps.insurances.services import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 class InsuranceViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
@@ -61,19 +66,29 @@ class InsuranceViewSet(viewsets.GenericViewSet):
         insurance: BaseInsurance = get_object_or_404(self.get_queryset(), pk=pk)
 
         if insurance.type.id == 1:
-            serializer = ActivityInsuranceDetailOutputSerializer(insurance.activity_child)
+            serializer = ActivityInsuranceDetailOutputSerializer(
+                insurance.activity_child, context={"request": request}
+            )
         elif insurance.type.id == 2:
-            serializer = TemporaryInsuranceDetailOutputSerializer(insurance.temporary_child)
+            serializer = TemporaryInsuranceDetailOutputSerializer(
+                insurance.temporary_child, context={"request": request}
+            )
         elif insurance.type.id in (3, 4):
-            serializer = TravelAssistanceInsuranceDetailOutputSerializer(insurance.travel_assistance_child)
+            serializer = TravelAssistanceInsuranceDetailOutputSerializer(
+                insurance.travel_assistance_child, context={"request": request}
+            )
         elif insurance.type.id == 5:
-            serializer = TemporaryVehicleInsuranceDetailOutputSerializer(insurance.temporary_vehicle_child)
+            serializer = TemporaryVehicleInsuranceDetailOutputSerializer(
+                insurance.temporary_vehicle_child, context={"request": request}
+            )
         elif insurance.type.id == 6:
-            serializer = EquipmentInsuranceDetailOutputSerializer(insurance.equipment_child)
+            serializer = EquipmentInsuranceDetailOutputSerializer(
+                insurance.equipment_child, context={"request": request}
+            )
         elif insurance.type.id == 10:
             serializer = EventInsuranceDetailOutputSerializer(insurance.event_child, context={"request": request})
         else:
-            serializer = InsuranceListOutputSerializer(insurance)
+            serializer = InsuranceListOutputSerializer(insurance, context={"request": request})
 
         return Response(serializer.data)
 

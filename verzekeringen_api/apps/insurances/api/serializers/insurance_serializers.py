@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.db.models import Q
 from rest_framework import serializers
@@ -55,7 +57,9 @@ from groupadmin.serializers import (
 )
 
 
-# Output
+logger = logging.getLogger(__name__)
+
+
 class InsuranceCostOutputSerializer(serializers.Serializer):
     total_cost = serializers.DecimalField(max_digits=7, decimal_places=2)
 
