@@ -70,6 +70,9 @@ class InsuranceAttachmentUtils:
     claim_prefix = settings.INSURANCE_CLAIM_FILE_NAME_PREFIX
     claim_suffix = settings.INSURANCE_CLAIM_FILE_NAME_SUFFIX
 
+    participant_list_base_path = settings.INSURANCE_EVENT_PARTICIPANT_LIST_FILES_BASE_PATH
+    participant_list_prefix = settings.INSURANCE_EVENT_PARTICIPANT_LIST_FILE_NAME_PREFIX
+
     @staticmethod
     def get_insurance_base_path() -> str:
         InsuranceAttachmentUtils._static_setup()
@@ -101,6 +104,18 @@ class InsuranceAttachmentUtils:
         return InsuranceAttachmentUtils.claim_suffix
 
     @staticmethod
+    def get_participant_list_base_path() -> str:
+        InsuranceAttachmentUtils._static_setup()
+
+        return InsuranceAttachmentUtils.participant_list_base_path
+
+    @staticmethod
+    def get_participant_list_prefix() -> str:
+        InsuranceAttachmentUtils._static_setup()
+
+        return InsuranceAttachmentUtils.participant_list_prefix
+
+    @staticmethod
     def _clean(input: str, search: str, replace: str):
         return input.replace(search, replace)
 
@@ -113,6 +128,11 @@ class InsuranceAttachmentUtils:
             if InsuranceAttachmentUtils.claim_base_path[-1] != "/":
                 logger.warn("INSURANCE_CLAIM_FILES_BASE_PATH should end with a slash")
                 InsuranceAttachmentUtils.claim_base_path = InsuranceAttachmentUtils.claim_base_path + "/"
+            if InsuranceAttachmentUtils.participant_list_base_path[-1] != "/":
+                logger.warn("INSURANCE_EVENT_PARTICIPANT_LIST_FILES_BASE_PATH should end with a slash")
+                InsuranceAttachmentUtils.participant_list_base_path = (
+                    InsuranceAttachmentUtils.participant_list_base_path + "/"
+                )
 
             InsuranceAttachmentUtils.insurance_prefix = InsuranceAttachmentUtils._clean(
                 InsuranceAttachmentUtils.insurance_prefix, " ", "_"
@@ -122,6 +142,9 @@ class InsuranceAttachmentUtils:
             )
             InsuranceAttachmentUtils.claim_suffix = InsuranceAttachmentUtils._clean(
                 InsuranceAttachmentUtils.claim_suffix, " ", "_"
+            )
+            InsuranceAttachmentUtils.participant_list_prefix = InsuranceAttachmentUtils._clean(
+                InsuranceAttachmentUtils.participant_list_prefix, " ", "_"
             )
 
     @staticmethod
@@ -167,6 +190,15 @@ class InsuranceAttachmentUtils:
         return "%s_%010d%s" % (prefix, id, suffix)
 
     @staticmethod
+    def generate_insurance_attachment_file_name(insurance: BaseInsurance, extension: str) -> str:
+        return InsuranceAttachmentUtils.generate_attachment_file_name(
+            insurance.id,
+            InsuranceAttachmentUtils.insurance_base_path,
+            InsuranceAttachmentUtils.insurance_prefix,
+            extension,
+        )
+
+    @staticmethod
     def generate_claim_report_temp_file_name(claim: InsuranceClaim) -> str:
         return InsuranceAttachmentUtils.generate_temp_file_name(
             claim.id, InsuranceAttachmentUtils.insurance_prefix, ".pdf"
@@ -192,10 +224,10 @@ class InsuranceAttachmentUtils:
         )
 
     @staticmethod
-    def generate_insurance_attachment_file_name(insurance: BaseInsurance, extension: str) -> str:
+    def generate_participant_list_file_name(insurance: BaseInsurance, extension: str) -> str:
         return InsuranceAttachmentUtils.generate_attachment_file_name(
             insurance.id,
-            InsuranceAttachmentUtils.insurance_base_path,
-            InsuranceAttachmentUtils.insurance_prefix,
+            InsuranceAttachmentUtils.participant_list_base_path,
+            InsuranceAttachmentUtils.participant_list_prefix,
             extension,
         )
