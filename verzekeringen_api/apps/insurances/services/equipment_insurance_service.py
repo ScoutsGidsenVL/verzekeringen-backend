@@ -118,7 +118,7 @@ class EquipmentInsuranceService:
         insurance.full_clean()
         insurance.save()
 
-        # If a piece of equipment was remove from the list, also remove it from the database.
+        # If a piece of equipment was removed from the list, also remove it from the database.
         # Make sure the equipment is not part of an insurance request that is not new or waiting (i.e. already approved or billed).
         existing_equipment_list = [
             equipment.id
@@ -134,7 +134,7 @@ class EquipmentInsuranceService:
 
             equipment = EquipmentService.equipment_create_or_update(**equipment_data, insurance=insurance)
 
-            if equipment_id:
+            if equipment_id and equipment_id in existing_equipment_list
                 existing_equipment_list.remove(equipment.id)
 
         for equipment_id in existing_equipment_list:
