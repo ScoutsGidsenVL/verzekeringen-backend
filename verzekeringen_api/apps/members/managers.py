@@ -16,18 +16,22 @@ class InuitsNonMemberQuerySet(models.QuerySet):
 
     def currently_insured(self, start: datetime, end: datetime):
         return self.filter(
+            # Equipment (vrzkmateriaal)
             (
-                Q(template__non_member__equipment__equipment_child___start_date__gte=start)
-                and Q(template__non_member__equipment__insurance_parent___end_date__lte=end)
+                Q(template__non_member__equipment__insurance__insurance_parent___start_date__gte=start)
+                and Q(template__non_member__equipment__insurance__insurance_parent___end_date__lte=end)
             )
+            # NonMemberTemporaryInsurance (vrzknietledentijd)
             | (
-                Q(template__non_member__temporary__temporary_insurance__temporary_child___start_date__gte=start)
-                and Q(template__non_member__temporary__temporary_insurance__temporary_child___end_date__lte=end)
+                Q(template__non_member__temporary__temporary_insurance__insurance_parent___start_date__gte=start)
+                and Q(template__non_member__temporary__temporary_insurance__insurance_parent___end_date__lte=end)
             )
+            # ParticipantTemporaryVehicleInsurance (vrzktijdautonietleden)
             | (
                 Q(template__non_member__temporary_vehicle__insurance__insurance_parent___start_date__gte=start)
                 and Q(template__non_member__temporary_vehicle__insurance__insurance_parent___end_date__lte=end)
             )
+            # ParticipantTravelAssistanceInsurance (vrzkassistpassagier)
             | (
                 Q(template__non_member__travel__temporary_insurance__insurance_parent___start_date__gte=start)
                 and Q(template__non_member__travel__temporary_insurance__insurance_parent___end_date__lte=end)
