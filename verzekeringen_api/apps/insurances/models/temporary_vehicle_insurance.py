@@ -122,6 +122,7 @@ class ParticipantTemporaryVehicleInsurance(models.Model):
         db_column="bestuurderid",
         on_delete=models.CASCADE,
         primary_key=True,
+        related_name="temporary_vehicle",
     )
     insurance = models.ForeignKey(
         TemporaryVehicleInsurance,

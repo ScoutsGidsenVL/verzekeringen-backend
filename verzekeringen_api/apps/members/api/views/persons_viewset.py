@@ -8,12 +8,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
-from apps.members.api.filters import InuitsNonMemberFilter
 from apps.members.models import InuitsNonMember
+from apps.members.api.filters import InuitsNonMemberFilter
+from apps.members.api.serializers import PersonSerializer
 
 from groupadmin.models import ScoutsMemberSearchResponse
 from groupadmin.services import GroupAdminMemberService
-from groupadmin.serializers import ScoutsMemberSearchFrontendSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -30,24 +30,22 @@ class PersonSearch(viewsets.GenericViewSet):
     def get_queryset(self):
         return InuitsNonMember.objects.all().allowed(self.request.user)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: PersonSerializer})
     def list(self, request):
         return self._list(request=request)
 
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer},
+        responses={status.HTTP_200_OK: PersonSerializer},
     )
     @action(methods=["get"], detail=False, url_path="/inactive")
     def list_with_previous_members(self, request):
         return self._list(request=request, include_inactive=True)
 
-    @action(methods=["get"], detail=False, url_path="insured/(?P<start>\w+)(?P<end>\w+)")
-    def list_insured_non_members(self, request):
-        pass
-
-    def _list(self, request, start: datetime = None, end: datetime = None):
+    def _list(self, request):
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
+        start = self.request.GET.get("start", None)
+        end = self.request.GET.get("end", None)
 
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")
@@ -57,12 +55,19 @@ class PersonSearch(viewsets.GenericViewSet):
         else:
             logger.debug("Searching for members and non-members with term and group %s", group_group_admin_id)
 
+        if start and end:
+            logger.debug("Searching for non-members who are already insured between %s and %s", start, end)
+
         members: ScoutsMemberSearchResponse = self.service.search_member_filtered(
             active_user=request.user, term=search_term, group_group_admin_id=group_group_admin_id
         )
-        # Include non-members with a running insurance in the search results
-        non_members = self.filter_queryset(self.get_queryset().with_group(group_group_admin_id))
+
+        queryset = self.get_queryset().with_group(group_group_admin_id)
+        # Include non-members with a running insurance in the search results if needed
+        if start and end:
+            queryset = queryset.currently_insured(start, end)
+        non_members = self.filter_queryset(queryset)
         results = [*members, *non_members]
-        output_serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
+        output_serializer = PersonSerializer(results, many=True)
 
         return Response(output_serializer.data)
