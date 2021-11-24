@@ -25,16 +25,20 @@ class InsuranceClaimMailService(EmailService):
     """
 
     from_email = InsuranceSettingsHelper.get_email_insurance_from()
+    template_path_start = settings.RESOURCES_MAIL_TEMPLATE_START
+    template_path_end = settings.RESOURCES_MAIL_TEMPLATE_END
 
     insurer_template_path = settings.RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH
-    insurer_subject = "Documenten schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
+    insurer_subject = "Schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
     insurer_address = ""
 
     victim_template_path = settings.RESOURCES_CLAIMS_VICTIM_TEMPLATE_PATH
-    victim_subject = "Schadeaangifte"
+    victim_subject = "Bevestiging schadeaangifte"
 
     stakeholder_template_path = settings.RESOURCES_CLAIMS_STAKEHOLDER_TEMPLATE_PATH
-    stakeholder_subject = "Schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
+    stakeholder_subject = "Bevestiging schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
+
+    insurance_request_subject = "Bevestiging aanvraag verzekering"
 
     template_id = settings.EMAIL_TEMPLATE
 
@@ -65,7 +69,7 @@ class InsuranceClaimMailService(EmailService):
             dictionary=dictionary,
             subject=subject,
             template_path=self.insurer_template_path,
-            to=InsuranceSettingsHelper.get_insurer_address(self.insurer_address),
+            to=InsuranceSettingsHelper.get_insurer_address(self.insurer_address, claim.declarant.email),
             add_attachments=True,
             claim_report_path=claim_report_path,
         )
@@ -80,7 +84,7 @@ class InsuranceClaimMailService(EmailService):
             dictionary=dictionary,
             subject=self.victim_subject,
             template_path=self.victim_template_path,
-            to=InsuranceSettingsHelper.get_victim_email(victim.email),
+            to=InsuranceSettingsHelper.get_victim_email(victim.email, claim.declarant.email),
             add_attachments=True,
             claim_report_path=claim_report_path,
         )
@@ -97,7 +101,7 @@ class InsuranceClaimMailService(EmailService):
             dictionary=dictionary,
             subject=subject,
             template_path=self.stakeholder_template_path,
-            to=InsuranceSettingsHelper.get_declarant_email(claim.declarant.email),
+            to=InsuranceSettingsHelper.get_declarant_email(claim.declarant.email, claim.declarant.email),
             add_attachments=False,
         )
 
@@ -114,10 +118,15 @@ class InsuranceClaimMailService(EmailService):
             "victim__email": claim.victim.email,
             "date_of_accident": claim.date_of_accident.date(),
             "date_of_declaration": claim.date.date(),
+            "title_mail--": "",
+            "insurance__type--": "",
+            "requester__first_name--": "",
         }
 
     def _prepare_email_body(self, template_path: str, dictionary: dict) -> str:
-        return TextUtils.replace(path=template_path, dictionary=dictionary)
+        return TextUtils.replace(
+            path=template_path, dictionary=dictionary, placeholder_start="--", placeholder_end="--"
+        )
 
     def _send_prepared_email(
         self,
@@ -133,14 +142,15 @@ class InsuranceClaimMailService(EmailService):
         claim_report_path: str = None,
         add_attachments: bool = False,
     ):
-        dictionary["subject"] = subject
+        dictionary["title_mail"] = subject
         body = self._prepare_email_body(template_path, dictionary)
+        body = TextUtils.compose_html_email(self.template_path_start, body, self.template_path_end)
 
         if not reply_to:
             reply_to = self.from_email
 
         mail = Email(
-            subject=dictionary["subject"],
+            subject=dictionary["title_mail"],
             body=body,
             from_email=self.from_email,
             to=to,

@@ -146,7 +146,8 @@ def correct_url(prefix, url):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False)
+DEBUG = env.bool("DEBUG", False)
+IS_ACCEPTANCE = env.bool("IS_ACCEPTANCE", False)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -351,6 +352,8 @@ else:
 # EMAIL RESOURCES
 RESOURCES_PATH = env.str("RESOURCES_PATH")
 RESOURCES_MAIL_TEMPLATE_PATH = RESOURCES_PATH + env.str("RESOURCES_MAIL_TEMPLATE_PATH")
+RESOURCES_MAIL_TEMPLATE_START = RESOURCES_MAIL_TEMPLATE_PATH + env.str("RESOURCES_MAIL_TEMPLATE_START")
+RESOURCES_MAIL_TEMPLATE_END = RESOURCES_MAIL_TEMPLATE_PATH + env.str("RESOURCES_MAIL_TEMPLATE_END")
 RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH = RESOURCES_MAIL_TEMPLATE_PATH + env.str(
     "RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH"
 )

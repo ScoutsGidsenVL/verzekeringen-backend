@@ -17,12 +17,21 @@ class InsuranceSettingsHelper:
         return getattr(settings, "DEBUG", False) and GlobalSettingsUtil.instance().is_test
 
     @staticmethod
+    def is_acceptance() -> bool:
+        return InsuranceSettingsHelper.is_test() and getattr(settings, "IS_ACCEPTANCE", False)
+
+    @staticmethod
     def get_email_insurance_from():
         return getattr(settings, "EMAIL_INSURANCE_FROM")
 
     @staticmethod
-    def get_insurer_address(insurer_address: str = None) -> str:
+    def get_insurer_address(insurer_address: str = None, send_to: str = None) -> str:
         if InsuranceSettingsHelper.is_test():
+            # When on acceptance, send everything to the declarant
+            if InsuranceSettingsHelper.is_acceptance():
+                if not send_to:
+                    raise ValidationError("Declarant email is not set")
+                return send_to
             address = getattr(settings, "EMAIL_INSURER_ADDRESS_DEBUG", None)
             if not address:
                 raise ValidationError("EMAIL_ADDRESS_INSURER_DEBUG is not set !")
@@ -37,8 +46,13 @@ class InsuranceSettingsHelper:
         return None
 
     @staticmethod
-    def get_victim_email(victim_email: str = None) -> str:
+    def get_victim_email(victim_email: str = None, send_to: str = None) -> str:
         if InsuranceSettingsHelper.is_test():
+            # When on acceptance, send everything to the declarant
+            if InsuranceSettingsHelper.is_acceptance():
+                if not send_to:
+                    raise ValidationError("Declarant email is not set")
+                return send_to
             address = getattr(settings, "EMAIL_VICTIM_ADDRESS_DEBUG", None)
             if not address:
                 raise ValidationError("EMAIL_VICTIM_ADDRESS_DEBUG is not set !")
@@ -48,8 +62,13 @@ class InsuranceSettingsHelper:
         return victim_email
 
     @staticmethod
-    def get_declarant_email(declarant_email: str = None) -> str:
+    def get_declarant_email(declarant_email: str = None, send_to: str = None) -> str:
         if InsuranceSettingsHelper.is_test():
+            # When on acceptance, send everything to the declarant
+            if InsuranceSettingsHelper.is_acceptance():
+                if not send_to:
+                    raise ValidationError("Declarant email is not set")
+                return send_to
             address = getattr(settings, "EMAIL_DECLARANT_ADDRESS_DEBUG", None)
             if not address:
                 raise ValidationError("EMAIL_DECLARANT_ADDRESS_DEBUG is not set !")
