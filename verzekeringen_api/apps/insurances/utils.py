@@ -1,11 +1,58 @@
 import logging
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from apps.insurances.models import InsuranceClaim, BaseInsurance
 
+from inuits.utils import GlobalSettingsUtil
+
 
 logger = logging.getLogger(__name__)
+
+
+class InsuranceSettingsHelper:
+    @staticmethod
+    def is_test() -> bool:
+        logger.debug("DEBUG: %s", getattr(settings, "DEBUG", False))
+        logger.debug("IS_TEST: %s", GlobalSettingsUtil.instance().is_test)
+        return getattr(settings, "DEBUG", False) and GlobalSettingsUtil.instance().is_test
+
+    @staticmethod
+    def get_email_insurance_from():
+        return getattr(settings, "EMAIL_INSURANCE_FROM")
+
+    @staticmethod
+    def get_insurer_address() -> str:
+        if InsuranceSettingsHelper.is_test():
+            address = getattr(settings, "EMAIL_INSURER_ADDRESS_DEBUG", None)
+            if not address:
+                raise ValidationError("EMAIL_ADDRESS_INSURER_DEBUG is not set !")
+
+            return address
+        return getattr(settings, "EMAIL_INSURER_ADDRESS")
+
+    @staticmethod
+    def get_victim_email(victim_email: str = None) -> str:
+        if InsuranceSettingsHelper.is_test():
+            address = getattr(settings, "EMAIL_VICTIM_ADDRESS_DEBUG", None)
+            if not address:
+                raise ValidationError("EMAIL_VICTIM_ADDRESS_DEBUG is not set !")
+            return address
+        if not victim_email:
+            raise ValidationError("Victim email is not set !")
+        return victim_email
+
+    @staticmethod
+    def get_declarant_email(declarant_email: str = None) -> str:
+        if InsuranceSettingsHelper.is_test():
+            address = getattr(settings, "EMAIL_DECLARANT_ADDRESS_DEBUG", None)
+            if not address:
+                raise ValidationError("EMAIL_DECLARANT_ADDRESS_DEBUG is not set !")
+            return address
+        if not declarant_email:
+            raise ValidationError("Declarant email not set")
+        return declarant_email
 
 
 class InsuranceAttachmentUtils:

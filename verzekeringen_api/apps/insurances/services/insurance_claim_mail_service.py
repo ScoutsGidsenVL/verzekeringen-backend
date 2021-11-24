@@ -3,7 +3,9 @@ import logging
 from django.conf import settings
 from django.core.files.storage import default_storage
 
+from apps.insurances.utils import InsuranceSettingsHelper
 from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
+
 from inuits.mail import Email, EmailAttachment, EmailService
 from inuits.utils import TextUtils
 
@@ -19,15 +21,14 @@ class InsuranceClaimMailService(EmailService):
     - The insurance company
     - The afflicted member (or his/her parents) -> email address in claim
     #80697:
-    - The group leader should be notified a claim was reported
+    - The declarant should be notified a claim was reported
     """
 
-    from_email = settings.EMAIL_INSURANCE_FROM
-    to = settings.EMAIL_INSURANCE_TO
+    from_email = InsuranceSettingsHelper.get_email_insurance_from()
 
     insurer_template_path = settings.RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH
     insurer_subject = "Documenten schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
-    insurer_address = settings.EMAIL_INSURER_ADDRESS
+    insurer_address = InsuranceSettingsHelper.get_insurer_address()
 
     victim_template_path = settings.RESOURCES_CLAIMS_VICTIM_TEMPLATE_PATH
     victim_subject = "Schadeaangifte"
@@ -79,7 +80,7 @@ class InsuranceClaimMailService(EmailService):
             dictionary=dictionary,
             subject=self.victim_subject,
             template_path=self.victim_template_path,
-            to=victim.email,
+            to=InsuranceSettingsHelper.get_victim_email(victim.email),
             add_attachments=True,
             claim_report_path=claim_report_path,
         )
@@ -91,13 +92,12 @@ class InsuranceClaimMailService(EmailService):
         subject = self.stakeholder_subject
         subject = subject.replace("(((claim.id)))", str(claim.id))
         subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.date()))
-        to = "boro@inuits.eu"
         self._send_prepared_email(
             claim=claim,
             dictionary=dictionary,
             subject=subject,
             template_path=self.stakeholder_template_path,
-            to=to,
+            to=InsuranceSettingsHelper.get_declarant_email(claim.declarant.email),
             add_attachments=False,
         )
 

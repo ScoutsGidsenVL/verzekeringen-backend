@@ -18,6 +18,7 @@ class InsuranceSignalHandler:
     @receiver(app_ready, sender=ScoutsAuthSignalSender.sender, dispatch_uid=ScoutsAuthSignalSender.app_ready_uid)
     def handle_app_ready(**kwargs):
         logger.debug("SIGNAL received: 'app_ready' from %s", ScoutsAuthSignalSender.sender)
+        from apps.insurances.utils import InsuranceSettingsHelper
 
         try:
             PermissionService().populate_roles()

@@ -9,6 +9,8 @@ from groupadmin.models import ScoutsGroup, ScoutsFunction
 from groupadmin.services import GroupAdminMemberService
 from groupadmin.utils import SettingsHelper
 
+from inuits.utils import GlobalSettingsUtil
+
 
 logger = logging.getLogger(__name__)
 
@@ -46,8 +48,6 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         user = self.update_user_scouts_groups(user)
 
-        logger.debug("USER PERMISSIONS: %s", user.user_permissions)
-
         return user
 
     def update_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
@@ -78,6 +78,7 @@ class ScoutsAuthorizationService(AuthorizationService):
                     "User %s is member of a test group and DEBUG is set to True, adding user as administrator",
                     user.username,
                 )
+                GlobalSettingsUtil.instance().is_test = True
                 user = self.add_user_as_admin(user)
 
         return user
