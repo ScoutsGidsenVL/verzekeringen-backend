@@ -149,13 +149,10 @@ class InsuranceAttachmentUtils:
 
     @staticmethod
     def generate_temp_file_name(id, prefix: str, suffix: str) -> str:
-        InsuranceAttachmentUtils._static_setup()
-
         return "%s_%010d%s" % (prefix, id, suffix)
 
     @staticmethod
     def generate_report_name(id, base_path: str, prefix: str, extension: str) -> str:
-        InsuranceAttachmentUtils._static_setup()
         return "%s%s_%010d%s" % (
             base_path,
             prefix,
@@ -165,8 +162,6 @@ class InsuranceAttachmentUtils:
 
     @staticmethod
     def generate_attachment_file_name(id, base_path: str, prefix: str, extension: str, suffix: str = None) -> str:
-        InsuranceAttachmentUtils._static_setup()
-
         if suffix:
             return "%s%s_%010d_%s%s" % (
                 base_path,
@@ -185,8 +180,6 @@ class InsuranceAttachmentUtils:
 
     @staticmethod
     def generate_temp_file_name(id, prefix: str, suffix: str) -> str:
-        InsuranceAttachmentUtils._static_setup()
-
         return "%s_%010d%s" % (prefix, id, suffix)
 
     @staticmethod

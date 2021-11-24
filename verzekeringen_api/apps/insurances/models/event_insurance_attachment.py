@@ -1,8 +1,10 @@
 import logging
 
+from django.conf import settings
 from django.db import models
 
 from apps.insurances.models import EventInsurance
+
 from inuits.files.validators import validate_file_extension
 from inuits.models import BaseModel
 

@@ -1,5 +1,6 @@
-import logging
+import logging, os
 
+from django.conf import settings
 from django.core.files.storage import Storage
 
 

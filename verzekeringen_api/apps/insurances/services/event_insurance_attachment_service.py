@@ -23,11 +23,9 @@ class EventInsuranceAttachmentService:
         name, extension = os.path.splitext(uploaded_file.name)
         file_name = InsuranceAttachmentUtils.generate_participant_list_file_name(event_insurance, extension)
         logger.debug("Storing attachment for event insurance(%d) to %s", event_insurance.id, file_name)
-        # stored_file_path = self.file_service.store_file(file_name, uploaded_file)
 
         attachment = EventInsuranceAttachment()
         attachment.event_insurance = event_insurance
-        # attachment.file = stored_file_path
         attachment.file.save(name=file_name, content=uploaded_file)
         attachment.content_type = uploaded_file.content_type
         try:

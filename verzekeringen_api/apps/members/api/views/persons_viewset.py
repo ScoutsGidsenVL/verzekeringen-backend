@@ -28,7 +28,6 @@ class PersonSearch(viewsets.GenericViewSet):
     service = GroupAdminMemberService()
 
     def get_queryset(self):
-        # return InuitsNonMember.objects.all().allowed(self.request.user)
         return InuitsNonMember.objects.all().allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSearchFrontendSerializer})

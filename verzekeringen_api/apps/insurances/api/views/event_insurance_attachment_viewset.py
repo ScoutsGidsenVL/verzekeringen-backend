@@ -61,11 +61,15 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
                 data={"message": "Event participant list can only be uploaded after the insurance was accepted !"},
             )
 
-        if EventInsuranceAttachment.objects.filter(event_insurance=event_insurance):
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"message": "Event insurance already has a participant list !"},
-            )
+        file = EventInsuranceAttachment.objects.filter(event_insurance=event_insurance)
+        if file:
+            file.delete()
+
+            # Allow the participant list file to be replaced
+            # return Response(
+            #     status=status.HTTP_400_BAD_REQUEST,
+            #     data={"message": "Event insurance already has a participant list !"},
+            # )
 
         try:
             result = self.service.store_attachment(uploaded_file=data.get("file"), event_insurance=event_insurance)

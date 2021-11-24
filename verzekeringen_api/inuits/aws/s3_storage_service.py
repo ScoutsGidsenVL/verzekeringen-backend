@@ -70,10 +70,10 @@ class S3StorageService(StorageService, S3Boto3Storage):
 
         return self.local_storage.path(file_dest_path)
 
-    def delete(self, using=None, keep_parents=False):
-        storage = self.file.storage
+    # def delete(self, file_path: str, using=None, keep_parents=False):
+    #     storage = self.file.storage
 
-        if storage.exists(self.file.name):
-            storage.delete(self.file.name)
+    #     if storage.exists(self.file.name):
+    #         storage.delete(self.file.name)
 
-        super().delete(using=using, keep_parents=keep_parents)
+    #     super().delete(using=using, keep_parents=keep_parents)
