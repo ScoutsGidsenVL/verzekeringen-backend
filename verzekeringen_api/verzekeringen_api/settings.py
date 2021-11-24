@@ -114,7 +114,7 @@ LOGGING = {
         },
         "groupadmin": {
             "handlers": ["console"],
-            "level": LOGGING_LEVEL,
+            "level": "INFO",
             "propagate": False,
         },
         "apps": {

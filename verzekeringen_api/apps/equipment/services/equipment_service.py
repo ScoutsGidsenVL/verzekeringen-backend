@@ -59,12 +59,13 @@ def inuits_equipment_update(*, equipment: InuitsEquipment, **fields) -> InuitsEq
 @transaction.atomic
 def equipment_create(
     *,
-    insurance,
+    insurance: EquipmentInsurance,
     description: str,
     total_value: Decimal,
     nature: str = None,
     owner_non_member: dict = None,
     owner_member: dict = None,
+    id: str = None,
     inuits_equipment_id: str = None,
 ) -> Equipment:
     equipment = Equipment(nature=nature, description=description, total_value=total_value, insurance=insurance)
@@ -93,8 +94,8 @@ def equipment_create(
 
 def equipment_update(
     *,
-    equipment: Equipment,
     insurance=EquipmentInsurance,
+    equipment: Equipment,
     description: str = None,
     total_value: Decimal = None,
     nature: str = None,
@@ -103,6 +104,7 @@ def equipment_update(
     inuits_equipment_id: str = None,
     id: str = None,
 ) -> Equipment:
+    equipment.insurance = insurance
     equipment.nature = nature if nature else equipment.nature
     equipment.description = description if description else equipment.description
     equipment.total_value = total_value if total_value else equipment.total_value
@@ -117,7 +119,7 @@ def equipment_update(
 
 def equipment_create_or_update(
     *,
-    insurance,
+    insurance: EquipmentInsurance,
     description: str,
     total_value: Decimal,
     nature: str = None,
@@ -138,8 +140,8 @@ def equipment_create_or_update(
             "Updating Equipment instance with id %s and inuits_equipment_id %s", equipment.id, inuits_equipment_id
         )
         return equipment_update(
-            equipment=equipment,
             insurance=insurance,
+            equipment=equipment,
             description=description,
             total_value=total_value,
             nature=nature,

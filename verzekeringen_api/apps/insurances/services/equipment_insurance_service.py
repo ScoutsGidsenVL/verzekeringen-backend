@@ -87,10 +87,8 @@ class EquipmentInsuranceService:
         insurance.full_clean()
         insurance.save()
 
-        # Save insurance here already so we can create equipment linked to it
-        # This whole function is atomic so if equipment cant be created this will rollback aswell
-        for equipment_data in equipment:
-            equipment = EquipmentService.equipment_create(**equipment_data, insurance=insurance)
+        self.update_equipment(insurance, equipment)
+
         insurance.total_cost = self._calculate_total_cost(insurance)
         insurance.full_clean()
         insurance.save()
@@ -118,17 +116,31 @@ class EquipmentInsuranceService:
         insurance.full_clean()
         insurance.save()
 
+        self.update_equipment(insurance, fields.get("equipment", []))
+
+        insurance.total_cost = self._calculate_total_cost(insurance)
+        insurance.full_clean()
+        insurance.save()
+
+    def update_equipment(self, insurance: EquipmentInsurance, equipment: list):
         # If a piece of equipment was removed from the list, also remove it from the database.
         # Make sure the equipment is not part of an insurance request that is not new or waiting (i.e. already approved or billed).
+        logger.debug("Updating equipment list on insurance %s", insurance.id)
         existing_equipment_list = [
             equipment.id
             for equipment in Equipment.objects.filter(
                 Q(insurance=insurance)
-                | Q(insurance__insurance_parent___status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
+                & Q(insurance__insurance_parent___status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
             )
         ]
 
-        for equipment_data in fields.get("equipment", []):
+        logger.debug(
+            "List of existing equipment for insurance %s that are not NEW or WAITING: %s",
+            insurance.id,
+            existing_equipment_list,
+        )
+
+        for equipment_data in equipment:
             equipment_id = equipment_data.get("id", None)
             inuits_equipment_id = equipment_data.get("inuits_equipment_id", None)
 
@@ -143,7 +155,3 @@ class EquipmentInsuranceService:
 
             EquipmentInuitsTemplate.objects.get(equipment=equipment).delete()
             equipment.delete()
-
-        insurance.total_cost = self._calculate_total_cost(insurance)
-        insurance.full_clean()
-        insurance.save()
