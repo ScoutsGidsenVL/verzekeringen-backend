@@ -21,14 +21,20 @@ class InsuranceSettingsHelper:
         return getattr(settings, "EMAIL_INSURANCE_FROM")
 
     @staticmethod
-    def get_insurer_address() -> str:
+    def get_insurer_address(insurer_address: str = None) -> str:
         if InsuranceSettingsHelper.is_test():
             address = getattr(settings, "EMAIL_INSURER_ADDRESS_DEBUG", None)
             if not address:
                 raise ValidationError("EMAIL_ADDRESS_INSURER_DEBUG is not set !")
 
             return address
-        return getattr(settings, "EMAIL_INSURER_ADDRESS")
+        if not insurer_address:
+            insurer_address = getattr(settings, "EMAIL_INSURER_ADDRESS", None)
+
+        if not insurer_address:
+            raise ValidationError("Insurer address is not set !")
+
+        return None
 
     @staticmethod
     def get_victim_email(victim_email: str = None) -> str:

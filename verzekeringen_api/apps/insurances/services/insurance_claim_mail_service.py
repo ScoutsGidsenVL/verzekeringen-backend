@@ -28,7 +28,7 @@ class InsuranceClaimMailService(EmailService):
 
     insurer_template_path = settings.RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH
     insurer_subject = "Documenten schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
-    insurer_address = InsuranceSettingsHelper.get_insurer_address()
+    insurer_address = ""
 
     victim_template_path = settings.RESOURCES_CLAIMS_VICTIM_TEMPLATE_PATH
     victim_subject = "Schadeaangifte"
@@ -65,7 +65,7 @@ class InsuranceClaimMailService(EmailService):
             dictionary=dictionary,
             subject=subject,
             template_path=self.insurer_template_path,
-            to=self.insurer_address,
+            to=InsuranceSettingsHelper.get_insurer_address(self.insurer_address),
             add_attachments=True,
             claim_report_path=claim_report_path,
         )
