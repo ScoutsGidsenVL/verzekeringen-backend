@@ -25,7 +25,7 @@ def inuits_equipment_create(
     owner_member: str = None,
 ) -> InuitsEquipment:
     # validate group
-    if owner_group not in (group.group_admin_id for group in created_by.scouts_groups):
+    if owner_group not in [group.group_admin_id for group in created_by.scouts_groups]:
         raise ValidationError("Given group %s is not a valid group of user" % owner_group)
     equipment = InuitsEquipment(
         nature=nature,
