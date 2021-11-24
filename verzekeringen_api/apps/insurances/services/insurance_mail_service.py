@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 
 from apps.insurances.utils import InsuranceSettingsHelper
-from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
+from apps.insurances.models import BaseInsurance, InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
 
 from inuits.mail import Email, EmailAttachment, EmailService
 from inuits.utils import TextUtils
@@ -12,7 +12,7 @@ from inuits.utils import TextUtils
 logger = logging.getLogger(__name__)
 
 
-class InsuranceClaimMailService(EmailService):
+class InsuranceMailService(EmailService):
     """
     Prepares claims mails and sends them.
 
@@ -44,6 +44,9 @@ class InsuranceClaimMailService(EmailService):
 
     file_service = default_storage
     mail_service = EmailService()
+
+    def send_insurance(self, insurance: BaseInsurance):
+        pass
 
     def send_claim(
         self,

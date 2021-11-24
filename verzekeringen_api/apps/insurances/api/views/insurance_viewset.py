@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response

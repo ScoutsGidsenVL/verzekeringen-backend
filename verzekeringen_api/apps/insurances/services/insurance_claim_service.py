@@ -9,7 +9,7 @@ from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim
 from apps.insurances.services import (
     InsuranceClaimReportService,
     InsuranceClaimAttachmentService,
-    InsuranceClaimMailService,
+    InsuranceMailService,
 )
 
 
@@ -20,7 +20,7 @@ class InsuranceClaimService:
 
     report_service = InsuranceClaimReportService()
     attachment_service = InsuranceClaimAttachmentService()
-    mail_service = InsuranceClaimMailService()
+    mail_service = InsuranceMailService()
 
     @transaction.atomic
     def create(

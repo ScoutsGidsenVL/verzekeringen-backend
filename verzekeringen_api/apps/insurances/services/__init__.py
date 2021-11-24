@@ -9,6 +9,6 @@ from .activity_insurance_attachment_service import ActivityInsuranceAttachmentSe
 from .equipment_insurance_service import EquipmentInsuranceService
 from .insurance_draft_service import InsuranceDraftService
 from .insurance_claim_report_service import InsuranceClaimReportService
-from .insurance_claim_mail_service import InsuranceClaimMailService
+from .insurance_mail_service import InsuranceMailService
 from .insurance_claim_attachment_service import InsuranceClaimAttachmentService
 from .insurance_claim_service import InsuranceClaimService
