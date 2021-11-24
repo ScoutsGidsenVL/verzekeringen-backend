@@ -82,7 +82,7 @@ class InuitsEquipment(models.Model):
     # Save some group admin id of owner, all detailed info will be gotten from group admin
     owner_member_group_admin_id = models.CharField(db_column="ga_id", max_length=255, blank=True, null=True)
     # GroupAdmin id of the group to which the equipment belongs
-    owner_group_group_admin_id = models.CharField(max_length=6)
+    owner_group_group_admin_id = models.CharField(max_length=6, blank=True, null=True)
 
     def clean(self):
         if self.owner_non_member and self.owner_member_group_admin_id:
