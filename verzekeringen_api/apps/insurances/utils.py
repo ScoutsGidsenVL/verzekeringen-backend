@@ -14,8 +14,6 @@ logger = logging.getLogger(__name__)
 class InsuranceSettingsHelper:
     @staticmethod
     def is_test() -> bool:
-        logger.debug("DEBUG: %s", getattr(settings, "DEBUG", False))
-        logger.debug("IS_TEST: %s", GlobalSettingsUtil.instance().is_test)
         return getattr(settings, "DEBUG", False) and GlobalSettingsUtil.instance().is_test
 
     @staticmethod
