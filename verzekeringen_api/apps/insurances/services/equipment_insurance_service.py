@@ -134,7 +134,7 @@ class EquipmentInsuranceService:
 
             equipment = EquipmentService.equipment_create_or_update(**equipment_data, insurance=insurance)
 
-            if equipment_id and equipment_id in existing_equipment_list
+            if equipment_id and equipment_id in existing_equipment_list:
                 existing_equipment_list.remove(equipment.id)
 
         for equipment_id in existing_equipment_list:
