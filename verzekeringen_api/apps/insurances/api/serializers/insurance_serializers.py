@@ -29,6 +29,7 @@ from apps.locations.models import Country
 from apps.insurances.models import (
     BaseInsurance,
     ActivityInsurance,
+    ActivityInsuranceAttachment,
     TemporaryInsurance,
     TravelAssistanceInsurance,
     TemporaryVehicleInsurance,
@@ -43,7 +44,11 @@ from apps.insurances.models.enums import (
     TemporaryVehicleInsuranceOptionApi,
     TemporaryVehicleInsuranceCoverageOption,
 )
-from apps.insurances.api.serializers import InsuranceTypeOutputSerializer, EventInsuranceAttachmentSerializer
+from apps.insurances.api.serializers import (
+    InsuranceTypeOutputSerializer,
+    EventInsuranceAttachmentSerializer,
+    ActivityInsuranceAttachmentSerializer,
+)
 from groupadmin.serializers import (
     ScoutsGroupSerializer,
     BelgianPostcodeCitySerializer,
@@ -105,44 +110,41 @@ class BaseInsuranceDetailOutputSerializer(serializers.ModelSerializer):
         return EnumOutputSerializer(parse_choice_to_tuple(InsuranceStatus(obj.status))).data
 
 
-class ActivityInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    location = BelgianPostcodeCitySerializer(source="postcode_city")
-    group_size = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ActivityInsurance
-        fields = base_insurance_detail_fields + ("nature", "group_size", "location")
-
-    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
-    def get_group_size(self, obj):
-        return EnumOutputSerializer(parse_choice_to_tuple(GroupSize(obj.group_size))).data
+class BaseInsuranceCreateInputSerializer(serializers.Serializer):
+    group_group_admin_id = serializers.CharField(max_length=6)
+    start_date = DateTimeTZField()
+    end_date = DateTimeTZField()
+    comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    responsible_phone_number = serializers.CharField(max_length=15, required=False)
 
 
-class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    participants = NonMemberNestedOutputSerializer(many=True)
-    vehicle = serializers.SerializerMethodField()
+class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    postcode_city = BelgianPostcodeCitySerializer()
+    non_members = NonMemberNestedOutputSerializer(many=True)
     country = CountryOutputSerializer()
 
     class Meta:
-        model = TravelAssistanceInsurance
-        fields = base_insurance_detail_fields + ("country", "participants", "vehicle")
+        model = TemporaryInsurance
+        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "non_members")
 
-    @swagger_serializer_method(serializer_or_field=InuitsVehicleOutputSerializer)
-    def get_vehicle(self, obj):
-        vehicle = obj.vehicle
 
-        if vehicle:
+class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+    nature = serializers.CharField(max_length=500)
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2), required=False)
+    postcode_city = BelgianPostcodeCitySerializer(required=False)
+    non_members = NonMemberCreateInputSerializer(many=True)
 
-            inuits_vehicles = InuitsVehicle.objects.filter(
-                Q(brand=vehicle.brand) | Q(license_plate=vehicle.license_plate)
-            )
+    def validate_non_members(self, value):
+        if len(value) < 1:
+            raise serializers.ValidationError("At least one non member is required")
+        return value
 
-            if inuits_vehicles.count() > 0:
-                return InuitsVehicleOutputSerializer(inuits_vehicles[0]).data
-
-            return VehicleOutputSerializer(vehicle).data
-
-        return None
+    def validate(self, data):
+        if not data.get("postcode_city") and not data.get("country"):
+            raise serializers.ValidationError("Either postcode_city or country is required")
+        elif data.get("postcode_city") and data.get("country"):
+            raise serializers.ValidationError("Country and postcode_city are mutually exclusive fields")
+        return data
 
 
 class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
@@ -185,60 +187,6 @@ class TemporaryVehicleInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputS
         return InuitsVehicleOutputSerializer(vehicle).data
 
 
-class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    postcode_city = BelgianPostcodeCitySerializer()
-    equipment = EquipmentNestedOutputSerializer(many=True)
-    country = CountryOutputSerializer()
-
-    class Meta:
-        model = EquipmentInsurance
-        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "equipment")
-
-
-# Input
-class BaseInsuranceCreateInputSerializer(serializers.Serializer):
-    group_group_admin_id = serializers.CharField(max_length=6)
-    start_date = DateTimeTZField()
-    end_date = DateTimeTZField()
-    comment = serializers.CharField(max_length=500, required=False, allow_blank=True)
-    responsible_phone_number = serializers.CharField(max_length=15, required=False)
-
-
-class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
-    nature = serializers.CharField(max_length=500)
-    group_size = serializers.ChoiceField(choices=GroupSize.choices)
-    location = BelgianPostcodeCitySerializer()
-
-
-class TemporaryInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
-    nature = serializers.CharField(max_length=500)
-    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_type(2), required=False)
-    postcode_city = BelgianPostcodeCitySerializer(required=False)
-    non_members = NonMemberCreateInputSerializer(many=True)
-
-    def validate_non_members(self, value):
-        if len(value) < 1:
-            raise serializers.ValidationError("At least one non member is required")
-        return value
-
-    def validate(self, data):
-        if not data.get("postcode_city") and not data.get("country"):
-            raise serializers.ValidationError("Either postcode_city or country is required")
-        elif data.get("postcode_city") and data.get("country"):
-            raise serializers.ValidationError("Country and postcode_city are mutually exclusive fields")
-        return data
-
-
-class TemporaryInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
-    postcode_city = BelgianPostcodeCitySerializer()
-    non_members = NonMemberNestedOutputSerializer(many=True)
-    country = CountryOutputSerializer()
-
-    class Meta:
-        model = TemporaryInsurance
-        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "non_members")
-
-
 class TemporaryVehicleInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     insurance_options = serializers.MultipleChoiceField(choices=TemporaryVehicleInsuranceOptionApi.choices)
     max_coverage = serializers.ChoiceField(choices=TemporaryVehicleInsuranceCoverageOption.choices, required=False)
@@ -272,6 +220,33 @@ class TemporaryVehicleInsuranceCreateInputSerializer(BaseInsuranceCreateInputSer
         return data
 
 
+class TravelAssistanceInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    participants = NonMemberNestedOutputSerializer(many=True)
+    vehicle = serializers.SerializerMethodField()
+    country = CountryOutputSerializer()
+
+    class Meta:
+        model = TravelAssistanceInsurance
+        fields = base_insurance_detail_fields + ("country", "participants", "vehicle")
+
+    @swagger_serializer_method(serializer_or_field=InuitsVehicleOutputSerializer)
+    def get_vehicle(self, obj):
+        vehicle = obj.vehicle
+
+        if vehicle:
+
+            inuits_vehicles = InuitsVehicle.objects.filter(
+                Q(brand=vehicle.brand) | Q(license_plate=vehicle.license_plate)
+            )
+
+            if inuits_vehicles.count() > 0:
+                return InuitsVehicleOutputSerializer(inuits_vehicles[0]).data
+
+            return VehicleOutputSerializer(vehicle).data
+
+        return None
+
+
 class TravelAssistanceInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.by_types([3, 4]))
     vehicle = VehicleInputSerializer(required=False)
@@ -283,9 +258,33 @@ class TravelAssistanceInsuranceCreateInputSerializer(BaseInsuranceCreateInputSer
         return value
 
 
-class EventInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+class ActivityInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    location = BelgianPostcodeCitySerializer(source="postcode_city")
+    group_size = serializers.SerializerMethodField()
+    participant_list_file = serializers.SerializerMethodField(required=False, allow_null=True)
+
+    class Meta:
+        model = ActivityInsurance
+        fields = base_insurance_detail_fields + ("nature", "group_size", "location", "participant_list_file")
+
+    @swagger_serializer_method(serializer_or_field=EnumOutputSerializer)
+    def get_group_size(self, obj):
+        return EnumOutputSerializer(parse_choice_to_tuple(GroupSize(obj.group_size))).data
+
+    @swagger_serializer_method(serializer_or_field=ActivityInsuranceAttachmentSerializer)
+    def get_participant_list_file(self, obj: ActivityInsurance):
+        try:
+            attachment: ActivityInsuranceAttachment = obj.attachment
+
+            if attachment:
+                return ActivityInsuranceAttachmentSerializer(attachment, context=self.context).data
+        except Exception:
+            return None
+
+
+class ActivityInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
     nature = serializers.CharField(max_length=500)
-    event_size = serializers.ChoiceField(choices=EventSize.choices)
+    group_size = serializers.ChoiceField(choices=GroupSize.choices)
     location = BelgianPostcodeCitySerializer()
 
 
@@ -303,14 +302,30 @@ class EventInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
         return EnumOutputSerializer(parse_choice_to_tuple(EventSize(obj.event_size))).data
 
     @swagger_serializer_method(serializer_or_field=EventInsuranceAttachmentSerializer)
-    def get_participant_list_file(self, obj):
-        if hasattr(obj, "attachment"):
+    def get_participant_list_file(self, obj: EventInsurance):
+        try:
             attachment: EventInsuranceAttachment = obj.attachment
 
             if attachment:
                 return EventInsuranceAttachmentSerializer(attachment, context=self.context).data
+        except Exception:
+            return None
 
-        return None
+
+class EventInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):
+    nature = serializers.CharField(max_length=500)
+    event_size = serializers.ChoiceField(choices=EventSize.choices)
+    location = BelgianPostcodeCitySerializer()
+
+
+class EquipmentInsuranceDetailOutputSerializer(BaseInsuranceDetailOutputSerializer):
+    postcode_city = BelgianPostcodeCitySerializer()
+    equipment = EquipmentNestedOutputSerializer(many=True)
+    country = CountryOutputSerializer()
+
+    class Meta:
+        model = EquipmentInsurance
+        fields = base_insurance_detail_fields + ("nature", "country", "postcode_city", "equipment")
 
 
 class EquipmentInsuranceCreateInputSerializer(BaseInsuranceCreateInputSerializer):

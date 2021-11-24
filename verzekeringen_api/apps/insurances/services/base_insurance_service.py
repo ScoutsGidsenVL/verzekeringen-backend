@@ -9,12 +9,15 @@ from django.utils import timezone
 from apps.members.services import MemberService
 from apps.insurances.models import BaseInsurance, InsuranceType
 from apps.insurances.models.enums import InsuranceStatus
+from apps.insurances.services import InsuranceMailService
 
 
 logger = logging.getLogger(__name__)
 
 
 class BaseInsuranceService:
+    mail_service = InsuranceMailService()
+
     def base_insurance_creation_fields(
         self,
         *,
@@ -57,3 +60,6 @@ class BaseInsuranceService:
     def base_insurance_delete_relations(self, *, insurance: BaseInsurance):
         insurance.responsible_member.delete()
         return insurance
+
+    def handle_insurance_created(self, insurance: BaseInsurance):
+        return self.mail_service.send_insurance(insurance)

@@ -133,3 +133,6 @@ class BaseInsurance(models.Model):
     @property
     def editable(self):
         return self.status in [InsuranceStatus.NEW, InsuranceStatus.WAITING]
+
+    def has_attachment(self) -> bool:
+        return False

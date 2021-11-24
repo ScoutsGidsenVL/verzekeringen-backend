@@ -103,6 +103,8 @@ class TravelAssistanceInsuranceService:
         insurance.full_clean()
         insurance.save()
 
+        self.base_insurance_service.handle_insurance_created(insurance)
+
         return insurance
 
     @transaction.atomic

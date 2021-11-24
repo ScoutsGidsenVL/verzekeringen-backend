@@ -39,3 +39,24 @@ class InsuranceType(models.Model):
     class Meta:
         db_table = "vrzkverzekeringstypes"
         managed = False
+
+    def is_activity_insurance(self) -> bool:
+        return self.id == 1
+
+    def is_temporary_insurance(self) -> bool:
+        return self.id == 2
+
+    def is_travel_assistance_without_vehicle_insurance(self) -> bool:
+        return self.id == 3
+
+    def is_travel_assistance_with_vehicle_insurance(self) -> bool:
+        return self.id == 4
+
+    def is_temporary_vehicle_insurance(self) -> bool:
+        return self.id == 5
+
+    def is_equipment_insurance(self) -> bool:
+        return self.id == 6
+
+    def is_event_insurance(self) -> bool:
+        return self.id == 10

@@ -39,3 +39,6 @@ class ActivityInsurance(BaseInsurance):
     @property
     def postcode_city(self):
         return PostcodeCity(postcode=self.postcode, name=self.city)
+
+    def has_attachment(self) -> bool:
+        return self.attachment is not None

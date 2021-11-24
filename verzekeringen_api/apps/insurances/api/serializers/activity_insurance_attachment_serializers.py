@@ -48,7 +48,9 @@ class ActivityInsuranceAttachmentSerializer(serializers.Serializer):
         return obj.id
 
     def get_url(self, obj: ActivityInsuranceAttachment):
-        return self.context.get("request").build_absolute_uri("/api/participants/" + str(obj.id) + "/download")
+        return self.context.get("request").build_absolute_uri(
+            "/api/activities/participants/" + str(obj.id) + "/download"
+        )
 
     def get_filename(self, obj: ActivityInsuranceAttachment):
         return obj.file.name

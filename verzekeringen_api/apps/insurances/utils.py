@@ -25,6 +25,24 @@ class InsuranceSettingsHelper:
         return getattr(settings, "EMAIL_INSURANCE_FROM")
 
     @staticmethod
+    def get_insurance_requester_address(insurance_requester_address: str = None, send_to: str = None) -> str:
+        if InsuranceSettingsHelper.is_test():
+            # When on acceptance, send everything to the requester
+            if InsuranceSettingsHelper.is_acceptance():
+                if not send_to:
+                    raise ValidationError("Insurance requester email is not set")
+                return send_to
+            address = getattr(settings, "EMAIL_INSURANCE_REQUESTER_ADDRESS_DEBUG", None)
+            if not address:
+                raise ValidationError("EMAIL_INSURANCE_REQUESTER_ADDRESS_DEBUG is not set !")
+
+            return address
+        if not insurance_requester_address:
+            raise ValidationError("Insurance requester address is not set !")
+
+        return None
+
+    @staticmethod
     def get_insurer_address(insurer_address: str = None, send_to: str = None) -> str:
         if InsuranceSettingsHelper.is_test():
             # When on acceptance, send everything to the declarant
@@ -34,7 +52,7 @@ class InsuranceSettingsHelper:
                 return send_to
             address = getattr(settings, "EMAIL_INSURER_ADDRESS_DEBUG", None)
             if not address:
-                raise ValidationError("EMAIL_ADDRESS_INSURER_DEBUG is not set !")
+                raise ValidationError("EMAIL_INSURER_ADDRESS_DEBUG is not set !")
 
             return address
         if not insurer_address:
