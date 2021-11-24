@@ -9,11 +9,11 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_FILE, TYPE_ARRAY
 
-from apps.insurances.models import EventInsurance, EventInsuranceAttachment
-from apps.insurances.services import EventInsuranceAttachmentService
+from apps.insurances.models import ActivityInsurance, ActivityInsuranceAttachment
+from apps.insurances.services import ActivityInsuranceAttachmentService
 from apps.insurances.api.serializers import (
-    EventInsuranceAttachmentUploadSerializer,
-    EventInsuranceAttachmentSerializer,
+    ActivityInsuranceAttachmentUploadSerializer,
+    ActivityInsuranceAttachmentSerializer,
 )
 
 responses = {
@@ -25,19 +25,19 @@ responses = {
 logger = logging.getLogger(__name__)
 
 
-class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
+class ActivityInsuranceAttachmentViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = EventInsuranceAttachment.objects.all()
-    serializer_class = EventInsuranceAttachmentUploadSerializer
-    service = EventInsuranceAttachmentService()
+    queryset = ActivityInsuranceAttachment.objects.all()
+    serializer_class = ActivityInsuranceAttachmentUploadSerializer
+    service = ActivityInsuranceAttachmentService()
 
     @swagger_auto_schema(
-        request_body=EventInsuranceAttachmentUploadSerializer,
-        responses={status.HTTP_201_CREATED: EventInsuranceAttachmentSerializer},
+        request_body=ActivityInsuranceAttachmentUploadSerializer,
+        responses={status.HTTP_201_CREATED: ActivityInsuranceAttachmentSerializer},
         tags=["Files"],
     )
     def create(self, request):
-        serializer = EventInsuranceAttachmentUploadSerializer(data=request.data)
+        serializer = ActivityInsuranceAttachmentUploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
@@ -48,7 +48,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         if not insurance_id:
             return HttpResponse(404, "Insurance instance id not supplied with file upload !")
 
-        insurance = EventInsurance.objects.get(pk=insurance_id)
+        insurance = ActivityInsurance.objects.get(pk=insurance_id)
         if not insurance:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
@@ -61,7 +61,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
                 data={"message": "Participant list can only be uploaded after the insurance was accepted !"},
             )
 
-        file = EventInsuranceAttachment.objects.filter(insurance=insurance)
+        file = ActivityInsuranceAttachment.objects.filter(insurance=insurance)
         if file:
             file.delete()
 
@@ -70,7 +70,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         except ValidationError as e:
             raise serializers.ValidationError("; ".join(e.messages))
 
-        output_serializer = EventInsuranceAttachmentSerializer(result, context={"request": request})
+        output_serializer = ActivityInsuranceAttachmentSerializer(result, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -84,8 +84,8 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         tags=["Files"],
     )
     def retrieve(self, request, pk=None):
-        attachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
-        output_serializer = EventInsuranceAttachmentSerializer(attachment, context={"request": request})
+        attachment = get_object_or_404(ActivityInsuranceAttachment.objects, pk=pk)
+        output_serializer = ActivityInsuranceAttachmentSerializer(attachment, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -100,7 +100,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["get"], detail=True, url_path="download")
     def download(self, request, pk=None):
-        attachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
+        attachment = get_object_or_404(ActivityInsuranceAttachment.objects, pk=pk)
         response = HttpResponse(attachment.file, content_type=attachment.content_type)
         response["Content-Disposition"] = "attachment; filename={}".format(attachment.file.name)
         return response
@@ -115,6 +115,6 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         tags=["Files"],
     )
     def destroy(self, request, pk):
-        attachement: EventInsuranceAttachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
+        attachement: ActivityInsuranceAttachment = get_object_or_404(ActivityInsuranceAttachment.objects, pk=pk)
         attachement.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

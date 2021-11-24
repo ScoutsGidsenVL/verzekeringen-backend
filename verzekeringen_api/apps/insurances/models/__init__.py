@@ -11,3 +11,4 @@ from .cost_variable import CostVariable
 from .insurance_draft import InsuranceDraft
 from .insurance_claim import InsuranceClaim, InsuranceClaimVictim
 from .insurance_claim_attachment import InsuranceClaimAttachment
+from .activity_insurance_attachment import ActivityInsuranceAttachment

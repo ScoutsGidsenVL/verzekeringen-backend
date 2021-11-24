@@ -4,18 +4,18 @@ from django.forms import FileField as DjangoFileField
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from apps.insurances.models import EventInsuranceAttachment
+from apps.insurances.models import ActivityInsuranceAttachment
 
 
 logger = logging.getLogger(__name__)
 
 
-class EventInsuranceAttachmentUploadSerializer(serializers.Serializer):
+class ActivityInsuranceAttachmentUploadSerializer(serializers.Serializer):
     file = serializers.FileField(required=False)
     event_insurance = serializers.IntegerField(required=False)
 
     class Meta:
-        model = EventInsuranceAttachment
+        model = ActivityInsuranceAttachment
         fields = ["file", "insurance"]
 
     def validate(self, attrs):
@@ -35,20 +35,20 @@ class EventInsuranceAttachmentUploadSerializer(serializers.Serializer):
         return attrs
 
 
-class EventInsuranceAttachmentSerializer(serializers.Serializer):
+class ActivityInsuranceAttachmentSerializer(serializers.Serializer):
     id = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     filename = serializers.SerializerMethodField()
 
     class Meta:
-        model = EventInsuranceAttachment
+        model = ActivityInsuranceAttachment
         exclude = ("insurance", "file")
 
-    def get_id(self, obj: EventInsuranceAttachment):
+    def get_id(self, obj: ActivityInsuranceAttachment):
         return obj.id
 
-    def get_url(self, obj: EventInsuranceAttachment):
+    def get_url(self, obj: ActivityInsuranceAttachment):
         return self.context.get("request").build_absolute_uri("/api/participants/" + str(obj.id) + "/download")
 
-    def get_filename(self, obj: EventInsuranceAttachment):
+    def get_filename(self, obj: ActivityInsuranceAttachment):
         return obj.file.name

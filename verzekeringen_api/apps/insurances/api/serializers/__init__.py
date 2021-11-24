@@ -4,6 +4,10 @@ from .event_insurance_attachment_serializers import (
     EventInsuranceAttachmentUploadSerializer,
     EventInsuranceAttachmentSerializer,
 )
+from .activity_insurance_attachment_serializers import (
+    ActivityInsuranceAttachmentUploadSerializer,
+    ActivityInsuranceAttachmentSerializer,
+)
 from .insurance_serializers import (
     InsuranceCostOutputSerializer,
     InsuranceListOutputSerializer,

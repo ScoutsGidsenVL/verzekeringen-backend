@@ -11,6 +11,7 @@ from apps.insurances.api.views import (
     TemporaryVehicleInsuranceCoverageOptionViewSet,
     TemporaryVehicleInsuranceOptionApiViewSet,
     EventInsuranceAttachmentViewSet,
+    ActivityInsuranceAttachmentViewSet,
 )
 
 router = routers.SimpleRouter()
@@ -32,7 +33,8 @@ router.register(
     "VehicleInsuranceOption",
 )
 router.register(r"files", InsuranceClaimAttachmentViewSet, "Files")
-router.register(r"participants", EventInsuranceAttachmentViewSet, "EventInsuranceFiles")
+router.register(r"events/participants", EventInsuranceAttachmentViewSet, "EventInsuranceFiles")
+router.register(r"activities/participants", ActivityInsuranceAttachmentViewSet, "ActivityInsuranceFiles")
 
 
 urlpatterns = router.urls
