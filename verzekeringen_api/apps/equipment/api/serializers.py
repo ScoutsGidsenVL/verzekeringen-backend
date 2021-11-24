@@ -232,7 +232,7 @@ class InuitsEquipmentDetailOutputSerializer(serializers.ModelSerializer):
     inuits_equipment_id = serializers.SerializerMethodField()
     owner_non_member = InuitsNonMemberOutputSerializer()
     owner_member = serializers.SerializerMethodField()
-    owner_group = serializers.CharField(source="owner_group_group_admin_id")
+    owner_group = serializers.CharField(source="owner_group_group_admin_id", required=False, allow_blank=True)
 
     class Meta:
         model = InuitsEquipment
