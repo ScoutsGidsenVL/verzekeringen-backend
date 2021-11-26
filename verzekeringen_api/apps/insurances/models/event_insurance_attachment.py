@@ -2,20 +2,14 @@ import logging
 
 from django.db import models
 
-from apps.insurances.models import EventInsurance
+from scouts_insurances.insurances.models import EventInsurance
 
-from inuits.files.validators import validate_file_extension
-from inuits.models import BaseModel
+from inuits.models import AbstractBaseModel, PersistedFile
 
 
 logger = logging.getLogger(__name__)
 
 
-class EventInsuranceAttachment(BaseModel):
-    file = models.FileField(
-        validators=[validate_file_extension],
-        null=True,
-        blank=True,
-    )
-    content_type = models.CharField(max_length=100)
+class EventInsuranceAttachment(AbstractBaseModel):
+    file = models.OneToOneField(PersistedFile, on_delete=models.CASCADE, related_name="event_insurance")
     insurance = models.OneToOneField(EventInsurance, on_delete=models.CASCADE, related_name="attachment", null=True)

@@ -1,0 +1,1 @@
+from .inuits_non_member_related_field import InuitsEquipmentNonMemberRelatedField

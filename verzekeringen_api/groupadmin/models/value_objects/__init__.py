@@ -1,4 +1,3 @@
-from .postcode_city import PostcodeCity
 from .ga_position import ScoutsGeoCoordinate, ScoutsPosition
 from .ga_fields_value import ScoutsValue
 from .ga_link import ScoutsLink

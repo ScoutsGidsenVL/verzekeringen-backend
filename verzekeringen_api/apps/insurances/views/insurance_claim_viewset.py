@@ -1,0 +1,145 @@
+import logging
+
+from django.core.exceptions import ValidationError
+from django.conf import settings
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status, filters, parsers, permissions
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from drf_yasg2.utils import swagger_auto_schema
+
+from apps.insurances.serializers import (
+    InsuranceClaimAttachmentUploadSerializer,
+    InsuranceClaimSerializer,
+    InsuranceClaimCreateDataSerializer,
+)
+from apps.insurances.filters import InsuranceClaimFilter
+from apps.insurances.models import InsuranceClaim
+from apps.insurances.services import InsuranceClaimService
+
+from scouts_auth.permissions import CustomDjangoPermission
+
+from inuits.utils import MultipartJsonParser
+from inuits.aws import S3StorageService
+
+
+logger = logging.getLogger(__name__)
+
+
+class InsuranceClaimViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ["victim__first_name", "victim__last_name", "group_group_admin_id", "victim__group_admin_id"]
+    ordering_fields = ["created_on"]
+    ordering = ["-created_on"]
+
+    # Filters on the year of the accident
+    filterset_class = InsuranceClaimFilter
+    service = InsuranceClaimService()
+    storage_service = S3StorageService()
+
+    serializer_class = InsuranceClaimSerializer
+    parser_classes = [MultipartJsonParser, parsers.JSONParser]
+
+    def get_queryset(self):
+        return InsuranceClaim.objects.all().allowed(self.request.user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+
+        # appending extra data to context
+        if len(self.request.FILES) > 0:
+            context.update({"attachments": self.request.FILES})
+
+        return context
+
+    def get_permissions(self):
+        current_permissions = super().get_permissions()
+        if self.action == "create":
+            pass
+        if self.action == "list":
+            current_permissions.append(CustomDjangoPermission("insurances.list_insuranceclaims"))
+
+        return current_permissions
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimCreateDataSerializer})
+    @action(methods=["get"], detail=False, url_path="data")
+    def get_create_data(self, request, *args, **kwargs):
+        user: settings.AUTH_USER_MODEL = request.user
+        permitted_scouts_groups = user.get_section_leader_groups()
+
+        data = {"permitted_scouts_groups": permitted_scouts_groups}
+        serializer = InsuranceClaimCreateDataSerializer(data, context={"request": request})
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=InsuranceClaimSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceClaimSerializer},
+    )
+    def create(self, request, *args, **kwargs):
+        try:
+            file_serializer = InsuranceClaimAttachmentUploadSerializer(data=request.FILES)
+            file_serializer.is_valid(raise_exception=True)
+        except Exception as exc:
+            logger.error("Error while handling uploaded insurance claim attachment", exc)
+            raise ValidationError(
+                message={"file": "Error while handling file upload"},
+                code=406,
+            )
+
+        serializer = InsuranceClaimSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+
+        insurance_claim = self.service.create(
+            created_by=request.user, file=file_serializer.validated_data, **serializer.validated_data
+        )
+        try:
+            self.service.email_claim(insurance_claim)
+        except Exception as exc:
+            logger.error("Error while sending insurance claim emails", exc)
+            raise ValidationError(
+                message={"mail": "Error while sending insurance claim emails"},
+                code=406,
+            )
+
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimSerializer})
+    def retrieve(self, request, pk=None):
+        claim = self.get_object()
+        serializer = InsuranceClaimSerializer(claim, context={"request": request})
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=InsuranceClaimSerializer,
+        responses={status.HTTP_200_OK: InsuranceClaimSerializer},
+    )
+    def partial_update(self, request, pk=None):
+        claim = self.get_object()
+
+        serializer = InsuranceClaimSerializer(
+            data=request.data, instance=InsuranceClaim, context={"request": request}, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        updated_claim = InsuranceClaimService.claim_update(claim=claim, **serializer.validated_data)
+
+        output_serializer = InsuranceClaimSerializer(updated_claim, context={"request": request})
+
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceClaimSerializer})
+    def list(self, request):
+        insurances = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(insurances)
+
+        if page is not None:
+            serializer = InsuranceClaimSerializer(page, many=True, context={"request": request})
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = InsuranceClaimSerializer(insurances, many=True, context={"request": request})
+            return Response(serializer.data)

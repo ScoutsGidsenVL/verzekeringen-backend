@@ -1,0 +1,71 @@
+from rest_framework import viewsets, status, filters, permissions
+from rest_framework.response import Response
+from drf_yasg2.utils import swagger_auto_schema
+
+from apps.insurances.models import InsuranceDraft
+from apps.insurances.serializers import InsuranceDraftSerializer
+from apps.insurances.services import InsuranceDraftService
+
+
+class InsuranceDraftViewSet(viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["created_on"]
+    ordering = ["-created_on"]
+    service = InsuranceDraftService()
+
+    def get_queryset(self):
+        return InsuranceDraft.objects.all().allowed(self.request.user)
+
+    @swagger_auto_schema(
+        request_body=InsuranceDraftSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceDraftSerializer},
+    )
+    def create(self, request):
+        input_serializer = InsuranceDraftSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+        draft = self.service.insurance_draft_create(**input_serializer.validated_data, created_by=request.user)
+
+        output_serializer = InsuranceDraftSerializer(draft)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceDraftSerializer})
+    def retrieve(self, request, pk=None):
+        draft = self.get_object()
+        serializer = InsuranceDraftSerializer(draft)
+
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        request_body=InsuranceDraftSerializer,
+        responses={status.HTTP_201_CREATED: InsuranceDraftSerializer},
+    )
+    def update(self, request, pk=None):
+        draft = self.get_object()
+        input_serializer = InsuranceDraftSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+        new_draft = self.service.insurance_draft_update(
+            draft=draft, **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceDraftSerializer(new_draft)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, pk=None):
+        draft = self.get_object()
+        self.service.insurance_draft_delete(draft=draft)
+        return Response(status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(responses={status.HTTP_200_OK: InsuranceDraftSerializer})
+    def list(self, request):
+        drafts = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(drafts)
+
+        if page is not None:
+            serializer = InsuranceDraftSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            serializer = InsuranceDraftSerializer(drafts, many=True)
+            return Response(serializer.data)

@@ -98,11 +98,12 @@ class ScoutsMember:
         self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
 
-    def get_gender(self):
-        return self.personal_data.gender
-
     def get_function_codes(self) -> List[str]:
         return [function.code for function in self.functions]
+
+    @property
+    def gender(self):
+        return self.personal_data.gender
 
     @property
     def phone_number(self):

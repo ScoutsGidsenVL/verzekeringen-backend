@@ -1,5 +1,3 @@
-from .ga_member_list_viewset import ScoutsMemberListView
-
 from .ga_allowed_calls_viewset import ScoutsAllowedCallsView
 from .ga_function_viewset import ScoutsFunctionView
 from .ga_group_viewset import ScoutsGroupView

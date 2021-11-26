@@ -1,4 +1,4 @@
-from groupadmin.models.value_objects import PostcodeCity, ScoutsPosition
+from groupadmin.models.value_objects import ScoutsPosition
 
 
 class ScoutsAddress:
@@ -7,7 +7,6 @@ class ScoutsAddress:
     street: str
     number: str
     letter_box: str
-    postcode_city: PostcodeCity
     postal_code: str
     city: str
     country: str
@@ -24,7 +23,6 @@ class ScoutsAddress:
         street: str = "",
         number: str = "",
         letter_box: str = "",
-        postcode_city: str = "",
         postal_code: str = "",
         city: str = "",
         country: str = "",
@@ -39,7 +37,6 @@ class ScoutsAddress:
         self.street = street
         self.number = number
         self.letter_box = letter_box
-        self.postcode_city = postcode_city
         self.postal_code = postal_code
         self.city = city
         self.country = country
@@ -51,12 +48,11 @@ class ScoutsAddress:
         self.description = description
 
     def __str__(self):
-        return "group_admin_id({}), street({}), number({}), letter_box({}), postcode_city({}), postal_code({}), city({}), country({}), phone_number({}), postal_address({}), status({}), position({}), giscode({}), description({})".format(
+        return "group_admin_id({}), street({}), number({}), letter_box({}), postal_code({}), city({}), country({}), phone_number({}), postal_address({}), status({}), position({}), giscode({}), description({})".format(
             self.group_admin_id,
             self.street,
             self.number,
             self.letter_box,
-            str(self.postcode_city),
             self.postal_code,
             self.city,
             self.country,

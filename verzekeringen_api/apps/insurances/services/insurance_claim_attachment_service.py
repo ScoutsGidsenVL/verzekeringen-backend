@@ -5,7 +5,9 @@ from django.core.files.storage import default_storage
 
 from apps.insurances.models import InsuranceClaimAttachment
 from apps.insurances.utils import InsuranceAttachmentUtils
+
 from inuits.files import StorageService
+from inuits.models import PersistedFile
 
 
 logger = logging.getLogger(__name__)
@@ -23,10 +25,18 @@ class InsuranceClaimAttachmentService:
         logger.debug("Storing attachment for claim(%d) to %s", claim.id, file_name)
 
         attachment = InsuranceClaimAttachment()
-        attachment.insurance_claim = claim
-        attachment.file.save(name=file_name, content=uploaded_file)
-        attachment.content_type = uploaded_file.content_type
+        file = PersistedFile()
+        file.file.save(name=file_name, content=uploaded_file)
+        file.content_type = uploaded_file.content_type
+
         try:
+            file.full_clean()
+            file.save()
+
+            attachment = InsuranceClaimAttachment()
+            attachment.insurance_claim = claim
+            attachment.file = file
+
             attachment.full_clean()
             attachment.save()
         except Exception as exc:

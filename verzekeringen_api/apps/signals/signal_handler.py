@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from django.conf import settings
 from django.dispatch import receiver
@@ -18,8 +17,6 @@ class InsuranceSignalHandler:
     @receiver(app_ready, sender=ScoutsAuthSignalSender.sender, dispatch_uid=ScoutsAuthSignalSender.app_ready_uid)
     def handle_app_ready(**kwargs):
         logger.debug("SIGNAL received: 'app_ready' from %s", ScoutsAuthSignalSender.sender)
-        from apps.insurances.utils import InsuranceSettingsHelper
-
         try:
             PermissionService().populate_roles()
         except Exception as exc:
@@ -31,7 +28,7 @@ class InsuranceSignalHandler:
     )
     def handle_authenticated(user: settings.AUTH_USER_MODEL, **kwargs) -> settings.AUTH_USER_MODEL:
         """
-        Reads additional data for a user and takes appropriate action
+        Reads additional data for a user and takes appropriate action.
 
         Some user data necessary for permissions can only be loaded by a groupadmin profile call after authentication.
         This method handles a signal for the basic oidc authentication, then makes the necessary additional calls.

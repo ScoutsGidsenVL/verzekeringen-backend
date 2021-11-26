@@ -3,15 +3,16 @@ import logging
 from django.conf import settings
 from django.core.files.storage import default_storage
 
+from apps.people.models import InuitsClaimVictim
 from apps.insurances.utils import InsuranceSettingsHelper
 from apps.insurances.models import (
-    BaseInsurance,
     InsuranceClaim,
-    InsuranceClaimVictim,
     InsuranceClaimAttachment,
     EventInsuranceAttachment,
     ActivityInsuranceAttachment,
 )
+
+from scouts_insurances.insurances.models import BaseInsurance
 
 from inuits.mail import Email, EmailAttachment, EmailService
 from inuits.utils import TextUtils
@@ -40,14 +41,14 @@ class InsuranceMailService(EmailService):
     insurance_request_address = ""
 
     insurer_template_path = settings.RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH
-    insurer_subject = "Schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
+    insurer_subject = "Schadeaangifte van (((date_of_accident)))"
     insurer_address = ""
 
     victim_template_path = settings.RESOURCES_CLAIMS_VICTIM_TEMPLATE_PATH
     victim_subject = "Bevestiging schadeaangifte"
 
     stakeholder_template_path = settings.RESOURCES_CLAIMS_STAKEHOLDER_TEMPLATE_PATH
-    stakeholder_subject = "Bevestiging schadeaangifte (#(((claim.id)))) van (((date_of_accident)))"
+    stakeholder_subject = "Bevestiging schadeaangifte van (((date_of_accident)))"
 
     template_id = settings.EMAIL_TEMPLATE
 
@@ -111,7 +112,7 @@ class InsuranceMailService(EmailService):
         """Notify the victim that the claim was sent to the insurer."""
         logger.debug("Preparing to send claim #%d to the victim", claim.id)
 
-        victim: InsuranceClaimVictim = claim.victim
+        victim: InuitsClaimVictim = claim.victim
         self._send_prepared_claim_email(
             claim=claim,
             dictionary=dictionary,
@@ -159,7 +160,7 @@ class InsuranceMailService(EmailService):
             "victim__name": claim.victim.first_name + " " + claim.victim.last_name,
             "victim__email": claim.victim.email,
             "date_of_accident": claim.date_of_accident.date(),
-            "date_of_declaration": claim.date.date(),
+            "date_of_declaration": claim.created_on.date(),
             "title_mail--": "",
         }
 
@@ -254,7 +255,7 @@ class InsuranceMailService(EmailService):
                 mail.add_attachment(EmailAttachment(claim_report_path))
             if claim.has_attachment():
                 attachment: InsuranceClaimAttachment = claim.attachment
-                logger.debug("Adding attachment with path %s to claim(%d) email", attachment.file.name, claim.id)
-                mail.add_attachment(EmailAttachment(attachment.file.name, self.file_service))
+                logger.debug("Adding attachment with path %s to claim(%d) email", attachment.file.file.name, claim.id)
+                mail.add_attachment(EmailAttachment(attachment.file.file.name, self.file_service))
 
         self.mail_service.send(mail)

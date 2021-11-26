@@ -1,2 +1,2 @@
 from .insurance_claim_manager import InsuranceClaimManager
-from .insurance_manager import BaseInsuranceManager
+from .insurance_draft_manager import InsuranceDraftManager

@@ -5,7 +5,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
-from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim
+from apps.people.models import InuitsClaimVictim
+from apps.insurances.models import InsuranceClaim
 from apps.insurances.services import (
     InsuranceClaimReportService,
     InsuranceClaimAttachmentService,
@@ -26,27 +27,26 @@ class InsuranceClaimService:
     def create(
         self,
         *,
-        created_by: settings.AUTH_USER_MODEL,
-        declarant_city: str = None,
         group_group_admin_id: str,
-        bank_account: str = None,
-        date_of_accident: datetime,
-        activity: str = None,
-        activity_type: str = None,
-        location: str = None,
-        used_transport: str = None,
-        damage_type: str = None,
-        description: str = None,
-        involved_party_description: str = None,
-        involved_party_name: str = None,
-        involved_party_birthdate: date = None,
-        official_report_description: str = None,
-        pv_number: str = None,
-        witness_name: str = None,
-        witness_description: str = None,
-        leadership_description: str = None,
-        victim: InsuranceClaimVictim,
+        created_by: settings.AUTH_USER_MODEL,
+        date_of_accident: datetime = None,
+        declarant_city: str = "",
         file=None,
+        bank_account: str = "",
+        activity: str = "",
+        activity_type: str = "",
+        used_transport: str = "",
+        damage_type: str = "",
+        description: str = "",
+        involved_party_description: str = "",
+        involved_party_name: str = "",
+        involved_party_birthdate: date = None,
+        official_report_description: str = "",
+        pv_number: str = "",
+        witness_name: str = "",
+        witness_description: str = "",
+        leadership_description: str = "",
+        victim: InuitsClaimVictim,
     ) -> InsuranceClaim:
         # validate if person have rights to create claim for this group
         if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
@@ -59,7 +59,6 @@ class InsuranceClaimService:
         victim.save()
 
         claim = InsuranceClaim(
-            date=datetime.now(),
             declarant=created_by,
             declarant_city=declarant_city,
             group_group_admin_id=group_group_admin_id,
@@ -67,7 +66,6 @@ class InsuranceClaimService:
             date_of_accident=date_of_accident,
             activity=activity,
             activity_type=activity_type,
-            location=location,
             used_transport=used_transport,
             damage_type=damage_type,
             description=description,
@@ -91,6 +89,7 @@ class InsuranceClaimService:
         return claim
 
     def claim_update(*, claim: InsuranceClaim, **fields) -> InsuranceClaim:
+        logger.debug("Updating claim %s with case_number and note", claim.id)
         claim.note = fields.get("note", claim.note)
         claim.case_number = fields.get("case_number", claim.case_number)
 

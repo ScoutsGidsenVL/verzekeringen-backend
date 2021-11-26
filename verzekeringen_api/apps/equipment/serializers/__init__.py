@@ -1,0 +1,4 @@
+from .inuits_equipment_serializer import InuitsEquipmentSerializer
+from .inuits_equipment_template_serializer import InuitsEquipmentTemplateSerializer
+from .inuits_vehicle_serializer import InuitsVehicleSerializer
+from .inuits_vehicle_template_serializer import InuitsVehicleTemplateSerializer

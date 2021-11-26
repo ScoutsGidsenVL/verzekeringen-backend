@@ -2,7 +2,6 @@ from .enums import (
     ScoutsFunctionCode,
 )
 from .value_objects import (
-    PostcodeCity,
     ScoutsGeoCoordinate,
     ScoutsPosition,
     ScoutsValue,

@@ -1,0 +1,2 @@
+from .equipment_serializer import EquipmentSerializer
+from .vehicle_serializer import VehicleSerializer

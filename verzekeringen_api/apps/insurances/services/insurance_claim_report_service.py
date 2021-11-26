@@ -6,11 +6,14 @@ from django.core.files.storage import default_storage, FileSystemStorage
 
 from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
 
-from apps.insurances.models import InsuranceClaim, InsuranceClaimVictim, InsuranceClaimAttachment
+from apps.people.models import InuitsClaimVictim
+from apps.insurances.models import InsuranceClaim
 from apps.insurances.utils import InsuranceAttachmentUtils
-from inuits.files import FileUtils
+
 from groupadmin.models import ScoutsMember
 from groupadmin.services import GroupAdmin
+
+from inuits.files import FileUtils
 
 
 logger = logging.getLogger(__name__)
@@ -28,11 +31,11 @@ class InsuranceClaimReportService:
         owner: ScoutsMember = self.group_admin_service.get_member_info(
             active_user=claim.declarant, group_admin_id=claim.declarant.group_admin_id
         )
-        victim: InsuranceClaimVictim = claim.victim
+        victim: InuitsClaimVictim = claim.victim
         model = {
             "(Benaming)": claim.group_group_admin_id,
             "(Naam_Verantwoordelijke)": owner.first_name,
-            "(Voornnaam_Verantwoordelijke)": owner.last_name,
+            "(Voornaam_Verantwoordelijke)": owner.last_name,
             "(E-mail)": owner.email,
             "(Naam_Slachtoffer)": victim.first_name,
             "(Voornaam_Slachtoffer)": victim.last_name,
@@ -40,8 +43,8 @@ class InsuranceClaimReportService:
             "(Beroep)": victim.legal_representative,
             "(Straat_2)": victim.address.street,
             "(Nr_2)": victim.address.number,
-            "(Postcode_2)": str(victim.address.postcode_city.postcode),
-            "(Gemeente_2)": victim.address.postcode_city.name,
+            "(Postcode_2)": str(victim.address.postal_code),
+            "(Gemeente_2)": victim.address.city,
             "(Bus_2)": victim.address.letter_box,
             "(Land_2)": "België",
             "(Geslacht_2)": victim.gender,
@@ -52,7 +55,7 @@ class InsuranceClaimReportService:
             "(Ongeval_Dag)": f"{claim.date_of_accident.date().day:02d}",
             "(Ongeval_Maand)": f"{claim.date_of_accident.date().month:02d}",
             "(Ongeval_Jaar)": str(claim.date_of_accident.date().year),
-            "(Lidnummer)": victim.get_member_number(claim.declarant),
+            "(Lidnummer)": victim.membership_number,
             "(IBAN_1)": claim.bank_account[2:4] if claim.bank_account else "",
             "(IBAN_2)": claim.bank_account[4:8] if claim.bank_account else "",
             "(IBAN_3)": claim.bank_account[8:12] if claim.bank_account else "",
@@ -69,10 +72,10 @@ class InsuranceClaimReportService:
             "(Naam_Getuige_1)": claim.witness_name,
             "(Adres_getuige_1)": claim.witness_description,
             "(Toezichthouder)": claim.leadership_description,
-            "(Ondertekening_Dag)": f"{claim.date.date().day:02d}",
-            "(Ondertekening_Maand)": f"{claim.date.date().month:02d}",
-            "(Ondertekening_Jaar)": str(claim.date.date().year),
-            "(Plaats_opmaak_1)": claim.declarant_city if claim.declarant_city else owner.address.postcode_city.name,
+            "(Ondertekening_Dag)": f"{claim.created_on.date().day:02d}",
+            "(Ondertekening_Maand)": f"{claim.created_on.date().month:02d}",
+            "(Ondertekening_Jaar)": str(claim.created_on.date().year),
+            "(Plaats_opmaak_1)": claim.declarant_city if claim.declarant_city else owner.address.city,
             "(Identiteit_Aangever)": ("%s %s" % (owner.first_name, owner.last_name)),
         }
 

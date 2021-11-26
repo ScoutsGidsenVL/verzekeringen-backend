@@ -1,0 +1,4 @@
+from .inuits_equipment import InuitsEquipment
+from .inuits_equipment_template import InuitsEquipmentTemplate
+from .inuits_vehicle import InuitsVehicle
+from .inuits_vehicle_template import InuitsVehicleTemplate

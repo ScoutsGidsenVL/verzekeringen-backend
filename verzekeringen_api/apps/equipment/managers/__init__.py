@@ -1,0 +1,2 @@
+from .inuits_equipment_manager import InuitsEquipmentManager
+from .inuits_vehicle_manager import InuitsVehicleManager

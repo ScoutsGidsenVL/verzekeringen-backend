@@ -32,11 +32,13 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("api/", include("scouts_auth.urls")),
     path("api/", include("groupadmin.urls")),
-    path("api/", include("apps.insurances.urls")),
-    path("api/", include("apps.members.urls")),
+    path("api/", include("scouts_insurances.equipment.urls")),
+    path("api/", include("scouts_insurances.info.urls")),
+    path("api/", include("scouts_insurances.insurances.urls")),
     path("api/", include("apps.equipment.urls")),
+    path("api/", include("apps.insurances.urls")),
     path("api/", include("apps.locations.urls")),
-    path("api/", include("apps.info.urls")),
+    path("api/", include("apps.people.urls")),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("api/docs/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
 ]

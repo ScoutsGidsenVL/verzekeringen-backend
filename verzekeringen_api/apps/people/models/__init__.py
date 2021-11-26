@@ -1,0 +1,4 @@
+from .inuits_abstract_person import InuitsAbstractPerson
+from .inuits_non_member import InuitsNonMember
+from .inuits_non_member_template import InuitsNonMemberTemplate
+from .inuits_claim_victim import InuitsClaimVictim

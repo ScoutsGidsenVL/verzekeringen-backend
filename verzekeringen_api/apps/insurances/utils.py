@@ -3,7 +3,9 @@ import logging
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from apps.insurances.models import InsuranceClaim, BaseInsurance
+from apps.insurances.models import InsuranceClaim
+
+from scouts_insurances.insurances.models import BaseInsurance
 
 from inuits.utils import GlobalSettingsUtil
 

@@ -224,17 +224,14 @@ class ScoutsMemberSearchFrontendSerializer(NonModelSerializer):
             serialized["street"] = address.street
             serialized["number"] = address.number
             serialized["letter_box"] = address.letter_box
-            serialized["postcode_city"] = {
-                "city": address.city,
-                "postcode": address.postal_code,
-            }
+            serialized["postal_code"] = address.postal_code
+            serialized["city"] = address.city
         else:
             serialized["street"] = None
             serialized["number"] = None
             serialized["letter_box"] = None
-            serialized["postcode_city"] = None
-        # @TODO this should not be here
-        serialized["is_member"] = True
+            serialized["postal_code"] = None
+            serialized["city"] = None
 
         return serialized
 
@@ -258,11 +255,13 @@ class ScoutsMemberFrontendSerializer(NonModelSerializer):
             serialized["street"] = address.street
             serialized["number"] = address.number
             serialized["letter_box"] = address.letter_box
-            serialized["postcode_city"] = {
-                "city": address.city,
-                "postcode": address.postal_code,
-            }
-        # @TODO this should not be here
-        serialized["is_member"] = True
+            serialized["postal_code"] = address.postal_code
+            serialized["city"] = address.city
+        else:
+            serialized["street"] = None
+            serialized["number"] = None
+            serialized["letter_box"] = None
+            serialized["postal_code"] = None
+            serialized["city"] = None
 
         return serialized

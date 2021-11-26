@@ -34,10 +34,3 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_permissions(self, obj):
         return obj.get_all_permissions()
-
-
-# COMMENTED out because it doesn't appear to be used anywhere
-# class UserNestedOutputSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = User
-#        fields = ('id', 'first_name', 'last_name', 'email', 'date_joined')

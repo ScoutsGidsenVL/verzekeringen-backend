@@ -16,12 +16,12 @@ class Gender(models.TextChoices):
 
 class GenderHelper:
     @staticmethod
-    def parse_gender(value) -> Gender:
+    def parse_gender(value: str = None) -> Gender:
         if not value:
             return Gender.UNKNOWN
 
         value = value.strip().upper()
-        if value in ["O", "OTHER", "ANDERE"]:
+        if value in ["O", "OTHER", "A", "ANDER", "ANDERE"]:
             return Gender.OTHER
         if value in ["F", "FEMALE", "V", "VROUW"]:
             return Gender.FEMALE

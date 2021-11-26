@@ -1,0 +1,2 @@
+from .inuits_equipment_viewset import InuitsEquipmentViewSet
+from .inuits_vehicle_viewset import InuitsVehicleViewSet

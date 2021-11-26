@@ -5,7 +5,6 @@ from groupadmin.views import (
     ScoutsFunctionView,
     ScoutsGroupView,
     ScoutsMemberView,
-    ScoutsMemberListView,
 )
 
 view_allowed_calls = ScoutsAllowedCallsView.as_view({"get": "view_allowed_calls"})
@@ -22,8 +21,6 @@ view_group = ScoutsGroupView.as_view({"get": "view_group"})
 view_functions = ScoutsFunctionView.as_view({"get": "view_functions"})
 view_function_list = ScoutsFunctionView.as_view({"get": "view_function_list"})
 view_function = ScoutsFunctionView.as_view({"get": "view_function"})
-view_member_list_members = ScoutsMemberListView.as_view({"get": "view_member_list_members"})
-view_member_list_member_detail = ScoutsMemberListView.as_view({"get": "view_member_list_member_detail"})
 
 urlpatterns = [
     path("ga/allowed_calls", view_allowed_calls, name="ga_allowed_calls"),

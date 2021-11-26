@@ -1,4 +1,3 @@
-from .belgian_postcode_city_serializer import BelgianPostcodeCitySerializer
 from .ga_position_serializer import ScoutsGeoCoordinateSerializer, ScoutsPositionSerializer
 from .ga_field_value_serializer import ScoutsValueSerializer
 from .ga_link_serializer import ScoutsLinkSerializer
@@ -30,6 +29,4 @@ from .ga_response_member_search_serializer import (
 )
 from .ga_member_medical_flash_card_serializer import ScoutsMedicalFlashCardSerializer
 
-from .group_admin_list_serializer import ScoutsMemberListSerializer
-from .group_admin_detail_serializer import ScoutsMemberDetailSerializer
 from .scouts_user_serializer import ScoutsUserSerializer

@@ -1,0 +1,2 @@
+from .vehicle_trailer_option_viewset import VehicleTrailerOptionViewSet
+from .vehicle_type_viewset import VehicleTypeViewSet

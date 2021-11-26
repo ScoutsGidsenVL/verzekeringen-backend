@@ -1,6 +1,2 @@
-from .insurance_status import InsuranceStatus
-from .group_size import GroupSize
-from .event_size import EventSize
-from .temporary_vehicle_insurance_coverage_option import TemporaryVehicleInsuranceCoverageOption
-from .temporary_vehicle_insurance_option import TemporaryVehicleInsuranceOption, TemporaryVehicleInsuranceOptionApi
-from .temporary_vehicle_participant_type import TemporaryVehicleParticipantType
+from .claim_activity_type import ClaimActivityType
+from .claim_damage_type import ClaimDamageType

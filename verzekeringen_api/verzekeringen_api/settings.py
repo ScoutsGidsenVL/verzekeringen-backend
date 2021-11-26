@@ -160,7 +160,6 @@ SILENCED_SYSTEM_CHECKS = ["fields.W342"]
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "apps.signals",
     "django.contrib.admin",
@@ -176,21 +175,24 @@ INSTALLED_APPS = [
     "corsheaders",
     "inuits",
     "groupadmin",
-    "apps.members",
+    "scouts_insurances",
     "apps.equipment",
-    "apps.locations",
     "apps.insurances",
-    "apps.info",
+    "apps.locations",
+    "apps.people",
 ]
 
-MIGRATION_MODULES = {
-    "apps.base": "migrations",
-    "apps.equipment": "migrations",
-    "apps.info": "migrations",
-    "apps.insurances": "migrations",
-    "apps.locations": "migrations",
-    "apps.members": "migrations",
-}
+# MIGRATION_MODULES = {
+#     "scouts_auth": "migrations",
+#     "inuits": "migrations",
+#     "groupadmin": "migrations",
+#     "scouts_insurances": "migrations",
+#     "apps.equipment": "migrations",
+#     "apps.insurances": "migrations",
+#     "apps.locations": "migrations",
+#     "apps.people": "migrations",
+#     "apps.signals": "migrations",
+# }
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -378,7 +380,6 @@ def setup_mail():
     global EMAIL_BACKEND
     global ANYMAIL
     global EMAIL_INSURANCE_FROM
-    global EMAIL_INSURANCE_TO
     global EMAIL_INSURANCE_CC
     global EMAIL_INSURANCE_BCC
     global EMAIL_TEMPLATE

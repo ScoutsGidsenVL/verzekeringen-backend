@@ -1,3 +1,0 @@
-from .enum_viewsets import VehicleTypeViewSet, VehicleTrailerOptionViewSet
-from .vehicle_viewset import VehicleViewSet
-from .inuits_equipment_viewset import InuitsEquipmentViewSet

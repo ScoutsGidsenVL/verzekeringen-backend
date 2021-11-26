@@ -1,2 +1,2 @@
-from . import vehicle_service as VehicleService
-from . import equipment_service as EquipmentService
+from .inuits_equipment_service import InuitsEquipmentService
+from .inuits_vehicle_service import InuitsVehicleService

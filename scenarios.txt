@@ -1,0 +1,38 @@
+
+
+APPLICATIE OPSTARTEN
+
+INLOGGEN
+
+
+SCHADECLAIMS
+TEST CREATE {
+- Enkel verplichte gegevens
+  - Zonder bijlage
+  - Met bijlage
+- Alle gegevens
+  - Zonder bijlage
+  - Met bijlage
+}
+TEST READ {
+
+}
+TEST UPDATE {
+
+}
+
+
+SCHADECLAIM OVERZICHT OPROEPEN
+
+
+NIEUWE SCHADECLAIM STARTEN
+1) Groep selecteren (correcte groepen)
+2) Slachtoffer opzoeken
+   - Verifiëren dat de correcte leden gevonden worden
+3) Slachtoffer selecteren
+   - Verifiëren dat alle gegevens correct ingevuld worden
+4) Gegevens ongeval invullen
+   - Tijdens activiteit
+   - Op heen- of terugweg
+5) Bijlage toevoegen
+  
