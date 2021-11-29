@@ -17,10 +17,10 @@ from apps.insurances.filters import InsuranceClaimFilter
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.services import InsuranceClaimService
 
-from scouts_auth.permissions import CustomDjangoPermission
+from scouts_auth.auth.permissions import CustomDjangoPermission
 
-from inuits.utils import MultipartJsonParser
-from inuits.aws import S3StorageService
+from scouts_auth.inuits.utils import MultipartJsonParser
+from scouts_auth.inuits.aws import S3StorageService
 
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from scouts_insurances.people.serializers import NonMemberSerializer
-from apps.locations.serializers import CountrySerializer
+from scouts_insurances.locations.serializers import CountrySerializer
 
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer

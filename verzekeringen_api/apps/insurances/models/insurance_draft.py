@@ -4,7 +4,7 @@ from apps.insurances.managers import InsuranceDraftManager
 
 from scouts_insurances.insurances.models import InsuranceType
 
-from inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models import AuditedBaseModel
 
 
 class InsuranceDraft(AuditedBaseModel):
@@ -12,6 +12,5 @@ class InsuranceDraft(AuditedBaseModel):
 
     objects = InsuranceDraftManager()
 
-    id = models.AutoField(primary_key=True)
     data = models.JSONField()
     insurance_type = models.ForeignKey(InsuranceType, related_name="insurance_drafts", on_delete=models.RESTRICT)

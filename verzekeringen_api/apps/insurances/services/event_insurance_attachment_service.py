@@ -5,7 +5,7 @@ from django.core.files.storage import default_storage
 
 from apps.insurances.models import EventInsuranceAttachment
 from apps.insurances.utils import InsuranceAttachmentUtils
-from inuits.files import StorageService
+from scouts_auth.inuits.files import StorageService
 
 
 logger = logging.getLogger(__name__)

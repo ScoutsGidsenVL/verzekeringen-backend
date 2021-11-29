@@ -106,23 +106,7 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
-        # @TODO
-        "scouts_auth": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": False,
-        },
-        "groupadmin": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": False,
-        },
         "apps": {
-            "handlers": ["console"],
-            "level": LOGGING_LEVEL,
-            "propagate": False,
-        },
-        "inuits": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL,
             "propagate": False,
@@ -173,26 +157,11 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_yasg2",
     "corsheaders",
-    "inuits",
-    "groupadmin",
     "scouts_insurances",
     "apps.equipment",
     "apps.insurances",
-    "apps.locations",
     "apps.people",
 ]
-
-# MIGRATION_MODULES = {
-#     "scouts_auth": "migrations",
-#     "inuits": "migrations",
-#     "groupadmin": "migrations",
-#     "scouts_insurances": "migrations",
-#     "apps.equipment": "migrations",
-#     "apps.insurances": "migrations",
-#     "apps.locations": "migrations",
-#     "apps.people": "migrations",
-#     "apps.signals": "migrations",
-# }
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -282,7 +251,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "verzekeringen_api.pagination.PageNumberPagination",
-    "EXCEPTION_HANDLER": "inuits.exceptions.drf_exception_handler",
+    "EXCEPTION_HANDLER": "scouts_auth.inuits.exceptions.drf_exception_handler",
 }
 
 
@@ -291,11 +260,11 @@ CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST")
 
 # OIDC
 
-AUTH_USER_MODEL = "groupadmin.ScoutsUser"
+AUTH_USER_MODEL = "scouts_auth.ScoutsUser"
 AUTHORIZATION_ROLES_CONFIG_PACKAGE = "initial_data"
 AUTHORIZATION_ROLES_CONFIG_YAML = "roles.yaml"
 AUTHENTICATION_BACKENDS = {
-    "groupadmin.services.ScoutsOIDCAuthenticationBackend",
+    "scouts_auth.groupadmin.services.ScoutsOIDCAuthenticationBackend",
 }
 OIDC_OP_ISSUER = env.str("OIDC_OP_ISSUER")
 OIDC_OP_AUTHORIZATION_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_AUTHORIZATION_ENDPOINT"))
@@ -304,7 +273,7 @@ OIDC_OP_USER_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_USER_ENDPOI
 OIDC_RP_CLIENT_ID = env.str("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")
 OIDC_RP_SIGN_ALGO = env.str("OIDC_RP_SIGN_ALGO", default="RS256")
-OIDC_DRF_AUTH_BACKEND = "groupadmin.services.ScoutsOIDCAuthenticationBackend"
+OIDC_DRF_AUTH_BACKEND = "scouts_auth.groupadmin.services.ScoutsOIDCAuthenticationBackend"
 OIDC_OP_JWKS_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_JWKS_ENDPOINT"))
 
 

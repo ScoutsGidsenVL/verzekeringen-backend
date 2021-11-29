@@ -12,8 +12,8 @@ from apps.people.models import InuitsNonMember
 from apps.people.filters import InuitsNonMemberFilter
 from apps.people.serializers import PersonSerializer
 
-from groupadmin.models import ScoutsMember
-from groupadmin.services import GroupAdminMemberService
+from scouts_auth.groupadmin.models import ScoutsMember
+from scouts_auth.groupadmin.services import GroupAdminMemberService
 
 
 logger = logging.getLogger(__name__)

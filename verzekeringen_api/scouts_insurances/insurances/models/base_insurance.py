@@ -9,7 +9,7 @@ from scouts_insurances.insurances.models import InsuranceType
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.managers import BaseInsuranceManager
 
-from groupadmin.models import ScoutsGroup, ScoutsAddress
+from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsAddress
 
 
 class BaseInsurance(models.Model):
@@ -26,7 +26,7 @@ class BaseInsurance(models.Model):
 
     total_cost = models.DecimalField(db_column="totkostprijs", null=True, max_digits=7, decimal_places=2)
     comment = models.CharField(db_column="opmerking", max_length=500, blank=True)
-    vvks_comment = models.CharField(db_column="vvksmopmerking", max_length=500, blank=True)
+    vvksm_comment = models.CharField(db_column="vvksmopmerking", max_length=500, blank=True)
 
     _printed = models.CharField(db_column="afgedrukt", max_length=1, default="N")
     _finished = models.CharField(db_column="afgewerkt", max_length=1, default="N")

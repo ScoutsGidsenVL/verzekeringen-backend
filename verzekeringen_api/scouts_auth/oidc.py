@@ -10,9 +10,9 @@ from django.contrib.auth.models import Group
 
 from rest_framework import exceptions
 
-from scouts_auth.models import User
-from scouts_auth.utils import SettingsHelper
-from scouts_auth.signals import ScoutsAuthSignalSender
+from scouts_auth.auth.models import User
+from scouts_auth.auth.utils import SettingsHelper
+from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
 
 logger = logging.getLogger(__name__)

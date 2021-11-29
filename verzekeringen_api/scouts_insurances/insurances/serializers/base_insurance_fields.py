@@ -16,8 +16,8 @@ base_insurance_fields = (
     "total_cost",
     # comment               max_length=500  optional
     "comment",
-    # vvks_comment          max_length=500  optional
-    "vvks_comment",
+    # vvksm_comment         max_length=500  optional
+    "vvksm_comment",
     # _printed              max_length=1    optional, default="N"
     # _finished             max_length=1    optional, default="N"
     # _listed               max_length=1    optional, default="N"

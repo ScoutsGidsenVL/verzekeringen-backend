@@ -10,7 +10,7 @@ class InsuranceSignalsConfig(AppConfig):
     name = "apps.signals"
 
     def ready(self):
-        import scouts_auth.signals
+        import scouts_auth.auth.signals
         from .signal_handler import InsuranceSignalHandler
 
         logger.debug("insurance app is ready")

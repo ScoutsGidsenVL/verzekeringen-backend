@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from drf_yasg2.utils import swagger_serializer_method
 
-from inuits.filters.helpers import parse_choice_to_tuple
-from inuits.serializers import EnumSerializer
+from scouts_auth.inuits.filters.helpers import parse_choice_to_tuple
+from scouts_auth.inuits.serializers import EnumSerializer
 
 from scouts_insurances.insurances.models import ActivityInsurance
 from scouts_insurances.insurances.models.enums import GroupSize

@@ -4,7 +4,7 @@ from django.db import models
 
 from scouts_insurances.insurances.models import ActivityInsurance
 
-from inuits.models import AbstractBaseModel, PersistedFile
+from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
 
 
 logger = logging.getLogger(__name__)

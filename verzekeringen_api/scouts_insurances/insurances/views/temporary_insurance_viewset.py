@@ -14,7 +14,7 @@ from scouts_insurances.insurances.services import TemporaryInsuranceService
 logger = logging.getLogger(__name__)
 
 
-class TemporaryInsuranceViewSet(viewsets.GenericViewSet):
+class TemporaryInsuranceViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     search_fields = ["_group_group_admin_id"]
@@ -30,7 +30,7 @@ class TemporaryInsuranceViewSet(viewsets.GenericViewSet):
         request_body=TemporaryInsuranceSerializer,
         responses={status.HTTP_201_CREATED: TemporaryInsuranceSerializer},
     )
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         input_serializer = TemporaryInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 

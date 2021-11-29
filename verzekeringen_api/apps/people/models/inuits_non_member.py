@@ -1,19 +1,15 @@
 import logging
 
-from django.db import models
-
-from apps.people.models import InuitsAbstractPerson
 from apps.people.managers import InuitsNonMemberManager
 
-from scouts_insurances.locations.models import Address
-
-from inuits.models import GenderHelper
+from scouts_auth.inuits.models import InuitsPerson, GenderHelper
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 logger = logging.getLogger(__name__)
 
 
-class InuitsNonMember(InuitsAbstractPerson):
+class InuitsNonMember(InuitsPerson):
     """
     Extra non member class we can use to save unique non members so
     we can have an easy and clean table to search in.
@@ -22,6 +18,8 @@ class InuitsNonMember(InuitsAbstractPerson):
     """
 
     objects = InuitsNonMemberManager()
+
+    comment = OptionalCharField(max_length=500)
 
     class Meta:
         pass

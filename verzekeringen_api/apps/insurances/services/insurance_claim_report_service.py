@@ -10,10 +10,10 @@ from apps.people.models import InuitsClaimVictim
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.utils import InsuranceAttachmentUtils
 
-from groupadmin.models import ScoutsMember
-from groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.models import ScoutsMember
+from scouts_auth.groupadmin.services import GroupAdmin
 
-from inuits.files import FileUtils
+from scouts_auth.inuits.files import FileUtils
 
 
 logger = logging.getLogger(__name__)

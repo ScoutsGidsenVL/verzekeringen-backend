@@ -7,7 +7,7 @@ from apps.insurances.models import InsuranceClaim
 
 from scouts_insurances.insurances.models import BaseInsurance
 
-from inuits.utils import GlobalSettingsUtil
+from scouts_auth.inuits.utils import GlobalSettingsUtil
 
 
 logger = logging.getLogger(__name__)

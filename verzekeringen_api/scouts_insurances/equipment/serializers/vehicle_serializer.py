@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from scouts_insurances.equipment.models import VehicleType
 
-from inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class VehicleSerializer(serializers.Serializer):

@@ -4,7 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from apps.locations.models import Country
+from scouts_insurances.locations.models import Country
 
 from scouts_insurances.equipment.models import Vehicle, VehicleTrailerOption, VehicleType
 from scouts_insurances.people.models import NonMember

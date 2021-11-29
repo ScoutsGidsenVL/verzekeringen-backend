@@ -3,15 +3,15 @@ import logging
 from rest_framework import serializers
 
 from apps.people.models import InuitsClaimVictim, InuitsNonMember
-from apps.people.serializers import InuitsAbstractPersonSerializer
 
-from groupadmin.services import GroupAdmin
+from scouts_auth.inuits.serializers import InuitsPersonSerializer
+from scouts_auth.groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
 
 
-class InuitsClaimVictimSerializer(InuitsAbstractPersonSerializer):
+class InuitsClaimVictimSerializer(InuitsPersonSerializer):
     # id                    pk
     # first_name            max_length=15           required
     # last_name             max_length=25           required

@@ -10,6 +10,6 @@ class ScoutsAuthConfig(AppConfig):
     name = "scouts_auth"
 
     def ready(self):
-        from scouts_auth.signals import ScoutsAuthSignalSender
+        from scouts_auth.auth.signals import ScoutsAuthSignalSender
 
         ScoutsAuthSignalSender().send_app_ready()

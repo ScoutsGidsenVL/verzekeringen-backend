@@ -3,10 +3,10 @@ import logging
 from django.conf import settings
 from django.dispatch import receiver
 
-from scouts_auth.signals import ScoutsAuthSignalSender, app_ready, authenticated
-from scouts_auth.services import PermissionService
+from scouts_auth.auth.signals import ScoutsAuthSignalSender, app_ready, authenticated
+from scouts_auth.auth.services import PermissionService
 
-from groupadmin.services import ScoutsAuthorizationService
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService
 
 
 logger = logging.getLogger(__name__)

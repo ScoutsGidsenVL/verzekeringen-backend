@@ -11,4 +11,4 @@ class InsuranceDraftSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InsuranceDraft
-        fields = ("id", "created_on", "insurance_type", "data")
+        fields = "__all__"

@@ -6,8 +6,8 @@ from drf_yasg2.utils import swagger_serializer_method
 from apps.equipment.models import InuitsEquipment
 from apps.equipment.models.fields import InuitsEquipmentNonMemberRelatedField
 
-from groupadmin.serializers import ScoutsMemberSearchFrontendSerializer
-from groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.serializers import ScoutsMemberSearchFrontendSerializer
+from scouts_auth.groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)

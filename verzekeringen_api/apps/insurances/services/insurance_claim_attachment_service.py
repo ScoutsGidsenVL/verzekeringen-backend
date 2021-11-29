@@ -6,8 +6,8 @@ from django.core.files.storage import default_storage
 from apps.insurances.models import InsuranceClaimAttachment
 from apps.insurances.utils import InsuranceAttachmentUtils
 
-from inuits.files import StorageService
-from inuits.models import PersistedFile
+from scouts_auth.inuits.files import StorageService
+from scouts_auth.inuits.models import PersistedFile
 
 
 logger = logging.getLogger(__name__)

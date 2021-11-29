@@ -1,15 +1,19 @@
 import logging
 
+from rest_framework import serializers
+
 from apps.people.models import InuitsNonMember
-from apps.people.serializers import InuitsAbstractPersonSerializer
+
+from scouts_auth.inuits.serializers import InuitsPersonSerializer
 
 
 logger = logging.getLogger(__name__)
 
 
-class InuitsNonMemberSerializer(InuitsAbstractPersonSerializer):
+class InuitsNonMemberSerializer(serializers.ModelSerializer):
     # id            pk
-    # fields from AbstractInuitsPerson
+    # fields from InuitsPerson
+    # comment       max_length=500      optional
 
     class Meta:
         model = InuitsNonMember

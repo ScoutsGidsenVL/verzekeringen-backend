@@ -8,7 +8,7 @@ from apps.equipment.managers import InuitsVehicleManager
 
 from scouts_insurances.equipment.models import VehicleType, VehicleTrailerOption
 
-from inuits.models.fields import OptionalCharField, RequiredCharField, OptionalIntegerField
+from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField, OptionalIntegerField
 
 
 class InuitsVehicle(models.Model):

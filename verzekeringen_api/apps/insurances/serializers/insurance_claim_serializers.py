@@ -7,10 +7,10 @@ from rest_framework import serializers
 from apps.people.serializers import InuitsClaimVictimSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
-from groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberSerializer
-from groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberSerializer
+from scouts_auth.groupadmin.services import GroupAdmin
 
-from inuits.serializers import DateTimeTimezoneField, PermissionRequiredField
+from scouts_auth.inuits.serializers import DateTimeTimezoneField, PermissionRequiredField
 
 
 logger = logging.getLogger(__name__)

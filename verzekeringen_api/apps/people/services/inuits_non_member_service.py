@@ -1,33 +1,46 @@
 from datetime import datetime
 
-from django.conf import settings
-from django.core.exceptions import ValidationError
 
 from apps.people.models import InuitsNonMember
 
+from scouts_auth.inuits.models import (
+    Gender,
+    InuitsPersonalDetails,
+    InuitsAddress,
+    InuitsCountry,
+)
+from scouts_auth.inuits.services import InuitsPersonService
+
 
 class InuitsNonMemberService:
+    person_service = InuitsPersonService()
+
     def inuits_non_member_create(
         self,
         *,
-        last_name: str = "",
         first_name: str = "",
+        last_name: str = "",
         phone_number: str = "",
+        cell_number: str = "",
         birth_date: datetime.date = None,
+        gender: Gender = Gender.UNKNOWN,
         street: str = "",
         number: str = "",
+        letter_box: str = "",
         postal_code: int = None,
         city: str = "",
+        country: InuitsCountry = None,
         # group_group_admin_id: str,
         # created_by: settings.AUTH_USER_MODEL = None,
-        letter_box: str = "",
         comment: str = "",
     ) -> InuitsNonMember:
         non_member = InuitsNonMember(
-            last_name=last_name,
             first_name=first_name,
+            last_name=last_name,
             phone_number=phone_number,
+            cell_number=cell_number,
             birth_date=birth_date,
+            gender=gender,
             street=street,
             number=number,
             letter_box=letter_box,
@@ -41,8 +54,8 @@ class InuitsNonMemberService:
         return non_member
 
     def inuits_non_member_update(self, *, non_member: InuitsNonMember, **fields) -> InuitsNonMember:
-        non_member.last_name = fields.get("last_name", non_member.last_name)
         non_member.first_name = fields.get("first_name", non_member.first_name)
+        non_member.last_name = fields.get("last_name", non_member.last_name)
         non_member.phone_number = fields.get("phone_number", non_member.phone_number)
         non_member.birth_date = fields.get("birth_date", non_member.birth_date)
         non_member.street = fields.get("street", non_member.street)

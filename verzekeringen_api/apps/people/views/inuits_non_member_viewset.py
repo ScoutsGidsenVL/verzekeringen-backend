@@ -1,3 +1,5 @@
+import logging
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -7,6 +9,9 @@ from apps.people.serializers import InuitsNonMemberSerializer
 from apps.people.filters import InuitsNonMemberFilter
 from apps.people.services import InuitsNonMemberService
 from apps.people.models import InuitsNonMember
+
+
+logger = logging.getLogger(__name__)
 
 
 class InuitsNonMemberViewSet(viewsets.GenericViewSet):
@@ -47,7 +52,7 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
     def create(self, request):
         input_serializer = InuitsNonMemberSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
-
+        logger.debug("valid: %s", input_serializer.validated_data)
         created_non_member = self.service.inuits_non_member_create(**input_serializer.validated_data)
 
         output_serializer = InuitsNonMemberSerializer(created_non_member, context={"request": request})

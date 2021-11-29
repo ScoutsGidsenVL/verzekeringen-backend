@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from apps.equipment.managers import InuitsEquipmentManager
 from apps.people.models import InuitsNonMember
 
-from inuits.models.fields import OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class InuitsEquipment(models.Model):

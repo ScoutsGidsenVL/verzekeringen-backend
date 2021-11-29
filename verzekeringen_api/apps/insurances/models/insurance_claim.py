@@ -7,10 +7,10 @@ from apps.people.models import InuitsClaimVictim
 from apps.insurances.models.enums import ClaimActivityType
 from apps.insurances.managers import InsuranceClaimManager
 
-from groupadmin.services import GroupAdmin
+from scouts_auth.groupadmin.services import GroupAdmin
 
-from inuits.models import AuditedBaseModel
-from inuits.models.fields import (
+from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_auth.inuits.models.fields import (
     OptionalCharField,
     OptionalDateField,
     OptionalDateTimeField,

@@ -16,6 +16,7 @@ from scouts_insurances.insurances.views import (
 )
 
 router = routers.SimpleRouter()
+
 router.register(r"insurance_types", InsuranceTypeViewSet, "InsuranceType")
 router.register(r"insurance_statuses", InsuranceStatusViewSet, "InsuranceStatus")
 router.register(r"insurance_group_sizes", GroupSizeViewSet, "GroupSize")
@@ -30,15 +31,13 @@ router.register(
     TemporaryVehicleInsuranceOptionViewSet,
     "VehicleInsuranceOption",
 )
-
-router.register(r"insurances", BaseInsuranceViewSet, "Insurance")
-
 router.register(r"insurances/activity", ActivityInsuranceViewSet, "ActivityInsurance")
 router.register(r"insurances/equipment", EquipmentInsuranceViewSet, "EquipmentInsurance")
 router.register(r"insurances/event", EventInsuranceViewSet, "EventInsurance")
 router.register(r"insurances/temporary", TemporaryInsuranceViewSet, "TemporaryInsurance")
 router.register(r"insurances/temporary_vehicle", TemporaryVehicleInsuranceViewSet, "TemporaryVehicleInsurance")
 router.register(r"insurances/travel_assistance", TravelAssistanceInsuranceViewSet, "TravelAssistanceInsurance")
+router.register(r"insurances", BaseInsuranceViewSet, "Insurance")
 
 
 urlpatterns = router.urls

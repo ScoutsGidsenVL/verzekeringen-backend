@@ -1,16 +1,14 @@
 from django.db import models
-from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from apps.people.models import InuitsAbstractPerson, InuitsNonMember
-
-from groupadmin.models import ScoutsMember
-from groupadmin.services import GroupAdmin
-
-from inuits.models.fields import OptionalCharField
+from apps.people.models import InuitsNonMember
+from scouts_auth.inuits.models import InuitsPerson
 
 
-class InuitsClaimVictim(InuitsAbstractPerson):
+from scouts_auth.inuits.models.fields import OptionalCharField
+
+
+class InuitsClaimVictim(InuitsPerson):
     id = models.AutoField(primary_key=True)
     legal_representative = OptionalCharField(max_length=128)
     group_admin_id = OptionalCharField(max_length=64)

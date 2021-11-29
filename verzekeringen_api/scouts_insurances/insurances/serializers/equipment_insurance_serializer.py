@@ -2,7 +2,7 @@ import logging
 
 from rest_framework import serializers
 
-from apps.locations.serializers import CountrySerializer
+from scouts_insurances.locations.serializers import CountrySerializer
 
 from scouts_insurances.equipment.serializers import EquipmentSerializer
 from scouts_insurances.insurances.models import EquipmentInsurance

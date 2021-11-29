@@ -1,6 +1,7 @@
-from django.urls import path, re_path
+from django.urls import path
+from django.conf.urls import url, include
 
-from scouts_auth.views import (
+from scouts_auth.auth.views import (
     CurrentUserView,
     OIDCAuthCodeView,
     OIDCRefreshView,
@@ -14,4 +15,5 @@ urlpatterns = [
     # Refresh the OIDC authentication
     path("oidc/refresh/", OIDCRefreshView.as_view(), name="refresh"),
     # path("oidc/", include("mozilla_django_oidc.urls")),
+    path("", include("scouts_auth.groupadmin.urls")),
 ]

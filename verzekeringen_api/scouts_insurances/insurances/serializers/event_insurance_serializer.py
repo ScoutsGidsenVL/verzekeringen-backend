@@ -10,8 +10,8 @@ from scouts_insurances.insurances.models import EventInsurance
 from scouts_insurances.insurances.models.enums import EventSize
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
 
-from inuits.serializers import EnumSerializer
-from inuits.filters.helpers import parse_choice_to_tuple
+from scouts_auth.inuits.serializers import EnumSerializer
+from scouts_auth.inuits.filters.helpers import parse_choice_to_tuple
 
 
 logger = logging.getLogger(__name__)

@@ -14,8 +14,8 @@ from apps.insurances.models import (
 
 from scouts_insurances.insurances.models import BaseInsurance
 
-from inuits.mail import Email, EmailAttachment, EmailService
-from inuits.utils import TextUtils
+from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
+from scouts_auth.inuits.utils import TextUtils
 
 logger = logging.getLogger(__name__)
 

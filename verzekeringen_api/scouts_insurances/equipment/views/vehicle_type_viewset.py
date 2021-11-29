@@ -4,7 +4,7 @@ from drf_yasg2.utils import swagger_auto_schema
 
 from scouts_insurances.equipment.models import VehicleType
 
-from inuits.serializers import EnumSerializer
+from scouts_auth.inuits.serializers import EnumSerializer
 
 
 class VehicleTypeViewSet(viewsets.ViewSet):

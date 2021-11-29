@@ -3,7 +3,7 @@ from rest_framework import serializers
 from apps.equipment.models import InuitsVehicleTemplate
 from apps.equipment.serializers import InuitsVehicleSerializer
 
-from inuits.mixins import FlattenSerializerMixin
+from scouts_auth.inuits.mixins import FlattenSerializerMixin
 
 
 class InuitsVehicleTemplateSerializer(FlattenSerializerMixin, serializers.Serializer):
@@ -16,7 +16,7 @@ class InuitsVehicleTemplateSerializer(FlattenSerializerMixin, serializers.Serial
         model = InuitsVehicleTemplate
         fields = "id, inuits_vehicle"
         # The InuitsVehicle to create/read/update/delete
-        flatten = [("inuits_vehicle", InuitsVehicleSerializer())]
+        flatten = [("inuits_vehicle", InuitsVehicleSerializer)]
 
     def get_id(self, obj: InuitsVehicleTemplate):
         try:
