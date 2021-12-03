@@ -15,7 +15,7 @@ class ActivityInsurance(BaseInsurance):
         related_name="activity_child",
     )
     nature = models.CharField(db_column="aardactiviteit", max_length=500)
-    _group_size = models.IntegerField(
+    group_size = models.IntegerField(
         db_column="aantgroep", null=True, validators=[MinValueValidator(1), MaxValueValidator(9)]
     )
     postal_code = models.IntegerField(db_column="postcode", null=True)
@@ -24,15 +24,6 @@ class ActivityInsurance(BaseInsurance):
     class Meta:
         db_table = "vrzktypeeenact"
         managed = False
-
-    # Parse group_size int to enum
-    @property
-    def group_size(self):
-        return GroupSize(self._group_size)
-
-    @group_size.setter
-    def group_size(self, value):
-        self._group_size = value.value
 
     def has_attachment(self) -> bool:
         return self.attachment is not None

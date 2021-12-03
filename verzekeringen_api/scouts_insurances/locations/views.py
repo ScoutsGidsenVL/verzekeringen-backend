@@ -26,7 +26,7 @@ class CountryViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["get"], detail=False, url_path="countries_by_type/(?P<type_id>\d+)")
     def get_by_type(self, request, type_id=None):
-        countries = self.filter_queryset(self.get_queryset().by_type(type_id))
+        countries = self.filter_queryset(self.get_queryset().by_insurance_type_id(type_id))
         page = self.paginate_queryset(countries)
 
         if page is not None:

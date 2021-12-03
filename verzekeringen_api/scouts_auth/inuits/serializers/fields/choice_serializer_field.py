@@ -7,7 +7,7 @@ from rest_framework import serializers
 logger = logging.getLogger(__name__)
 
 
-class ChoiceSerializerField(serializers.Serializer):
+class ChoiceSerializerField:
     instance = None
 
     CHOICE_FIELD = "ChoiceField"
@@ -15,27 +15,25 @@ class ChoiceSerializerField(serializers.Serializer):
 
     def __init__(self, *args, **kwargs):
         choices = kwargs.pop("choices", None)
+        source = kwargs.pop("source", None)
         many = kwargs.pop("many", False)
-
-        # logger.debug("FIELD: %s", self.field_name)
-        super().__init__(*args, **kwargs)
-        logger.debug("FIELD: %s", self.field_name)
-
-        source = self.field_name
 
         if not choices:
             raise ValidationError("ChoiceSerializerField needs to have the choices field set")
+        kwargs["choices"] = choices
 
+        if source:
+            kwargs["source"] = source
+
+        parent = ChoiceSerializerField.CHOICE_FIELD
         if many:
             parent = ChoiceSerializerField.MULTIPLE_CHOICE_FIELD
-        else:
-            parent = ChoiceSerializerField.CHOICE_FIELD
 
-        self.instance = getattr(serializers, parent)(*args, choices=choices, source=source, **kwargs)
+        self.instance = getattr(serializers, parent)(*args, **kwargs)
 
     def bind(self, field_name, parent):
         logger.debug("FIELD NAME: %s", field_name)
-        return super().bind(field_name, parent)
+        return self.instance.bind(field_name, parent)
 
     def get_value(self, dictionary):
         logger.debug("DICT: %s", dictionary)
