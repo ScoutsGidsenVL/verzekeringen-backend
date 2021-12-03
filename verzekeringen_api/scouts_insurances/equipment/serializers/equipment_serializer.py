@@ -13,8 +13,8 @@ class EquipmentSerializer(serializers.ModelSerializer):
     # owner_non_member  references NonMember
     # owner_member      references Member
 
-    owner_non_member = NonMemberSerializer()
-    owner_member = MemberSerializer()
+    owner_non_member = NonMemberSerializer(required=False)
+    owner_member = MemberSerializer(required=False)
 
     class Meta:
         model = Equipment

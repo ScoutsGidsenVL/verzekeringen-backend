@@ -80,3 +80,6 @@ class ScoutsGroup:
             ", ".join(str(field) for field in self.group_specific_fields),
             ", ".join(str(link) for link in self.links),
         )
+
+    def to_simple_string(self) -> str:
+        return "group_admin_id({}), name({})".format(self.group_admin_id, self.name)

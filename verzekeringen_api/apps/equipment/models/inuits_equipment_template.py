@@ -1,8 +1,8 @@
 from django.db import models
 
-from scouts_insurances.equipment.models import Equipment
-
 from apps.equipment.models import InuitsEquipment
+
+from scouts_insurances.equipment.models import Equipment
 
 
 class InuitsEquipmentTemplate(models.Model):

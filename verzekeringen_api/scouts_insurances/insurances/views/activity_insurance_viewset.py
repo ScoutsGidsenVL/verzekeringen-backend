@@ -31,6 +31,7 @@ class ActivityInsuranceViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: ActivityInsuranceSerializer},
     )
     def create(self, request):
+        logger.debug("DATA: %s", request.data)
         input_serializer = ActivityInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 

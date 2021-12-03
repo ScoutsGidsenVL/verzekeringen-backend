@@ -31,11 +31,15 @@ class EventInsuranceViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: EventInsuranceSerializer},
     )
     def create(self, request):
+        logger.debug("CREATE DATA: %s", request.data)
         input_serializer = EventInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
+        validated_data = input_serializer.validated_data
+        logger.debug("VALIDATED DATA: %s", validated_data)
+
         created_insurance = self.event_insurance_service.event_insurance_create(
-            **input_serializer.validated_data, created_by=request.user
+            **validated_data, created_by=request.user
         )
 
         output_serializer = EventInsuranceSerializer(created_insurance, context={"request": request})
@@ -48,12 +52,14 @@ class EventInsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["post"], detail=False, url_path="cost")
     def cost_calculation_event(self, request):
+        logger.debug("COST CALCULATION DATA: %s", request.data)
         input_serializer = EventInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        cost = self.event_insurance_service.event_insurance_cost_calculation(
-            **input_serializer.validated_data, created_by=request.user
-        )
+        validated_data = input_serializer.validated_data
+        logger.debug("COST CALCULATION VALIDATED DATA: %s", validated_data)
+
+        cost = self.event_insurance_service.event_insurance_cost_calculation(**validated_data, created_by=request.user)
 
         output_serializer = InsuranceCostSerializer({"total_cost": cost})
 

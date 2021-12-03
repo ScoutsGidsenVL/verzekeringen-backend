@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from scouts_auth.inuits.serializers import DatetypeAwareDateSerializerField
+
 
 class OptionalCharField(serializers.CharField):
     """
@@ -89,7 +91,7 @@ class RequiredYearField(serializers.IntegerField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalDateField(serializers.DateField):
+class OptionalDateField(DatetypeAwareDateSerializerField):
     """
     Initializes a serializers.DateField that is optional.
 

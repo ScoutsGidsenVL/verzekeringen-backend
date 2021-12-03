@@ -36,8 +36,8 @@ class EquipmentInsurance(BaseInsurance):
         return Country.objects.get(name=self._country)
 
     @country.setter
-    def country(self, value: Country):
-        if not value:
-            self._country = None
-        else:
+    def country(self, value):
+        if isinstance(value, Country):
             self._country = value.name
+        else:
+            self._country = value

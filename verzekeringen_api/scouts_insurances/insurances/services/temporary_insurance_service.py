@@ -1,3 +1,5 @@
+import logging
+
 from decimal import Decimal
 
 from django.db import transaction
@@ -7,8 +9,12 @@ from scouts_insurances.insurances.models import TemporaryInsurance, InsuranceTyp
 from scouts_insurances.insurances.services import BaseInsuranceService
 
 
+logger = logging.getLogger(__name__)
+
+
 class TemporaryInsuranceService:
     base_insurance_service = BaseInsuranceService()
+    member_service = MemberService()
 
     def _calculate_total_cost(self, insurance: TemporaryInsurance, non_member_amount: int) -> Decimal:
         premium = CostVariable.objects.get_variable(insurance.type, "premium")
@@ -51,6 +57,7 @@ class TemporaryInsuranceService:
         city: str = None,
         **base_insurance_fields,
     ) -> TemporaryInsurance:
+        logger.debug("COUNTRY: %s", country)
         base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=InsuranceType.objects.temporary()
         )
@@ -68,7 +75,7 @@ class TemporaryInsuranceService:
         # Save insurance here already so we can create non members linked to it
         # This whole function is atomic so if non members cant be created this will rollback aswell
         for non_member_data in non_members:
-            non_member = MemberService.non_member_create(**non_member_data)
+            non_member = self.member_service.non_member_create(**non_member_data)
             insurance.non_members.add(non_member)
 
         insurance.full_clean()

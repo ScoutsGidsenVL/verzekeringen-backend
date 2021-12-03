@@ -1,3 +1,5 @@
+import logging
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -7,6 +9,9 @@ from apps.equipment.filters import InuitsEquipmentFilter
 from apps.equipment.serializers import InuitsEquipmentSerializer
 from apps.equipment.services import InuitsEquipmentService
 from apps.equipment.models import InuitsEquipment
+
+
+logger = logging.getLogger(__name__)
 
 
 class InuitsEquipmentViewSet(viewsets.GenericViewSet):
@@ -45,8 +50,12 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: InuitsEquipmentSerializer},
     )
     def create(self, request):
+        logger.debug("CREATE DATA: %s", request.data)
+
         input_serializer = InuitsEquipmentSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
+
+        logger.debug("CREATE VALIDATED DATA: %s", request.data)
 
         created_equipment = self.service.inuits_equipment_create(
             **input_serializer.validated_data, created_by=request.user
@@ -61,6 +70,7 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsEquipmentSerializer},
     )
     def partial_update(self, request, pk=None):
+        logger.debug("UPDATE: request data: %s", request.data)
         equipment = self.get_object()
 
         serializer = InuitsEquipmentSerializer(

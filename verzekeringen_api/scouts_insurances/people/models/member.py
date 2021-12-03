@@ -25,4 +25,9 @@ class Member(AbstractMember, models.Model):
         if not (self.birth_date and self.phone_number and self.email) or (
             not self.birth_date and not self.phone_number and not self.email
         ):
-            raise ValidationError("Birth date, Phone number and email need to be either filled in or blank together")
+            raise ValidationError("Birth date, phone number and email need to be either filled in or blank together")
+
+    def __str__(self):
+        return "{}, group_admin_id({}), membership_number({})".format(
+            super().__str__(), self.group_admin_id, self.membership_number
+        )

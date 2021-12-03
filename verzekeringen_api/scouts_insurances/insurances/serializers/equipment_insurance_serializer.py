@@ -5,7 +5,9 @@ from rest_framework import serializers
 from scouts_insurances.locations.serializers import CountrySerializer
 
 from scouts_insurances.equipment.serializers import EquipmentSerializer
+from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import EquipmentInsurance
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
 
 logger = logging.getLogger(__name__)
@@ -13,11 +15,11 @@ logger = logging.getLogger(__name__)
 
 class EquipmentInsuranceSerializer(BaseInsuranceSerializer):
     equipment = EquipmentSerializer(many=True)
-    country = CountrySerializer()
+    country = CountrySerializer(required=False)
 
     class Meta:
         model = EquipmentInsurance
-        fields = BaseInsuranceFields + ("nature", "country", "postal_code", "city", "equipment")
+        fields = BaseInsuranceFields + ["nature", "country", "postal_code", "city", "equipment"]
 
     def validate_equipment(self, value):
         if len(value) < 1:
@@ -25,9 +27,12 @@ class EquipmentInsuranceSerializer(BaseInsuranceSerializer):
         return value
 
     def validate(self, data):
+        logger.debug("SERIALIZER VALIDATE DATA: %s", data)
+
         postal_code = data.get("postal_code", None)
         city = data.get("city", None)
         country = data.get("country", None)
+
         if not (postal_code and city) and not country:
             raise serializers.ValidationError("Either postal code/city or country is required")
         elif (postal_code and city) and country:

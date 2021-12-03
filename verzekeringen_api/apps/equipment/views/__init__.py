@@ -1,2 +1,3 @@
 from .inuits_equipment_viewset import InuitsEquipmentViewSet
+from .inuits_equipment_template_viewset import InuitsEquipmentTemplateViewSet
 from .inuits_vehicle_viewset import InuitsVehicleViewSet

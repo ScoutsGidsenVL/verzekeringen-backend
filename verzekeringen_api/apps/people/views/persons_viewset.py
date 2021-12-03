@@ -1,11 +1,12 @@
 import logging
 from typing import List
+from datetime import datetime
 
+from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, status, filters, permissions
-from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.people.models import InuitsNonMember
@@ -14,6 +15,7 @@ from apps.people.serializers import PersonSerializer
 
 from scouts_auth.groupadmin.models import ScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
+from scouts_auth.inuits.utils import DateUtils
 
 
 logger = logging.getLogger(__name__)
@@ -44,8 +46,8 @@ class PersonSearch(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False):
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
-        start = self.request.GET.get("start", None)
-        end = self.request.GET.get("end", None)
+        start = DateUtils.datetime_from_isoformat(self.request.GET.get("start", None))
+        end = DateUtils.datetime_from_isoformat(self.request.GET.get("end", None))
 
         if not search_term:
             raise ValidationError("Url param 'term' is a required filter")

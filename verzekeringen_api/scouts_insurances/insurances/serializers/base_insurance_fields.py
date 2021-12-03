@@ -1,4 +1,4 @@
-base_insurance_fields = (
+base_insurance_fields = [
     # id                    pk
     "id",
     # _status               number          optional
@@ -32,4 +32,4 @@ base_insurance_fields = (
     "responsible_member",
     # type                  InsuranceType   optional
     "type",
-)
+]

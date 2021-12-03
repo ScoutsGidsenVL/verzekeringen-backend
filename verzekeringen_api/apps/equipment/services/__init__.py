@@ -1,2 +1,3 @@
 from .inuits_equipment_service import InuitsEquipmentService
+from .inuits_equipment_template_service import InuitsEquipmentTemplateService
 from .inuits_vehicle_service import InuitsVehicleService

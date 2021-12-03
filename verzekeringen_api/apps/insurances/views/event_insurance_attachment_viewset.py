@@ -57,7 +57,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
                 data={"message": "Insurance instance not found !"},
             )
 
-        if not insurance.is_accepted():
+        if not insurance.accepted:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "Participant list can only be uploaded after the insurance was accepted !"},

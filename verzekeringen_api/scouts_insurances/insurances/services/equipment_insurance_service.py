@@ -1,5 +1,6 @@
 import logging
 from decimal import Decimal
+from typing import List
 
 from django.db import transaction
 from django.db.models import Q
@@ -7,8 +8,9 @@ from django.db.models import Q
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.equipment.services import EquipmentService
 
+from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import EquipmentInsurance, InsuranceType, CostVariable
-from scouts_insurances.insurances.models.enums import InsuranceStatus
+from scouts_insurances.insurances.models.enums import InsuranceStatus, InsuranceTypeEnum
 from scouts_insurances.insurances.services import BaseInsuranceService
 
 
@@ -17,15 +19,16 @@ logger = logging.getLogger(__name__)
 
 class EquipmentInsuranceService:
     base_insurance_service = BaseInsuranceService()
+    equipment_service = EquipmentService()
 
-    def _calculate_total_cost(self, insurance: EquipmentInsurance, equipment_list: list = []) -> Decimal:
+    def _calculate_total_cost(self, insurance: EquipmentInsurance, equipment_list: List[Equipment] = []) -> Decimal:
         equipment_cost = 0
 
         if not equipment_list:
             equipment_list = insurance.equipment.all()
 
         for equipment in equipment_list:
-            equipment_cost += equipment._amount * equipment.total_value
+            equipment_cost += equipment.amount * equipment.total_value
 
         cost = equipment_cost * CostVariable.objects.get_variable(insurance.type, "premium_percentage").value
         if cost < CostVariable.objects.get_variable(insurance.type, "premium_minimum").value:
@@ -54,7 +57,11 @@ class EquipmentInsuranceService:
             city=city,
             **base_insurance_fields,
         )
-        insurance.country = country
+        insurance.country = (
+            country
+            if country and isinstance(country, str)
+            else Country.objects.by_type(InsuranceTypeEnum.EQUIPMENT).get(name=Country.DEFAULT_COUNTRY_NAME).name
+        )
         # Create some fake equipment data for cost calc (only need total value)
         equipment_objects = []
         for equipment_data in equipment:
@@ -145,7 +152,7 @@ class EquipmentInsuranceService:
             equipment_id = equipment_data.get("id", None)
             inuits_equipment_id = equipment_data.get("inuits_equipment_id", None)
 
-            equipment = EquipmentService.equipment_create_or_update(**equipment_data, insurance=insurance)
+            equipment = self.equipment_service.equipment_create_or_update(**equipment_data, insurance=insurance)
 
             if equipment_id and equipment_id in existing_equipment_list:
                 existing_equipment_list.remove(equipment.id)

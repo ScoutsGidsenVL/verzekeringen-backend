@@ -11,33 +11,32 @@ from scouts_insurances.people.models import Member
 from scouts_insurances.people.services import MemberService
 from scouts_insurances.insurances.models import BaseInsurance, InsuranceType
 from scouts_insurances.insurances.models.enums import InsuranceStatus
+from scouts_insurances.insurances.services import InsuranceMailService
 
 from scouts_auth.groupadmin.models import ScoutsGroup
-
-# from scouts_insurances.insurances.services import InsuranceMailService
 
 
 logger = logging.getLogger(__name__)
 
 
 class BaseInsuranceService:
-    # mail_service = InsuranceMailService()
+    mail_service = InsuranceMailService()
     member_service = MemberService()
 
     def base_insurance_creation_fields(
         self,
         *,
-        id: str = "",
-        status: str = "",
+        id: str = None,
+        status: str = "",  # Calculated value
         scouts_group: ScoutsGroup = None,
-        total_cost: Decimal = None,
+        total_cost: Decimal = None,  # Handled by the BaseInsuranceSerializer
         comment: str = "",
         vvksm_comment: str = "",
-        created_on: datetime = None,
-        responsible_member: Member = None,
-        type: InsuranceType,
-        start_date: datetime,
-        end_date: datetime,
+        created_on: datetime = None,  # Calculated value
+        responsible_member: Member = None,  # Calculated value
+        type: InsuranceType = None,
+        start_date: datetime = None,
+        end_date: datetime = None,
         created_by: settings.AUTH_USER_MODEL,
     ) -> dict:
         # validate group
@@ -60,7 +59,8 @@ class BaseInsuranceService:
             "end_date": end_date,
             "responsible_member": member,
             "comment": comment,
-            "created_on": timezone.now(),
+            "vvksm_comment": vvksm_comment,
+            "created_on": datetime.now(),
             "id": id,
         }
 
@@ -72,5 +72,4 @@ class BaseInsuranceService:
         return insurance
 
     def handle_insurance_created(self, insurance: BaseInsurance):
-        # return self.mail_service.send_insurance(insurance)
-        pass
+        return self.mail_service.send_insurance(insurance)

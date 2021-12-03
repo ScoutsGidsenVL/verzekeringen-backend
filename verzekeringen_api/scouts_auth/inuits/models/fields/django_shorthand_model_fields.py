@@ -4,6 +4,8 @@ from typing import Iterable
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from scouts_auth.inuits.models.fields import DatetypeAwareDateField
+
 
 class OptionalCharField(models.CharField):
     """
@@ -181,7 +183,7 @@ class OptionalEmailField(OptionalCharField):
         super().__init__(*args, **kwargs)
 
 
-class OptionalDateField(models.DateField):
+class OptionalDateField(DatetypeAwareDateField):
     """
     Initializes a models.DateField as optional.
 

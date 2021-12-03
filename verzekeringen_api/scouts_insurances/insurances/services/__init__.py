@@ -1,3 +1,4 @@
+from .insurance_mail_service import InsuranceMailService
 from .base_insurance_service import BaseInsuranceService
 from .activity_insurance_service import ActivityInsuranceService
 from .equipment_insurance_service import EquipmentInsuranceService

@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from scouts_insurances.people.models import Member
 
+from scouts_auth.inuits.serializers import DatetypeAndTimezoneAwareDateTimeSerializerField
+
 
 class MemberSerializer(serializers.ModelSerializer):
     # id                    pk
@@ -12,6 +14,8 @@ class MemberSerializer(serializers.ModelSerializer):
     # membership_number     scouts membership number
     # email                 max_length=60               optional
     # group_admin_id        max_length=255              optional
+
+    birth_date = DatetypeAndTimezoneAwareDateTimeSerializerField()
 
     class Meta:
         model = Member

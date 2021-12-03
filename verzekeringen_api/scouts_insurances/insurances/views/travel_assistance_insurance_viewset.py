@@ -31,6 +31,7 @@ class TravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: TravelAssistanceInsuranceSerializer},
     )
     def create(self, request):
+        logger.debug("DATA: %s", request.data)
         input_serializer = TravelAssistanceInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 

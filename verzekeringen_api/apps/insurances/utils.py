@@ -13,7 +13,7 @@ from scouts_auth.inuits.utils import GlobalSettingsUtil
 logger = logging.getLogger(__name__)
 
 
-class InsuranceSettingsHelper:
+class InuitsInsuranceSettingsHelper:
     @staticmethod
     def is_test() -> bool:
         return getattr(settings, "DEBUG", False) and GlobalSettingsUtil.instance().is_test

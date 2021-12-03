@@ -9,17 +9,9 @@ from scouts_auth.inuits.mixins import FlattenSerializerMixin
 class InuitsEquipmentTemplateSerializer(FlattenSerializerMixin, serializers.Serializer):
     """Provides a bridge between Equipment and InuitsEquipment."""
 
-    # The Equipment instance id, if any
-    id = serializers.SerializerMethodField()
-
     class Meta:
         model = InuitsEquipmentTemplate
-        fields = ["id", "inuits_equipment"]
+        # fields = ["id", "inuits_equipment"]
         # The InuitsEquipment to create/read/update/delete
+        exclude = ["created_on", "created_by", "updated_on", "updated_by"]
         flatten = [("inuits_equipment", InuitsEquipmentSerializer)]
-
-    def get_id(self, obj: InuitsEquipmentTemplate):
-        try:
-            return obj.id
-        except:
-            return None

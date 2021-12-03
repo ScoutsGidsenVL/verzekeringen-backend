@@ -1,34 +1,11 @@
 from django.db import models
 
-
-class InsuranceTypeManager(models.Manager):
-    def get_queryset(self):
-        # Exclude some types from list that may still be in database
-        return super().get_queryset().exclude(id__in=[11, 12])
-
-    def activity(self):
-        return self.get_queryset().get(id=1)
-
-    def temporary(self):
-        return self.get_queryset().get(id=2)
-
-    def travel_assistance_without_vehicle(self):
-        return self.get_queryset().get(id=3)
-
-    def travel_assistance_with_vehicle(self):
-        return self.get_queryset().get(id=4)
-
-    def temporary_vehicle(self):
-        return self.get_queryset().get(id=5)
-
-    def equipment(self):
-        return self.get_queryset().get(id=6)
-
-    def event(self):
-        return self.get_queryset().get(id=10)
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
+from scouts_insurances.insurances.managers import InsuranceTypeManager
 
 
 class InsuranceType(models.Model):
+
     objects = InsuranceTypeManager()
 
     id = models.IntegerField(db_column="verzekeringstypeid", primary_key=True)
@@ -41,22 +18,22 @@ class InsuranceType(models.Model):
         managed = False
 
     def is_activity_insurance(self) -> bool:
-        return self.id == 1
+        return self.id == InsuranceTypeEnum.ACTIVITY
 
     def is_temporary_insurance(self) -> bool:
-        return self.id == 2
+        return self.id == InsuranceTypeEnum.TEMPORARY
 
     def is_travel_assistance_without_vehicle_insurance(self) -> bool:
-        return self.id == 3
+        return self.id == InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE
 
     def is_travel_assistance_with_vehicle_insurance(self) -> bool:
-        return self.id == 4
+        return self.id == InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE
 
     def is_temporary_vehicle_insurance(self) -> bool:
-        return self.id == 5
+        return self.id == InsuranceTypeEnum.TEMPORARY_VEHICLE
 
     def is_equipment_insurance(self) -> bool:
-        return self.id == 6
+        return self.id == InsuranceTypeEnum.EQUIPMENT
 
     def is_event_insurance(self) -> bool:
-        return self.id == 10
+        return self.id == InsuranceTypeEnum.EVENT

@@ -31,6 +31,7 @@ class TemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: TemporaryVehicleInsuranceSerializer},
     )
     def create(self, request):
+        logger.debug("REQUEST DATA: %s", request.data)
         input_serializer = TemporaryVehicleInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
@@ -48,6 +49,7 @@ class TemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["post"], detail=False, url_path="cost")
     def cost_calculation_temporary_vehicle(self, request):
+        logger.debug("REQUEST DATA: %s", request.data)
         input_serializer = TemporaryVehicleInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 

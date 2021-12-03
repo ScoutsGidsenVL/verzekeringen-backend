@@ -15,7 +15,7 @@ class Equipment(models.Model):
     nature = models.CharField(db_column="aard", max_length=50, blank=True)
     description = models.CharField(db_column="materieomschrijving", max_length=500)
     # Amount will not be used in the future so we will put it default 1 and ignore it
-    _amount = models.IntegerField(db_column="aantal", validators=[MinValueValidator(1)], default=1)
+    amount = models.IntegerField(db_column="aantal", validators=[MinValueValidator(1)], default=1)
     total_value = models.DecimalField(
         db_column="nieuwwaardeperstuk",
         max_digits=7,
@@ -54,4 +54,4 @@ class Equipment(models.Model):
         if self.owner_non_member and self.owner_member:
             raise ValidationError("There needs to be only one owner")
         if self.owner_member and self.nature:
-            raise ValidationError("If owner member then nature can not be given")
+            raise ValidationError("If the equipment owner is a member then equipment nature can not be given")

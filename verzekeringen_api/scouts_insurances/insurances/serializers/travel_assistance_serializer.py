@@ -14,7 +14,7 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
 
     class Meta:
         model = TravelAssistanceInsurance
-        fields = BaseInsuranceFields + ("country", "participants", "vehicle")
+        fields = BaseInsuranceFields + ["country", "participants", "vehicle"]
 
     # @swagger_serializer_method(serializer_or_field=InuitsVehicleOutputSerializer)
     # def get_vehicle(self, obj):

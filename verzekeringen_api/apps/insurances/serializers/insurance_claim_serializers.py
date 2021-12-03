@@ -10,7 +10,7 @@ from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 
-from scouts_auth.inuits.serializers import DateTimeTimezoneField, PermissionRequiredField
+from scouts_auth.inuits.serializers import DateTimeTimezoneSerializerField, PermissionRequiredField
 
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class InsuranceClaimCreateDataSerializer(serializers.Serializer):
 
 
 # class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
-#     date_of_accident = DateTimeTimezoneField()
+#     date_of_accident = DateTimeTimezoneSerializerField()
 #     activity_type = serializers.JSONField()
 #     victim = InuitsClaimVictimSerializer(many=True)
 #     group_group_admin_id = serializers.CharField()
@@ -137,8 +137,8 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
 
 
 # class InsuranceClaimSerializer(BaseInsuranceClaimSerializer):
-#     date = DateTimeTimezoneField()
-#     date_of_accident = DateTimeTimezoneField()
+#     date = DateTimeTimezoneSerializerField()
+#     date_of_accident = DateTimeTimezoneSerializerField()
 #     victim = InuitsClaimVictimSerializer(many=True)
 #     group = serializers.SerializerMethodField()
 #     attachment = serializers.SerializerMethodField()

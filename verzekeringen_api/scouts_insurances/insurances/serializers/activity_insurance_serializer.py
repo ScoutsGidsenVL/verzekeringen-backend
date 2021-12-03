@@ -18,7 +18,7 @@ class ActivityInsuranceSerializer(BaseInsuranceSerializer):
 
     class Meta:
         model = ActivityInsurance
-        fields = BaseInsuranceFields + ("nature", "group_size", "postal_code", "city", "participant_list_file")
+        fields = BaseInsuranceFields + ["nature", "group_size", "postal_code", "city", "participant_list_file"]
 
     @swagger_serializer_method(serializer_or_field=EnumSerializer)
     def get_group_size(self, obj):

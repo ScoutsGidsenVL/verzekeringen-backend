@@ -10,6 +10,8 @@ from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.managers import BaseInsuranceManager
 
 from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsAddress
+from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
+from scouts_auth.inuits.utils import BooleanParser
 
 
 class BaseInsurance(models.Model):
@@ -18,7 +20,7 @@ class BaseInsurance(models.Model):
     id = models.AutoField(primary_key=True, db_column="verzekeringsid")
     _status = models.IntegerField(db_column="status", null=True, blank=True)
     invoice_number = models.IntegerField(db_column="factuurnr", null=True, blank=True)
-    invoice_date = models.DateTimeField(db_column="facturatiedatum", null=True, blank=True)
+    invoice_date = TimezoneAwareDateTimeField(db_column="facturatiedatum", null=True, blank=True)
 
     _group_group_admin_id = models.CharField(db_column="groepsnr", max_length=6)
     _group_name = models.CharField(db_column="groepsnaam", max_length=50)
@@ -32,10 +34,10 @@ class BaseInsurance(models.Model):
     _finished = models.CharField(db_column="afgewerkt", max_length=1, default="N")
     _listed = models.CharField(db_column="lijstok", max_length=1, default="N")
 
-    created_on = models.DateTimeField(db_column="datumvaninvulling", null=True)
-    _start_date = models.DateTimeField(db_column="begindatum", null=True)
-    _end_date = models.DateTimeField(db_column="einddatum", null=True)
-    payment_date = models.DateTimeField(db_column="betalingsdatum", null=True, blank=True)
+    created_on = TimezoneAwareDateTimeField(db_column="datumvaninvulling", null=True)
+    _start_date = TimezoneAwareDateTimeField(db_column="begindatum", null=True)
+    _end_date = TimezoneAwareDateTimeField(db_column="einddatum", null=True)
+    payment_date = TimezoneAwareDateTimeField(db_column="betalingsdatum", null=True, blank=True)
 
     responsible_member = models.ForeignKey(Member, db_column="verantwoordelijkeid", on_delete=models.CASCADE)
     type = models.ForeignKey(InsuranceType, null=True, db_column="typeid", on_delete=models.RESTRICT)
@@ -48,22 +50,9 @@ class BaseInsurance(models.Model):
         if self.start_date > self.end_date:
             raise ValidationError("Start date needs to be before or equal to end date")
 
-    # Utility functions for parsing char boolean to actual boolean and the reverse
-    def parse_bool_to_char(value: bool) -> str:
-        if value:
-            return "J"
-        else:
-            return "N"
-
-    def parse_char_to_bool(value: str) -> bool:
-        if value == "J":
-            return True
-        else:
-            return False
-
     # Special group getter that returns group class to make it seem like normal model
     @property
-    def scouts_group(self):
+    def scouts_group(self) -> ScoutsGroup:
         return ScoutsGroup(
             group_admin_id=self._group_group_admin_id,
             name=self._group_name,
@@ -79,60 +68,90 @@ class BaseInsurance(models.Model):
 
     # Parse status int to actual string
     @property
-    def status(self):
+    def status(self) -> InsuranceStatus:
         return InsuranceStatus(self._status)
 
     @status.setter
-    def status(self, value):
+    def status(self, value: InsuranceStatus):
         self._status = value.value
 
-    def is_accepted(self):
+    @property
+    def editable(self) -> bool:
+        """Determines if the insurance can still be edited (i.e. not yet accepted or billed or rejected)"""
+        return self.status in [InsuranceStatus.NEW, InsuranceStatus.WAITING]
+
+    @property
+    def accepted(self) -> bool:
+        """Determines if the insurance has been approved or billed (i.e. no longer editable or rejected)"""
         return self.status == InsuranceStatus.ACCEPTED or self.status == InsuranceStatus.BILLED
 
     # Create property getter and setters for the boolean charfields so we can use them properly
     @property
-    def printed(self):
-        return self.parse_char_to_bool(self._printed)
+    def printed(self) -> bool:
+        return BooleanParser.to_bool(self._printed)
 
     @printed.setter
-    def printed(self, value):
-        self._printed = self.parse_bool_to_char(value)
+    def printed(self, value: bool):
+        self._printed = BooleanParser.to_char(value, "J", "N")
 
     @property
-    def finished(self):
-        return self.parse_char_to_bool(self._finished)
+    def finished(self) -> bool:
+        return BooleanParser.to_bool(self._finished)
 
     @finished.setter
-    def finished(self, value):
-        self._finished = self.parse_bool_to_char(value)
+    def finished(self, value: bool):
+        self._finished = BooleanParser.to_char(value, "J", "N")
 
     @property
-    def listed(self):
-        return self.parse_char_to_bool(self._listed)
+    def listed(self) -> bool:
+        return BooleanParser.to_bool(self._listed)
 
     @listed.setter
-    def listed(self, value):
-        self._listed = self.parse_bool_to_char(value)
+    def listed(self, value: bool):
+        self._listed = BooleanParser.to_char(value, "J", "N")
 
     @property
-    def start_date(self):
+    def start_date(self) -> datetime:
         return self._start_date
 
     @start_date.setter
-    def start_date(self, value: datetime.date):
+    def start_date(self, value: datetime):
         self._start_date = value
 
     @property
-    def end_date(self):
+    def end_date(self) -> datetime:
         return self._end_date
 
     @end_date.setter
-    def end_date(self, value: datetime.date):
+    def end_date(self, value: datetime):
         self._end_date = value
 
-    @property
-    def editable(self):
-        return self.status in [InsuranceStatus.NEW, InsuranceStatus.WAITING]
-
     def has_attachment(self) -> bool:
+        """Provides a test on all insurances to see if there are attachments. Only some insurance types have attachments."""
         return False
+
+    def __str__(self) -> str:
+        return """id({}), type({}), status({}),total_cost({}), 
+        start_date({}), end_date({}), 
+        scouts_group({}), responsible_member({}), comment({}), vvksm_comment({}), 
+        created_on({}),  
+        printed({}), finished({}), listed({}), 
+        invoice_number({}), invoice_date({}), payment_date({})""".format(
+            self.id,
+            self.type,
+            self.status.label,
+            self.total_cost,
+            self.start_date,
+            self.end_date,
+            self.scouts_group.to_simple_string(),
+            self.responsible_member,
+            self.comment,
+            self.vvksm_comment,
+            self.created_on,
+            self.printed,
+            self.finished,
+            self.listed,
+            self.invoice_number,
+            self.invoice_date,
+            self.payment_date,
+        )

@@ -16,6 +16,7 @@ class BaseInsuranceQuerySet(models.QuerySet):
         section_leader_groups = [group.group_admin_id for group in user.get_section_leader_groups()]
         group_leader_groups = [group.group_admin_id for group in user.get_group_leader_groups()]
         groups = section_leader_groups + list(set(group_leader_groups) - set(section_leader_groups))
+
         return self.filter(_group_group_admin_id__in=groups)
 
     def editable(self, user: settings.AUTH_USER_MODEL):

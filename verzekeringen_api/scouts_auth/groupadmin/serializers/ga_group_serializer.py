@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 class ScoutsGroupSerializer(NonModelSerializer):
     """Serializes a Group instance to a string."""
 
+    class Meta:
+        model = ScoutsGroup
+        abstract = True
+
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None

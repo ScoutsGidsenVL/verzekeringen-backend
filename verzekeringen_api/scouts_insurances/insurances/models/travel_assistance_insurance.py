@@ -20,7 +20,7 @@ class TravelAssistanceInsurance(BaseInsurance):
         primary_key=True,
         related_name="travel_assistance_child",
     )
-    _country = models.CharField(db_column="bestemmingsland", max_length=40)
+    country = models.CharField(db_column="bestemmingsland", max_length=40)
     _vehicle_type = models.CharField(db_column="autotype", max_length=30, null=True, blank=True)
     _vehicle_brand = models.CharField(db_column="automerk", max_length=15, null=True, blank=True)
     _vehicle_license_plate = models.CharField(db_column="autokenteken", max_length=10, null=True, blank=True)
@@ -87,8 +87,8 @@ class TravelAssistanceInsurance(BaseInsurance):
 
     @property
     def country(self):
-        return Country.objects.get(name=self._country)
+        return Country.objects.get(name=self.country)
 
     @country.setter
     def country(self, value: Country):
-        self._country = value.name
+        self.country = value.name

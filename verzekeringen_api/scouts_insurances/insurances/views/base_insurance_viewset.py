@@ -61,6 +61,9 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
         insurances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(insurances)
 
+        for insurance in insurances:
+            logger.debug(insurance)
+
         if page is not None:
             serializer = BaseInsuranceSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)

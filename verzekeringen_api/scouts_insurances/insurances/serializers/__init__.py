@@ -1,5 +1,6 @@
 from .base_insurance_fields import base_insurance_fields as BaseInsuranceFields
 from .insurance_cost_serializer import InsuranceCostSerializer
+from .insurances_status_serializer import InsuranceStatusSerializer
 from .insurance_type_serializers import InsuranceTypeSerializer
 from .base_insurance_serializer import BaseInsuranceSerializer
 from .activity_insurance_serializer import ActivityInsuranceSerializer

@@ -31,6 +31,7 @@ class EquipmentInsuranceViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: EquipmentInsuranceSerializer},
     )
     def create(self, request):
+        logger.debug("DATA: %s", request.data)
         input_serializer = EquipmentInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
@@ -48,11 +49,15 @@ class EquipmentInsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["post"], detail=False, url_path="cost")
     def cost_calculation_equipment(self, request):
+        logger.debug("COST CALCULATION DATA: %s", request.data)
         input_serializer = EquipmentInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
+        validated_data = input_serializer.validated_data
+        logger.debug("COST CALCULATION VALIDATED DATA: %s", validated_data)
+
         cost = self.equipment_insurance_service.equipment_insurance_cost_calculation(
-            **input_serializer.validated_data, created_by=request.user
+            **validated_data, created_by=request.user
         )
 
         output_serializer = InsuranceCostSerializer({"total_cost": cost})

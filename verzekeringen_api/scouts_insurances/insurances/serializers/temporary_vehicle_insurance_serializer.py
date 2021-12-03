@@ -11,6 +11,10 @@ from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
 )
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
+from scouts_insurances.insurances.serializers.fields import (
+    TemporaryVehicleInsuranceOptionSerializerField,
+    TemporaryVehicleInsuranceCoverageOptionSerializerField,
+)
 
 from scouts_auth.inuits.filters.helpers import parse_choice_to_tuple
 from scouts_auth.inuits.serializers import EnumSerializer
@@ -23,12 +27,14 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
     drivers = NonMemberSerializer(many=True)
     owner = serializers.SerializerMethodField()
     vehicle = serializers.SerializerMethodField()
-    insurance_options = serializers.SerializerMethodField()
-    max_coverage = serializers.SerializerMethodField()
+    # insurance_options = serializers.SerializerMethodField()
+    insurance_options = TemporaryVehicleInsuranceOptionSerializerField(many=True)
+    # max_coverage = serializers.SerializerMethodField()
+    max_coverage = TemporaryVehicleInsuranceCoverageOptionSerializerField()
 
     class Meta:
         model = TemporaryVehicleInsurance
-        fields = BaseInsuranceFields + ("insurance_options", "max_coverage", "vehicle", "owner", "drivers")
+        fields = BaseInsuranceFields + ["insurance_options", "max_coverage", "vehicle", "owner", "drivers"]
 
     @swagger_serializer_method(serializer_or_field=NonMemberSerializer)
     def get_owner(self, obj):
@@ -36,18 +42,19 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
             return NonMemberSerializer(obj.owner).data
         return NonMemberSerializer(obj.owner).data
 
-    @swagger_serializer_method(serializer_or_field=EnumSerializer)
-    def get_insurance_options(self, obj):
-        return EnumSerializer(
-            [parse_choice_to_tuple(TemporaryVehicleInsuranceOptionApi(option)) for option in obj.insurance_options],
-            many=True,
-        ).data
+    # @swagger_serializer_method(serializer_or_field=EnumSerializer)
+    # def get_insurance_options(self, obj):
+    #     logger.debug("OBJ: %s", obj)
+    #     return EnumSerializer(
+    #         [parse_choice_to_tuple(TemporaryVehicleInsuranceOptionApi(option)) for option in obj.insurance_options],
+    #         many=True,
+    #     ).data
 
-    @swagger_serializer_method(serializer_or_field=EnumSerializer)
-    def get_max_coverage(self, obj):
-        if not obj.max_coverage:
-            return None
-        return EnumSerializer(parse_choice_to_tuple(TemporaryVehicleInsuranceCoverageOption(obj.max_coverage))).data
+    # @swagger_serializer_method(serializer_or_field=EnumSerializer)
+    # def get_max_coverage(self, obj):
+    #     if not obj.max_coverage:
+    #         return None
+    #     return EnumSerializer(parse_choice_to_tuple(TemporaryVehicleInsuranceCoverageOption(obj.max_coverage))).data
 
     # @swagger_serializer_method(serializer_or_field=InuitsVehicleSerializer)
     # def get_vehicle(self, obj):
@@ -61,21 +68,22 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
         return value
 
     def validate(self, data):
-        if TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in data.get("insurance_options") and not data.get(
-            "max_coverage"
-        ):
+        logger.debug("DATA: %s", data)
+        insurance_options = data.get("insurance_options", [])
+        max_coverage = data.get("max_coverage", None)
+
+        if TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in insurance_options and not max_coverage:
             raise serializers.ValidationError(
                 "If 'reeds afgesloten omnium afdekken' is chosen max_coverage is required"
             )
-        elif TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM not in data.get("insurance_options") and data.get(
-            "max_coverage"
-        ):
+        elif TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM not in insurance_options and max_coverage:
             raise serializers.ValidationError(
                 "If 'reeds afgesloten omnium afdekken' is not chosen max_coverage is not allowed to be given"
             )
 
-        if TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in data.get(
-            "insurance_options"
-        ) and TemporaryVehicleInsuranceOptionApi.OMNIUM in data.get("insurance_options"):
+        if (
+            TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in insurance_options
+            and TemporaryVehicleInsuranceOptionApi.OMNIUM in insurance_options
+        ):
             raise serializers.ValidationError("'reeds afgesloten omnium afdekken' and 'omnium' are mutually exclusive")
         return data

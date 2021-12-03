@@ -101,7 +101,12 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
-        "scouts-auth": {
+        "scouts_auth": {
+            "handlers": ["console"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
+        },
+        "scouts_insurances": {
             "handlers": ["console"],
             "level": LOGGING_LEVEL,
             "propagate": False,

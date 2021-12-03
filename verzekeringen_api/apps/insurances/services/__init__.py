@@ -1,4 +1,4 @@
-from .insurance_mail_service import InsuranceMailService
+from .inuits_insurance_mail_service import InuitsInsuranceMailService
 from .event_insurance_attachment_service import EventInsuranceAttachmentService
 from .activity_insurance_attachment_service import ActivityInsuranceAttachmentService
 from .insurance_draft_service import InsuranceDraftService
