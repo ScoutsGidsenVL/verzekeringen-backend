@@ -250,7 +250,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 # Rest framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "scouts_auth.oidc.InuitsOIDCAuthentication",
+        "scouts_auth.auth.oidc.InuitsOIDCAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",

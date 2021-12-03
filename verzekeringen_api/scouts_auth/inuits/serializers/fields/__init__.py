@@ -8,3 +8,4 @@ from .fields import (
     OptionalDateField,
     OptionalDateTimeField,
 )
+from .recursive_serializer_field import RecursiveSerializerField

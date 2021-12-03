@@ -1,5 +1,7 @@
 import logging
 
+from django.db import models
+
 
 logger = logging.getLogger(__name__)
 
@@ -29,3 +31,7 @@ class TextUtils:
             end = f.read()
 
         return start + contents + end
+
+    @staticmethod
+    def is_non_empty(field: models.Field):
+        return field.value is not None and len(field.value.trim()) > 0

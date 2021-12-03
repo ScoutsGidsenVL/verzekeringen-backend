@@ -2,7 +2,7 @@ import logging
 
 from django.conf import settings
 
-from scouts_auth.oidc import InuitsOIDCAuthenticationBackend
+from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
 
 from scouts_auth.groupadmin.models import ScoutsMember
 from scouts_auth.groupadmin.serializers import ScoutsMemberSerializer
