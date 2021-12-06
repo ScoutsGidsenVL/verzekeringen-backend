@@ -13,7 +13,7 @@ from apps.people.models import InuitsNonMember
 from apps.people.filters import InuitsNonMemberFilter
 from apps.people.serializers import PersonSerializer
 
-from scouts_auth.groupadmin.models import ScoutsMember
+from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.utils import DateUtils
 
@@ -60,7 +60,7 @@ class PersonSearch(viewsets.GenericViewSet):
         if start and end:
             logger.debug("Searching for non-members who are already insured between %s and %s", start, end)
 
-        members: List[ScoutsMember] = self.service.search_member_filtered(
+        members: List[AbstractScoutsMember] = self.service.search_member_filtered(
             active_user=request.user, term=search_term, group_group_admin_id=group_group_admin_id
         )
 

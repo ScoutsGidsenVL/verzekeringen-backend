@@ -1,1 +1,1 @@
-from .scouts_function_code import ScoutsFunctionCode
+from .scouts_function_code import AbstractScoutsFunctionCode

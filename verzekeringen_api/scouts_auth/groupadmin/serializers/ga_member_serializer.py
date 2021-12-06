@@ -1,19 +1,19 @@
 import logging
 
 from scouts_auth.groupadmin.models import (
-    ScoutsMemberPersonalData,
-    ScoutsMemberGroupAdminData,
-    ScoutsMemberScoutsData,
-    ScoutsMember,
-    ScoutsAddress,
+    AbstractAbstractScoutsMemberPersonalData,
+    AbstractAbstractScoutsMemberGroupAdminData,
+    AbstractAbstractScoutsMemberScoutsData,
+    AbstractScoutsMember,
+    AbstractScoutsAddress,
 )
 from scouts_auth.groupadmin.serializers import (
-    ScoutsLinkSerializer,
-    ScoutsContactSerializer,
-    ScoutsAddressSerializer,
-    ScoutsFunctionSerializer,
-    ScoutsGroupSerializer,
-    ScoutsGroupSpecificFieldSerializer,
+    AbstractScoutsLinkSerializer,
+    AbstractScoutsContactSerializer,
+    AbstractScoutsAddressSerializer,
+    AbstractScoutsFunctionSerializer,
+    AbstractScoutsGroupSerializer,
+    AbstractScoutsGroupSpecificFieldSerializer,
 )
 
 from scouts_auth.inuits.models import GenderHelper
@@ -23,7 +23,7 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class ScoutsMemberPersonalDataSerializer(NonModelSerializer):
+class AbstractAbstractScoutsMemberPersonalDataSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -36,20 +36,20 @@ class ScoutsMemberPersonalDataSerializer(NonModelSerializer):
 
         return validated_data
 
-    # def to_representation(self, instance: ScoutsMemberPersonalData) -> dict:
+    # def to_representation(self, instance: AbstractAbstractScoutsMemberPersonalData) -> dict:
     #     return {
     #         "gender": str(instance.gender),
     #         "phone": instance.phone,
     #     }
 
-    def save(self) -> ScoutsMemberPersonalData:
+    def save(self) -> AbstractAbstractScoutsMemberPersonalData:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsMemberPersonalData:
+    def create(self, validated_data: dict) -> AbstractAbstractScoutsMemberPersonalData:
         if validated_data is None:
             return None
 
-        instance = ScoutsMemberPersonalData()
+        instance = AbstractAbstractScoutsMemberPersonalData()
 
         instance.gender = GenderHelper.parse_gender(validated_data.pop("gender", None))
         instance.phone_number = validated_data.pop("phone_number", None)
@@ -64,7 +64,7 @@ class ScoutsMemberPersonalDataSerializer(NonModelSerializer):
         return instance
 
 
-class ScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
+class AbstractAbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -81,21 +81,21 @@ class ScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
 
         return validated_data
 
-    # def to_representation(self, instance: ScoutsMemberGroupAdminData) -> dict:
+    # def to_representation(self, instance: AbstractAbstractScoutsMemberGroupAdminData) -> dict:
     #     return {
     #         "first_name": instance.first_name,
     #         "last_name": instance.last_name,
     #         "birth_date": instance.birth_date,
     #     }
 
-    def save(self) -> ScoutsMemberGroupAdminData:
+    def save(self) -> AbstractAbstractScoutsMemberGroupAdminData:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsMemberGroupAdminData:
+    def create(self, validated_data: dict) -> AbstractAbstractScoutsMemberGroupAdminData:
         if validated_data is None:
             return None
 
-        instance = ScoutsMemberGroupAdminData()
+        instance = AbstractAbstractScoutsMemberGroupAdminData()
 
         instance.first_name = validated_data.pop("first_name", None)
         instance.last_name = validated_data.pop("last_name", None)
@@ -108,7 +108,7 @@ class ScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
         return instance
 
 
-class ScoutsMemberScoutsDataSerializer(NonModelSerializer):
+class AbstractAbstractScoutsMemberScoutsDataSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -124,14 +124,14 @@ class ScoutsMemberScoutsDataSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsMemberScoutsData:
+    def save(self) -> AbstractAbstractScoutsMemberScoutsData:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsMemberScoutsData:
+    def create(self, validated_data: dict) -> AbstractAbstractScoutsMemberScoutsData:
         if validated_data is None:
             return None
 
-        instance = ScoutsMemberScoutsData()
+        instance = AbstractAbstractScoutsMemberScoutsData()
 
         instance.membership_number = validated_data.pop("membership_number", None)
         instance.customer_number = validated_data.pop("customer_number", None)
@@ -143,30 +143,32 @@ class ScoutsMemberScoutsDataSerializer(NonModelSerializer):
         return instance
 
 
-class ScoutsMemberSerializer(NonModelSerializer):
+class AbstractScoutsMemberSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
 
         validated_data: dict = {
-            "personal_data": ScoutsMemberPersonalDataSerializer().to_internal_value(
+            "personal_data": AbstractAbstractScoutsMemberPersonalDataSerializer().to_internal_value(
                 data.pop("persoonsgegevens", None)
             ),
-            "group_admin_data": ScoutsMemberGroupAdminDataSerializer().to_internal_value(
+            "group_admin_data": AbstractAbstractScoutsMemberGroupAdminDataSerializer().to_internal_value(
                 data.pop("vgagegevens", None)
             ),
-            "scouts_data": ScoutsMemberScoutsDataSerializer().to_internal_value(data.pop("verbondsgegevens", None)),
+            "scouts_data": AbstractAbstractScoutsMemberScoutsDataSerializer().to_internal_value(
+                data.pop("verbondsgegevens", None)
+            ),
             "email": data.pop("email", None),
             "username": data.pop("gebruikersnaam", None),
             "group_admin_id": data.pop("id", None),
-            "addresses": ScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
-            "contacts": ScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
-            "functions": ScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
-            "scouts_groups": ScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
-            "group_specific_fields": ScoutsGroupSpecificFieldSerializer().to_internal_value(
+            "addresses": AbstractScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
+            "contacts": AbstractScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
+            "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
+            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
+            "group_specific_fields": AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
                 data.pop("groepseigenVelden", {})
             ),
-            "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -175,31 +177,37 @@ class ScoutsMemberSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsMember:
+    def save(self) -> AbstractScoutsMember:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsMember:
+    def create(self, validated_data: dict) -> AbstractScoutsMember:
         if validated_data is None:
             return None
 
-        instance = ScoutsMember()
+        instance = AbstractScoutsMember()
 
-        instance.personal_data = ScoutsMemberPersonalDataSerializer().create(validated_data.pop("personal_data", None))
-        instance.group_admin_data = ScoutsMemberGroupAdminDataSerializer().create(
+        instance.personal_data = AbstractAbstractScoutsMemberPersonalDataSerializer().create(
+            validated_data.pop("personal_data", None)
+        )
+        instance.group_admin_data = AbstractAbstractScoutsMemberGroupAdminDataSerializer().create(
             validated_data.pop("group_admin_data", None)
         )
-        instance.scouts_data = ScoutsMemberScoutsDataSerializer().create(validated_data.pop("scouts_data", None))
+        instance.scouts_data = AbstractAbstractScoutsMemberScoutsDataSerializer().create(
+            validated_data.pop("scouts_data", None)
+        )
         instance.email = validated_data.pop("email", None)
         instance.username = validated_data.pop("username", None)
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
-        instance.addresses = ScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
-        instance.contacts = ScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
-        instance.functions = ScoutsFunctionSerializer(many=True).create(validated_data.pop("functions", []))
-        instance.scouts_groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("scouts_groups", []))
-        instance.group_specific_fields = ScoutsGroupSpecificFieldSerializer().create(
+        instance.addresses = AbstractScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
+        instance.contacts = AbstractScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
+        instance.functions = AbstractScoutsFunctionSerializer(many=True).create(validated_data.pop("functions", []))
+        instance.scouts_groups = AbstractScoutsGroupSerializer(many=True).create(
+            validated_data.pop("scouts_groups", [])
+        )
+        instance.group_specific_fields = AbstractScoutsGroupSpecificFieldSerializer().create(
             validated_data.pop("group_specific_fields", {})
         )
-        instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
@@ -208,8 +216,8 @@ class ScoutsMemberSerializer(NonModelSerializer):
         return instance
 
 
-class ScoutsMemberSearchFrontendSerializer(NonModelSerializer):
-    def to_representation(self, instance: ScoutsMember) -> dict:
+class AbstractScoutsMemberSearchFrontendSerializer(NonModelSerializer):
+    def to_representation(self, instance: AbstractScoutsMember) -> dict:
         serialized = {}
 
         serialized["group_admin_id"] = instance.group_admin_id
@@ -223,7 +231,7 @@ class ScoutsMemberSearchFrontendSerializer(NonModelSerializer):
         serialized["customer_number"] = instance.scouts_data.customer_number
 
         if instance.addresses and len(instance.addresses) > 0:
-            address: ScoutsAddress = instance.addresses[0]
+            address: AbstractScoutsAddress = instance.addresses[0]
             serialized["street"] = address.street
             serialized["number"] = address.number
             serialized["letter_box"] = address.letter_box
@@ -239,8 +247,8 @@ class ScoutsMemberSearchFrontendSerializer(NonModelSerializer):
         return serialized
 
 
-class ScoutsMemberFrontendSerializer(NonModelSerializer):
-    def to_representation(self, instance: ScoutsMember) -> dict:
+class AbstractScoutsMemberFrontendSerializer(NonModelSerializer):
+    def to_representation(self, instance: AbstractScoutsMember) -> dict:
         serialized: dict = super().to_representation(instance)
 
         serialized["group_admin_id"] = instance.group_admin_id
@@ -254,7 +262,7 @@ class ScoutsMemberFrontendSerializer(NonModelSerializer):
         serialized["customer_number"] = instance.scouts_data.customer_number
 
         if instance.addresses and len(instance.addresses) > 0:
-            address: ScoutsAddress = instance.addresses[0]
+            address: AbstractScoutsAddress = instance.addresses[0]
             serialized["street"] = address.street
             serialized["number"] = address.number
             serialized["letter_box"] = address.letter_box

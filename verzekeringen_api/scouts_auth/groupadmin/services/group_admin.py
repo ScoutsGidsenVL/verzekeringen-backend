@@ -7,23 +7,23 @@ from drf_yasg2.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import (
     ScoutsAllowedCalls,
-    ScoutsFunction,
-    ScoutsFunctionListResponse,
-    ScoutsGroup,
-    ScoutsGroupListResponse,
-    ScoutsMemberSearchResponse,
-    ScoutsMember,
-    ScoutsMemberListResponse,
+    AbstractScoutsFunction,
+    AbstractScoutsFunctionListResponse,
+    AbstractScoutsGroup,
+    AbstractScoutsGroupListResponse,
+    AbstractAbstractScoutsMemberSearchResponse,
+    AbstractScoutsMember,
+    AbstractAbstractScoutsMemberListResponse,
 )
 from scouts_auth.groupadmin.serializers import (
     ScoutsAllowedCallsSerializer,
-    ScoutsFunctionSerializer,
-    ScoutsFunctionListResponseSerializer,
-    ScoutsGroupSerializer,
-    ScoutsGroupListResponseSerializer,
-    ScoutsMemberSearchResponseSerializer,
-    ScoutsMemberListResponseSerializer,
-    ScoutsMemberSerializer,
+    AbstractScoutsFunctionSerializer,
+    AbstractScoutsFunctionListResponseSerializer,
+    AbstractScoutsGroupSerializer,
+    AbstractScoutsGroupListResponseSerializer,
+    AbstractAbstractScoutsMemberSearchResponseSerializer,
+    AbstractAbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberSerializer,
 )
 
 from scouts_auth.groupadmin.utils import SettingsHelper
@@ -124,13 +124,13 @@ class GroupAdmin:
 
         return json_data
 
-    def get_groups(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsGroupListResponse:
+    def get_groups(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsGroupListResponse:
         json_data = self.get_groups_raw(active_user)
 
-        serializer = ScoutsGroupListResponseSerializer(data=json_data)
+        serializer = AbstractScoutsGroupListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        groups_response: ScoutsGroupListResponse = serializer.save()
+        groups_response: AbstractScoutsGroupListResponse = serializer.save()
 
         return groups_response
 
@@ -148,13 +148,13 @@ class GroupAdmin:
 
         return json_data
 
-    def get_accountable_groups(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsGroupListResponse:
+    def get_accountable_groups(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsGroupListResponse:
         json_data = self.get_accountable_groups_raw(active_user)
 
-        serializer = ScoutsGroupListResponseSerializer(data=json_data)
+        serializer = AbstractScoutsGroupListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        groups_response: ScoutsGroupListResponse = serializer.save()
+        groups_response: AbstractScoutsGroupListResponse = serializer.save()
 
         return groups_response
 
@@ -173,13 +173,13 @@ class GroupAdmin:
 
         return json_data
 
-    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> ScoutsGroup:
+    def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> AbstractScoutsGroup:
         json_data = self.get_group_raw(active_user, group_group_admin_id)
 
-        serializer = ScoutsGroupSerializer(data=json_data)
+        serializer = AbstractScoutsGroupSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        group: ScoutsGroup = serializer.save()
+        group: AbstractScoutsGroup = serializer.save()
 
         return group
 
@@ -208,13 +208,13 @@ class GroupAdmin:
 
     def get_functions(
         self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id_fragment: str = None
-    ) -> ScoutsFunctionListResponse:
+    ) -> AbstractScoutsFunctionListResponse:
         json_data = self.get_functions_raw(active_user, group_group_admin_id_fragment)
 
-        serializer = ScoutsFunctionListResponseSerializer(data=json_data)
+        serializer = AbstractScoutsFunctionListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        function_response: ScoutsFunctionListResponse = serializer.save()
+        function_response: AbstractScoutsFunctionListResponse = serializer.save()
 
         return function_response
 
@@ -233,13 +233,13 @@ class GroupAdmin:
 
         return json_data
 
-    def get_function(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> ScoutsFunction:
+    def get_function(self, active_user: settings.AUTH_USER_MODEL, function_id: str) -> AbstractScoutsFunction:
         json_data = self.get_function_raw(active_user, function_id)
 
-        serializer = ScoutsFunctionSerializer(data=json_data)
+        serializer = AbstractScoutsFunctionSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        function: ScoutsFunction = serializer.save()
+        function: AbstractScoutsFunction = serializer.save()
 
         return function
 
@@ -257,13 +257,13 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_profile(self, active_user: settings.AUTH_USER_MODEL) -> ScoutsMember:
+    def get_member_profile(self, active_user: settings.AUTH_USER_MODEL) -> AbstractScoutsMember:
         json_data = self.get_member_profile_raw(active_user)
 
-        serializer = ScoutsMemberSerializer(data=json_data)
+        serializer = AbstractScoutsMemberSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member: ScoutsMember = serializer.save()
+        member: AbstractScoutsMember = serializer.save()
 
         return member
 
@@ -282,13 +282,13 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_info(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> ScoutsMember:
+    def get_member_info(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> AbstractScoutsMember:
         json_data = self.get_member_info_raw(active_user, group_admin_id)
 
-        serializer = ScoutsMemberSerializer(data=json_data)
+        serializer = AbstractScoutsMemberSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member: ScoutsMember = serializer.save()
+        member: AbstractScoutsMember = serializer.save()
 
         return member
 
@@ -323,13 +323,15 @@ class GroupAdmin:
 
         return json_data
 
-    def get_member_list(self, active_user: settings.AUTH_USER_MODEL, offset: int = 0) -> ScoutsMemberListResponse:
+    def get_member_list(
+        self, active_user: settings.AUTH_USER_MODEL, offset: int = 0
+    ) -> AbstractAbstractScoutsMemberListResponse:
         json_data = self.get_member_list_raw(active_user, offset)
 
-        serializer = ScoutsMemberListResponseSerializer(data=json_data)
+        serializer = AbstractAbstractScoutsMemberListResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: ScoutsMemberListResponse = serializer.save()
+        member_list: AbstractAbstractScoutsMemberListResponse = serializer.save()
 
         return member_list
 
@@ -348,13 +350,15 @@ class GroupAdmin:
 
         return json_data
 
-    def search_member(self, active_user: settings.AUTH_USER_MODEL, term: str) -> ScoutsMemberSearchResponse:
+    def search_member(
+        self, active_user: settings.AUTH_USER_MODEL, term: str
+    ) -> AbstractAbstractScoutsMemberSearchResponse:
         json_data = self.search_member_raw(active_user, term)
 
-        serializer = ScoutsMemberSearchResponseSerializer(data=json_data)
+        serializer = AbstractAbstractScoutsMemberSearchResponseSerializer(data=json_data)
         serializer.is_valid(raise_exception=True)
 
-        member_list: ScoutsMemberSearchResponse = serializer.save()
+        member_list: AbstractAbstractScoutsMemberSearchResponse = serializer.save()
 
         return member_list
 

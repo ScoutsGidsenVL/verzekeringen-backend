@@ -1,7 +1,10 @@
-class ScoutsValue:
+from scouts_auth.inuits.models.fields import OptionalCharField
 
-    key: str
-    value: str
+
+class AbstractScoutsValue:
+
+    key = OptionalCharField()
+    value = OptionalCharField()
 
     def __init__(self, key: str = "", value: str = ""):
         self.key = key

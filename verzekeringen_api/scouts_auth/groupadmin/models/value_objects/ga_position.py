@@ -1,7 +1,10 @@
-class ScoutsGeoCoordinate:
+from django.db import models
 
-    imaginary: float
-    real: float
+
+class AbstractScoutsGeoCoordinate:
+
+    imaginary = models.FloatField()
+    real = models.FloatField()
 
     def __init__(self, imaginary: float = 0.0, real: float = 0.0):
         self.imaginary = imaginary
@@ -11,12 +14,12 @@ class ScoutsGeoCoordinate:
         return "imaginary({}), real({})".format(self.imaginary, self.real)
 
 
-class ScoutsPosition:
+class AbstractScoutsPosition:
 
-    latitude: ScoutsGeoCoordinate
-    longitude: ScoutsGeoCoordinate
+    latitude: AbstractScoutsGeoCoordinate = models.JSONField()
+    longitude: AbstractScoutsGeoCoordinate = models.JSONField()
 
-    def __init__(self, latitude: ScoutsGeoCoordinate = None, longitude: ScoutsGeoCoordinate = None):
+    def __init__(self, latitude: AbstractScoutsGeoCoordinate = None, longitude: AbstractScoutsGeoCoordinate = None):
         self.latitude = latitude
         self.longitude = longitude
 

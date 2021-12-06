@@ -10,7 +10,7 @@ base_insurance_fields = [
     # _group_group_admin_id max_length=6    required
     # _group_name           max_length=50   required
     # _group_location       max_length=50   required
-    # _group_group_admin_id, _group_name, _group_location are serialized as a ScoutsGroup instance
+    # _group_group_admin_id, _group_name, _group_location are serialized as a AbstractScoutsGroup instance
     "scouts_group",
     # total_cost            decimal         optional
     "total_cost",

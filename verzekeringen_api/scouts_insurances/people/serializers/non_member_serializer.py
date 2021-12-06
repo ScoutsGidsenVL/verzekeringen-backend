@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from scouts_insurances.people.models import NonMember
 
+from scouts_auth.inuits.serializers import DatetypeAwareDateSerializerField
+
 
 class NonMemberSerializer(serializers.ModelSerializer):
     # id            pk
@@ -15,6 +17,8 @@ class NonMemberSerializer(serializers.ModelSerializer):
     # postal_code                       optional
     # city          max_length=40       optional
     # comment       max_length=500      optional
+
+    birth_date = DatetypeAwareDateSerializerField()
 
     class Meta:
         model = NonMember

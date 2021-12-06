@@ -3,7 +3,7 @@ from typing import List
 
 from rest_framework import serializers
 
-from scouts_auth.groupadmin.models import ScoutsLink
+from scouts_auth.groupadmin.models import AbstractScoutsLink
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -11,7 +11,7 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class ScoutsLinkSectionSerializer(NonModelSerializer):
+class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
     def to_internal_value(self, data: List[str]) -> list:
         if data is None:
             return None
@@ -28,7 +28,7 @@ class ScoutsLinkSectionSerializer(NonModelSerializer):
         return validated_data
 
 
-class ScoutsLinkSerializer(NonModelSerializer):
+class AbstractScoutsLinkSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -37,7 +37,7 @@ class ScoutsLinkSerializer(NonModelSerializer):
             "rel": data.pop("rel", None),
             "href": data.pop("href", None),
             "method": data.pop("method", None),
-            "sections": ScoutsLinkSectionSerializer().to_internal_value(data.pop("secties", None)),
+            "sections": AbstractScoutsLinkSectionSerializer().to_internal_value(data.pop("secties", None)),
         }
 
         remaining_keys = data.keys()
@@ -46,19 +46,19 @@ class ScoutsLinkSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsLink:
+    def save(self) -> AbstractScoutsLink:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsLink:
+    def create(self, validated_data: dict) -> AbstractScoutsLink:
         if validated_data is None:
             return None
 
-        instance = ScoutsLink()
+        instance = AbstractScoutsLink()
 
         instance.rel = validated_data.pop("rel", None)
         instance.href = validated_data.pop("href", None)
         instance.method = validated_data.pop("method", None)
-        instance.sections = ScoutsLinkSectionSerializer().create(validated_data.pop("sections", None))
+        instance.sections = AbstractScoutsLinkSectionSerializer().create(validated_data.pop("sections", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

@@ -1,28 +1,28 @@
-from .ga_position import ScoutsGeoCoordinate, ScoutsPosition
-from .ga_fields_value import ScoutsValue
-from .ga_link import ScoutsLink
-from .ga_contact import ScoutsContact
-from .ga_address import ScoutsAddress
-from .ga_field_group_specific import ScoutsGroupSpecificField
-from .ga_group import ScoutsGroup
-from .ga_grouping import ScoutsGrouping
-from .ga_function import ScoutsFunction
+from .ga_position import AbstractScoutsGeoCoordinate, AbstractScoutsPosition
+from .ga_fields_value import AbstractScoutsValue
+from .ga_link import AbstractScoutsLink
+from .ga_contact import AbstractScoutsContact
+from .ga_address import AbstractScoutsAddress
+from .ga_field_group_specific import AbstractScoutsGroupSpecificField
+from .ga_group import AbstractScoutsGroup
+from .ga_grouping import AbstractScoutsGrouping
+from .ga_function import AbstractScoutsFunction
 from .ga_allowed_calls import ScoutsAllowedCalls
-from .ga_response import ScoutsResponse
+from .ga_response import AbstractScoutsResponse
 from .ga_response_member_search import (
-    ScoutsMemberSearchMember,
-    ScoutsMemberSearchResponse,
+    AbstractAbstractScoutsMemberSearchMember,
+    AbstractAbstractScoutsMemberSearchResponse,
 )
 from .ga_member import (
-    ScoutsMemberPersonalData,
-    ScoutsMemberGroupAdminData,
-    ScoutsMemberScoutsData,
-    ScoutsMember,
+    AbstractAbstractScoutsMemberPersonalData,
+    AbstractAbstractScoutsMemberGroupAdminData,
+    AbstractAbstractScoutsMemberScoutsData,
+    AbstractScoutsMember,
 )
-from .ga_response_group_list import ScoutsGroupListResponse
-from .ga_response_function_list import ScoutsFunctionListResponse
+from .ga_response_group_list import AbstractScoutsGroupListResponse
+from .ga_response_function_list import AbstractScoutsFunctionListResponse
 from .ga_response_member_list import (
-    ScoutsMemberListMember,
-    ScoutsMemberListResponse,
+    AbstractAbstractScoutsMemberListMember,
+    AbstractAbstractScoutsMemberListResponse,
 )
-from .ga_medical_flash_card import ScoutsMedicalFlashCard
+from .ga_medical_flash_card import AbstractScoutsMedicalFlashCard

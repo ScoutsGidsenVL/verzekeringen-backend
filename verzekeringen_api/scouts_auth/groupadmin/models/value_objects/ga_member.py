@@ -1,23 +1,26 @@
 from typing import List
 from datetime import date
 
+from django.db import models
+
 from scouts_auth.groupadmin.models.value_objects import (
-    ScoutsAddress,
-    ScoutsContact,
-    ScoutsFunction,
-    ScoutsLink,
-    ScoutsGroup,
-    ScoutsGroupSpecificField,
-    ScoutsMemberSearchMember,
+    AbstractScoutsAddress,
+    AbstractScoutsContact,
+    AbstractScoutsFunction,
+    AbstractScoutsLink,
+    AbstractScoutsGroup,
+    AbstractScoutsGroupSpecificField,
+    AbstractAbstractScoutsMemberSearchMember,
 )
 
 from scouts_auth.inuits.models import Gender, GenderHelper
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField
 
 
-class ScoutsMemberPersonalData:
+class AbstractAbstractScoutsMemberPersonalData:
 
-    gender: Gender
-    phone_number: str
+    phone_number = OptionalCharField()
+    gender: Gender = models.CharField(choices=Gender, default=Gender.UNKNOWN, max_length="1")
 
     def __init__(self, gender: Gender = None, phone_number: str = ""):
         self.gender = gender if gender and isinstance(gender, Gender) else GenderHelper.parse_gender(gender)
@@ -27,11 +30,11 @@ class ScoutsMemberPersonalData:
         return "gender({}), phone_number({})".format(self.gender, self.phone_number)
 
 
-class ScoutsMemberGroupAdminData:
+class AbstractAbstractScoutsMemberGroupAdminData:
 
-    first_name: str
-    last_name: str
-    birth_date: date
+    first_name = OptionalCharField()
+    last_name = OptionalCharField()
+    birth_date = OptionalDateField()
 
     def __init__(self, first_name: str = "", last_name: str = "", birth_date: date = None):
         self.first_name = first_name
@@ -42,10 +45,10 @@ class ScoutsMemberGroupAdminData:
         return "first_name({}), last_name({}), birth_date({})".format(self.first_name, self.last_name, self.birth_date)
 
 
-class ScoutsMemberScoutsData:
+class AbstractAbstractScoutsMemberScoutsData:
 
-    membership_number: str
-    customer_number: str
+    membership_number = OptionalCharField()
+    customer_number = OptionalCharField()
 
     def __init__(self, membership_number: str = "", customer_number: str = ""):
         self.membership_number = membership_number
@@ -55,35 +58,35 @@ class ScoutsMemberScoutsData:
         return "membership_number({}), customer_number({})".format(self.customer_number, self.membership_number)
 
 
-class ScoutsMember:
+class AbstractScoutsMember:
 
-    personal_data: ScoutsMemberPersonalData
-    group_admin_data: ScoutsMemberGroupAdminData
-    scouts_data: ScoutsMemberScoutsData
+    personal_data: AbstractAbstractScoutsMemberPersonalData
+    group_admin_data: AbstractAbstractScoutsMemberGroupAdminData
+    scouts_data: AbstractAbstractScoutsMemberScoutsData
     email: str
     username: str
     group_admin_id: str
-    addresses: List[ScoutsAddress]
-    contacts: List[ScoutsContact]
-    functions: List[ScoutsFunction]
-    scouts_groups: List[ScoutsGroup]
-    group_specific_fields: List[ScoutsGroupSpecificField]
-    links: List[ScoutsLink]
+    addresses: List[AbstractScoutsAddress]
+    contacts: List[AbstractScoutsContact]
+    functions: List[AbstractScoutsFunction]
+    scouts_groups: List[AbstractScoutsGroup]
+    group_specific_fields: List[AbstractScoutsGroupSpecificField]
+    links: List[AbstractScoutsLink]
 
     def __init__(
         self,
-        personal_data: ScoutsMemberPersonalData = None,
-        group_admin_data: ScoutsMemberGroupAdminData = None,
-        scouts_data: ScoutsMemberScoutsData = None,
+        personal_data: AbstractAbstractScoutsMemberPersonalData = None,
+        group_admin_data: AbstractAbstractScoutsMemberGroupAdminData = None,
+        scouts_data: AbstractAbstractScoutsMemberScoutsData = None,
         email: str = "",
         username: str = "",
         group_admin_id: str = "",
-        addresses: List[ScoutsAddress] = None,
-        contacts: List[ScoutsContact] = None,
-        functions: List[ScoutsFunction] = None,
-        scouts_groups: List[ScoutsGroup] = None,
-        group_specific_fields: List[ScoutsGroupSpecificField] = None,
-        links: List[ScoutsLink] = None,
+        addresses: List[AbstractScoutsAddress] = None,
+        contacts: List[AbstractScoutsContact] = None,
+        functions: List[AbstractScoutsFunction] = None,
+        scouts_groups: List[AbstractScoutsGroup] = None,
+        group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.personal_data = personal_data
         self.group_admin_data = group_admin_data
@@ -149,8 +152,8 @@ class ScoutsMember:
             ", ".join(str(link) for link in self.links),
         )
 
-    def to_search_member(self) -> ScoutsMemberSearchMember:
-        member = ScoutsMemberSearchMember(
+    def to_search_member(self) -> AbstractAbstractScoutsMemberSearchMember:
+        member = AbstractAbstractScoutsMemberSearchMember(
             group_admin_id=self.group_admin_id,
             first_name=self.group_admin_data.first_name,
             last_name=self.group_admin_data.last_name,

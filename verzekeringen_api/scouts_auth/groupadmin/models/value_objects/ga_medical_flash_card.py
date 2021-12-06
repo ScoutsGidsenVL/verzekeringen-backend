@@ -1,2 +1,2 @@
-class ScoutsMedicalFlashCard:
+class AbstractScoutsMedicalFlashCard:
     pass

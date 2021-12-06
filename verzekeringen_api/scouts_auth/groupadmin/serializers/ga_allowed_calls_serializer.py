@@ -1,7 +1,7 @@
 import logging
 
 from scouts_auth.groupadmin.models import ScoutsAllowedCalls
-from scouts_auth.groupadmin.serializers import ScoutsLinkSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsLinkSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -14,7 +14,7 @@ class ScoutsAllowedCallsSerializer(NonModelSerializer):
         if data is None:
             return None
 
-        validated_data = {"links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", []))}
+        validated_data = {"links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", []))}
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
@@ -31,7 +31,7 @@ class ScoutsAllowedCallsSerializer(NonModelSerializer):
 
         instance = ScoutsAllowedCalls()
 
-        instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

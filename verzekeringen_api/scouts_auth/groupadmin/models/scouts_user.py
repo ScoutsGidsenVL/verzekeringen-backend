@@ -6,11 +6,11 @@ from django.db import models
 from scouts_auth.auth.models import User
 
 from scouts_auth.groupadmin.models import (
-    ScoutsAddress,
-    ScoutsFunction,
-    ScoutsGroupSpecificField,
-    ScoutsLink,
-    ScoutsGroup,
+    AbstractScoutsAddress,
+    AbstractScoutsFunction,
+    AbstractScoutsGroupSpecificField,
+    AbstractScoutsLink,
+    AbstractScoutsGroup,
 )
 from scouts_auth.groupadmin.utils import SettingsHelper
 
@@ -39,11 +39,11 @@ class ScoutsUser(User):
     #
     # Locally cached, non-persisted fields
     #
-    scouts_groups: List[ScoutsGroup] = []
-    addresses: List[ScoutsAddress] = []
-    functions: List[ScoutsFunction] = []
-    group_specific_fields: List[ScoutsGroupSpecificField] = []
-    links: List[ScoutsLink] = []
+    scouts_groups: List[AbstractScoutsGroup] = []
+    addresses: List[AbstractScoutsAddress] = []
+    functions: List[AbstractScoutsFunction] = []
+    group_specific_fields: List[AbstractScoutsGroupSpecificField] = []
+    links: List[AbstractScoutsLink] = []
 
     #
     # The active access token, provided by group admin oidc
@@ -68,7 +68,7 @@ class ScoutsUser(User):
     def get_group_names(self) -> List[str]:
         return [group.group_admin_id for group in self.scouts_groups]
 
-    def has_role_section_leader(self, group: ScoutsGroup) -> bool:
+    def has_role_section_leader(self, group: AbstractScoutsGroup) -> bool:
         """
         Determines if the user is a section leader based on a function in the specified group
         """
@@ -77,10 +77,10 @@ class ScoutsUser(User):
                 return True
         return False
 
-    def get_section_leader_groups(self) -> List[ScoutsGroup]:
+    def get_section_leader_groups(self) -> List[AbstractScoutsGroup]:
         return [group for group in self.scouts_groups if self.has_role_section_leader(group)]
 
-    def has_role_group_leader(self, group: ScoutsGroup) -> bool:
+    def has_role_group_leader(self, group: AbstractScoutsGroup) -> bool:
         """
         Determines if the user is a group leader based on a function in the specified group
         """
@@ -90,7 +90,7 @@ class ScoutsUser(User):
 
         return False
 
-    def get_group_leader_groups(self) -> List[ScoutsGroup]:
+    def get_group_leader_groups(self) -> List[AbstractScoutsGroup]:
         return [group for group in self.scouts_groups if self.has_role_group_leader(group)]
 
     def has_role_district_commissioner(self) -> bool:

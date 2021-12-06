@@ -12,8 +12,8 @@ from scouts_insurances.insurances.serializers import (
     InsuranceCostSerializer,
 )
 
-from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
 from scouts_auth.inuits.serializers import DatetypeAndTimezoneAwareDateTimeSerializerField
 
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class BaseInsuranceSerializer(serializers.ModelSerializer):
     # id                    pk
     # status                number          optional
-    # scouts_group          ScoutsGroup
+    # scouts_group          AbstractScoutsGroup
     # total_cost            decimal         optional
     # comment               max_length=500  optional
     # vvksm_comment         max_length=500  optional
@@ -34,7 +34,7 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
     # type                  InsuranceType   optional
 
     status = serializers.SerializerMethodField()
-    scouts_group = ScoutsGroupSerializer(required=False)
+    scouts_group = AbstractScoutsGroupSerializer(required=False)
     # For input
     group_admin_id = serializers.CharField(required=False)
     total_cost = serializers.SerializerMethodField()
@@ -66,9 +66,9 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
     def get_status(self, obj: BaseInsurance) -> dict:
         return {"id": obj.status.value, "value": obj.status.value, "label": obj.status.label}
 
-    @swagger_serializer_method(serializer_or_field=ScoutsGroupSerializer)
-    def get_scouts_group(self, obj) -> ScoutsGroup:
-        return ScoutsGroupSerializer(obj).data
+    @swagger_serializer_method(serializer_or_field=AbstractScoutsGroupSerializer)
+    def get_scouts_group(self, obj) -> AbstractScoutsGroup:
+        return AbstractScoutsGroupSerializer(obj).data
 
     @swagger_serializer_method(serializer_or_field=InsuranceCostSerializer)
     def get_total_cost(self, obj: BaseInsurance) -> Decimal:
@@ -87,7 +87,7 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
         group_admin_id = data.get("group_admin_id", None)
         if not scouts_group and not group_admin_id:
             raise ValidationError(
-                "An insurance needs either a ScoutsGroup instance or the group_admin_id of a scouts group, both are None."
+                "An insurance needs either a AbstractScoutsGroup instance or the group_admin_id of a scouts group, both are None."
             )
 
         return super().validate(data)

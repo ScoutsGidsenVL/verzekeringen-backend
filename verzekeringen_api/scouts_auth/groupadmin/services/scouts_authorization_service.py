@@ -5,7 +5,7 @@ from django.conf import settings
 
 from scouts_auth.auth.services import AuthorizationService
 
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsFunction
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.utils import SettingsHelper
 
@@ -42,7 +42,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     service = GroupAdminMemberService()
 
     def load_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        scouts_groups: List[ScoutsGroup] = self.service.get_groups(active_user=user).scouts_groups
+        scouts_groups: List[AbstractScoutsGroup] = self.service.get_groups(active_user=user).scouts_groups
 
         user.scouts_groups = scouts_groups
 
@@ -95,7 +95,7 @@ class ScoutsAuthorizationService(AuthorizationService):
         return user
 
     def load_user_functions(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        functions: List[ScoutsFunction] = self.service.get_functions(active_user=user).functions
+        functions: List[AbstractScoutsFunction] = self.service.get_functions(active_user=user).functions
         for user_function in user.functions:
             for function in functions:
                 if function.group_admin_id == user_function.function:

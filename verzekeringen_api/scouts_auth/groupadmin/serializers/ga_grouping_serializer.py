@@ -1,13 +1,13 @@
 import logging
 
-from scouts_auth.groupadmin.models import ScoutsGrouping
+from scouts_auth.groupadmin.models import AbstractScoutsGrouping
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class ScoutsGroupingSerializer(NonModelSerializer):
+class AbstractScoutsGroupingSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -20,14 +20,14 @@ class ScoutsGroupingSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsGrouping:
+    def save(self) -> AbstractScoutsGrouping:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsGrouping:
+    def create(self, validated_data: dict) -> AbstractScoutsGrouping:
         if validated_data is None:
             return None
 
-        instance = ScoutsGrouping()
+        instance = AbstractScoutsGrouping()
 
         instance.name = validated_data.pop("name", None)
         instance.index = validated_data.pop("index", None)

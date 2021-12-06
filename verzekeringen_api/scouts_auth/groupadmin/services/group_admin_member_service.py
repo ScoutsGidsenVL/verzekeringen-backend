@@ -4,7 +4,7 @@ from datetime import date, datetime, timedelta
 
 from django.conf import settings
 
-from scouts_auth.groupadmin.models import ScoutsMember, ScoutsMemberSearchResponse
+from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractAbstractScoutsMemberSearchResponse
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -18,13 +18,13 @@ class GroupAdminMemberService(GroupAdmin):
         term: str,
         group_group_admin_id: str = None,
         include_inactive: bool = False,
-    ) -> List[ScoutsMember]:
-        response: ScoutsMemberSearchResponse = self.search_member(active_user, term)
+    ) -> List[AbstractScoutsMember]:
+        response: AbstractAbstractScoutsMemberSearchResponse = self.search_member(active_user, term)
 
         logger.debug("GA returned a list of %d member(s) for search term %s", len(response.members), term)
 
         if group_group_admin_id:
-            members: List[ScoutsMember] = self.search_member_filtered_by_group(
+            members: List[AbstractScoutsMember] = self.search_member_filtered_by_group(
                 active_user, response, group_group_admin_id, include_inactive
             )
 
@@ -38,7 +38,7 @@ class GroupAdminMemberService(GroupAdmin):
 
             return members
         else:
-            members: List[ScoutsMember] = self.search_member_filtered_by_activity(
+            members: List[AbstractScoutsMember] = self.search_member_filtered_by_activity(
                 active_user, response, include_inactive
             )
 
@@ -55,13 +55,13 @@ class GroupAdminMemberService(GroupAdmin):
     def search_member_filtered_by_group(
         self,
         active_user: settings.AUTH_USER_MODEL,
-        response: ScoutsMemberSearchResponse,
+        response: AbstractAbstractScoutsMemberSearchResponse,
         group_group_admin_id: str,
         include_inactive: bool = False,
-    ) -> List[ScoutsMember]:
+    ) -> List[AbstractScoutsMember]:
         results = []
         for partial_member in response.members:
-            member: ScoutsMember = self.get_member_info(active_user, partial_member.group_admin_id)
+            member: AbstractScoutsMember = self.get_member_info(active_user, partial_member.group_admin_id)
 
             for function in member.functions:
                 if function.scouts_group.group_admin_id == group_group_admin_id:
@@ -73,15 +73,15 @@ class GroupAdminMemberService(GroupAdmin):
     def search_member_filtered_by_activity(
         self,
         active_user: settings.AUTH_USER_MODEL,
-        response: ScoutsMemberSearchResponse,
+        response: AbstractAbstractScoutsMemberSearchResponse,
         include_inactive: bool = False,
-    ) -> List[ScoutsMember]:
+    ) -> List[AbstractScoutsMember]:
         results = []
         # The "activity epoch" after which a member is deemed a past active member
         activity_epoch = self._calculate_activity_epoch(datetime.now(), 3)
 
         for partial_member in response.members:
-            member: ScoutsMember = self.get_member_info(active_user, partial_member.group_admin_id)
+            member: AbstractScoutsMember = self.get_member_info(active_user, partial_member.group_admin_id)
 
             was_active = False
             end_of_activity_period_counter = 0

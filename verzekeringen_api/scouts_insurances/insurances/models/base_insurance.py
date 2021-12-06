@@ -9,7 +9,7 @@ from scouts_insurances.insurances.models import InsuranceType
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.managers import BaseInsuranceManager
 
-from scouts_auth.groupadmin.models import ScoutsGroup, ScoutsAddress
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsAddress
 from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
 from scouts_auth.inuits.utils import BooleanParser
 
@@ -35,8 +35,8 @@ class BaseInsurance(models.Model):
     _listed = models.CharField(db_column="lijstok", max_length=1, default="N")
 
     created_on = TimezoneAwareDateTimeField(db_column="datumvaninvulling", null=True)
-    _start_date = TimezoneAwareDateTimeField(db_column="begindatum", null=True)
-    _end_date = TimezoneAwareDateTimeField(db_column="einddatum", null=True)
+    start_date = TimezoneAwareDateTimeField(db_column="begindatum", null=True)
+    end_date = TimezoneAwareDateTimeField(db_column="einddatum", null=True)
     payment_date = TimezoneAwareDateTimeField(db_column="betalingsdatum", null=True, blank=True)
 
     responsible_member = models.ForeignKey(Member, db_column="verantwoordelijkeid", on_delete=models.CASCADE)
@@ -52,16 +52,16 @@ class BaseInsurance(models.Model):
 
     # Special group getter that returns group class to make it seem like normal model
     @property
-    def scouts_group(self) -> ScoutsGroup:
-        return ScoutsGroup(
+    def scouts_group(self) -> AbstractScoutsGroup:
+        return AbstractScoutsGroup(
             group_admin_id=self._group_group_admin_id,
             name=self._group_name,
-            addresses=[ScoutsAddress(city=self._group_location)],
+            addresses=[AbstractScoutsAddress(city=self._group_location)],
         )
 
     # Special group setter that accepts group class
     @scouts_group.setter
-    def scouts_group(self, value: ScoutsGroup):
+    def scouts_group(self, value: AbstractScoutsGroup):
         self._group_group_admin_id = value.group_admin_id
         self._group_name = value.name
         self._group_location = value.addresses[0].city
@@ -110,21 +110,21 @@ class BaseInsurance(models.Model):
     def listed(self, value: bool):
         self._listed = BooleanParser.to_char(value, "J", "N")
 
-    @property
-    def start_date(self) -> datetime:
-        return self._start_date
+    # @property
+    # def start_date(self) -> datetime:
+    #     return self._start_date
 
-    @start_date.setter
-    def start_date(self, value: datetime):
-        self._start_date = value
+    # @start_date.setter
+    # def start_date(self, value: datetime):
+    #     self._start_date = value
 
-    @property
-    def end_date(self) -> datetime:
-        return self._end_date
+    # @property
+    # def end_date(self) -> datetime:
+    #     return self._end_date
 
-    @end_date.setter
-    def end_date(self, value: datetime):
-        self._end_date = value
+    # @end_date.setter
+    # def end_date(self, value: datetime):
+    #     self._end_date = value
 
     def has_attachment(self) -> bool:
         """Provides a test on all insurances to see if there are attachments. Only some insurance types have attachments."""

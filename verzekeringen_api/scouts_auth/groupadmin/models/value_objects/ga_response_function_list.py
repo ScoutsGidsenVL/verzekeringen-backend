@@ -1,14 +1,14 @@
 from typing import List, Tuple
 
-from scouts_auth.groupadmin.models.value_objects import ScoutsFunction, ScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsFunction, AbstractScoutsLink
 
 
-class ScoutsFunctionListResponse:
+class AbstractScoutsFunctionListResponse:
 
-    functions: List[ScoutsFunction]
-    links: List[ScoutsLink]
+    functions: List[AbstractScoutsFunction]
+    links: List[AbstractScoutsLink]
 
-    def __init__(self, functions: List[ScoutsFunction] = None, links: List[ScoutsLink] = None):
+    def __init__(self, functions: List[AbstractScoutsFunction] = None, links: List[AbstractScoutsLink] = None):
         self.functions = functions if functions else []
         self.links = links if links else []
 

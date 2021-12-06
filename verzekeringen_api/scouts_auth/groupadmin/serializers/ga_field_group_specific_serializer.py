@@ -1,8 +1,8 @@
 import logging
 from typing import List
 
-from scouts_auth.groupadmin.models import ScoutsGroupSpecificField
-from scouts_auth.groupadmin.serializers import ScoutsValueSerializer
+from scouts_auth.groupadmin.models import AbstractScoutsGroupSpecificField
+from scouts_auth.groupadmin.serializers import AbstractScoutsValueSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -10,7 +10,7 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
+class AbstractScoutsGroupSpecificFieldSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> list:
         if data is None:
             return None
@@ -24,26 +24,26 @@ class ScoutsGroupSpecificFieldSerializer(NonModelSerializer):
 
             validated["scouts_group"] = group
             validated["schema"] = group_data.pop("schema", None)
-            # validated["values"] = ScoutsValueSerializer().to_internal_value(group_data.pop("waarden", {}))
+            # validated["values"] = AbstractScoutsValueSerializer().to_internal_value(group_data.pop("waarden", {}))
 
             validated_data.append(validated)
 
         return validated_data
 
-    def save(self) -> ScoutsGroupSpecificField:
+    def save(self) -> AbstractScoutsGroupSpecificField:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: list) -> List[ScoutsGroupSpecificField]:
+    def create(self, validated_data: list) -> List[AbstractScoutsGroupSpecificField]:
         if validated_data is None:
             return None
 
         fields = []
         for data in validated_data:
-            instance = ScoutsGroupSpecificField()
+            instance = AbstractScoutsGroupSpecificField()
 
             instance.scouts_group = data.pop("scouts_group", None)
             instance.schema = data.pop("schema", None)
-            # instance.values = ScoutsValueSerializer().create(data.pop("values", {}))
+            # instance.values = AbstractScoutsValueSerializer().create(data.pop("values", {}))
 
             fields.append(instance)
 

@@ -1,32 +1,32 @@
-from .ga_position_serializer import ScoutsGeoCoordinateSerializer, ScoutsPositionSerializer
-from .ga_field_value_serializer import ScoutsValueSerializer
-from .ga_link_serializer import ScoutsLinkSerializer
-from .ga_contact_serializer import ScoutsContactSerializer
-from .ga_address_serializer import ScoutsAddressSerializer
-from .ga_field_group_specific_serializer import ScoutsGroupSpecificFieldSerializer
-from .ga_group_serializer import ScoutsGroupSerializer
-from .ga_grouping_serializer import ScoutsGroupingSerializer
-from .ga_function_serializer import ScoutsFunctionSerializer
+from .ga_position_serializer import AbstractScoutsGeoCoordinateSerializer, AbstractScoutsPositionSerializer
+from .ga_field_value_serializer import AbstractScoutsValueSerializer
+from .ga_link_serializer import AbstractScoutsLinkSerializer
+from .ga_contact_serializer import AbstractScoutsContactSerializer
+from .ga_address_serializer import AbstractScoutsAddressSerializer
+from .ga_field_group_specific_serializer import AbstractScoutsGroupSpecificFieldSerializer
+from .ga_group_serializer import AbstractScoutsGroupSerializer
+from .ga_grouping_serializer import AbstractScoutsGroupingSerializer
+from .ga_function_serializer import AbstractScoutsFunctionSerializer
 from .ga_allowed_calls_serializer import ScoutsAllowedCallsSerializer
-from .ga_response_serializer import ScoutsResponseSerializer
+from .ga_response_serializer import AbstractScoutsResponseSerializer
 from .ga_member_serializer import (
-    ScoutsMemberPersonalDataSerializer,
-    ScoutsMemberGroupAdminDataSerializer,
-    ScoutsMemberScoutsDataSerializer,
-    ScoutsMemberSerializer,
-    ScoutsMemberSearchFrontendSerializer,
-    ScoutsMemberFrontendSerializer,
+    AbstractAbstractScoutsMemberPersonalDataSerializer,
+    AbstractAbstractScoutsMemberGroupAdminDataSerializer,
+    AbstractAbstractScoutsMemberScoutsDataSerializer,
+    AbstractScoutsMemberSerializer,
+    AbstractScoutsMemberSearchFrontendSerializer,
+    AbstractScoutsMemberFrontendSerializer,
 )
-from .ga_response_group_list_serializer import ScoutsGroupListResponseSerializer
-from .ga_response_function_list_serializer import ScoutsFunctionListResponseSerializer
+from .ga_response_group_list_serializer import AbstractScoutsGroupListResponseSerializer
+from .ga_response_function_list_serializer import AbstractScoutsFunctionListResponseSerializer
 from .ga_response_member_list_serializer import (
-    ScoutsMemberListMemberSerializer,
-    ScoutsMemberListResponseSerializer,
+    AbstractAbstractScoutsMemberListMemberSerializer,
+    AbstractAbstractScoutsMemberListResponseSerializer,
 )
 from .ga_response_member_search_serializer import (
-    ScoutsMemberSearchMemberSerializer,
-    ScoutsMemberSearchResponseSerializer,
+    AbstractAbstractScoutsMemberSearchMemberSerializer,
+    AbstractAbstractScoutsMemberSearchResponseSerializer,
 )
-from .ga_member_medical_flash_card_serializer import ScoutsMedicalFlashCardSerializer
+from .ga_member_medical_flash_card_serializer import AbstractScoutsMedicalFlashCardSerializer
 
 from .scouts_user_serializer import ScoutsUserSerializer

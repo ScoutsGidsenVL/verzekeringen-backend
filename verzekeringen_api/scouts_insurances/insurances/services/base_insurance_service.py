@@ -13,7 +13,7 @@ from scouts_insurances.insurances.models import BaseInsurance, InsuranceType
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.services import InsuranceMailService
 
-from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class BaseInsuranceService:
         *,
         id: str = None,
         status: str = "",  # Calculated value
-        scouts_group: ScoutsGroup = None,
+        scouts_group: AbstractScoutsGroup = None,
         total_cost: Decimal = None,  # Handled by the BaseInsuranceSerializer
         comment: str = "",
         vvksm_comment: str = "",

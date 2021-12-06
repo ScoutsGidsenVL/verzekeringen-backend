@@ -10,15 +10,15 @@ from rest_framework.exceptions import ValidationError
 from drf_yasg2.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import (
-    ScoutsGroupListResponse,
-    ScoutsMember,
-    ScoutsMemberListResponse,
+    AbstractScoutsGroupListResponse,
+    AbstractScoutsMember,
+    AbstractAbstractScoutsMemberListResponse,
 )
 from scouts_auth.groupadmin.serializers import (
-    ScoutsMemberSerializer,
-    ScoutsMemberFrontendSerializer,
-    ScoutsMemberSearchFrontendSerializer,
-    ScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberSerializer,
+    AbstractScoutsMemberFrontendSerializer,
+    AbstractScoutsMemberSearchFrontendSerializer,
+    AbstractAbstractScoutsMemberListResponseSerializer,
     ScoutsUserSerializer,
 )
 from scouts_auth.groupadmin.services import GroupAdminMemberService
@@ -27,22 +27,22 @@ from scouts_auth.groupadmin.services import GroupAdminMemberService
 logger = logging.getLogger(__name__)
 
 
-class ScoutsMemberView(viewsets.ViewSet):
+class AbstractScoutsMemberView(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     service = GroupAdminMemberService()
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberListResponseSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractAbstractScoutsMemberListResponseSerializer})
     @action(methods=["GET"], url_path="", detail=True)
     def view_member_list(self, request) -> Response:
         logger.debug("GA: Received request for member list")
 
-        response: ScoutsMemberListResponse = self.service.get_member_list(request.user)
+        response: AbstractAbstractScoutsMemberListResponse = self.service.get_member_list(request.user)
 
-        serializer = ScoutsMemberListResponseSerializer(response)
+        serializer = AbstractAbstractScoutsMemberListResponseSerializer(response)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMemberSerializer})
     @action(
         methods=["GET"],
         url_path=r"(?P<group_admin_id>\w+)",
@@ -51,13 +51,13 @@ class ScoutsMemberView(viewsets.ViewSet):
     def view_member_info_internal(self, request, group_admin_id: str) -> Response:
         logger.debug("GA: Received request for member info (group_admin_id: %s)", group_admin_id)
 
-        member: ScoutsMember = self.service.get_member_info(request.user, group_admin_id)
+        member: AbstractScoutsMember = self.service.get_member_info(request.user, group_admin_id)
 
-        serializer = ScoutsMemberSerializer(member)
+        serializer = AbstractScoutsMemberSerializer(member)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberFrontendSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMemberFrontendSerializer})
     @action(
         methods=["GET"],
         url_path=r"(?P<group_admin_id>\w+)",
@@ -66,13 +66,13 @@ class ScoutsMemberView(viewsets.ViewSet):
     def view_member_info(self, request, group_admin_id: str) -> Response:
         logger.debug("GA: Received request for member info (group_admin_id: %s)", group_admin_id)
 
-        member: ScoutsMember = self.service.get_member_info(request.user, group_admin_id)
+        member: AbstractScoutsMember = self.service.get_member_info(request.user, group_admin_id)
 
-        serializer = ScoutsMemberFrontendSerializer(member)
+        serializer = AbstractScoutsMemberFrontendSerializer(member)
 
         return Response(serializer.to_representation(member))
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberListResponseSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractAbstractScoutsMemberListResponseSerializer})
     @action(
         methods=["GET"],
         url_path=r"(?:/(?P<term>\w+))?(?:/(?P<group_group_admin_id>\w+))?",
@@ -89,15 +89,15 @@ class ScoutsMemberView(viewsets.ViewSet):
         if not term:
             raise ValidationError("Url param 'term' is a required filter")
 
-        results: List[ScoutsMember] = self.service.search_member_filtered(
+        results: List[AbstractScoutsMember] = self.service.search_member_filtered(
             request.user, term=term, group_group_admin_id=group_group_admin_id
         )
 
-        serializer = ScoutsMemberSearchFrontendSerializer(results, many=True)
+        serializer = AbstractScoutsMemberSearchFrontendSerializer(results, many=True)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMemberSerializer})
     @action(
         methods=["GET"],
         url_path="",
@@ -106,13 +106,13 @@ class ScoutsMemberView(viewsets.ViewSet):
     def view_member_profile_internal(self, request) -> Response:
         logger.debug("GA: Received request for current user GA member profile")
 
-        member: ScoutsMember = self.service.get_member_profile(request.user)
+        member: AbstractScoutsMember = self.service.get_member_profile(request.user)
 
-        serializer = ScoutsMemberSerializer(member)
+        serializer = AbstractScoutsMemberSerializer(member)
 
         return Response(serializer.data)
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberFrontendSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMemberFrontendSerializer})
     @action(
         methods=["GET"],
         url_path="",
@@ -121,16 +121,16 @@ class ScoutsMemberView(viewsets.ViewSet):
     def view_member_profile(self, request) -> Response:
         logger.debug("GA: Received request for current user GA member profile")
 
-        member: ScoutsMember = self.service.get_member_profile(request.user)
-        groups_response: ScoutsGroupListResponse = self.service.get_groups(request.user)
+        member: AbstractScoutsMember = self.service.get_member_profile(request.user)
+        groups_response: AbstractScoutsGroupListResponse = self.service.get_groups(request.user)
 
         member.scouts_groups = groups_response.scouts_groups
 
-        serializer = ScoutsMemberFrontendSerializer(member)
+        serializer = AbstractScoutsMemberFrontendSerializer(member)
 
         return Response(serializer.to_representation(member))
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: ScoutsMemberFrontendSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMemberFrontendSerializer})
     @action(
         methods=["GET"],
         url_path="",

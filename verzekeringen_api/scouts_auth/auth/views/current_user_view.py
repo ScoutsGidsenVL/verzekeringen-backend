@@ -9,8 +9,8 @@ from scouts_auth.auth.models import User
 from scouts_auth.auth.serializers import UserSerializer
 
 
-from scouts_auth.groupadmin.models import ScoutsGroup
-from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -29,10 +29,10 @@ class CurrentUserView(views.APIView):
             logger.debug("USER: %s", user.username)
 
             group_data = self.service.get_groups(request.user)
-            group_serializer = ScoutsGroupSerializer(data=group_data, many=True)
+            group_serializer = AbstractScoutsGroupSerializer(data=group_data, many=True)
             group_serializer.is_valid(raise_exception=True)
 
-            scouts_groups: List[ScoutsGroup] = group_serializer.validated_data
+            scouts_groups: List[AbstractScoutsGroup] = group_serializer.validated_data
             user.scouts_groups = scouts_groups
 
             serializer = UserSerializer(request.user)

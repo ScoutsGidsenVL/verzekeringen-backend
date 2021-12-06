@@ -1,12 +1,12 @@
 from typing import List
 from datetime import date
 
-from scouts_auth.groupadmin.models.value_objects import ScoutsResponse, ScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsResponse, AbstractScoutsLink
 
 from scouts_auth.inuits.models import Gender
 
 
-class ScoutsMemberSearchMember:
+class AbstractAbstractScoutsMemberSearchMember:
 
     group_admin_id: str
     first_name: str
@@ -15,7 +15,7 @@ class ScoutsMemberSearchMember:
     email: str
     phone_number: str
     gender: Gender
-    links: List[ScoutsLink]
+    links: List[AbstractScoutsLink]
 
     def __init__(
         self,
@@ -25,7 +25,7 @@ class ScoutsMemberSearchMember:
         birth_date: date = None,
         email: str = "",
         phone_number: str = "",
-        links: List[ScoutsLink] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.first_name = first_name
@@ -50,10 +50,10 @@ class ScoutsMemberSearchMember:
         )
 
 
-class ScoutsMemberSearchResponse(ScoutsResponse):
+class AbstractAbstractScoutsMemberSearchResponse(AbstractScoutsResponse):
     """Class to capture data returned from a call to /ledenlijst."""
 
-    members: List[ScoutsMemberSearchMember]
+    members: List[AbstractAbstractScoutsMemberSearchMember]
 
     def __init__(
         self,
@@ -62,8 +62,8 @@ class ScoutsMemberSearchResponse(ScoutsResponse):
         offset: int = 0,
         filter_criterium: str = "",
         criteria: dict = None,
-        members: List[ScoutsMemberSearchMember] = None,
-        links: List[ScoutsLink] = None,
+        members: List[AbstractAbstractScoutsMemberSearchMember] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.members = members if members else []
 

@@ -27,7 +27,7 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField)
 
         if isinstance(value, date):
             logger.warn(
-                "Field %s: Attempting to serializer a date value for a datetime field, transforming to datetime",
+                "Field %s: Attempting to serialize a date value for a datetime field, transforming to datetime",
                 self.field_name,
             )
             value = datetime.combine(value, datetime.min.time())

@@ -1,11 +1,11 @@
 import logging
 
-from scouts_auth.groupadmin.models import ScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.serializers import (
-    ScoutsLinkSerializer,
-    ScoutsContactSerializer,
-    ScoutsAddressSerializer,
-    ScoutsGroupSpecificFieldSerializer,
+    AbstractScoutsLinkSerializer,
+    AbstractScoutsContactSerializer,
+    AbstractScoutsAddressSerializer,
+    AbstractScoutsGroupSpecificFieldSerializer,
 )
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -14,11 +14,11 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class ScoutsGroupSerializer(NonModelSerializer):
+class AbstractScoutsGroupSerializer(NonModelSerializer):
     """Serializes a Group instance to a string."""
 
     class Meta:
-        model = ScoutsGroup
+        model = AbstractScoutsGroup
         abstract = True
 
     def to_internal_value(self, data: dict) -> dict:
@@ -37,12 +37,12 @@ class ScoutsGroupSerializer(NonModelSerializer):
             "type": data.pop("soort", None),
             "only_leaders": bool(data.pop("enkelLeiding", None)),
             "show_members_improved": bool(data.pop("ledenVerbeterdTonen", None)),
-            "addresses": ScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
-            "contacts": ScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
-            "group_specific_fields": ScoutsGroupSpecificFieldSerializer().to_internal_value(
+            "addresses": AbstractScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
+            "contacts": AbstractScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
+            "group_specific_fields": AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
                 data.pop("groepseigenVelden", {})
             ),
-            "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -51,14 +51,14 @@ class ScoutsGroupSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsGroup:
+    def save(self) -> AbstractScoutsGroup:
         return self.create(self.validated_data)
 
-    def create(self, validated_data) -> ScoutsGroup:
+    def create(self, validated_data) -> AbstractScoutsGroup:
         if validated_data is None:
             return None
 
-        instance = ScoutsGroup()
+        instance = AbstractScoutsGroup()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.number = validated_data.pop("number", None)
@@ -71,12 +71,12 @@ class ScoutsGroupSerializer(NonModelSerializer):
         instance.type = validated_data.pop("type", None)
         instance.only_leaders = validated_data.pop("only_leaders", None)
         instance.show_members_improved = validated_data.pop("show_members_improved", None)
-        instance.addresses = ScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
-        instance.contacts = ScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
-        instance.group_specific_fields = ScoutsGroupSpecificFieldSerializer().create(
+        instance.addresses = AbstractScoutsAddressSerializer(many=True).create(validated_data.pop("addresses", []))
+        instance.contacts = AbstractScoutsContactSerializer(many=True).create(validated_data.pop("contacts", []))
+        instance.group_specific_fields = AbstractScoutsGroupSpecificFieldSerializer().create(
             validated_data.pop("group_specific_fields", {})
         )
-        instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

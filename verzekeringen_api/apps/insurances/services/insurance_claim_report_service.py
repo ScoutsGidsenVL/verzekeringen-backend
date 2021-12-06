@@ -10,7 +10,7 @@ from apps.people.models import InuitsClaimVictim
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.utils import InsuranceAttachmentUtils
 
-from scouts_auth.groupadmin.models import ScoutsMember
+from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.files import FileUtils
@@ -28,7 +28,7 @@ class InsuranceClaimReportService:
     group_admin_service = GroupAdmin()
 
     def generate_pdf(self, claim: InsuranceClaim):
-        owner: ScoutsMember = self.group_admin_service.get_member_info(
+        owner: AbstractScoutsMember = self.group_admin_service.get_member_info(
             active_user=claim.declarant, group_admin_id=claim.declarant.group_admin_id
         )
         victim: InuitsClaimVictim = claim.victim

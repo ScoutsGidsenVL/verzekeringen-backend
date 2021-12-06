@@ -1,16 +1,18 @@
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import ScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
+
+from scouts_auth.inuits.models.fields import OptionalCharField
 
 
-class ScoutsContact:
+class AbstractScoutsContact:
 
-    member: str
-    function: str
-    name: str
-    phone_number: str
-    email: str
-    links: List[ScoutsLink]
+    member = OptionalCharField()
+    function = OptionalCharField()
+    name = OptionalCharField()
+    phone_number = OptionalCharField()
+    email = OptionalCharField()
+    links: List[AbstractScoutsLink]
 
     def __init__(
         self,
@@ -19,7 +21,7 @@ class ScoutsContact:
         name: str = "",
         phone_number: str = "",
         email: str = "",
-        links: List[ScoutsLink] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.member = member
         self.function = function

@@ -1,7 +1,10 @@
 import logging
 
-from scouts_auth.groupadmin.models import ScoutsMemberSearchMember, ScoutsMemberSearchResponse
-from scouts_auth.groupadmin.serializers import ScoutsLinkSerializer, ScoutsResponseSerializer
+from scouts_auth.groupadmin.models import (
+    AbstractAbstractScoutsMemberSearchMember,
+    AbstractAbstractScoutsMemberSearchResponse,
+)
+from scouts_auth.groupadmin.serializers import AbstractScoutsLinkSerializer, AbstractScoutsResponseSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -9,7 +12,7 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class ScoutsMemberSearchMemberSerializer(NonModelSerializer):
+class AbstractAbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -21,7 +24,7 @@ class ScoutsMemberSearchMemberSerializer(NonModelSerializer):
             "birth_date": data.pop("geboortedatum", None),
             "email": data.pop("email", None),
             "phone_number": data.pop("gsm", None),
-            "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", None)),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", None)),
         }
 
         remaining_keys = data.keys()
@@ -30,14 +33,14 @@ class ScoutsMemberSearchMemberSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsMemberSearchMember:
+    def save(self) -> AbstractAbstractScoutsMemberSearchMember:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsMemberSearchMember:
+    def create(self, validated_data: dict) -> AbstractAbstractScoutsMemberSearchMember:
         if validated_data is None:
             return None
 
-        instance = ScoutsMemberSearchMember()
+        instance = AbstractAbstractScoutsMemberSearchMember()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.first_name = validated_data.pop("first_name", None)
@@ -45,7 +48,7 @@ class ScoutsMemberSearchMemberSerializer(NonModelSerializer):
         instance.birth_date = validated_data.pop("birth_date", None)
         instance.email = validated_data.pop("email", None)
         instance.phone_number = validated_data.pop("phone_number", None)
-        instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", None))
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:
@@ -54,13 +57,15 @@ class ScoutsMemberSearchMemberSerializer(NonModelSerializer):
         return instance
 
 
-class ScoutsMemberSearchResponseSerializer(ScoutsResponseSerializer):
+class AbstractAbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
 
         validated_data = {
-            "members": ScoutsMemberSearchMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
+            "members": AbstractAbstractScoutsMemberSearchMemberSerializer(many=True).to_internal_value(
+                data.pop("leden", [])
+            ),
         }
 
         validated_data = {**validated_data, **(super().to_internal_value(data))}
@@ -71,18 +76,20 @@ class ScoutsMemberSearchResponseSerializer(ScoutsResponseSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsMemberSearchResponse:
+    def save(self) -> AbstractAbstractScoutsMemberSearchResponse:
         self.is_valid(raise_exception=True)
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsMemberSearchResponse:
+    def create(self, validated_data: dict) -> AbstractAbstractScoutsMemberSearchResponse:
         if validated_data is None:
             return None
 
-        instance = ScoutsMemberSearchResponse()
+        instance = AbstractAbstractScoutsMemberSearchResponse()
         instance = super().update(instance, validated_data)
 
-        instance.members = ScoutsMemberSearchMemberSerializer(many=True).create(validated_data.pop("members", []))
+        instance.members = AbstractAbstractScoutsMemberSearchMemberSerializer(many=True).create(
+            validated_data.pop("members", [])
+        )
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

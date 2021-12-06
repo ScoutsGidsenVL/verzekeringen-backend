@@ -4,8 +4,8 @@ from django.conf import settings
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
 
-from scouts_auth.groupadmin.models import ScoutsMember
-from scouts_auth.groupadmin.serializers import ScoutsMemberSerializer
+from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdmin, ScoutsAuthorizationService
 
 
@@ -20,7 +20,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Create and return a new user object.
         """
-        member: ScoutsMember = self.load_member_data(data=claims)
+        member: AbstractScoutsMember = self.load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.UserModel.objects.create_user(
             username=member.username, email=member.email
         )
@@ -36,23 +36,23 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
         """
-        member: ScoutsMember = self.load_member_data(data=claims)
+        member: AbstractScoutsMember = self.load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self.merge_member_data(user, member, claims)
 
         logger.debug("AUTHENTICATION: Updated a user with username %s ", user.username)
 
         return user
 
-    def load_member_data(self, data: dict) -> ScoutsMember:
-        serializer = ScoutsMemberSerializer(data=data)
+    def load_member_data(self, data: dict) -> AbstractScoutsMember:
+        serializer = AbstractScoutsMemberSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        member: ScoutsMember = serializer.save()
+        member: AbstractScoutsMember = serializer.save()
 
         return member
 
     def merge_member_data(
-        self, user: settings.AUTH_USER_MODEL, member: ScoutsMember, claims: dict
+        self, user: settings.AUTH_USER_MODEL, member: AbstractScoutsMember, claims: dict
     ) -> settings.AUTH_USER_MODEL:
         user.group_admin_id = member.group_admin_id
         user.gender = member.personal_data.gender

@@ -1,22 +1,22 @@
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import ScoutsValue, ScoutsLink, ScoutsResponse
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsValue, AbstractScoutsLink, AbstractScoutsResponse
 
 
-class ScoutsMemberListMember:
+class AbstractAbstractScoutsMemberListMember:
     """Partial member data captured in a member list from a call to /ledenlijst."""
 
     group_admin_id: str
     index: int
-    values: List[ScoutsValue]
-    links: List[ScoutsLink]
+    values: List[AbstractScoutsValue]
+    links: List[AbstractScoutsLink]
 
     def __init__(
         self,
         group_admin_id: str = "",
         index: int = 0,
-        values: List[ScoutsValue] = None,
-        links: List[ScoutsLink] = None,
+        values: List[AbstractScoutsValue] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.group_admin_id = group_admin_id
         self.index = index
@@ -32,10 +32,10 @@ class ScoutsMemberListMember:
         )
 
 
-class ScoutsMemberListResponse(ScoutsResponse):
+class AbstractAbstractScoutsMemberListResponse(AbstractScoutsResponse):
     """Class to capture data returned from a call to /ledenlijst."""
 
-    members: List[ScoutsMemberListMember]
+    members: List[AbstractAbstractScoutsMemberListMember]
 
     def __init__(
         self,
@@ -45,7 +45,7 @@ class ScoutsMemberListResponse(ScoutsResponse):
         filter_criterium: str = "",
         criteria: dict = None,
         members: list = None,
-        links: List[ScoutsLink] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.members = members if members else []
 

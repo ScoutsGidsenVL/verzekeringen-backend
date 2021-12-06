@@ -1,7 +1,7 @@
 import logging
 
-from scouts_auth.groupadmin.models import ScoutsAddress
-from scouts_auth.groupadmin.serializers import ScoutsPositionSerializer
+from scouts_auth.groupadmin.models import AbstractScoutsAddress
+from scouts_auth.groupadmin.serializers import AbstractScoutsPositionSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -9,7 +9,7 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class ScoutsAddressSerializer(NonModelSerializer):
+class AbstractScoutsAddressSerializer(NonModelSerializer):
     def to_internal_value(self, data) -> dict:
         if data is None:
             return None
@@ -25,7 +25,7 @@ class ScoutsAddressSerializer(NonModelSerializer):
             "phone_number": data.pop("telefoon", None),
             "postal_address": data.pop("postadres", None),
             "status": data.pop("status", None),
-            "position": ScoutsPositionSerializer().to_internal_value(data.pop("positie", None)),
+            "position": AbstractScoutsPositionSerializer().to_internal_value(data.pop("positie", None)),
             "giscode": data.pop("giscode", None),
             "description": data.pop("omschrijving", None),
         }
@@ -36,14 +36,14 @@ class ScoutsAddressSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsAddress:
+    def save(self) -> AbstractScoutsAddress:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsAddress:
+    def create(self, validated_data: dict) -> AbstractScoutsAddress:
         if validated_data is None:
             return None
 
-        instance = ScoutsAddress()
+        instance = AbstractScoutsAddress()
 
         instance.group_admin_id = validated_data.pop("id", None)
         instance.street = validated_data.pop("street", None)
@@ -55,7 +55,7 @@ class ScoutsAddressSerializer(NonModelSerializer):
         instance.phone_number = validated_data.pop("phone_number", None)
         instance.postal_address = validated_data.pop("postal_address", None)
         instance.status = validated_data.pop("status", None)
-        instance.position = ScoutsPositionSerializer().create(validated_data.pop("position", None))
+        instance.position = AbstractScoutsPositionSerializer().create(validated_data.pop("position", None))
         instance.giscode = validated_data.pop("giscode", None)
         instance.description = validated_data.pop("description", None)
 

@@ -1,13 +1,13 @@
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import ScoutsGroup, ScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsLink
 
 
-class ScoutsGroupListResponse:
+class AbstractScoutsGroupListResponse:
 
-    scouts_groups: List[ScoutsGroup]
-    links: List[ScoutsLink]
+    scouts_groups: List[AbstractScoutsGroup]
+    links: List[AbstractScoutsLink]
 
-    def __init__(self, scouts_groups: List[ScoutsGroup] = None, links: List[ScoutsLink] = None):
+    def __init__(self, scouts_groups: List[AbstractScoutsGroup] = None, links: List[AbstractScoutsLink] = None):
         self.scouts_groups = scouts_groups.sort(key=lambda group: group.group_admin_id) if scouts_groups else []
         self.links = links if links else []

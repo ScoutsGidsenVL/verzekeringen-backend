@@ -1,9 +1,9 @@
 from typing import List
 
-from scouts_auth.groupadmin.models.value_objects import ScoutsLink
+from scouts_auth.groupadmin.models.value_objects import AbstractScoutsLink
 
 
-class ScoutsResponse:
+class AbstractScoutsResponse:
     """
     Class to capture composite responses, that typically contain a list of links and a list of objects.
     """
@@ -13,7 +13,7 @@ class ScoutsResponse:
     offset: int
     filter_criterium: str
     criteria: dict
-    links: List[ScoutsLink]
+    links: List[AbstractScoutsLink]
 
     def __init__(
         self,
@@ -22,7 +22,7 @@ class ScoutsResponse:
         offset: int = 0,
         filter_criterium: str = "",
         criteria: dict = None,
-        links: List[ScoutsLink] = None,
+        links: List[AbstractScoutsLink] = None,
     ):
         self.count = count
         self.total = total

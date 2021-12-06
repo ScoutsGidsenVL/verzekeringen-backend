@@ -1,20 +1,24 @@
 import logging
 
-from scouts_auth.groupadmin.models import ScoutsGroupListResponse
-from scouts_auth.groupadmin.serializers import ScoutsLinkSerializer, ScoutsGroupSerializer, ScoutsResponseSerializer
+from scouts_auth.groupadmin.models import AbstractScoutsGroupListResponse
+from scouts_auth.groupadmin.serializers import (
+    AbstractScoutsLinkSerializer,
+    AbstractScoutsGroupSerializer,
+    AbstractScoutsResponseSerializer,
+)
 
 
 logger = logging.getLogger(__name__)
 
 
-class ScoutsGroupListResponseSerializer(ScoutsResponseSerializer):
+class AbstractScoutsGroupListResponseSerializer(AbstractScoutsResponseSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
 
         validated_data = {
-            "scouts_groups": ScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
-            "links": ScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
+            "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
+            "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
         remaining_keys = data.keys()
@@ -23,14 +27,16 @@ class ScoutsGroupListResponseSerializer(ScoutsResponseSerializer):
 
         return validated_data
 
-    def create(self, validated_data: dict) -> ScoutsGroupListResponse:
+    def create(self, validated_data: dict) -> AbstractScoutsGroupListResponse:
         if validated_data is None:
             return None
 
-        instance = ScoutsGroupListResponse()
+        instance = AbstractScoutsGroupListResponse()
 
-        instance.scouts_groups = ScoutsGroupSerializer(many=True).create(validated_data.pop("scouts_groups", []))
-        instance.links = ScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
+        instance.scouts_groups = AbstractScoutsGroupSerializer(many=True).create(
+            validated_data.pop("scouts_groups", [])
+        )
+        instance.links = AbstractScoutsLinkSerializer(many=True).create(validated_data.pop("links", []))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

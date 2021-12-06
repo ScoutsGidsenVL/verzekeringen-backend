@@ -1,6 +1,6 @@
 import logging
 
-from scouts_auth.groupadmin.models import ScoutsGeoCoordinate, ScoutsPosition
+from scouts_auth.groupadmin.models import AbstractScoutsGeoCoordinate, AbstractScoutsPosition
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -8,7 +8,7 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class ScoutsGeoCoordinateSerializer(NonModelSerializer):
+class AbstractScoutsGeoCoordinateSerializer(NonModelSerializer):
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -21,14 +21,14 @@ class ScoutsGeoCoordinateSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsGeoCoordinate:
+    def save(self) -> AbstractScoutsGeoCoordinate:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsGeoCoordinate:
+    def create(self, validated_data: dict) -> AbstractScoutsGeoCoordinate:
         if validated_data is None:
             return None
 
-        instance = ScoutsGeoCoordinate()
+        instance = AbstractScoutsGeoCoordinate()
 
         instance.imaginary = validated_data.pop("imaginary", None)
         instance.real = validated_data.pop("real", None)
@@ -40,7 +40,7 @@ class ScoutsGeoCoordinateSerializer(NonModelSerializer):
         return instance
 
 
-class ScoutsPositionSerializer(NonModelSerializer):
+class AbstractScoutsPositionSerializer(NonModelSerializer):
     def _parse_geo_coordinate(self, geo_coordinate: dict, name: str) -> dict:
         if isinstance(geo_coordinate, dict):
             imaginary = geo_coordinate.pop("imag", None)
@@ -69,8 +69,8 @@ class ScoutsPositionSerializer(NonModelSerializer):
         longitude = self._parse_geo_coordinate(longitude, "longitude")
 
         validated_data = {
-            "latitude": ScoutsGeoCoordinateSerializer().to_internal_value(latitude),
-            "longitude": ScoutsGeoCoordinateSerializer().to_internal_value(longitude),
+            "latitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(latitude),
+            "longitude": AbstractScoutsGeoCoordinateSerializer().to_internal_value(longitude),
         }
 
         remaining_keys = data.keys()
@@ -79,17 +79,17 @@ class ScoutsPositionSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> ScoutsPosition:
+    def save(self) -> AbstractScoutsPosition:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> ScoutsPosition:
+    def create(self, validated_data: dict) -> AbstractScoutsPosition:
         if validated_data is None:
             return None
 
-        instance = ScoutsPosition()
+        instance = AbstractScoutsPosition()
 
-        instance.latitude = ScoutsGeoCoordinateSerializer().create(validated_data.pop("latitude", None))
-        instance.longitude = ScoutsGeoCoordinateSerializer().create(validated_data.pop("longitude", None))
+        instance.latitude = AbstractScoutsGeoCoordinateSerializer().create(validated_data.pop("latitude", None))
+        instance.longitude = AbstractScoutsGeoCoordinateSerializer().create(validated_data.pop("longitude", None))
 
         remaining_keys = validated_data.keys()
         if len(remaining_keys) > 0:

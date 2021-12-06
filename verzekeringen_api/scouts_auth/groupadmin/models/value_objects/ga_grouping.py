@@ -1,7 +1,10 @@
-class ScoutsGrouping:
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerField
 
-    name: str
-    index: int
+
+class AbstractScoutsGrouping:
+
+    name = OptionalCharField()
+    index = OptionalIntegerField()
 
     def __init__(self, name: str = "", index: int = -1):
         self.name = name

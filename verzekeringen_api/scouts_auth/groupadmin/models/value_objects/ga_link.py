@@ -1,13 +1,17 @@
 from typing import List
 
+from django.db import models
 
-class ScoutsLink:
+from scouts_auth.inuits.models.fields import OptionalCharField
+
+
+class AbstractScoutsLink:
     """This class captures the data returned by GroupAdmin containing links to the full references info."""
 
-    rel: str
-    href: str
-    method: str
-    sections: List[str]
+    rel = OptionalCharField()
+    href = OptionalCharField()
+    method = OptionalCharField()
+    sections: List[str] = models.JSONField()
 
     def __init__(self, rel: str = "", href: str = "", method: str = "", sections: List[str] = None):
         self.rel = rel

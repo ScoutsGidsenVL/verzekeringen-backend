@@ -6,7 +6,7 @@ from drf_yasg2.utils import swagger_serializer_method
 from apps.equipment.models import InuitsEquipment
 from apps.equipment.models.fields import InuitsEquipmentNonMemberRelatedField
 
-from scouts_auth.groupadmin.serializers import ScoutsMemberSearchFrontendSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSearchFrontendSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.serializers.fields import OptionalCharField
 
@@ -67,12 +67,12 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
             data[InuitsEquipmentSerializer.LBL_OWNER_GROUP] = ""
         return data
 
-    # @swagger_serializer_method(serializer_or_field=ScoutsMemberSearchFrontendSerializer)
+    # @swagger_serializer_method(serializer_or_field=AbstractScoutsMemberSearchFrontendSerializer)
     # def get_owner_member(self, obj):
     #     if not obj.owner_member_group_admin_id:
     #         return None
     #     request = self.context.get("request", None)
-    #     return ScoutsMemberSearchFrontendSerializer(
+    #     return AbstractScoutsMemberSearchFrontendSerializer(
     #         GroupAdmin().get_member_info(active_user=request.user, group_admin_id=obj.owner_member_group_admin_id)
     #     ).data
 

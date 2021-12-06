@@ -7,7 +7,7 @@ from rest_framework import serializers
 from apps.people.serializers import InuitsClaimVictimSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
-from scouts_auth.groupadmin.serializers import ScoutsGroupSerializer, ScoutsMemberSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer, AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.serializers import DateTimeTimezoneSerializerField, PermissionRequiredField
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class InsuranceClaimCreateDataSerializer(serializers.Serializer):
 
-    permitted_scouts_groups = ScoutsGroupSerializer(many=True)
+    permitted_scouts_groups = AbstractScoutsGroupSerializer(many=True)
 
 
 # class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
@@ -57,10 +57,10 @@ class InsuranceClaimCreateDataSerializer(serializers.Serializer):
 #         data = GroupAdmin().get_member_info(
 #             active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
 #         )
-#         return ScoutsMemberSerializer(data).data
+#         return AbstractScoutsMemberSerializer(data).data
 
 #     def get_group(self, obj: InsuranceClaim):
-#         return ScoutsGroupSerializer(
+#         return AbstractScoutsGroupSerializer(
 #             GroupAdmin().get_group(self.context.get("request").user, obj.group_group_admin_id)
 #         ).data
 
@@ -148,7 +148,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
 #         fields = "__all__"
 
 #     def get_group(self, obj: InsuranceClaim):
-#         return ScoutsGroupSerializer(
+#         return AbstractScoutsGroupSerializer(
 #             GroupAdmin().get_group(self.context.get("request").user, obj.group_group_admin_id)
 #         ).data
 
