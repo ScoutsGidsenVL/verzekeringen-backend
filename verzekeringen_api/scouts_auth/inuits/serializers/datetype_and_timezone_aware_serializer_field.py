@@ -25,7 +25,7 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField)
         if not value:
             return None
 
-        if isinstance(value, date):
+        if not isinstance(value, datetime):
             logger.warn(
                 "Field %s: Attempting to serialize a date value for a datetime field, transforming to datetime",
                 self.field_name,
@@ -33,6 +33,9 @@ class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField)
             value = datetime.combine(value, datetime.min.time())
 
         if not hasattr(value, "tzinfo") or value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
+            logger.warn(
+                "Field %s: Attempting to serialize a datetime value that does not have timzone info", self.field_name
+            )
             value = pytz.utc.localize(value)
 
         return super().to_representation(value)
