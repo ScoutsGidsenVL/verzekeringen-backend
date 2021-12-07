@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
@@ -5,6 +7,9 @@ from drf_yasg2.utils import swagger_auto_schema
 from apps.insurances.models import InsuranceDraft
 from apps.insurances.serializers import InsuranceDraftSerializer
 from apps.insurances.services import InsuranceDraftService
+
+
+logger = logging.getLogger(__name__)
 
 
 class InsuranceDraftViewSet(viewsets.GenericViewSet):
@@ -22,9 +27,14 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: InsuranceDraftSerializer},
     )
     def create(self, request):
+        logger.debug("CREATE REQUEST DATA: %s", request.data)
         input_serializer = InsuranceDraftSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
-        draft = self.service.insurance_draft_create(**input_serializer.validated_data, created_by=request.user)
+
+        validated_data = input_serializer.validated_data
+        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+
+        draft = self.service.insurance_draft_create(**validated_data, created_by=request.user)
 
         output_serializer = InsuranceDraftSerializer(draft)
 
