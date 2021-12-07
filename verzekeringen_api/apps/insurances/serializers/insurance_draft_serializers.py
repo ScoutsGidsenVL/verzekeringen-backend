@@ -2,11 +2,11 @@ from rest_framework import serializers
 
 from apps.insurances.models import InsuranceDraft
 
-from scouts_insurances.insurances.serializers import InsuranceTypeSerializer
+from scouts_insurances.insurances.models import InsuranceType
 
 
 class InsuranceDraftSerializer(serializers.ModelSerializer):
-    insurance_type = InsuranceTypeSerializer()
+    insurance_type = serializers.PrimaryKeyRelatedField(queryset=InsuranceType.objects.all())
     data = serializers.JSONField()
 
     class Meta:
