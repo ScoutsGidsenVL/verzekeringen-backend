@@ -1,15 +1,9 @@
 import logging
 
 from rest_framework import serializers
-from drf_yasg2.utils import swagger_serializer_method
 
 from apps.equipment.models import InuitsEquipment
-from apps.equipment.models.fields import InuitsEquipmentNonMemberRelatedField
 from apps.people.models import InuitsNonMember
-from apps.people.serializers import InuitsNonMemberSerializer
-
-from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSearchFrontendSerializer
-from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.serializers.fields import OptionalCharField
 
 

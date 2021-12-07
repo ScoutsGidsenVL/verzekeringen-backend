@@ -13,9 +13,9 @@ class TemporaryVehicleInsuranceCoverageOptionSerializerField(ChoiceSerializerFie
         super().__init__(*args, choices=TemporaryVehicleInsuranceCoverageOption, **kwargs)
 
     def to_internal_value(self, data):
-        logger.debug("INPUT DATA: %s", data)
+        # logger.debug("INPUT DATA: %s", data)
         return data
 
     def to_representation(self, data):
-        logger.debug("OUTPUT DATA: %s", data)
+        # logger.debug("OUTPUT DATA: %s", data)
         return data

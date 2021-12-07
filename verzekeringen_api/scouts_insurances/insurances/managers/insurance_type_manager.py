@@ -21,7 +21,7 @@ class InsuranceTypeManager(models.Manager):
         return self.get_queryset().get(id=InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE)
 
     def temporary_vehicle(self):
-        return self.get_queryset().get(id=InsuranceTypeEnum.TEMPORARY)
+        return self.get_queryset().get(id=InsuranceTypeEnum.TEMPORARY_VEHICLE)
 
     def equipment(self):
         return self.get_queryset().get(id=InsuranceTypeEnum.EQUIPMENT)

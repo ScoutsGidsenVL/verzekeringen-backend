@@ -4,15 +4,19 @@ from rest_framework import serializers
 
 from scouts_insurances.equipment.serializers import VehicleSerializer
 from scouts_insurances.people.serializers import NonMemberSerializer
+from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleInsuranceOptionApi,
+    TemporaryVehicleInsuranceCoverageOption,
 )
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
 from scouts_insurances.insurances.serializers.fields import (
     TemporaryVehicleInsuranceOptionSerializerField,
     TemporaryVehicleInsuranceCoverageOptionSerializerField,
 )
+
+from scouts_auth.inuits.serializers import EnumSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +32,25 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
     class Meta:
         model = TemporaryVehicleInsurance
         fields = BaseInsuranceFields + ["insurance_options", "max_coverage", "vehicle", "owner", "drivers"]
+
+    def to_internal_value(self, data: dict) -> dict:
+        company = data.get("owner", {}).get("company_name", None)
+        if company:
+            data["owner"]["first_name"] = InsuranceSettingsHelper.get_company_identifier()
+            data["owner"]["last_name"] = company
+
+        data = super().to_internal_value(data)
+        logger.debug("INTERNAL VALUE DATA: %s", data)
+
+        return data
+
+    def to_representation(self, obj: TemporaryVehicleInsurance) -> dict:
+        data = super().to_representation(obj)
+
+        max_coverage = TemporaryVehicleInsuranceCoverageOption.from_choice(obj.max_coverage)
+        data["max_coverage"] = EnumSerializer((max_coverage[0], max_coverage[1])).data
+
+        return data
 
     def get_insurance_options(self, obj):
         logger.debug("OBJ: %s", obj)

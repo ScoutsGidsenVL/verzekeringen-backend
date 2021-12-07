@@ -41,24 +41,13 @@ class Vehicle:
         self.chassis_number = chassis_number
         self.trailer = trailer if trailer else self.DEFAULT_VEHICLE_TRAILER_OPTION
 
-
-# class Vehicle(models.Model):
-#     type = DefaultCharField(
-#         db_column="autotype",
-#         choices=VehicleType.choices,
-#         default="VehicleRelatedInsurance.DEFAULT_VEHICLE_TYPE",
-#         max_length=30,
-#     )
-#     brand = OptionalCharField(db_column="automerk", max_length=15)
-#     license_plate = OptionalCharField(db_column="autokenteken", max_length=10)
-#     construction_year = OptionalIntegerField(db_column="autobouwjaar", validators=[MinValueValidator(1900)])
-#     chassis_number = RequiredCharField(db_column="autochassis", max_length=20, default=None)
-#     trailer = DefaultCharField(
-#         db_column="aanhangwagen",
-#         choices=VehicleTrailerOption.choices,
-#         max_length=1,
-#         default="VehicleRelatedInsurance.DEFAULT_VEHICLE_TRAILER_OPTION",
-#     )
-
-#     class Meta:
-#         abstract = True
+    def __str__(self):
+        return "id({}), type({}), brand({}), license_plate({}), construction_year({}), chassis_number({}), trailer({})".format(
+            self.id,
+            self.type,
+            self.brand,
+            self.license_plate,
+            self.construction_year,
+            self.chassis_number,
+            self.trailer,
+        )

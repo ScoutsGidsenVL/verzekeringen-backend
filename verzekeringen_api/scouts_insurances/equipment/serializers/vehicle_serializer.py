@@ -3,7 +3,6 @@ import logging
 from rest_framework import serializers
 
 from scouts_insurances.equipment.models import Vehicle, VehicleType, VehicleTrailerOption
-from scouts_insurances.insurances.models import VehicleRelatedInsurance
 
 from scouts_auth.inuits.serializers import EnumSerializer
 from scouts_auth.inuits.serializers.fields import OptionalCharField, ChoiceSerializerField
@@ -30,18 +29,23 @@ class VehicleSerializer(serializers.Serializer):
         super().to_internal_value(data)
 
         return Vehicle(
+            # type=VehicleType.from_choice(data.get("type", Vehicle.DEFAULT_VEHICLE_TYPE)),
             type=data.get("type", Vehicle.DEFAULT_VEHICLE_TYPE),
             brand=data.get("brand", ""),
             license_plate=data.get("license_plate", ""),
             construction_year=data.get("construction_year", None),
             chassis_number=data.get("chassis_number", None),
+            # trailer=VehicleTrailerOption.from_choice(data.get("trailer", Vehicle.DEFAULT_VEHICLE_TRAILER_OPTION)),
             trailer=data.get("trailer", Vehicle.DEFAULT_VEHICLE_TRAILER_OPTION),
         )
 
     def to_representation(self, obj: Vehicle) -> dict:
         data = super().to_representation(obj)
 
-        data["type"] = EnumSerializer((obj.type.value, obj.type.label)).data
-        data["trailer"] = EnumSerializer((obj.trailer.value, obj.trailer.label)).data
+        type = VehicleType.from_choice(obj.type)
+        data["type"] = EnumSerializer((type[0], type[1])).data
+
+        trailer = VehicleTrailerOption.from_choice(obj.trailer)
+        data["trailer"] = EnumSerializer((trailer[0], trailer[1])).data
 
         return data

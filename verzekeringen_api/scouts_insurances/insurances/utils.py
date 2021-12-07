@@ -65,6 +65,10 @@ class InsuranceSettingsHelper:
 
         return None
 
+    @staticmethod
+    def get_company_identifier() -> str:
+        return getattr(settings, "COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME")
+
 
 class InsuranceAttachmentUtils:
 

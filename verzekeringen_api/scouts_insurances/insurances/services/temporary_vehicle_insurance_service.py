@@ -58,9 +58,8 @@ class TemporaryVehicleInsuranceService:
         cost = round(cost, 2)
 
         # Double if you have heavy trailer
-        # @TODO
-        # if insurance.vehicle.has_heavy_trailer:
-        #     cost *= 2
+        if insurance.vehicle.has_heavy_trailer:
+            cost *= 2
 
         return cost
 

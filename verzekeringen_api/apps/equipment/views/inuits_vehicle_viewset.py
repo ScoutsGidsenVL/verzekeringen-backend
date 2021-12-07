@@ -54,10 +54,10 @@ class InuitsVehicleViewSet(viewsets.GenericViewSet):
         input_serializer = InuitsVehicleSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        validated_data = input_serializer.validated_data
-        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+        inuits_vehicle: InuitsVehicle = input_serializer.validated_data
+        logger.debug("CREATE VALIDATED DATA: %s", inuits_vehicle)
 
-        created_vehicle = self.service.inuits_vehicle_create(**validated_data, created_by=request.user)
+        created_vehicle = self.service.inuits_vehicle_create(inuits_vehicle, created_by=request.user)
 
         output_serializer = InuitsVehicleSerializer(created_vehicle, context={"request": request})
 

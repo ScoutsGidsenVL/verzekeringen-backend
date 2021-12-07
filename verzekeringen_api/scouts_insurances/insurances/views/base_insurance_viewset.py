@@ -34,21 +34,24 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         insurance: BaseInsurance = get_object_or_404(self.get_queryset(), pk=pk)
 
-        if insurance.type.id == 1:
+        if insurance.type.is_activity_insurance():
             serializer = ActivityInsuranceSerializer(insurance.activity_child, context={"request": request})
-        elif insurance.type.id == 2:
+        elif insurance.type.is_temporary_insurance():
             serializer = TemporaryInsuranceSerializer(insurance.temporary_child, context={"request": request})
-        elif insurance.type.id in (3, 4):
+        elif (
+            insurance.type.is_travel_assistance_without_vehicle_insurance()
+            or insurance.type.is_travel_assistance_with_vehicle_insurance()
+        ):
             serializer = TravelAssistanceInsuranceSerializer(
                 insurance.travel_assistance_child, context={"request": request}
             )
-        elif insurance.type.id == 5:
+        elif insurance.type.is_temporary_vehicle_insurance():
             serializer = TemporaryVehicleInsuranceSerializer(
                 insurance.temporary_vehicle_child, context={"request": request}
             )
-        elif insurance.type.id == 6:
+        elif insurance.type.is_equipment_insurance():
             serializer = EquipmentInsuranceSerializer(insurance.equipment_child, context={"request": request})
-        elif insurance.type.id == 10:
+        elif insurance.type.is_event_insurance():
             serializer = EventInsuranceSerializer(insurance.event_child, context={"request": request})
         else:
             serializer = BaseInsuranceSerializer(insurance, many=True, context={"request": request})

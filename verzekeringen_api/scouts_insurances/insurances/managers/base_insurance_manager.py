@@ -13,11 +13,12 @@ class BaseInsuranceQuerySet(models.QuerySet):
             return self.qs
 
         # Section and group leaders can view and change requests they made themselves
-        section_leader_groups = [group.group_admin_id for group in user.get_section_leader_groups()]
-        group_leader_groups = [group.group_admin_id for group in user.get_group_leader_groups()]
-        groups = section_leader_groups + list(set(group_leader_groups) - set(section_leader_groups))
+        # section_leader_groups = [group.group_admin_id for group in user.get_section_leader_groups()]
+        # group_leader_groups = [group.group_admin_id for group in user.get_group_leader_groups()]
+        # groups = section_leader_groups + list(set(group_leader_groups) - set(section_leader_groups))
 
-        return self.filter(_group_group_admin_id__in=groups)
+        # return self.filter(_group_group_admin_id__in=groups)
+        return self.filter(responsible_member__group_admin_id=user.group_admin_id)
 
     def editable(self, user: settings.AUTH_USER_MODEL):
         # Only section leaders can edit and only their own requests

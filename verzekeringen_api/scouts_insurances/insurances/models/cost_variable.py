@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 from django.db import models
@@ -6,8 +7,12 @@ from django.core.validators import MinValueValidator
 from scouts_insurances.insurances.models import InsuranceType
 
 
+logger = logging.getLogger(__name__)
+
+
 class CostVariableQuerySet(models.QuerySet):
-    def get_variable(self, insurance_type, key):
+    def get_variable(self, insurance_type: InsuranceType, key: str):
+        logger.debug("COST: Fetching cost variable for insurance type %s and key %s", insurance_type.name, key)
         return self.get(insurance_type=insurance_type, key=key)
 
 
@@ -15,7 +20,7 @@ class CostVariableManager(models.Manager):
     def get_queryset(self):
         return CostVariableQuerySet(self.model, using=self._db)
 
-    def get_variable(self, insurance_type, key):
+    def get_variable(self, insurance_type: InsuranceType, key: str):
         return self.get_queryset().get_variable(insurance_type, key)
 
 

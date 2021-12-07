@@ -13,27 +13,29 @@ class InuitsVehicleService:
     @transaction.atomic
     def inuits_vehicle_create(
         self,
-        *,
-        type: str,
-        brand: str,
-        license_plate: str,
-        construction_year: datetime.date,
-        chassis_number: str,
+        #     *,
+        #     type: str,
+        #     brand: str,
+        #     license_plate: str,
+        #     construction_year: datetime.date,
+        #     chassis_number: str,
+        #     created_by: settings.AUTH_USER_MODEL,
+        #     trailer: str = VehicleTrailerOption.NO_TRAILER,
+        inuits_vehicle: InuitsVehicle,
         created_by: settings.AUTH_USER_MODEL,
-        trailer: str = VehicleTrailerOption.NO_TRAILER,
     ) -> InuitsVehicle:
-        vehicle = InuitsVehicle(
-            type=type,
-            brand=brand,
-            license_plate=license_plate,
-            construction_year=construction_year,
-            chassis_number=chassis_number,
-            trailer=trailer,
-        )
-        vehicle.full_clean()
-        vehicle.save()
+        # vehicle = InuitsVehicle(
+        #     type=type,
+        #     brand=brand,
+        #     license_plate=license_plate,
+        #     construction_year=construction_year,
+        #     chassis_number=chassis_number,
+        #     trailer=trailer,
+        # )
+        inuits_vehicle.full_clean()
+        inuits_vehicle.save()
 
-        return vehicle
+        return inuits_vehicle
 
     @transaction.atomic
     def inuits_vehicle_update(self, *, vehicle: InuitsVehicle, **fields) -> InuitsVehicle:
