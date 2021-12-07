@@ -3,12 +3,20 @@ from rest_framework import serializers
 from apps.insurances.models import InsuranceDraft
 
 from scouts_insurances.insurances.models import InsuranceType
+from scouts_insurances.insurances.serializers import InsuranceTypeSerializer
 
 
 class InsuranceDraftSerializer(serializers.ModelSerializer):
-    insurance_type = serializers.PrimaryKeyRelatedField(queryset=InsuranceType.objects.all())
+    insurance_type = InsuranceTypeSerializer()
     data = serializers.JSONField()
 
     class Meta:
         model = InsuranceDraft
         fields = "__all__"
+
+    def to_internal_value(self, data: dict) -> dict:
+        data["insurance_type"] = InsuranceType.objects.get(id=data.get("insurance_type"))
+
+        data = super().to_internal_value(data)
+
+        return data
