@@ -31,5 +31,5 @@ base_insurance_fields = [
     # responsible_member    Member          required
     "responsible_member",
     # type                  InsuranceType   optional
-    "type",
+    # "type",
 ]

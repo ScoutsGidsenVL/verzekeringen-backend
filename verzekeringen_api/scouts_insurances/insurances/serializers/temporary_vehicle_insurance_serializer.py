@@ -2,6 +2,7 @@ import logging
 
 from rest_framework import serializers
 
+from scouts_insurances.equipment.serializers import VehicleSerializer
 from scouts_insurances.people.serializers import NonMemberSerializer
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.models.enums import (
@@ -13,42 +14,25 @@ from scouts_insurances.insurances.serializers.fields import (
     TemporaryVehicleInsuranceCoverageOptionSerializerField,
 )
 
-from scouts_auth.groupadmin.services import GroupAdmin
-
 
 logger = logging.getLogger(__name__)
 
 
 class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
-    drivers = NonMemberSerializer(many=True)
     owner = NonMemberSerializer()
-    insurance_options = TemporaryVehicleInsuranceOptionSerializerField(many=True)
-    # insurance_options = serializers.SerializerMethodField()
-    max_coverage = TemporaryVehicleInsuranceCoverageOptionSerializerField()
+    drivers = NonMemberSerializer(many=True)
+    insurance_options = TemporaryVehicleInsuranceOptionSerializerField()
+    max_coverage = TemporaryVehicleInsuranceCoverageOptionSerializerField(required=False)
+    vehicle = VehicleSerializer()
 
     class Meta:
         model = TemporaryVehicleInsurance
-        fields = BaseInsuranceFields + ["insurance_options", "max_coverage", "owner", "drivers"]
+        fields = BaseInsuranceFields + ["insurance_options", "max_coverage", "vehicle", "owner", "drivers"]
 
     def get_insurance_options(self, obj):
         logger.debug("OBJ: %s", obj)
 
         return "".join(str(option) for option in obj.insurance_options)
-
-    def to_internal_value(self, data: dict) -> dict:
-        logger.debug("TEMPORARY VEHICLE INSURANCE SERIALIZER TO_INTERNAL_VALUE: %s", data)
-        data.pop("responsible_phone_number", None)
-        data.pop("group_admin_id", None)
-        insurance_options = data.pop("insurance_options", [])
-        data = super().to_internal_value(data)
-        logger.debug("TEMPORARY VEHICLE INSURANCE SERIALIZER TO_INTERNAL_VALUE: %s", data)
-        data["insurance_options"] = insurance_options
-        return data
-        # data["scouts_group"] = GroupAdmin().get_group(
-        #     active_user=self.context.get("request").user, group_group_admin_id=data.pop("group_group_admin_id")
-        # )
-
-        # return data
 
     # @swagger_serializer_method(serializer_or_field=NonMemberSerializer)
     # def get_owner(self, obj):
@@ -90,7 +74,6 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
         return value
 
     def validate(self, data):
-        logger.debug("DATA: %s", data)
         insurance_options = data.get("insurance_options", [])
         max_coverage = data.get("max_coverage", None)
 

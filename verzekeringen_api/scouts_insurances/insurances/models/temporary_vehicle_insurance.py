@@ -1,12 +1,8 @@
-from datetime import datetime
-
 from django.db import models
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
 
-from scouts_insurances.equipment.models import Vehicle, VehicleTrailerOption, VehicleType
+from scouts_insurances.equipment.models import VehicleTrailerOption, VehicleType
 from scouts_insurances.people.models import NonMember
-from scouts_insurances.insurances.models import BaseInsurance
+from scouts_insurances.insurances.models import BaseInsurance, VehicleRelatedInsurance
 from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
     TemporaryVehicleInsuranceOption,
@@ -14,9 +10,7 @@ from scouts_insurances.insurances.models.enums import (
 )
 
 
-class TemporaryVehicleInsurance(BaseInsurance):
-    DEFAULT_VEHICLE_TYPE = VehicleType.PASSENGER_CAR
-    DEFAULT_VEHICLE_TRAILER_OPTION = VehicleTrailerOption.NO_TRAILER
+class TemporaryVehicleInsurance(VehicleRelatedInsurance, BaseInsurance):
 
     insurance_parent = models.OneToOneField(
         BaseInsurance,
@@ -34,26 +28,6 @@ class TemporaryVehicleInsurance(BaseInsurance):
         null=True,
         blank=True,
     )
-    _vehicle_type = models.CharField(
-        db_column="autotype",
-        choices=VehicleType.choices,
-        default="TemporaryVehicleInsurance.DEFAULT_VEHICLE_TYPE",
-        max_length=30,
-        null=True,
-        blank=True,
-    )
-    _vehicle_brand = models.CharField(db_column="automerk", max_length=15, null=True, blank=True)
-    _vehicle_license_plate = models.CharField(db_column="autokenteken", max_length=10, null=True, blank=True)
-    _vehicle_construction_year = models.IntegerField(
-        db_column="autobouwjaar", null=True, blank=True, validators=[MinValueValidator(1900)]
-    )
-    _vehicle_chassis_number = models.CharField(db_column="autochassis", max_length=20)
-    _vehicle_trailer = models.CharField(
-        db_column="aanhangwagen",
-        choices=VehicleTrailerOption.choices,
-        max_length=1,
-        default="TemporaryVehicleInsurance.DEFAULT_VEHICLE_TRAILER_OPTION",
-    )
 
     # Even though this is an insurance only for members the participants are saved in the NonMember table
     # Cant change this because external database
@@ -64,47 +38,6 @@ class TemporaryVehicleInsurance(BaseInsurance):
     class Meta:
         db_table = "vrzktypetijdauto"
         managed = False
-
-    # def clean(self):
-    #     super().clean()
-    #     if not (
-    #         self._vehicle_type
-    #         and self._vehicle_brand
-    #         and self._vehicle_license_plate
-    #         and self._vehicle_construction_year
-    #     ) and not (
-    #         not self._vehicle_type
-    #         and not self._vehicle_brand
-    #         and not self._vehicle_license_plate
-    #         and not self._vehicle_construction_year
-    #     ):
-    #         raise ValidationError("If one vehicle field given all vehicle fields need to be given")
-
-    # Handle vehicle using seperate class so we can reuse it in other insurances
-    @property
-    def vehicle(self):
-        # If no vehicle type all other fields are empty aswell
-        if not self._vehicle_type:
-            return None
-        return Vehicle(
-            # @TODO
-            # type=VehicleType(self._vehicle_type),
-            brand=self._vehicle_brand,
-            license_plate=self._vehicle_license_plate,
-            construction_year=datetime.strptime(str(self._vehicle_construction_year), "%Y").date(),
-            chassis_number=self._vehicle_chassis_number,
-            trailer=self._vehicle_trailer,
-        )
-
-    @vehicle.setter
-    def vehicle(self, value: Vehicle):
-        # @TODO
-        self._vehicle_type = value.get("type", self.DEFAULT_VEHICLE_TYPE)
-        self._vehicle_brand = value.get("brand", None)
-        self._vehicle_license_plate = value.get("license_plate", None)
-        self._vehicle_construction_year = value.get("construction_year", None)
-        self._vehicle_chassis_number = value.get("chassis_number", None)
-        self._vehicle_trailer = value.get("trailer", self.DEFAULT_VEHICLE_TRAILER_OPTION)
 
     @property
     def owner(self):

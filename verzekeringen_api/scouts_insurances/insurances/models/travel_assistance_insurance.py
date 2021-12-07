@@ -1,17 +1,10 @@
-from datetime import datetime
-
 from django.db import models
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
 
-from scouts_insurances.locations.models import Country
-
-from scouts_insurances.equipment.models import Vehicle, VehicleTrailerOption, VehicleType
 from scouts_insurances.people.models import NonMember
-from scouts_insurances.insurances.models import BaseInsurance
+from scouts_insurances.insurances.models import BaseInsurance, VehicleRelatedInsurance
 
 
-class TravelAssistanceInsurance(BaseInsurance):
+class TravelAssistanceInsurance(VehicleRelatedInsurance, BaseInsurance):
     insurance_parent = models.OneToOneField(
         BaseInsurance,
         db_column="verzekeringsid",
@@ -21,18 +14,6 @@ class TravelAssistanceInsurance(BaseInsurance):
         related_name="travel_assistance_child",
     )
     country = models.CharField(db_column="bestemmingsland", max_length=40)
-    _vehicle_type = models.CharField(db_column="autotype", max_length=30, null=True, blank=True)
-    _vehicle_brand = models.CharField(db_column="automerk", max_length=15, null=True, blank=True)
-    _vehicle_license_plate = models.CharField(db_column="autokenteken", max_length=10, null=True, blank=True)
-    _vehicle_construction_year = models.IntegerField(
-        db_column="autobouwjaar", null=True, blank=True, validators=[MinValueValidator(1900)]
-    )
-    _vehicle_trailer = models.IntegerField(
-        db_column="aanhangwagen",
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0), MaxValueValidator(1)],
-    )
 
     # Even though this is an insurance only for members the participants are saved in the NonMember table
     # Cant change this because external database
@@ -43,47 +24,6 @@ class TravelAssistanceInsurance(BaseInsurance):
     class Meta:
         db_table = "vrzktypeethiasassistance"
         managed = False
-
-    def clean(self):
-        super().clean()
-        if not (
-            self._vehicle_type
-            and self._vehicle_brand
-            and self._vehicle_license_plate
-            and self._vehicle_construction_year
-        ) and not (
-            not self._vehicle_type
-            and not self._vehicle_brand
-            and not self._vehicle_license_plate
-            and not self._vehicle_construction_year
-        ):
-            raise ValidationError("If one vehicle field given all vehicle fields need to be given")
-
-    # Handle vehicle using seperate class so we can reuse it in other insurances
-    @property
-    def vehicle(self):
-        # If no vehicle type all other fields are empty aswell
-        if not self._vehicle_type:
-            return None
-        trailer = (
-            VehicleTrailerOption.TRAILER_LESS_750 if self._vehicle_trailer == 1 else VehicleTrailerOption.NO_TRAILER
-        )
-        return Vehicle(
-            type=VehicleType(self._vehicle_type),
-            brand=self._vehicle_brand,
-            license_plate=self._vehicle_license_plate,
-            construction_year=datetime.strptime(str(self._vehicle_construction_year), "%Y").date(),
-            chassis_number="",
-            trailer=trailer,
-        )
-
-    @vehicle.setter
-    def vehicle(self, value: Vehicle):
-        self._vehicle_type = value.type.value
-        self._vehicle_brand = value.brand
-        self._vehicle_license_plate = value.license_plate
-        self._vehicle_construction_year = value.construction_year.year
-        self._vehicle_trailer = int(value.has_trailer)
 
     # @property
     # def country(self):

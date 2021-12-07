@@ -18,8 +18,8 @@ class InuitsVehicleViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = InuitsVehicleFilter
-    ordering_fields = ["inuits_vehicle_id"]
-    ordering = ["inuits_vehicle_id"]
+    ordering_fields = ["brand", "license_plate", "chassis_number"]
+    ordering = ["brand", "license_plate", "chassis_number"]
 
     service = InuitsVehicleService()
 

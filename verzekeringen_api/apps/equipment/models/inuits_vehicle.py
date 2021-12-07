@@ -1,17 +1,11 @@
-from datetime import datetime
-
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
-
 from apps.equipment.managers import InuitsVehicleManager
 
-from scouts_insurances.equipment.models import VehicleType, VehicleTrailerOption
+from scouts_insurances.equipment.models import Vehicle
 
-from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField, OptionalIntegerField
+from scouts_auth.inuits.models import AbstractBaseModel
 
 
-class InuitsVehicle(models.Model):
+class InuitsVehicle(Vehicle, AbstractBaseModel):
     """
     Extra vehicle class we can use to save and search unique vehicles.
 
@@ -27,19 +21,3 @@ class InuitsVehicle(models.Model):
     """
 
     objects = InuitsVehicleManager()
-
-    inuits_vehicle_id = models.AutoField(primary_key=True)
-    type = OptionalCharField(choices=VehicleType.choices, max_length=30)
-    brand = OptionalCharField(max_length=15)
-    license_plate = OptionalCharField(max_length=10)
-    construction_year = OptionalIntegerField(validators=[MinValueValidator(1900)])
-    chassis_number = RequiredCharField(max_length=20)
-    trailer = models.CharField(choices=VehicleTrailerOption.choices, max_length=1, default="0")
-
-    # class Meta:
-    #     unique_together = ["chassis_number", "license_plate", "trailer"]
-
-    def clean_construction_year(self, value):
-        if datetime.strptime("1900", "%Y") > value:
-            raise ValidationError("Invalid construction year")
-        return value

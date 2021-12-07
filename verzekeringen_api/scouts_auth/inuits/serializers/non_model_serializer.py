@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 
 class NonModelSerializer(serializers.Serializer):
     def _get_attribute(self, instance, attribute_name):
-        logger.debug("Getting attribute %s for instance of %s", attribute_name, instance.__class__.__name__)
+        # logger.debug("Getting attribute %s for instance of %s", attribute_name, instance.__class__.__name__)
         if hasattr(instance, attribute_name):
             attribute = getattr(instance, attribute_name)
-            logger.debug("Found attribute: %s", attribute)
+            # logger.debug("Found attribute: %s", attribute)
 
             return attribute
 
@@ -25,9 +25,9 @@ class NonModelSerializer(serializers.Serializer):
 
         # Attempt to
         try:
-            logger.debug("NON-MODEL: deserializing data: %s", data)
+            # logger.debug("NON-MODEL: deserializing data: %s", data)
             validated_data = super().to_internal_value(data)
-            logger.debug("NON-MODEL: deserialized data: %s", validated_data)
+            # logger.debug("NON-MODEL: deserialized data: %s", validated_data)
 
             return validated_data
         except Exception:

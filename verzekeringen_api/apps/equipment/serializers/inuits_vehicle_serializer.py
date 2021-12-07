@@ -1,10 +1,9 @@
-from re import T
-from rest_framework import serializers
-
 from apps.equipment.models import InuitsVehicle
 
+from scouts_insurances.equipment.serializers import VehicleSerializer
 
-class InuitsVehicleSerializer(serializers.ModelSerializer):
+
+class InuitsVehicleSerializer(VehicleSerializer):
     # inuits_vehicle_id pk
     # type              max_length=30       optional        VehicleType.choices
     # brand             max_length=15       optional

@@ -5,9 +5,6 @@ from scouts_insurances.insurances.serializers import TemporaryVehicleInsuranceSe
 
 
 class InuitsTemporaryVehicleInsuranceSerializer(TemporaryVehicleInsuranceSerializer):
-
-    vehicle = InuitsVehicleSerializer()
-
     class Meta:
         model = TemporaryVehicleInsurance
-        fields = TemporaryVehicleInsuranceSerializer.Meta.fields + ["vehicle"]
+        fields = TemporaryVehicleInsuranceSerializer.Meta.fields
