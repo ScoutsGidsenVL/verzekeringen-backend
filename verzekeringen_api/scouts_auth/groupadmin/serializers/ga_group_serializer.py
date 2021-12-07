@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 class AbstractScoutsGroupSerializer(NonModelSerializer):
     """Serializes a Group instance to a string."""
 
+    # addresses = AbstractScoutsAddressSerializer(many=True)
+
     class Meta:
         model = AbstractScoutsGroup
         abstract = True

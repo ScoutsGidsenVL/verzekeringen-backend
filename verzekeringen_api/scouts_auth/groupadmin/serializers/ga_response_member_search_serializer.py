@@ -1,8 +1,8 @@
 import logging
 
 from scouts_auth.groupadmin.models import (
-    AbstractAbstractScoutsMemberSearchMember,
-    AbstractAbstractScoutsMemberSearchResponse,
+    AbstractScoutsMemberSearchMember,
+    AbstractScoutsMemberSearchResponse,
 )
 from scouts_auth.groupadmin.serializers import AbstractScoutsLinkSerializer, AbstractScoutsResponseSerializer
 
@@ -12,7 +12,11 @@ from scouts_auth.inuits.serializers import NonModelSerializer
 logger = logging.getLogger(__name__)
 
 
-class AbstractAbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
+class AbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
+    class Meta:
+        model = AbstractScoutsMemberSearchMember
+        abstract = True
+
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -33,14 +37,14 @@ class AbstractAbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
 
         return validated_data
 
-    def save(self) -> AbstractAbstractScoutsMemberSearchMember:
+    def save(self) -> AbstractScoutsMemberSearchMember:
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractAbstractScoutsMemberSearchMember:
+    def create(self, validated_data: dict) -> AbstractScoutsMemberSearchMember:
         if validated_data is None:
             return None
 
-        instance = AbstractAbstractScoutsMemberSearchMember()
+        instance = AbstractScoutsMemberSearchMember()
 
         instance.group_admin_id = validated_data.pop("group_admin_id", None)
         instance.first_name = validated_data.pop("first_name", None)
@@ -57,15 +61,17 @@ class AbstractAbstractScoutsMemberSearchMemberSerializer(NonModelSerializer):
         return instance
 
 
-class AbstractAbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSerializer):
+class AbstractScoutsMemberSearchResponseSerializer(AbstractScoutsResponseSerializer):
+    class Meta:
+        model = AbstractScoutsMemberSearchResponse
+        abstract = True
+
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
 
         validated_data = {
-            "members": AbstractAbstractScoutsMemberSearchMemberSerializer(many=True).to_internal_value(
-                data.pop("leden", [])
-            ),
+            "members": AbstractScoutsMemberSearchMemberSerializer(many=True).to_internal_value(data.pop("leden", [])),
         }
 
         validated_data = {**validated_data, **(super().to_internal_value(data))}
@@ -76,18 +82,18 @@ class AbstractAbstractScoutsMemberSearchResponseSerializer(AbstractScoutsRespons
 
         return validated_data
 
-    def save(self) -> AbstractAbstractScoutsMemberSearchResponse:
+    def save(self) -> AbstractScoutsMemberSearchResponse:
         self.is_valid(raise_exception=True)
         return self.create(self.validated_data)
 
-    def create(self, validated_data: dict) -> AbstractAbstractScoutsMemberSearchResponse:
+    def create(self, validated_data: dict) -> AbstractScoutsMemberSearchResponse:
         if validated_data is None:
             return None
 
-        instance = AbstractAbstractScoutsMemberSearchResponse()
+        instance = AbstractScoutsMemberSearchResponse()
         instance = super().update(instance, validated_data)
 
-        instance.members = AbstractAbstractScoutsMemberSearchMemberSerializer(many=True).create(
+        instance.members = AbstractScoutsMemberSearchMemberSerializer(many=True).create(
             validated_data.pop("members", [])
         )
 

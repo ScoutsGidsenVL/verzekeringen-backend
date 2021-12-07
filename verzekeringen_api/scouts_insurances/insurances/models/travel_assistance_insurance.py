@@ -85,10 +85,10 @@ class TravelAssistanceInsurance(BaseInsurance):
         self._vehicle_construction_year = value.construction_year.year
         self._vehicle_trailer = int(value.has_trailer)
 
-    @property
-    def country(self):
-        return Country.objects.get(name=self.country)
+    # @property
+    # def country(self):
+    #     return Country.objects.get(name=self.country)
 
-    @country.setter
-    def country(self, value: Country):
-        self.country = value.name
+    # @country.setter
+    # def country(self, value: Country):
+    #     self.country = value.name

@@ -1,3 +1,5 @@
+import logging
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -7,6 +9,9 @@ from apps.equipment.serializers import InuitsVehicleSerializer
 from apps.equipment.filters import InuitsVehicleFilter
 from apps.equipment.services import InuitsVehicleService
 from apps.equipment.models import InuitsVehicle
+
+
+logger = logging.getLogger(__name__)
 
 
 class InuitsVehicleViewSet(viewsets.GenericViewSet):
@@ -45,12 +50,14 @@ class InuitsVehicleViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: InuitsVehicleSerializer},
     )
     def create(self, request):
+        logger.debug("CREATE REQUEST DATA: %s", request.data)
         input_serializer = InuitsVehicleSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        created_vehicle = self.service.inuits_vehicle_create(
-            **input_serializer.validated_data, created_by=request.user
-        )
+        validated_data = input_serializer.validated_data
+        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+
+        created_vehicle = self.service.inuits_vehicle_create(**validated_data, created_by=request.user)
 
         output_serializer = InuitsVehicleSerializer(created_vehicle, context={"request": request})
 

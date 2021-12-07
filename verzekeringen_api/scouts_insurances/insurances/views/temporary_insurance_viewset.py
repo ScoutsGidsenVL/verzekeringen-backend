@@ -31,12 +31,15 @@ class TemporaryInsuranceViewSet(viewsets.ViewSet):
         responses={status.HTTP_201_CREATED: TemporaryInsuranceSerializer},
     )
     def create(self, request, *args, **kwargs):
-        logger.debug("DATA: %s", request.data)
+        logger.debug("REQUEST DATA: %s", request.data)
         input_serializer = TemporaryInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
+        validated_data = input_serializer.validated_data
+        logger.debug("VALIDATED REQUEST DATA: %s", validated_data)
+
         created_insurance = self.temporary_insurance_service.temporary_insurance_create(
-            **input_serializer.validated_data, created_by=request.user
+            **validated_data, created_by=request.user
         )
 
         output_serializer = TemporaryInsuranceSerializer(created_insurance)

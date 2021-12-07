@@ -50,10 +50,14 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: InuitsNonMemberSerializer},
     )
     def create(self, request):
+        logger.debug("REQUEST DATA: %s", request.data)
         input_serializer = InuitsNonMemberSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
-        logger.debug("valid: %s", input_serializer.validated_data)
-        created_non_member = self.service.inuits_non_member_create(**input_serializer.validated_data)
+
+        validated_data = input_serializer.validated_data
+        logger.debug("VALIDATED REQUEST DATA: %s", validated_data)
+
+        created_non_member = self.service.inuits_non_member_create(**validated_data)
 
         output_serializer = InuitsNonMemberSerializer(created_non_member, context={"request": request})
 

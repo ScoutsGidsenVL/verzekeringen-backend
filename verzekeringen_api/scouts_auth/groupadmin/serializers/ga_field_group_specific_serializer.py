@@ -2,7 +2,6 @@ import logging
 from typing import List
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroupSpecificField
-from scouts_auth.groupadmin.serializers import AbstractScoutsValueSerializer
 
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -11,6 +10,10 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractScoutsGroupSpecificFieldSerializer(NonModelSerializer):
+    class Meta:
+        model = AbstractScoutsGroupSpecificField
+        abstract = True
+
     def to_internal_value(self, data: dict) -> list:
         if data is None:
             return None

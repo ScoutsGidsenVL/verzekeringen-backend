@@ -10,9 +10,9 @@ from .ga_function_serializer import AbstractScoutsFunctionSerializer
 from .ga_allowed_calls_serializer import ScoutsAllowedCallsSerializer
 from .ga_response_serializer import AbstractScoutsResponseSerializer
 from .ga_member_serializer import (
-    AbstractAbstractScoutsMemberPersonalDataSerializer,
-    AbstractAbstractScoutsMemberGroupAdminDataSerializer,
-    AbstractAbstractScoutsMemberScoutsDataSerializer,
+    AbstractScoutsMemberPersonalDataSerializer,
+    AbstractScoutsMemberGroupAdminDataSerializer,
+    AbstractScoutsMemberScoutsDataSerializer,
     AbstractScoutsMemberSerializer,
     AbstractScoutsMemberSearchFrontendSerializer,
     AbstractScoutsMemberFrontendSerializer,
@@ -20,12 +20,12 @@ from .ga_member_serializer import (
 from .ga_response_group_list_serializer import AbstractScoutsGroupListResponseSerializer
 from .ga_response_function_list_serializer import AbstractScoutsFunctionListResponseSerializer
 from .ga_response_member_list_serializer import (
-    AbstractAbstractScoutsMemberListMemberSerializer,
-    AbstractAbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberListMemberSerializer,
+    AbstractScoutsMemberListResponseSerializer,
 )
 from .ga_response_member_search_serializer import (
-    AbstractAbstractScoutsMemberSearchMemberSerializer,
-    AbstractAbstractScoutsMemberSearchResponseSerializer,
+    AbstractScoutsMemberSearchMemberSerializer,
+    AbstractScoutsMemberSearchResponseSerializer,
 )
 from .ga_member_medical_flash_card_serializer import AbstractScoutsMedicalFlashCardSerializer
 

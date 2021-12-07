@@ -1,8 +1,6 @@
 import logging
 from typing import List
 
-from rest_framework import serializers
-
 from scouts_auth.groupadmin.models import AbstractScoutsLink
 
 from scouts_auth.inuits.serializers import NonModelSerializer
@@ -29,6 +27,10 @@ class AbstractScoutsLinkSectionSerializer(NonModelSerializer):
 
 
 class AbstractScoutsLinkSerializer(NonModelSerializer):
+    class Meta:
+        model = AbstractScoutsLink
+        abstract = True
+
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None

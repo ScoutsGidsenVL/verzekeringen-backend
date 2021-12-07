@@ -33,6 +33,7 @@ class InuitsEquipmentService:
                     owner_group_group_admin_id, created_by.username
                 )
             )
+
         equipment = InuitsEquipment(
             nature=nature,
             description=description,

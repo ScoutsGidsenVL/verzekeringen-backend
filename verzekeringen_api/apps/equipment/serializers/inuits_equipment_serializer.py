@@ -5,6 +5,8 @@ from drf_yasg2.utils import swagger_serializer_method
 
 from apps.equipment.models import InuitsEquipment
 from apps.equipment.models.fields import InuitsEquipmentNonMemberRelatedField
+from apps.people.models import InuitsNonMember
+from apps.people.serializers import InuitsNonMemberSerializer
 
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSearchFrontendSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
@@ -18,6 +20,7 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
 
     LBL_OWNER_MEMBER = "owner_member_group_admin_id"
     LBL_OWNER_GROUP = "owner_group_group_admin_id"
+    LBL_OWNER_NON_MEMBER = "owner_non_member"
 
     # inuits_equipment_id           pk
     # nature                        max_length=50                   is optional
@@ -27,7 +30,9 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
     # owner_member_group_admin_id   group admin id of owner member
     # owner_group_group_admin_id    group admin id of owner group
 
-    owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
+    # owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
+    # owner_non_member = InuitsNonMemberSerializer(required=False, allow_null=True)
+    owner_non_member = serializers.SerializerMethodField()
     owner_member_group_admin_id = OptionalCharField()
     owner_group_group_admin_id = OptionalCharField()
 
@@ -43,9 +48,17 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
             "owner_group_group_admin_id",
         )
 
+    def get_owner_non_member(self, obj):
+        logger.debug("OBJ: %s", obj)
+
     def to_internal_value(self, data: dict) -> dict:
         data[InuitsEquipmentSerializer.LBL_OWNER_GROUP] = data.pop("owner_group", None)
         data[InuitsEquipmentSerializer.LBL_OWNER_MEMBER] = data.pop("owner_member", None)
+
+        owner_non_member = data.pop("owner_non_member", None)
+        if owner_non_member:
+            owner_non_member = InuitsNonMember.objects.get(id=owner_non_member)
+            data[InuitsEquipmentSerializer.LBL_OWNER_NON_MEMBER] = owner_non_member
 
         return data
 
@@ -64,7 +77,7 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
             logger.warn(
                 "A piece of equipment either belongs to a person or to a scouts group - Removing group as owner"
             )
-            data[InuitsEquipmentSerializer.LBL_OWNER_GROUP] = ""
+            data[InuitsEquipmentSerializer.LBL_OWNER_GROUP] = None
         return data
 
     # @swagger_serializer_method(serializer_or_field=AbstractScoutsMemberSearchFrontendSerializer)

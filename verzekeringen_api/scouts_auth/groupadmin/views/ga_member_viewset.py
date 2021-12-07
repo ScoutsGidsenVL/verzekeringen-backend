@@ -12,13 +12,13 @@ from drf_yasg2.utils import swagger_auto_schema
 from scouts_auth.groupadmin.models import (
     AbstractScoutsGroupListResponse,
     AbstractScoutsMember,
-    AbstractAbstractScoutsMemberListResponse,
+    AbstractScoutsMemberListResponse,
 )
 from scouts_auth.groupadmin.serializers import (
     AbstractScoutsMemberSerializer,
     AbstractScoutsMemberFrontendSerializer,
     AbstractScoutsMemberSearchFrontendSerializer,
-    AbstractAbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberListResponseSerializer,
     ScoutsUserSerializer,
 )
 from scouts_auth.groupadmin.services import GroupAdminMemberService
@@ -31,14 +31,14 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
     service = GroupAdminMemberService()
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractAbstractScoutsMemberListResponseSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMemberListResponseSerializer})
     @action(methods=["GET"], url_path="", detail=True)
     def view_member_list(self, request) -> Response:
         logger.debug("GA: Received request for member list")
 
-        response: AbstractAbstractScoutsMemberListResponse = self.service.get_member_list(request.user)
+        response: AbstractScoutsMemberListResponse = self.service.get_member_list(request.user)
 
-        serializer = AbstractAbstractScoutsMemberListResponseSerializer(response)
+        serializer = AbstractScoutsMemberListResponseSerializer(response)
 
         return Response(serializer.data)
 
@@ -72,7 +72,7 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
 
         return Response(serializer.to_representation(member))
 
-    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractAbstractScoutsMemberListResponseSerializer})
+    @swagger_auto_schema(responses={status.HTTP_200_OK: AbstractScoutsMemberListResponseSerializer})
     @action(
         methods=["GET"],
         url_path=r"(?:/(?P<term>\w+))?(?:/(?P<group_group_admin_id>\w+))?",

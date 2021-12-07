@@ -21,8 +21,8 @@ class InuitsNonMember(InuitsPerson):
 
     comment = OptionalCharField(max_length=500)
 
-    class Meta:
-        pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     @property
     def full_name(self):

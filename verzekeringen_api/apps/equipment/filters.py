@@ -15,13 +15,12 @@ class InuitsVehicleFilter(django_filters.FilterSet):
     def search_term_filter(self, queryset, name, value):
         # Annotate brand and license_plate so we can do an icontains on entire string
         return (
-            queryset.annotate(brand_license_plate=Concat("brand", Value(" "), "license_plate"))
-            .annotate(license_plate_brand=Concat("license_plate", Value(" "), "brand"))
+            queryset.annotate(brand_license_plate=Concat("brand", "license_plate"))
+            .annotate(license_plate_brand=Concat("license_plate", "brand"))
             .filter(
                 Q(brand_license_plate__icontains=value)
                 | Q(license_plate_brand__icontains=value)
-                | Q(chassis_number__icontains=value),
-                output_field=CharField(),
+                | Q(chassis_number__icontains=value)
             )
         )
 

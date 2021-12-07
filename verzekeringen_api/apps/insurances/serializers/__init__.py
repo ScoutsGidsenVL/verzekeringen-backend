@@ -16,3 +16,7 @@ from .insurance_claim_serializers import (
     InuitsClaimVictimSerializer,
     InsuranceClaimSerializer,
 )
+from .inuits_event_insurance_serializer import InuitsEventInsuranceSerializer
+from .inuits_activity_insurance_serializer import InuitsActivityInsuranceSerializer
+from .inuits_temporary_vehicle_insurance_serializer import InuitsTemporaryVehicleInsuranceSerializer
+from .inuits_travel_assistance_insurance_serializer import InuitsTravelAssistanceInsuranceSerializer

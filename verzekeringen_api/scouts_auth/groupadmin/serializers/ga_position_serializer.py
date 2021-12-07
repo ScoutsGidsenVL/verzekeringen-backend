@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractScoutsGeoCoordinateSerializer(NonModelSerializer):
+    class Meta:
+        model = AbstractScoutsGeoCoordinate
+        abstract = True
+
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
@@ -41,6 +45,10 @@ class AbstractScoutsGeoCoordinateSerializer(NonModelSerializer):
 
 
 class AbstractScoutsPositionSerializer(NonModelSerializer):
+    class Meta:
+        model = AbstractScoutsPosition
+        abstract = True
+
     def _parse_geo_coordinate(self, geo_coordinate: dict, name: str) -> dict:
         if isinstance(geo_coordinate, dict):
             imaginary = geo_coordinate.pop("imag", None)

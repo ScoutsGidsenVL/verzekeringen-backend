@@ -27,6 +27,7 @@ class ChoiceSerializerField:
 
         parent = ChoiceSerializerField.CHOICE_FIELD
         if many:
+            logger.debug("Multiple choice serializer field detected")
             parent = ChoiceSerializerField.MULTIPLE_CHOICE_FIELD
 
         self.instance = getattr(serializers, parent)(*args, **kwargs)
@@ -50,4 +51,6 @@ class ChoiceSerializerField:
         return self.instance.to_representation(value)
 
     def validate(self, value):
-        return self.instance.validate(value)
+        logger.debug("CHOICE VALIDATE VALUE: %s", value)
+        # return self.instance.validate(value)
+        return value

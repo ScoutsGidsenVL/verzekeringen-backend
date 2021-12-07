@@ -3,10 +3,11 @@ from datetime import date, datetime
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
 
 
-class AbstractScoutsFunction:
+class AbstractScoutsFunction(AbstractNonModel):
 
     group_admin_id = OptionalCharField()
     type = OptionalCharField()
@@ -29,6 +30,9 @@ class AbstractScoutsFunction:
     groups_section_leader: Dict[str, bool]
     groups_group_leader: Dict[str, bool]
     is_district_commissioner: bool = False
+
+    class Meta:
+        abstract = True
 
     def __init__(
         self,
@@ -63,6 +67,8 @@ class AbstractScoutsFunction:
         self.links = links if links else []
         self.groups_section_leader = groups_section_leader if groups_section_leader else {}
         self.groups_group_leader = groups_group_leader if groups_group_leader else {}
+
+        # super().__init__([], {})
 
     @property
     def function_code(self):

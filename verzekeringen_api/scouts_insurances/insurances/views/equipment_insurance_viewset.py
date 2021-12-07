@@ -31,7 +31,7 @@ class EquipmentInsuranceViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: EquipmentInsuranceSerializer},
     )
     def create(self, request):
-        logger.debug("DATA: %s", request.data)
+        logger.debug("REQUEST DATA: %s", request.data)
         input_serializer = EquipmentInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 

@@ -5,12 +5,17 @@ from django.db import transaction
 
 from scouts_insurances.people.services import MemberService
 from scouts_insurances.equipment.models import Vehicle
+from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import TravelAssistanceInsurance, InsuranceType, CostVariable
 from scouts_insurances.insurances.services import BaseInsuranceService
+
+from scouts_auth.groupadmin.services import GroupAdmin
 
 
 class TravelAssistanceInsuranceService:
     base_insurance_service = BaseInsuranceService()
+    groupadmin = GroupAdmin()
+    member_service = MemberService()
 
     def _cost_by_prefix(self, prefix: str, type: InsuranceType, active_limit: int, days: int) -> Decimal:
         if not active_limit:
@@ -47,8 +52,9 @@ class TravelAssistanceInsuranceService:
         self,
         *,
         participants: list,
-        country: str,
+        country: str = None,
         vehicle: Vehicle = None,
+        group_admin_id: str = "",
         **base_insurance_fields,
     ) -> Decimal:
         type = (
@@ -59,10 +65,11 @@ class TravelAssistanceInsuranceService:
         base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=type
         )
+        country = country if country and isinstance(country, str) else Country.DEFAULT_COUNTRY_NAME
         insurance = TravelAssistanceInsurance(
-            country=country,
             **base_insurance_fields,
         )
+        insurance.country = country
         if vehicle:
             insurance.vehicle = vehicle
         return self._calculate_total_cost(insurance, len(participants))
@@ -81,6 +88,12 @@ class TravelAssistanceInsuranceService:
             if vehicle is None
             else InsuranceType.objects.travel_assistance_with_vehicle()
         )
+        group_admin_id = base_insurance_fields.pop("group_admin_id", None)
+        if group_admin_id and not base_insurance_fields.get("scouts_group", None):
+            base_insurance_fields["scouts_group"] = self.groupadmin.get_group(
+                active_user=base_insurance_fields.get("created_by"), group_group_admin_id=group_admin_id
+            )
+
         base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=type
         )
@@ -97,7 +110,7 @@ class TravelAssistanceInsuranceService:
         # Save insurance here already so we can create non members linked to it
         # This whole function is atomic so if non members cant be created this will rollback aswell
         for participant_data in participants:
-            participant = MemberService.non_member_create(**participant_data)
+            participant = self.member_service.non_member_create(**participant_data)
             insurance.participants.add(participant)
 
         insurance.full_clean()

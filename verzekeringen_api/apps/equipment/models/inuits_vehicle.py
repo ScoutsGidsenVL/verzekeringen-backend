@@ -36,11 +36,8 @@ class InuitsVehicle(models.Model):
     chassis_number = RequiredCharField(max_length=20)
     trailer = models.CharField(choices=VehicleTrailerOption.choices, max_length=1, default="0")
 
-    # GroupAdmin id of the group to which the vehicle belongs
-    group_group_admin_id = models.CharField(max_length=6)
-
-    class Meta:
-        unique_together = ["chassis_number", "license_plate", "trailer"]
+    # class Meta:
+    #     unique_together = ["chassis_number", "license_plate", "trailer"]
 
     def clean_construction_year(self, value):
         if datetime.strptime("1900", "%Y") > value:

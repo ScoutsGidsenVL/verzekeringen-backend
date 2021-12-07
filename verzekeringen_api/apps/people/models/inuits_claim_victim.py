@@ -9,11 +9,10 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class InuitsClaimVictim(InuitsPerson):
-    id = models.AutoField(primary_key=True)
+
     legal_representative = OptionalCharField(max_length=128)
     group_admin_id = OptionalCharField(max_length=64)
     membership_number = OptionalCharField(max_length=64)
-    #
     non_member = models.ForeignKey(
         InuitsNonMember,
         null=True,
@@ -21,6 +20,9 @@ class InuitsClaimVictim(InuitsPerson):
         blank=True,
         on_delete=models.SET_NULL,
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def get_gender(self):
         return self.gender

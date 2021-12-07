@@ -15,6 +15,9 @@ from scouts_insurances.insurances.models.enums import (
 
 
 class TemporaryVehicleInsurance(BaseInsurance):
+    DEFAULT_VEHICLE_TYPE = VehicleType.PASSENGER_CAR
+    DEFAULT_VEHICLE_TRAILER_OPTION = VehicleTrailerOption.NO_TRAILER
+
     insurance_parent = models.OneToOneField(
         BaseInsurance,
         db_column="verzekeringsid",
@@ -32,7 +35,12 @@ class TemporaryVehicleInsurance(BaseInsurance):
         blank=True,
     )
     _vehicle_type = models.CharField(
-        db_column="autotype", choices=VehicleType.choices, max_length=30, null=True, blank=True
+        db_column="autotype",
+        choices=VehicleType.choices,
+        default="TemporaryVehicleInsurance.DEFAULT_VEHICLE_TYPE",
+        max_length=30,
+        null=True,
+        blank=True,
     )
     _vehicle_brand = models.CharField(db_column="automerk", max_length=15, null=True, blank=True)
     _vehicle_license_plate = models.CharField(db_column="autokenteken", max_length=10, null=True, blank=True)
@@ -41,7 +49,10 @@ class TemporaryVehicleInsurance(BaseInsurance):
     )
     _vehicle_chassis_number = models.CharField(db_column="autochassis", max_length=20)
     _vehicle_trailer = models.CharField(
-        db_column="aanhangwagen", choices=VehicleTrailerOption.choices, max_length=1, default="0"
+        db_column="aanhangwagen",
+        choices=VehicleTrailerOption.choices,
+        max_length=1,
+        default="TemporaryVehicleInsurance.DEFAULT_VEHICLE_TRAILER_OPTION",
     )
 
     # Even though this is an insurance only for members the participants are saved in the NonMember table
@@ -54,20 +65,20 @@ class TemporaryVehicleInsurance(BaseInsurance):
         db_table = "vrzktypetijdauto"
         managed = False
 
-    def clean(self):
-        super().clean()
-        if not (
-            self._vehicle_type
-            and self._vehicle_brand
-            and self._vehicle_license_plate
-            and self._vehicle_construction_year
-        ) and not (
-            not self._vehicle_type
-            and not self._vehicle_brand
-            and not self._vehicle_license_plate
-            and not self._vehicle_construction_year
-        ):
-            raise ValidationError("If one vehicle field given all vehicle fields need to be given")
+    # def clean(self):
+    #     super().clean()
+    #     if not (
+    #         self._vehicle_type
+    #         and self._vehicle_brand
+    #         and self._vehicle_license_plate
+    #         and self._vehicle_construction_year
+    #     ) and not (
+    #         not self._vehicle_type
+    #         and not self._vehicle_brand
+    #         and not self._vehicle_license_plate
+    #         and not self._vehicle_construction_year
+    #     ):
+    #         raise ValidationError("If one vehicle field given all vehicle fields need to be given")
 
     # Handle vehicle using seperate class so we can reuse it in other insurances
     @property
@@ -76,7 +87,8 @@ class TemporaryVehicleInsurance(BaseInsurance):
         if not self._vehicle_type:
             return None
         return Vehicle(
-            type=VehicleType(self._vehicle_type),
+            # @TODO
+            # type=VehicleType(self._vehicle_type),
             brand=self._vehicle_brand,
             license_plate=self._vehicle_license_plate,
             construction_year=datetime.strptime(str(self._vehicle_construction_year), "%Y").date(),
@@ -86,12 +98,13 @@ class TemporaryVehicleInsurance(BaseInsurance):
 
     @vehicle.setter
     def vehicle(self, value: Vehicle):
-        self._vehicle_type = value.type.value
-        self._vehicle_brand = value.brand
-        self._vehicle_license_plate = value.license_plate
-        self._vehicle_construction_year = value.construction_year.year
-        self._vehicle_chassis_number = value.chassis_number
-        self._vehicle_trailer = value.trailer
+        # @TODO
+        self._vehicle_type = value.get("type", self.DEFAULT_VEHICLE_TYPE)
+        self._vehicle_brand = value.get("brand", None)
+        self._vehicle_license_plate = value.get("license_plate", None)
+        self._vehicle_construction_year = value.get("construction_year", None)
+        self._vehicle_chassis_number = value.get("chassis_number", None)
+        self._vehicle_trailer = value.get("trailer", self.DEFAULT_VEHICLE_TRAILER_OPTION)
 
     @property
     def owner(self):
@@ -112,4 +125,5 @@ class TemporaryVehicleInsurance(BaseInsurance):
 
     @insurance_options.setter
     def insurance_options(self, value: set):
+        print("INSURANCE OPTIONS ", value)
         self._insurance_option = int("".join([str(sub_value) for sub_value in value]))

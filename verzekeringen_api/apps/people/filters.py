@@ -1,5 +1,6 @@
 import logging
 
+from django.db import models
 from django.db.models.functions import Concat
 from django.db.models import Value, Q
 from django_filters import FilterSet, CharFilter
@@ -20,7 +21,7 @@ class InuitsNonMemberFilter(FilterSet):
     def search_term_filter(self, queryset, name, value):
         # Annotate full name so we can do an icontains on the entire name
         return (
-            queryset.annotate(full_name_1=Concat("first_name", Value(" "), "last_name"))
-            .annotate(full_name_2=Concat("last_name", Value(" "), "first_name"))
+            queryset.annotate(full_name_1=Concat("first_name", "last_name", output_field=models.CharField()))
+            .annotate(full_name_2=Concat("last_name", "first_name", output_field=models.CharField()))
             .filter(Q(full_name_1__icontains=value) | Q(full_name_2__icontains=value))
         )

@@ -20,7 +20,7 @@ class InuitsInsuranceSettingsHelper:
 
     @staticmethod
     def is_acceptance() -> bool:
-        return InsuranceSettingsHelper.is_test() and getattr(settings, "IS_ACCEPTANCE", False)
+        return InuitsInsuranceSettingsHelper.is_test() and getattr(settings, "IS_ACCEPTANCE", False)
 
     @staticmethod
     def get_email_insurance_from():
@@ -28,9 +28,9 @@ class InuitsInsuranceSettingsHelper:
 
     @staticmethod
     def get_insurance_requester_address(insurance_requester_address: str = None, send_to: str = None) -> str:
-        if InsuranceSettingsHelper.is_test():
+        if InuitsInsuranceSettingsHelper.is_test():
             # When on acceptance, send everything to the requester
-            if InsuranceSettingsHelper.is_acceptance():
+            if InuitsInsuranceSettingsHelper.is_acceptance():
                 if not send_to:
                     raise ValidationError("Insurance requester email is not set")
                 return send_to
@@ -46,9 +46,9 @@ class InuitsInsuranceSettingsHelper:
 
     @staticmethod
     def get_insurer_address(insurer_address: str = None, send_to: str = None) -> str:
-        if InsuranceSettingsHelper.is_test():
+        if InuitsInsuranceSettingsHelper.is_test():
             # When on acceptance, send everything to the declarant
-            if InsuranceSettingsHelper.is_acceptance():
+            if InuitsInsuranceSettingsHelper.is_acceptance():
                 if not send_to:
                     raise ValidationError("Declarant email is not set")
                 return send_to
@@ -67,9 +67,9 @@ class InuitsInsuranceSettingsHelper:
 
     @staticmethod
     def get_victim_email(victim_email: str = None, send_to: str = None) -> str:
-        if InsuranceSettingsHelper.is_test():
+        if InuitsInsuranceSettingsHelper.is_test():
             # When on acceptance, send everything to the declarant
-            if InsuranceSettingsHelper.is_acceptance():
+            if InuitsInsuranceSettingsHelper.is_acceptance():
                 if not send_to:
                     raise ValidationError("Declarant email is not set")
                 return send_to
@@ -83,9 +83,9 @@ class InuitsInsuranceSettingsHelper:
 
     @staticmethod
     def get_declarant_email(declarant_email: str = None, send_to: str = None) -> str:
-        if InsuranceSettingsHelper.is_test():
+        if InuitsInsuranceSettingsHelper.is_test():
             # When on acceptance, send everything to the declarant
-            if InsuranceSettingsHelper.is_acceptance():
+            if InuitsInsuranceSettingsHelper.is_acceptance():
                 if not send_to:
                     raise ValidationError("Declarant email is not set")
                 return send_to

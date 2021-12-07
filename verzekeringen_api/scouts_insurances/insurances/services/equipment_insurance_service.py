@@ -51,17 +51,15 @@ class EquipmentInsuranceService:
         base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=type
         )
+        country = country if country and isinstance(country, str) else Country.DEFAULT_COUNTRY_NAME
         insurance = EquipmentInsurance(
             nature=nature,
             postal_code=postal_code,
             city=city,
             **base_insurance_fields,
         )
-        insurance.country = (
-            country
-            if country and isinstance(country, str)
-            else Country.objects.by_type(InsuranceTypeEnum.EQUIPMENT).get(name=Country.DEFAULT_COUNTRY_NAME).name
-        )
+        insurance.country = Country.objects.by_insurance_type_id(InsuranceTypeEnum.EQUIPMENT).get(name=country).name
+
         # Create some fake equipment data for cost calc (only need total value)
         equipment_objects = []
         for equipment_data in equipment:

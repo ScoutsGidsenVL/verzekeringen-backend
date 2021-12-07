@@ -7,12 +7,8 @@ from scouts_insurances.insurances.views import (
     TemporaryVehicleInsuranceCoverageOptionViewSet,
     TemporaryVehicleInsuranceOptionViewSet,
     BaseInsuranceViewSet,
-    ActivityInsuranceViewSet,
     EquipmentInsuranceViewSet,
-    EventInsuranceViewSet,
     TemporaryInsuranceViewSet,
-    TemporaryVehicleInsuranceViewSet,
-    TravelAssistanceInsuranceViewSet,
 )
 
 router = routers.SimpleRouter()
@@ -31,12 +27,8 @@ router.register(
     TemporaryVehicleInsuranceOptionViewSet,
     "VehicleInsuranceOption",
 )
-router.register(r"insurances/activity", ActivityInsuranceViewSet, "ActivityInsurance")
 router.register(r"insurances/equipment", EquipmentInsuranceViewSet, "EquipmentInsurance")
-router.register(r"insurances/event", EventInsuranceViewSet, "EventInsurance")
 router.register(r"insurances/temporary", TemporaryInsuranceViewSet, "TemporaryInsurance")
-router.register(r"insurances/temporary_vehicle", TemporaryVehicleInsuranceViewSet, "TemporaryVehicleInsurance")
-router.register(r"insurances/travel_assistance", TravelAssistanceInsuranceViewSet, "TravelAssistanceInsurance")
 router.register(r"insurances", BaseInsuranceViewSet, "Insurance")
 
 

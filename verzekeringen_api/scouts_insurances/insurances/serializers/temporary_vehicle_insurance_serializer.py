@@ -1,14 +1,11 @@
 import logging
 
-from django.conf import settings
 from rest_framework import serializers
-from drf_yasg2.utils import swagger_serializer_method
 
 from scouts_insurances.people.serializers import NonMemberSerializer
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleInsuranceOptionApi,
-    TemporaryVehicleInsuranceCoverageOption,
 )
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
 from scouts_insurances.insurances.serializers.fields import (
@@ -16,8 +13,7 @@ from scouts_insurances.insurances.serializers.fields import (
     TemporaryVehicleInsuranceCoverageOptionSerializerField,
 )
 
-from scouts_auth.inuits.filters.helpers import parse_choice_to_tuple
-from scouts_auth.inuits.serializers import EnumSerializer
+from scouts_auth.groupadmin.services import GroupAdmin
 
 
 logger = logging.getLogger(__name__)
@@ -25,22 +21,43 @@ logger = logging.getLogger(__name__)
 
 class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
     drivers = NonMemberSerializer(many=True)
-    owner = serializers.SerializerMethodField()
-    vehicle = serializers.SerializerMethodField()
-    # insurance_options = serializers.SerializerMethodField()
+    owner = NonMemberSerializer()
     insurance_options = TemporaryVehicleInsuranceOptionSerializerField(many=True)
-    # max_coverage = serializers.SerializerMethodField()
+    # insurance_options = serializers.SerializerMethodField()
     max_coverage = TemporaryVehicleInsuranceCoverageOptionSerializerField()
 
     class Meta:
         model = TemporaryVehicleInsurance
-        fields = BaseInsuranceFields + ["insurance_options", "max_coverage", "vehicle", "owner", "drivers"]
+        fields = BaseInsuranceFields + ["insurance_options", "max_coverage", "owner", "drivers"]
 
-    @swagger_serializer_method(serializer_or_field=NonMemberSerializer)
-    def get_owner(self, obj):
-        if obj.owner.first_name == settings.COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME:
-            return NonMemberSerializer(obj.owner).data
-        return NonMemberSerializer(obj.owner).data
+    def get_insurance_options(self, obj):
+        logger.debug("OBJ: %s", obj)
+
+        return "".join(str(option) for option in obj.insurance_options)
+
+    def to_internal_value(self, data: dict) -> dict:
+        logger.debug("TEMPORARY VEHICLE INSURANCE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        data.pop("responsible_phone_number", None)
+        data.pop("group_admin_id", None)
+        insurance_options = data.pop("insurance_options", [])
+        data = super().to_internal_value(data)
+        logger.debug("TEMPORARY VEHICLE INSURANCE SERIALIZER TO_INTERNAL_VALUE: %s", data)
+        data["insurance_options"] = insurance_options
+        return data
+        # data["scouts_group"] = GroupAdmin().get_group(
+        #     active_user=self.context.get("request").user, group_group_admin_id=data.pop("group_group_admin_id")
+        # )
+
+        # return data
+
+    # @swagger_serializer_method(serializer_or_field=NonMemberSerializer)
+    # def get_owner(self, obj):
+    #     # @TODO what's this ?
+    #     # if obj.owner.first_name == settings.COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME.trim():
+    #     #     return NonMemberSerializer(obj.owner).data
+    #     # return NonMemberSerializer(obj.owner).data
+    #     logger.debug("OWNER DATA: %s", obj)
+    #     return NonMemberSerializer(obj.owner).data
 
     # @swagger_serializer_method(serializer_or_field=EnumSerializer)
     # def get_insurance_options(self, obj):
@@ -62,6 +79,11 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
 
     #     return InuitsVehicleSerializer(vehicle).data
 
+    def validate_insurance_options(self, value: list):
+        if len(value) == 0:
+            raise serializers.ValidationError("At least one insurance option must be selected")
+        return value
+
     def validate_drivers(self, value):
         if len(value) < 1:
             raise serializers.ValidationError("At least one driver is required")
@@ -76,10 +98,11 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
             raise serializers.ValidationError(
                 "If 'reeds afgesloten omnium afdekken' is chosen max_coverage is required"
             )
-        elif TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM not in insurance_options and max_coverage:
-            raise serializers.ValidationError(
-                "If 'reeds afgesloten omnium afdekken' is not chosen max_coverage is not allowed to be given"
-            )
+        # @TODO logische fout in frontend ?
+        # elif TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM not in insurance_options and max_coverage:
+        #     raise serializers.ValidationError(
+        #         "If 'reeds afgesloten omnium afdekken' is not chosen max_coverage is not allowed to be given"
+        #     )
 
         if (
             TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in insurance_options

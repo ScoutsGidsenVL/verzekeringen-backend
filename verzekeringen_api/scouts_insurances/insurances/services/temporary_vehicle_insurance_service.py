@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 from django.db import transaction
@@ -18,8 +19,12 @@ from scouts_insurances.insurances.models.enums import (
 from scouts_insurances.insurances.services import BaseInsuranceService
 
 
+logger = logging.getLogger(__name__)
+
+
 class TemporaryVehicleInsuranceService:
     base_insurance_service = BaseInsuranceService()
+    member_service = MemberService()
 
     def _calculate_total_cost(self, insurance: TemporaryVehicleInsurance) -> Decimal:
         days = (insurance.end_date - insurance.start_date).days
@@ -53,8 +58,9 @@ class TemporaryVehicleInsuranceService:
         cost = round(cost, 2)
 
         # Double if you have heavy trailer
-        if insurance.vehicle.has_heavy_trailer:
-            cost *= 2
+        # @TODO
+        # if insurance.vehicle.has_heavy_trailer:
+        #     cost *= 2
 
         return cost
 
@@ -114,7 +120,7 @@ class TemporaryVehicleInsuranceService:
         # Save insurance here already so we can create non members linked to it
         # This whole function is atomic so if non members cant be created this will rollback aswell
         for driver_data in drivers:
-            driver = MemberService.non_member_create(**driver_data)
+            driver = self.member_service.non_member_create(**driver_data)
             driver_insurance = ParticipantTemporaryVehicleInsurance(
                 participant=driver, insurance=insurance, type=TemporaryVehicleParticipantType.DRIVER
             )
@@ -126,7 +132,7 @@ class TemporaryVehicleInsuranceService:
             owner["first_name"] = settings.COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME
             owner["last_name"] = owner.get("company_name")
             owner.pop("company_name")
-        owner_model = MemberService.non_member_create(**owner)
+        owner_model = self.member_service.non_member_create(**owner)
         owner_insurance = ParticipantTemporaryVehicleInsurance(
             participant=owner_model, insurance=insurance, type=TemporaryVehicleParticipantType.OWNER
         )

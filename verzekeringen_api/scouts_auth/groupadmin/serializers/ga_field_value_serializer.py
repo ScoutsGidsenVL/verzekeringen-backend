@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractScoutsValueSerializer(NonModelSerializer):
+    class Meta:
+        model = AbstractScoutsValue
+        abstract = True
+
     def to_internal_value(self, data: tuple) -> dict:
         if data is None:
             return None

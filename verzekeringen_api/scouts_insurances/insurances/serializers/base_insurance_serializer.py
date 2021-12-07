@@ -57,8 +57,6 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
             "_printed",
             "_finished",
             "_listed",
-            "_start_date",
-            "_end_date",
             "payment_date",
         ]
 
@@ -68,11 +66,12 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(serializer_or_field=AbstractScoutsGroupSerializer)
     def get_scouts_group(self, obj) -> AbstractScoutsGroup:
+        logger.debug("SCOUTS_GROUP OBJ BASE: %s", obj)
         return AbstractScoutsGroupSerializer(obj).data
 
     @swagger_serializer_method(serializer_or_field=InsuranceCostSerializer)
     def get_total_cost(self, obj: BaseInsurance) -> Decimal:
-        return InsuranceCostSerializer(obj.total_cost).data
+        return obj.total_cost
 
     def validate(self, data: dict) -> dict:
         start_date = data.get("start_date", None)
@@ -87,7 +86,7 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
         group_admin_id = data.get("group_admin_id", None)
         if not scouts_group and not group_admin_id:
             raise ValidationError(
-                "An insurance needs either a AbstractScoutsGroup instance or the group_admin_id of a scouts group, both are None."
+                "An insurance needs either an AbstractScoutsGroup instance or the group_admin_id of a scouts group, both are None."
             )
 
         return super().validate(data)

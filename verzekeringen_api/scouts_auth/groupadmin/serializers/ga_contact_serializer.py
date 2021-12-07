@@ -10,6 +10,10 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractScoutsContactSerializer(NonModelSerializer):
+    class Meta:
+        model = AbstractScoutsContact
+        abstract = True
+
     def to_internal_value(self, data: dict) -> dict:
         if data is None:
             return None
