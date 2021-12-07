@@ -13,6 +13,7 @@ class InuitsClaimVictim(InuitsPerson):
     legal_representative = OptionalCharField(max_length=128)
     group_admin_id = OptionalCharField(max_length=64)
     membership_number = OptionalCharField(max_length=64)
+    # @TODO should be forked: InuitsClaimVictimMember and InuitsClaimVictimNonMember
     non_member = models.ForeignKey(
         InuitsNonMember,
         null=True,
