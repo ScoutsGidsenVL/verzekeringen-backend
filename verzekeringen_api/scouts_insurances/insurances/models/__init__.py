@@ -8,6 +8,7 @@ from .event_insurance import EventInsurance
 from .temporary_insurance import TemporaryInsurance
 from .non_member_temporary_insurance import NonMemberTemporaryInsurance
 from .vehicle_related_insurance import VehicleRelatedInsurance
+from .vehicle_with_chassis_related_insurance import VehicleWithChassisRelatedInsurance
 from .travel_assistance_insurance import TravelAssistanceInsurance
 from .participant_travel_assistance_insurance import ParticipantTravelAssistanceInsurance
 from .temporary_vehicle_insurance import TemporaryVehicleInsurance

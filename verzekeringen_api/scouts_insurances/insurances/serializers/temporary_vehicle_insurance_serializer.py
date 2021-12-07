@@ -23,11 +23,11 @@ logger = logging.getLogger(__name__)
 
 
 class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
+    vehicle = VehicleSerializer()
     owner = NonMemberSerializer()
     drivers = NonMemberSerializer(many=True)
     insurance_options = TemporaryVehicleInsuranceOptionSerializerField()
     max_coverage = TemporaryVehicleInsuranceCoverageOptionSerializerField(required=False)
-    vehicle = VehicleSerializer()
 
     class Meta:
         model = TemporaryVehicleInsurance
@@ -47,8 +47,9 @@ class TemporaryVehicleInsuranceSerializer(BaseInsuranceSerializer):
     def to_representation(self, obj: TemporaryVehicleInsurance) -> dict:
         data = super().to_representation(obj)
 
-        max_coverage = TemporaryVehicleInsuranceCoverageOption.from_choice(obj.max_coverage)
-        data["max_coverage"] = EnumSerializer((max_coverage[0], max_coverage[1])).data
+        if obj.max_coverage:
+            max_coverage = TemporaryVehicleInsuranceCoverageOption.from_choice(obj.max_coverage)
+            data["max_coverage"] = EnumSerializer((max_coverage[0], max_coverage[1])).data
 
         return data
 

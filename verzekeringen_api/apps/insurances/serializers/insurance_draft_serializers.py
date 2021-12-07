@@ -15,10 +15,16 @@ class InsuranceDraftSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        serializer = InsuranceTypeSerializer(data=InsuranceType.objects.get(pk=int(data.get("insurance_type"))))
-        serializer.is_valid(raise_exception=False)
+        serializer = InsuranceTypeSerializer(InsuranceType.objects.get(pk=int(data.get("insurance_type"))))
 
-        data["insurance_type"] = serializer.validated_data
+        data["insurance_type"] = serializer.data
         data = super().to_internal_value(data)
+
+        return data
+
+    def to_representation(self, obj: InsuranceDraft) -> dict:
+        data = super().to_representation(obj)
+
+        data["insurance_type"] = data.pop("insurance_type").get("id")
 
         return data

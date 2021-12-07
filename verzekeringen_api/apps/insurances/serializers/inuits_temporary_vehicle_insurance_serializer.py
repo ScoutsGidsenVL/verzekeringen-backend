@@ -1,5 +1,3 @@
-from apps.equipment.serializers import InuitsVehicleSerializer
-
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.serializers import TemporaryVehicleInsuranceSerializer
 

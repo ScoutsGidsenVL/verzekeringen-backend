@@ -16,7 +16,7 @@ from scouts_auth.inuits.models.fields import (
 )
 
 
-class VehicleRelatedInsurance(models.Model):
+class VehicleWithChassisRelatedInsurance(models.Model):
 
     _vehicle_type = OptionalCharField(
         db_column="autotype",
@@ -27,6 +27,7 @@ class VehicleRelatedInsurance(models.Model):
     _vehicle_brand = OptionalCharField(db_column="automerk", max_length=15)
     _vehicle_license_plate = OptionalCharField(db_column="autokenteken", max_length=10)
     _vehicle_construction_year = OptionalIntegerField(db_column="autobouwjaar", validators=[MinValueValidator(1900)])
+    _vehicle_chassis_number = RequiredCharField(db_column="autochassis", max_length=20)
     _vehicle_trailer = DefaultCharField(
         db_column="aanhangwagen",
         choices=VehicleTrailerOption.choices,
@@ -64,6 +65,7 @@ class VehicleRelatedInsurance(models.Model):
             brand=self._vehicle_brand,
             license_plate=self._vehicle_license_plate,
             construction_year=self._vehicle_construction_year,
+            chassis_number=self._vehicle_chassis_number,
             trailer=self._vehicle_trailer,
         )
 
@@ -73,6 +75,7 @@ class VehicleRelatedInsurance(models.Model):
         self._vehicle_brand = value.brand
         self._vehicle_license_plate = value.license_plate
         self._vehicle_construction_year = value.construction_year
+        self._vehicle_chassis_number = value.chassis_number
         self._vehicle_trailer = value.trailer
 
     def clean_construction_year(self, value):

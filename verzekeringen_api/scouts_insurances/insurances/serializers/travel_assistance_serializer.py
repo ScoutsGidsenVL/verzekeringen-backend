@@ -14,18 +14,30 @@ logger = logging.getLogger(__name__)
 
 
 class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
+    vehicle = VehicleSerializer()
     participants = NonMemberSerializer(many=True)
     country = serializers.PrimaryKeyRelatedField(
         queryset=Country.objects.by_insurance_type_id(InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE),
         required=False,
     )
-    vehicle = VehicleSerializer()
 
     class Meta:
         model = TravelAssistanceInsurance
         fields = BaseInsuranceFields + ["country", "participants", "vehicle", "group_admin_id", "scouts_group"]
 
-    def validate_participants(self, value):
-        if len(value) < 1:
+    def to_internal_value(self, data: dict) -> dict:
+        vehicle_serializer = VehicleSerializer(data=data.pop("vehicle"))
+        vehicle_serializer.is_valid(raise_exception=True)
+
+        data = super().to_internal_value(data)
+
+        data["vehicle"] = vehicle_serializer.validated_data
+
+        return data
+
+    def validate(self, data: dict) -> dict:
+        participants = data.get("participants", [])
+        if len(participants) < 1:
             raise serializers.ValidationError("At least one participant is required")
-        return value
+
+        return data

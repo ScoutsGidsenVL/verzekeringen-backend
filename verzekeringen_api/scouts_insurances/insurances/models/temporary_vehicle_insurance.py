@@ -1,7 +1,7 @@
 from django.db import models
 
 from scouts_insurances.people.models import NonMember
-from scouts_insurances.insurances.models import BaseInsurance, VehicleRelatedInsurance
+from scouts_insurances.insurances.models import BaseInsurance, VehicleWithChassisRelatedInsurance
 from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
     TemporaryVehicleInsuranceOption,
@@ -9,7 +9,7 @@ from scouts_insurances.insurances.models.enums import (
 )
 
 
-class TemporaryVehicleInsurance(VehicleRelatedInsurance, BaseInsurance):
+class TemporaryVehicleInsurance(VehicleWithChassisRelatedInsurance, BaseInsurance):
 
     insurance_parent = models.OneToOneField(
         BaseInsurance,
