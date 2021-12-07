@@ -15,10 +15,10 @@ class InsuranceDraftSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_internal_value(self, data: dict) -> dict:
-        data["insurance_type"] = InsuranceTypeSerializer(
-            InsuranceType.objects.get(pk=int(data.get("insurance_type")))
-        ).data
+        serializer = InsuranceTypeSerializer(data=InsuranceType.objects.get(pk=int(data.get("insurance_type"))))
+        serializer.is_valid(raise_exception=False)
 
+        data["insurance_type"] = serializer.validated_data
         data = super().to_internal_value(data)
 
         return data
