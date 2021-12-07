@@ -7,10 +7,10 @@ from rest_framework import serializers
 from apps.people.serializers import InuitsClaimVictimSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
-from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer, AbstractScoutsMemberSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 
-from scouts_auth.inuits.serializers import DateTimeTimezoneSerializerField, PermissionRequiredField
+from scouts_auth.inuits.serializers import PermissionRequiredField
 
 
 logger = logging.getLogger(__name__)
@@ -111,6 +111,17 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsuranceClaim
         exclude = ["declarant"]
+
+    def to_representation(self, obj: InsuranceClaim) -> dict:
+        data = super().to_representation(obj)
+
+        data["group"] = AbstractScoutsGroupSerializer(
+            GroupAdmin().get_group(
+                active_user=self.context.get("request").user, group_group_admin_id=data["group_group_admin_id"]
+            )
+        ).data
+
+        return data
 
     def get_activity_type(self, obj: InsuranceClaim) -> str:
         return obj.activity_type

@@ -1,6 +1,5 @@
 from django.db import models
 
-from scouts_insurances.equipment.models import VehicleTrailerOption, VehicleType
 from scouts_insurances.people.models import NonMember
 from scouts_insurances.insurances.models import BaseInsurance, VehicleRelatedInsurance
 from scouts_insurances.insurances.models.enums import (

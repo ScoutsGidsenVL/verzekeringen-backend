@@ -13,21 +13,17 @@ from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseIn
 logger = logging.getLogger(__name__)
 
 
-class TravelAssistanceInsuranceSerializer(VehicleSerializer, BaseInsuranceSerializer):
+class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
     participants = NonMemberSerializer(many=True)
     country = serializers.PrimaryKeyRelatedField(
         queryset=Country.objects.by_insurance_type_id(InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE),
         required=False,
     )
+    vehicle = VehicleSerializer()
 
     class Meta:
         model = TravelAssistanceInsurance
         fields = BaseInsuranceFields + ["country", "participants", "vehicle", "group_admin_id", "scouts_group"]
-
-    def to_internal_value(self, data: dict) -> dict:
-        data = {**data, **VehicleSerializer(data=data.pop("vehicle")).data}
-
-        return data
 
     def validate_participants(self, value):
         if len(value) < 1:
