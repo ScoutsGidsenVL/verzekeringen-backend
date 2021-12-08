@@ -7,3 +7,10 @@ class EventSize(models.IntegerChoices):
     THOUSANDFIVEHUNDRED = 3, "1000-1500 (163,88 eur/dag)"
     TWOTHOUSAND = 4, "1500-2500 (229,43 eur/dag)"
     TWOTHOUSANDFIVEHUNDRED = 5, "meer dan 2500 (in overleg met Ethias)"
+
+    @staticmethod
+    def from_choice(choice: str):
+        for option in EventSize.choices:
+            if option[0] == choice:
+                return option
+        return None
