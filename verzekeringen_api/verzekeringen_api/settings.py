@@ -120,6 +120,8 @@ logging.info("LOGGING_LEVEL_ROOT: %s", LOGGING_LEVEL_ROOT)
 
 
 def correct_url(prefix, url):
+    if not prefix.endswith("/"):
+        prefix = prefix + "/"
     if not url.startswith("http"):
         return prefix + url
     return url
@@ -267,7 +269,7 @@ AUTHENTICATION_BACKENDS = {
 }
 OIDC_OP_ISSUER = env.str("OIDC_OP_ISSUER")
 OIDC_OP_AUTHORIZATION_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_AUTHORIZATION_ENDPOINT"))
-OIDC_OP_TOKEN_ENDPOINT = OIDC_OP_ISSUER + env.str("OIDC_OP_TOKEN_ENDPOINT")
+OIDC_OP_TOKEN_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_TOKEN_ENDPOINT"))
 OIDC_OP_USER_ENDPOINT = correct_url(OIDC_OP_ISSUER, env.str("OIDC_OP_USER_ENDPOINT"))
 OIDC_RP_CLIENT_ID = env.str("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env.str("OIDC_RP_CLIENT_SECRET")
