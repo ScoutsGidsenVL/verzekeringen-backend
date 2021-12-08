@@ -1,5 +1,7 @@
 from django.db import models
 
+from rest_framework import serializers
+
 from scouts_insurances.people.models import NonMember
 from scouts_insurances.insurances.models import BaseInsurance, VehicleRelatedInsurance
 
@@ -24,6 +26,21 @@ class TravelAssistanceInsurance(VehicleRelatedInsurance, BaseInsurance):
     class Meta:
         db_table = "vrzktypeethiasassistance"
         managed = False
+
+    def clean(self):
+        super().clean()
+        if not (
+            self._vehicle_type
+            and self._vehicle_brand
+            and self._vehicle_license_plate
+            and self._vehicle_construction_year
+        ) and not (
+            not self._vehicle_type
+            and not self._vehicle_brand
+            and not self._vehicle_license_plate
+            and not self._vehicle_construction_year
+        ):
+            raise serializers.ValidationError("If one vehicle field given all vehicle fields need to be given")
 
     # @property
     # def country(self):

@@ -103,6 +103,8 @@ class TravelAssistanceInsuranceService:
         )
         if vehicle:
             insurance.vehicle = vehicle
+        else:
+            insurance.vehicle = None
         insurance.total_cost = self._calculate_total_cost(insurance, len(participants))
         insurance.full_clean()
         insurance.save()
