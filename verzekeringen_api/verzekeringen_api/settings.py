@@ -85,11 +85,6 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "formatter": "verbose",
         },
-        "file": {
-            "class": "logging.FileHandler",
-            "level": LOGGING_LEVEL,
-            "filename": "verzekeringen-api.debug.log",
-        },
     },
     "root": {
         "handlers": ["console"],
