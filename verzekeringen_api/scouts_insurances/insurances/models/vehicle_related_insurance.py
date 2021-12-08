@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from rest_framework import serializers
 
 from scouts_insurances.equipment.models import Vehicle
@@ -11,7 +11,6 @@ from scouts_insurances.equipment.models.enums import VehicleType, VehicleTrailer
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,
     DefaultCharField,
-    RequiredCharField,
     OptionalIntegerField,
 )
 
@@ -29,9 +28,7 @@ class VehicleRelatedInsurance(models.Model):
     _vehicle_construction_year = OptionalIntegerField(db_column="autobouwjaar", validators=[MinValueValidator(1900)])
     _vehicle_trailer = DefaultCharField(
         db_column="aanhangwagen",
-        choices=VehicleTrailerOption.choices,
-        max_length=1,
-        default=Vehicle.DEFAULT_VEHICLE_TRAILER_OPTION,
+        validators=[MinValueValidator(0), MaxValueValidator(1)],
     )
 
     class Meta:

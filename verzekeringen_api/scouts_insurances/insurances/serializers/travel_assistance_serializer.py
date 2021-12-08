@@ -33,6 +33,7 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
         if vehicle:
             vehicle_serializer = VehicleSerializer(data=vehicle)
             vehicle_serializer.is_valid(raise_exception=True)
+
             data["vehicle"] = vehicle_serializer.validated_data
 
         return data
