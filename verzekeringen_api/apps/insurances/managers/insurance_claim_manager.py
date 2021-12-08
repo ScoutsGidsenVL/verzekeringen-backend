@@ -6,7 +6,7 @@ class InsuranceClaimQuerySet(models.QuerySet):
     def allowed(self, user: settings.AUTH_USER_MODEL):
         # Administrators can see all claims
         if user.has_role_administrator():
-            return self.qs
+            return self
 
         # Section and group leaders can see all claims, but only for authorized groups
         user_group_ids = [group.group_admin_id for group in user.scouts_groups]
