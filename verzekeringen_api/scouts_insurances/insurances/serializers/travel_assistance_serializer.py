@@ -26,12 +26,14 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
         fields = BaseInsuranceFields + ["country", "participants", "vehicle", "group_admin_id", "scouts_group"]
 
     def to_internal_value(self, data: dict) -> dict:
-        vehicle_serializer = VehicleSerializer(data=data.pop("vehicle"))
-        vehicle_serializer.is_valid(raise_exception=True)
+        vehicle = data.pop("vehicle", None)
 
         data = super().to_internal_value(data)
 
-        data["vehicle"] = vehicle_serializer.validated_data
+        if vehicle:
+            vehicle_serializer = VehicleSerializer(data=vehicle)
+            vehicle_serializer.is_valid(raise_exception=True)
+            data["vehicle"] = vehicle_serializer.validated_data
 
         return data
 
