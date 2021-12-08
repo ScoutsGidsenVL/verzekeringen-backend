@@ -1,5 +1,6 @@
 import logging
 from decimal import Decimal
+from re import I
 
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
@@ -14,6 +15,7 @@ from scouts_insurances.insurances.serializers import (
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.serializers import DatetypeAndTimezoneAwareDateTimeSerializerField
 
 
@@ -59,6 +61,18 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
             "_listed",
             "payment_date",
         ]
+
+    def to_internal_value(self, data: dict) -> dict:
+        logger.debug("BASE INSURANCE DATA: %s", data)
+        group_admin_id = data.pop("group", data.pop("group_group_admin_id", None))
+
+        data = super().to_internal_value(data)
+
+        data["scouts_group"] = GroupAdmin().get_group(
+            active_user=self.context.get("request").user, group_group_admin_id=group_admin_id
+        )
+
+        return data
 
     @swagger_serializer_method(serializer_or_field=status)
     def get_status(self, obj: BaseInsurance) -> dict:

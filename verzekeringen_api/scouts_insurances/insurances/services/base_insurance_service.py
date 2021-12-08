@@ -41,11 +41,7 @@ class BaseInsuranceService:
     ) -> dict:
         # validate group
         group_object = next(
-            (
-                scouts_group
-                for scouts_group in created_by.scouts_groups
-                if scouts_group.group_admin_id == scouts_group.group_admin_id
-            ),
+            (group for group in created_by.scouts_groups if group.group_admin_id == scouts_group.group_admin_id),
             None,
         )
         if not group_object:
@@ -54,7 +50,7 @@ class BaseInsuranceService:
         fields = {
             "status": InsuranceStatus.NEW,
             "type": type,
-            "scouts_group": group_object,
+            "scouts_group": scouts_group,
             "start_date": start_date,
             "end_date": end_date,
             "responsible_member": member,

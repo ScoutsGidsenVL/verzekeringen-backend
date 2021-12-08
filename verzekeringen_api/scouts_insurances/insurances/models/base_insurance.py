@@ -1,4 +1,4 @@
-from datetime import datetime
+import logging
 
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -12,6 +12,9 @@ from scouts_insurances.insurances.managers import BaseInsuranceManager
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsAddress
 from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
 from scouts_auth.inuits.utils import BooleanParser
+
+
+logger = logging.getLogger(__name__)
 
 
 class BaseInsurance(models.Model):
@@ -62,6 +65,7 @@ class BaseInsurance(models.Model):
     # Special group setter that accepts group class
     @scouts_group.setter
     def scouts_group(self, value: AbstractScoutsGroup):
+        logger.debug("SETTING SCOUTS GROUP: %s", value.group_admin_id)
         self._group_group_admin_id = value.group_admin_id
         self._group_name = value.name
         self._group_location = value.addresses[0].city

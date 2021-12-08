@@ -3,10 +3,11 @@ base_insurance_fields = [
     "id",
     # _status               number          optional
     "status",
-    # invoice_number        number          optional
     # don't serialize invoice_number to clients
-    # invoice_date          date            optional
+    # invoice_number        number          optional
     # don't serialize invoice_date to clients
+    # invoice_date          date            optional
+    # getter and setter on BaseInsurance for scouts_group
     # _group_group_admin_id max_length=6    required
     # _group_name           max_length=50   required
     # _group_location       max_length=50   required
