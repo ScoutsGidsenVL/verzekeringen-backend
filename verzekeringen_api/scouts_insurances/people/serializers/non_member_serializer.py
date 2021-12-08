@@ -18,7 +18,7 @@ class NonMemberSerializer(serializers.ModelSerializer):
     # city          max_length=40       optional
     # comment       max_length=500      optional
 
-    birth_date = DatetypeAwareDateSerializerField()
+    birth_date = DatetypeAwareDateSerializerField(required=False)
 
     class Meta:
         model = NonMember
