@@ -1,14 +1,4 @@
-# from django.db import models
-# from django.core.validators import MinValueValidator
-
 from scouts_insurances.equipment.models.enums import VehicleType, VehicleTrailerOption
-
-# from scouts_auth.inuits.models.fields import (
-#     OptionalCharField,
-#     DefaultCharField,
-#     RequiredCharField,
-#     OptionalIntegerField,
-# )
 
 
 class Vehicle:

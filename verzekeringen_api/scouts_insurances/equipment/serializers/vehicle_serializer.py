@@ -42,10 +42,14 @@ class VehicleSerializer(serializers.Serializer):
     def to_representation(self, obj: Vehicle) -> dict:
         data = super().to_representation(obj)
 
+        logger.debug("VEHICLE OBJECT TO REPRESENT: %s", obj)
+
         type = VehicleType.from_choice(obj.type)
+        logger.debug("VEHICLE TYPE: %s", type)
         data["type"] = EnumSerializer((type[0], type[1])).data
 
         trailer = VehicleTrailerOption.from_choice(obj.trailer)
+        logger.debug("VEHICLE TRAILER: %s", trailer)
         data["trailer"] = EnumSerializer((trailer[0], trailer[1])).data
 
         return data
