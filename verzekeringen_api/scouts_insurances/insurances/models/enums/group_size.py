@@ -11,3 +11,11 @@ class GroupSize(models.IntegerChoices):
     THREEHUNDREDFIFTY = 7, "301-350"
     FOURHUNDRED = 8, "351-400"
     FOURHUNDREDFIFTY = 9, "401-450"
+
+    @staticmethod
+    def from_choice(choice: str):
+        choice = int(choice)
+        for option in GroupSize.choices:
+            if option[0] == choice:
+                return option
+        return None
