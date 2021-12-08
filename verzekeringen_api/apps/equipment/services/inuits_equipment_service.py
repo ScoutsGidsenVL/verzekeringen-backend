@@ -3,10 +3,11 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.db import transaction
-from django.core.exceptions import ValidationError
 
 from apps.equipment.models import InuitsEquipment
 from apps.people.models import InuitsNonMember
+
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
 
 
 logger = logging.getLogger(__name__)
@@ -20,27 +21,17 @@ class InuitsEquipmentService:
         total_value: Decimal,
         created_by: settings.AUTH_USER_MODEL,
         nature: str = None,
-        owner_group_group_admin_id: str = None,
+        owner_group: AbstractScoutsGroup = None,
         owner_non_member: InuitsNonMember = None,
-        owner_member_group_admin_id: str = None,
+        owner_member: AbstractScoutsMember = None,
     ) -> InuitsEquipment:
-        # validate group
-        if owner_group_group_admin_id and owner_group_group_admin_id not in [
-            group.group_admin_id for group in created_by.scouts_groups
-        ]:
-            raise ValidationError(
-                "Given group {} is not a valid group of user {}".format(
-                    owner_group_group_admin_id, created_by.username
-                )
-            )
-
         equipment = InuitsEquipment(
             nature=nature,
             description=description,
             total_value=total_value,
-            owner_group_group_admin_id=owner_group_group_admin_id,
+            owner_group=owner_group.group_admin_id if owner_group else None,
             owner_non_member=owner_non_member,
-            owner_member_group_admin_id=owner_member_group_admin_id,
+            owner_member=owner_member.group_admin_id if owner_member else None,
         )
 
         equipment.full_clean()

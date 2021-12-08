@@ -37,14 +37,14 @@ class InuitsEquipment(AuditedBaseModel):
         on_delete=models.CASCADE,
     )
     # Save group admin id of owner member, all detailed info will be gotten from group admin
-    owner_member_group_admin_id = OptionalCharField(max_length=255, null=True)
+    owner_member = OptionalCharField(max_length=255, null=True)
     # The group admin id of the group to which the equipment belongs
-    owner_group_group_admin_id = OptionalCharField(max_length=6, null=True)
+    owner_group = OptionalCharField(max_length=6, null=True)
 
     def clean(self):
-        if self.owner_member_group_admin_id and self.nature:
+        if self.owner_member and self.nature:
             raise ValidationError("If owner member then nature can not be given")
-        if self.owner_non_member and self.owner_member_group_admin_id:
+        if self.owner_non_member and self.owner_member:
             raise ValidationError("There needs to be only one owner")
-        if not self.owner_non_member and not self.owner_member_group_admin_id and not self.owner_group_group_admin_id:
+        if not self.owner_non_member and not self.owner_member and not self.owner_group:
             raise ValidationError("A piece of equipment needs to have an owner")
