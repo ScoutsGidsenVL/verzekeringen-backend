@@ -70,12 +70,16 @@ class InuitsVehicleViewSet(viewsets.GenericViewSet):
     def partial_update(self, request, pk=None):
         vehicle = self.get_object()
 
+        logger.debug("UPDATE REQUEST DATA: %s", request.data)
         serializer = InuitsVehicleSerializer(
             data=request.data, instance=vehicle, context={"request": request}, partial=True
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_vehicle = self.service.inuits_vehicle_update(vehicle=vehicle, **serializer.validated_data)
+        updated_vehicle: InuitsVehicle = serializer.validated_data
+        logger.debug("UPDATE VALIDATED DATA: %s", updated_vehicle)
+
+        updated_vehicle = self.service.inuits_vehicle_update(vehicle=vehicle, updated_vehicle=updated_vehicle)
 
         output_serializer = InuitsVehicleSerializer(updated_vehicle)
 

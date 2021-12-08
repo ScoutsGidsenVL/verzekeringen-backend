@@ -38,13 +38,13 @@ class InuitsVehicleService:
         return inuits_vehicle
 
     @transaction.atomic
-    def inuits_vehicle_update(self, *, vehicle: InuitsVehicle, **fields) -> InuitsVehicle:
-        vehicle.type = fields.get("type", vehicle.type)
-        vehicle.brand = fields.get("brand", vehicle.brand)
-        vehicle.license_plate = fields.get("license_plate", vehicle.license_plate)
-        vehicle.construction_year = fields.get("construction_year", vehicle.construction_year)
-        vehicle.chassis_number = fields.get("chassis_number", vehicle.chassis_number)
-        vehicle.trailer = fields.get("trailer", vehicle.trailer)
+    def inuits_vehicle_update(self, *, vehicle: InuitsVehicle, updated_vehicle: InuitsVehicle) -> InuitsVehicle:
+        vehicle.type = updated_vehicle.type
+        vehicle.brand = updated_vehicle.brand
+        vehicle.license_plate = updated_vehicle.license_plate
+        vehicle.construction_year = updated_vehicle.construction_year
+        vehicle.chassis_number = updated_vehicle.chassis_number
+        vehicle.trailer = updated_vehicle.trailer
 
         vehicle.full_clean()
         vehicle.save()

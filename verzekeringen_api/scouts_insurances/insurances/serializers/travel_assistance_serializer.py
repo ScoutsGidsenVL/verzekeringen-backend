@@ -34,7 +34,11 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
             vehicle_serializer = VehicleSerializer(data=vehicle)
             vehicle_serializer.is_valid(raise_exception=True)
 
-            data["vehicle"] = vehicle_serializer.validated_data
+            # Travel assistance vehicles don't care for the type of trailer
+            serialized_vehicle = vehicle_serializer.validated_data
+            serialized_vehicle.trailer = 1 if serialized_vehicle.trailer != 0 else 0
+
+            data["vehicle"] = serialized_vehicle
 
         return data
 
