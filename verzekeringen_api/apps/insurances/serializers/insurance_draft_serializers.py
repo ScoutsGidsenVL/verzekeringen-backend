@@ -29,6 +29,6 @@ class InsuranceDraftSerializer(serializers.ModelSerializer):
     def to_representation(self, obj: InsuranceDraft) -> dict:
         data = super().to_representation(obj)
 
-        data["insurance_type"] = data.pop("insurance_type").get("id")
+        data["insurance_type"] = data.pop("insurance_type")
 
         return data
