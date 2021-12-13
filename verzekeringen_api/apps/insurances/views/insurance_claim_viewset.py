@@ -20,7 +20,7 @@ from apps.insurances.services import InsuranceClaimService
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
 from scouts_auth.inuits.utils import MultipartJsonParser
-from scouts_auth.inuits.aws import S3StorageService
+from scouts_auth.inuits.files import StorageService
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     # Filters on the year of the accident
     filterset_class = InsuranceClaimFilter
     service = InsuranceClaimService()
-    storage_service = S3StorageService()
+    storage_service = StorageService()
 
     serializer_class = InsuranceClaimSerializer
     parser_classes = [MultipartJsonParser, parsers.JSONParser]

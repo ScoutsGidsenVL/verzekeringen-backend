@@ -132,9 +132,10 @@ def correct_url(prefix, url):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", False)
-IS_ACCEPTANCE = env.bool("IS_ACCEPTANCE", False)
-
+# DEBUG = env.bool("DEBUG", False)
+# IS_ACCEPTANCE = env.bool("IS_ACCEPTANCE", False)
+DEBUG = True
+IS_ACCEPTANCE = False
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = env.str("BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -294,17 +295,19 @@ GROUP_ADMIN_FUNCTIONS_ENDPOINT = GROUP_ADMIN_BASE_URL + "/functie"
 BELGIAN_CITY_SEARCH_ENDPOINT = GROUP_ADMIN_BASE_URL + "/gis/gemeente"
 COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 
-
-# Storages/S3
-DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
-FILE_UPLOAD_ALLOWED_EXTENSIONS = env.list("FILE_UPLOAD_ALLOWED_EXTENSIONS")
-OVERWRITE_EXISTING_FILE = env.bool("OVERWRITE_EXISTING_FILE")
-
-USE_S3_STORAGE = env.bool("USE_S3_STORAGE", False) == True
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = "static/"
 STATIC_ROOT = env.str("STATIC_ROOT")
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
+FILE_UPLOAD_ALLOWED_EXTENSIONS = env.list("FILE_UPLOAD_ALLOWED_EXTENSIONS")
+OVERWRITE_EXISTING_FILE = env.bool("OVERWRITE_EXISTING_FILE")
+
+# Storages/S3
+USE_S3_STORAGE = env.bool("USE_S3_STORAGE", False) == True
 if USE_S3_STORAGE:
     AWS_ACCESS_KEY_ID = env.str("S3_ACCESS_KEY")
     AWS_SECRET_ACCESS_KEY = env.str("S3_ACCESS_SECRET")
@@ -313,13 +316,6 @@ if USE_S3_STORAGE:
     AWS_DEFAULT_ACL = "public-read"
     AWS_S3_FILE_OVERWRITE = OVERWRITE_EXISTING_FILE
     AWS_S3_SIGNATURE_VERSION = "s3v4"
-else:
-    # Static files (CSS, JavaScript, Images)
-    # https://docs.djangoproject.com/en/3.2/howto/static-files/
-    STATIC_URL = "static/"
-    STATIC_ROOT = env.str("STATIC_ROOT")
-    MEDIA_URL = "media/"
-    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # EMAIL RESOURCES
 RESOURCES_PATH = env.str("RESOURCES_PATH")
@@ -357,8 +353,12 @@ def setup_mail():
     global EMAIL_INSURER_ADDRESS
 
     if USE_SEND_IN_BLUE:
+        API_KEY = env.str("SEND_IN_BLUE_API_KEY")
+        if DEBUG:
+            API_KEY = env.str("SEND_IN_BLUE_API_KEY_DEBUG")
+
         EMAIL_BACKEND = env.str("SEND_IN_BLUE_BACKEND")
-        ANYMAIL["SENDINBLUE_API_KEY"] = env.str("SEND_IN_BLUE_API_KEY")
+        ANYMAIL["SENDINBLUE_API_KEY"] = API_KEY
         ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SEND_IN_BLUE_TEMPLATE_ID")
         EMAIL_TEMPLATE = ANYMAIL["SENDINBLUE_TEMPLATE_ID"]
     else:
