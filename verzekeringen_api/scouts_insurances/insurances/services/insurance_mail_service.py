@@ -88,8 +88,9 @@ class InsuranceMailService(EmailService):
         add_attachments: bool = False,
     ):
         dictionary["title_mail"] = subject
-        body = self._prepare_email_body(template_path, dictionary)
-        body = TextUtils.compose_html_email(self.template_path_start, body, self.template_path_end)
+        body = None
+        html_body = self._prepare_email_body(template_path, dictionary)
+        html_body = TextUtils.compose_html_email(self.template_path_start, html_body, self.template_path_end)
 
         if not reply_to:
             reply_to = self.from_email
@@ -97,12 +98,14 @@ class InsuranceMailService(EmailService):
         mail = Email(
             subject=subject,
             body=body,
+            html_body=html_body,
             from_email=self.from_email,
             to=to,
             cc=cc,
             bcc=bcc,
             reply_to=reply_to,
             template_id=template_id,
+            is_html=True,
         )
 
         # if add_attachments:
