@@ -37,10 +37,12 @@ class InsuranceSignalHandler:
 
         service = ScoutsAuthorizationService()
 
-        logger.debug("SIGNAL handling for 'authenticated' -> Loading additional user groups")
-        user = service.load_user_scouts_groups(user)
-        logger.debug("SIGNAL handling for 'authenticated' -> Loading scouts functions")
-        user = service.load_user_functions(user)
+        if not user.fully_loaded:
+            logger.debug("SIGNAL handling for 'authenticated' -> Loading additional user groups")
+            user = service.load_user_scouts_groups(user)
+            logger.debug("SIGNAL handling for 'authenticated' -> Loading scouts functions")
+            user = service.load_user_functions(user)
+        user.fully_loaded = True
 
         logger.debug(user.to_descriptive_string())
 

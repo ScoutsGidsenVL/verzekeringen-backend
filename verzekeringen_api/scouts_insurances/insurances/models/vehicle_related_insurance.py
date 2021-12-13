@@ -3,20 +3,20 @@ from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
-from rest_framework import serializers
 
 from scouts_insurances.equipment.models import Vehicle
 from scouts_insurances.equipment.models.enums import VehicleType, VehicleTrailerOption
 
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,
+    DefaultCharField,
     OptionalIntegerField,
 )
 
 
 class VehicleRelatedInsurance(models.Model):
 
-    _vehicle_type = OptionalCharField(
+    _vehicle_type = DefaultCharField(
         db_column="autotype",
         choices=VehicleType.choices,
         default=Vehicle.DEFAULT_VEHICLE_TYPE,

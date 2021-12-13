@@ -1,8 +1,8 @@
 import django_filters
 from django.db.models.functions import Concat
-from django.db.models import CharField, Value, Q
+from django.db.models import Q
 
-from apps.equipment.models import InuitsVehicle, InuitsEquipment
+from apps.equipment.models import InuitsVehicle
 
 
 class InuitsVehicleFilter(django_filters.FilterSet):
@@ -23,14 +23,3 @@ class InuitsVehicleFilter(django_filters.FilterSet):
                 | Q(chassis_number__icontains=value)
             )
         )
-
-
-class InuitsEquipmentFilter(django_filters.FilterSet):
-    term = django_filters.CharFilter(method="search_term_filter")
-
-    class Meta:
-        model = InuitsEquipment
-        fields = []
-
-    def search_term_filter(self, queryset, name, value):
-        return queryset.filter(Q(nature__icontains=value) | Q(description__icontains=value))

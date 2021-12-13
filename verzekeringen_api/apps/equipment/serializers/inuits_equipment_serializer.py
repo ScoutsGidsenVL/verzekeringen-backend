@@ -4,11 +4,13 @@ from rest_framework import serializers
 
 from apps.equipment.models import InuitsEquipment
 from apps.people.models import InuitsNonMember
-from apps.people.serializers import InuitsNonMemberSerializer
+from apps.people.serializers.fields import InuitsNonMemberSerializerField
 
-from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer, AbstractScoutsGroupSerializer
-from scouts_auth.groupadmin.services import GroupAdmin
-from scouts_auth.inuits.serializers.fields import OptionalCharField
+from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
+from scouts_auth.groupadmin.serializers.fields import (
+    AbstractScoutsMemberSerializerField,
+    AbstractScoutsGroupSerializerField,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -25,10 +27,10 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
     # owner_group_group_admin_id    group admin id of owner group
 
     # owner_non_member = InuitsEquipmentNonMemberRelatedField(required=False, allow_null=True)
-    owner_non_member = InuitsNonMemberSerializer(required=False, allow_null=True)
+    owner_non_member = InuitsNonMemberSerializerField(required=False, allow_null=True)
     # owner_non_member = serializers.SerializerMethodField()
-    owner_member = AbstractScoutsMemberSerializer(required=False, allow_null=True)
-    owner_group = AbstractScoutsGroupSerializer(required=False, allow_null=True)
+    owner_member = AbstractScoutsMemberSerializerField(required=False, allow_null=True)
+    owner_group = AbstractScoutsGroupSerializerField(required=False, allow_null=True)
 
     class Meta:
         model = InuitsEquipment
@@ -42,34 +44,7 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
             "owner_group",
         )
 
-    def to_internal_value(self, data: dict) -> dict:
-        owner_non_member = data.pop("owner_non_member", None)
-        if owner_non_member:
-            data["owner_non_member"] = InuitsNonMember.objects.get(id=owner_non_member)
-        else:
-            data["owner_non_member"] = None
-
-        owner_member = data.pop("owner_member", None)
-        if owner_member:
-            data["owner_member"] = GroupAdmin().get_member_info(
-                active_user=self.context.get("request").user, group_admin_id=owner_member
-            )
-        else:
-            data["owner_member"] = None
-
-        owner_group = data.pop("owner_group", None)
-        if owner_group:
-            data["owner_group"] = GroupAdmin().get_group(
-                active_user=self.context.get("request").user, group_group_admin_id=owner_group
-            )
-        else:
-            data["owner_group"] = None
-
-        return data
-
     def validate(self, data):
-        logger.debug("SERIALIZER VALIDATE DATA: %s", data)
-
         owner_non_member = data.get("owner_non_member", None)
         owner_member = data.get("owner_member", None)
         owner_group = data.get("owner_group", None)
@@ -83,4 +58,15 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
                 "A piece of equipment either belongs to a person or to a scouts group - Removing group as owner"
             )
             data["owner_group"] = None
+
+        if owner_member and not isinstance(owner_member, AbstractScoutsMember):
+            raise serializers.ValidationError(
+                "AbstractScoutsMember instance couldn't be loaded with the provided group admin id"
+            )
+
+        if owner_group and not isinstance(owner_group, AbstractScoutsGroup):
+            raise serializers.ValidationError(
+                "AbstractScoutsGroup instance couldn't be loaded with the provided group admin id"
+            )
+
         return data

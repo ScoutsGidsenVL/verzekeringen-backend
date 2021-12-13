@@ -339,8 +339,6 @@ STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING = env.bool("STORE_INSURANCE_CLAIM_R
 
 # EMAIL
 EMAIL_DEBUG_RECIPIENT = env.str("EMAIL_DEBUG_RECIPIENT")
-EMAIL_DEBUG_RECIPIENT = "sverholen@gmail.com"
-# EMAIL_DEBUG_RECIPIENT = "ricardo.acotore@gmail.com"
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing code
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
 def setup_mail():
