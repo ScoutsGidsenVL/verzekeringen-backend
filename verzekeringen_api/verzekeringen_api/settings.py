@@ -132,10 +132,8 @@ def correct_url(prefix, url):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env.bool("DEBUG", False)
-# IS_ACCEPTANCE = env.bool("IS_ACCEPTANCE", False)
-DEBUG = True
-IS_ACCEPTANCE = False
+DEBUG = env.bool("DEBUG", False)
+IS_ACCEPTANCE = env.bool("IS_ACCEPTANCE", True)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = env.str("BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
