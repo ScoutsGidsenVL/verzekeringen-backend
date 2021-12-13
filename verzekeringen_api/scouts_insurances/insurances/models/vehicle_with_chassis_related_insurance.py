@@ -18,7 +18,7 @@ from scouts_auth.inuits.models.fields import (
 
 class VehicleWithChassisRelatedInsurance(models.Model):
 
-    _vehicle_type = OptionalCharField(
+    _vehicle_type = DefaultCharField(
         db_column="autotype",
         choices=VehicleType.choices,
         default=Vehicle.DEFAULT_VEHICLE_TYPE,

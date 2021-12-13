@@ -5,9 +5,7 @@ from rest_framework import serializers
 from scouts_insurances.locations.serializers import CountrySerializer
 
 from scouts_insurances.equipment.serializers import EquipmentSerializer
-from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import EquipmentInsurance
-from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
 
 logger = logging.getLogger(__name__)
@@ -27,8 +25,6 @@ class EquipmentInsuranceSerializer(BaseInsuranceSerializer):
         return value
 
     def validate(self, data):
-        logger.debug("SERIALIZER VALIDATE DATA: %s", data)
-
         postal_code = data.get("postal_code", None)
         city = data.get("city", None)
         country = data.get("country", None)

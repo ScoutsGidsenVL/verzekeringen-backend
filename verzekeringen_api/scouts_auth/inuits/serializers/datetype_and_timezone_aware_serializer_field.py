@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class DatetypeAndTimezoneAwareDateTimeSerializerField(serializers.DateTimeField):
+    serialize = True
+
     def to_internal_value(self, value):
         if not value:
             return None

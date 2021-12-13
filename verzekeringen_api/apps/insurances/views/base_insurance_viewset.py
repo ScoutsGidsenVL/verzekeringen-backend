@@ -5,6 +5,10 @@ from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
 from drf_yasg2.utils import swagger_auto_schema
 
+from apps.insurances.serializers import (
+    InuitsEquipmentInsuranceSerializer,
+)
+
 from scouts_insurances.insurances.models import BaseInsurance
 from scouts_insurances.insurances.serializers import (
     BaseInsuranceSerializer,
@@ -13,7 +17,6 @@ from scouts_insurances.insurances.serializers import (
     TravelAssistanceInsuranceSerializer,
     TemporaryVehicleInsuranceSerializer,
     EventInsuranceSerializer,
-    EquipmentInsuranceSerializer,
 )
 
 
@@ -50,7 +53,7 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
                 insurance.temporary_vehicle_child, context={"request": request}
             )
         elif insurance.type.is_equipment_insurance():
-            serializer = EquipmentInsuranceSerializer(insurance.equipment_child, context={"request": request})
+            serializer = InuitsEquipmentInsuranceSerializer(insurance.equipment_child, context={"request": request})
         elif insurance.type.is_event_insurance():
             serializer = EventInsuranceSerializer(insurance.event_child, context={"request": request})
         else:

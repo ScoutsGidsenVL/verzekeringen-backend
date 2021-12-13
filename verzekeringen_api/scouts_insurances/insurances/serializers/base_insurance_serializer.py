@@ -63,7 +63,6 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
         ]
 
     def to_internal_value(self, data: dict) -> dict:
-        logger.debug("BASE INSURANCE DATA: %s", data)
         group_admin_id = data.pop("group", data.pop("group_group_admin_id", None))
 
         data = super().to_internal_value(data)

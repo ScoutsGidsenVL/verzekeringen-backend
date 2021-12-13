@@ -39,10 +39,10 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         page = self.paginate_queryset(equipment)
 
         if page is not None:
-            serializer = InuitsEquipmentSerializer(page, many=True)
+            serializer = InuitsEquipmentSerializer(page, many=True, context={"request": request})
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = InuitsEquipmentSerializer(equipment, many=True)
+            serializer = InuitsEquipmentSerializer(equipment, many=True, context={"request": request})
             return Response(serializer.data)
 
     @swagger_auto_schema(
@@ -55,10 +55,11 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         input_serializer = InuitsEquipmentSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        validated_data = input_serializer.validated_data
-        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+        logger.debug("CREATE VALIDATED DATA: %s", request.data)
 
-        created_equipment = self.service.inuits_equipment_create(**validated_data, created_by=request.user)
+        created_equipment = self.service.inuits_equipment_create(
+            **input_serializer.validated_data, created_by=request.user
+        )
 
         output_serializer = InuitsEquipmentSerializer(created_equipment, context={"request": request})
 
@@ -73,7 +74,7 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         equipment = self.get_object()
 
         serializer = InuitsEquipmentSerializer(
-            data=request.data, instance=equipment, context={"request": request}, partial=True
+            data=request.data, instance=equipment, partial=True, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
 

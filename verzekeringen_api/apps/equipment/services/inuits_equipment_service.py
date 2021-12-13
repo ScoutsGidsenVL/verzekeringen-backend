@@ -45,12 +45,8 @@ class InuitsEquipmentService:
         equipment.description = fields.get("description", equipment.description)
         equipment.total_value = fields.get("total_value", equipment.total_value)
         equipment.owner_non_member = fields.get("owner_non_member", equipment.owner_non_member)
-        equipment.owner_member_group_admin_id = fields.get(
-            "owner_member_group_admin_id", equipment.owner_member_group_admin_id
-        )
-        equipment.owner_group_group_admin_id = fields.get(
-            "owner_group_group_admin_id", equipment.owner_group_group_admin_id
-        )
+        equipment.owner_member = fields.get("owner_member", equipment.owner_member)
+        equipment.owner_group_group_admin_id = fields.get("owner_group", equipment.owner_group)
 
         equipment.full_clean()
         equipment.save()

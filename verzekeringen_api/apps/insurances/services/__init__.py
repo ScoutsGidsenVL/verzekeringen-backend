@@ -5,3 +5,4 @@ from .insurance_draft_service import InsuranceDraftService
 from .insurance_claim_report_service import InsuranceClaimReportService
 from .insurance_claim_attachment_service import InsuranceClaimAttachmentService
 from .insurance_claim_service import InsuranceClaimService
+from .inuits_equipment_insurance_service import InuitsEquipmentInsuranceService

@@ -174,6 +174,10 @@ class GroupAdmin:
         return json_data
 
     def get_group(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> AbstractScoutsGroup:
+        if group_group_admin_id is None:
+            logger.warn("GA: can't fetch a group without a group admin id")
+            return None
+
         json_data = self.get_group_raw(active_user, group_group_admin_id)
 
         serializer = AbstractScoutsGroupSerializer(data=json_data)
@@ -182,6 +186,14 @@ class GroupAdmin:
         group: AbstractScoutsGroup = serializer.save()
 
         return group
+
+    def get_group_serialized(self, active_user: settings.AUTH_USER_MODEL, group_group_admin_id: str) -> dict:
+        if group_group_admin_id is None:
+            return None
+
+        return AbstractScoutsGroupSerializer(
+            self.get_group(active_user=active_user, group_group_admin_id=group_group_admin_id)
+        ).data
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/functie?groep{group_group_admin_id_fragment_start}
     def get_functions_raw(
@@ -291,6 +303,16 @@ class GroupAdmin:
         member: AbstractScoutsMember = serializer.save()
 
         return member
+
+    def get_member_info_serialized(
+        self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str
+    ) -> AbstractScoutsMember:
+        if group_admin_id is None:
+            return None
+
+        return AbstractScoutsMemberSerializer(
+            self.get_member_info(active_user=active_user, group_admin_id=group_admin_id)
+        ).data
 
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/{group_admin_id}/steekkaart
     def get_member_medical_flash_card(self, active_user: settings.AUTH_USER_MODEL, group_admin_id: str) -> str:

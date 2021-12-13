@@ -1,0 +1,2 @@
+from .inuits_vehicle_filter import InuitsVehicleFilter
+from .inuits_equipment_filter import InuitsEquipmentFilter
