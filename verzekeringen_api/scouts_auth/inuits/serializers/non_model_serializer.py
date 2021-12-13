@@ -40,7 +40,7 @@ class NonModelSerializer(serializers.Serializer):
 
         @see https://www.django-rest-framework.org/api-guide/serializers/#creating-new-base-classes
         """
-        logger.debug("Serializing instance of type %s", instance.__class__.__name__)
+        # logger.debug("Serializing instance of type %s", instance.__class__.__name__)
 
         output = {}
         for attribute_name in dir(instance):
@@ -61,32 +61,32 @@ class NonModelSerializer(serializers.Serializer):
             elif isinstance(attribute, str):
                 # Ignore empty strings
                 if len(attribute) > 0:
-                    logger.debug("Serializing string attribute %s as %s", attribute_name, attribute)
+                    # logger.debug("Serializing string attribute %s as %s", attribute_name, attribute)
                     output[attribute_name] = attribute
             elif isinstance(attribute, (int, float, bool)):
-                logger.debug("Serializing primitive attribute %s as %s", attribute_name, attribute)
+                # logger.debug("Serializing primitive attribute %s as %s", attribute_name, attribute)
                 # Primitive types can be passed through unmodified.
                 output[attribute_name] = attribute
             elif isinstance(attribute, list):
                 # Ignore lists that contain no elements
                 if len(attribute) > 0:
-                    logger.debug("Serializing list attribute %s", attribute_name)
-                    logger.debug("List contents: %s", attribute)
+                    # logger.debug("Serializing list attribute %s", attribute_name)
+                    # logger.debug("List contents: %s", attribute)
                     # Recursively deal with items in lists.
                     output[attribute_name] = [NonModelSerializer().to_representation(item) for item in attribute]
             elif isinstance(attribute, dict):
                 # Ignore empty dictionaries
                 if len(attribute.keys()) > 0:
-                    logger.debug("Serializing dict attribute %s", attribute_name)
+                    # logger.debug("Serializing dict attribute %s", attribute_name)
                     # Recursively deal with items in dictionaries.
                     output[attribute_name] = {
                         str(key): NonModelSerializer().to_representation(value) for key, value in attribute.items()
                     }
             elif isinstance(attribute, date) or isinstance(attribute, datetime):
-                logger.debug("Serializing datetime attribute %s", attribute_name)
+                # logger.debug("Serializing datetime attribute %s", attribute_name)
                 output[attribute_name] = str(attribute)
             elif hasattr(attribute, "__class__"):
-                logger.debug("Serializing nested class attribute %s", attribute_name)
+                # logger.debug("Serializing nested class attribute %s", attribute_name)
                 output[attribute_name] = NonModelSerializer().to_representation(attribute)
             else:
                 # Force anything else to its string representation.
