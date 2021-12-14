@@ -9,19 +9,10 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
     def equipment_insurance_create(
         self,
         *args,
-        nature: str,
-        equipment: list,
-        postal_code: int = None,
-        city: str = None,
-        country: str = None,
         **base_insurance_fields,
     ) -> EquipmentInsurance:
         insurance = super().equipment_insurance_create(
-            nature=nature,
-            equipment=equipment,
-            postal_code=postal_code,
-            city=city,
-            country=country,
+            *args,
             **base_insurance_fields,
         )
 

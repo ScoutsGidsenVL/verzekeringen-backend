@@ -12,6 +12,7 @@ class BaseInsuranceQuerySet(models.QuerySet):
         if user.has_role_administrator():
             return self.qs
 
+        # @TODO
         # Section and group leaders can view and change requests they made themselves
         # section_leader_groups = [group.group_admin_id for group in user.get_section_leader_groups()]
         # group_leader_groups = [group.group_admin_id for group in user.get_group_leader_groups()]

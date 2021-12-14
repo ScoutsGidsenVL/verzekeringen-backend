@@ -38,19 +38,15 @@ class AbstractScoutsMemberSearchMember(AbstractNonModel):
         self.phone_number = phone_number
         self.links = links if links else []
 
-        # super().__init__([], {})
-
-    def get_gender(self):
-        return self.gender
-
     def __str__(self):
-        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), links({})".format(
+        return "group_admin_id({}), first_name({}), last_name({}), birth_date({}), email({}), phone_number({}), gender ({}), links({})".format(
             self.group_admin_id,
             self.first_name,
             self.last_name,
             self.birth_date,
             self.email,
             self.phone_number,
+            str(self.gender),
             ", ".join(str(link) for link in self.links),
         )
 

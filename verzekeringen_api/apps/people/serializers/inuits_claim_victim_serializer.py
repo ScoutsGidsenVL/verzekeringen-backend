@@ -2,9 +2,11 @@ import logging
 
 from rest_framework import serializers
 
-from apps.people.models import InuitsClaimVictim, InuitsNonMember
+from apps.people.models import InuitsClaimVictim
+from apps.people.serializers.fields import InuitsNonMemberSerializerField
 
 from scouts_auth.inuits.serializers import InuitsPersonSerializer
+from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
 
 
@@ -26,54 +28,36 @@ class InuitsClaimVictimSerializer(InuitsPersonSerializer):
     # comment               max_length=500          optional
     # legal_representative  max_length=128          optional
     # group_admin_id        max_length=255          optional
-    # #
-    # non_member = models.ForeignKey(
-    #     InuitsNonMember,
-    #     null=True,
-    #     related_name="claim_victim",
-    #     blank=True,
-    #     on_delete=models.SET_NULL,
-    # )
+    # non_member            InuitsNonMember         optional
+    non_member = InuitsNonMemberSerializerField(required=False, allow_null=True)
 
     class Meta:
         model = InuitsClaimVictim
         fields = "__all__"
 
-    class InsuranceClaimNonMemberRelatedField(serializers.PrimaryKeyRelatedField):
-        def get_queryset(self):
-            request = self.context.get("request", None)
-            queryset = InuitsNonMember.objects.all().allowed(request.user)
-            return queryset
+    def validate_group_admin_id(self, group_admin_id: str) -> str:
+        if not group_admin_id or len(group_admin_id.strip()) == 0:
+            raise serializers.ValidationError("Can't validate victim without a group admin id")
 
-    # last_name = serializers.CharField()
-    # first_name = serializers.CharField()
-    # birth_date = serializers.DateField()
-    # street = serializers.CharField()
-    # number = serializers.CharField()
-    # letter_box = serializers.CharField(required=False)
-    # # Making postal_code int field is bad practice but keeping it because of compatibility with actual NonMember
-    # postal_code = serializers.IntegerField()
-    # city = serializers.CharField()
-    # email = serializers.EmailField()
-    # legal_representative = serializers.CharField(required=False)
-    # gender = serializers.ChoiceField(required=False, choices=Gender.choices, default=Gender.UNKNOWN)
-
-    # group_admin_id = serializers.CharField(required=False, allow_null=True)
-    non_member = InsuranceClaimNonMemberRelatedField(required=False, allow_null=True)
-
-    def validate_group_admin_id(self, value: str) -> str:
-        logger.debug("Validating group_admin_id for claim victim (group_admin_id: %s)", value)
         # Validate whether membership number of member is valid
-        request = self.context.get("request", None)
+        victim: AbstractScoutsMember = None
         try:
-            if value:
-                GroupAdmin().get_member_info(active_user=request.user, group_admin_id=value)
+            # logger.debug("Validating claim victim as scouts member with group admin id %s", group_admin_id)
+            victim = GroupAdmin().get_member_info(
+                active_user=self.context["request"].user, group_admin_id=group_admin_id
+            )
+
+            if not victim or victim.group_admin_id != group_admin_id:
+                victim = None
         except:
-            raise serializers.ValidationError("Couldn't validate group_admin_id {} for claim victim".format(value))
-        return value
+            raise serializers.ValidationError("Couldn't validate victim with group admin id {}".format(group_admin_id))
 
-    def validate(self, data):
-        if data.get("victim_member_id") and data.get("victim_non_member"):
-            raise serializers.ValidationError("Victim cannot be member and non member at same time")
+        if victim is None:
+            raise serializers.ValidationError(
+                "Victim with group admin id {} not found by groupadmin".format(group_admin_id)
+            )
 
+        return group_admin_id
+
+    def validate(self, data: dict) -> InuitsClaimVictim:
         return InuitsClaimVictim(**data)

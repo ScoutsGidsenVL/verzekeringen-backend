@@ -73,6 +73,10 @@ class AbstractScoutsGroup(AbstractNonModel):
 
         # super().__init__([], {})
 
+    @property
+    def full_name(self):
+        return "{} {}".format(self.name, self.group_admin_id)
+
     def __str__(self):
         return "group_admin_id({}), number({}), name({}), addresses({}), date_of_foundation({}), only_leaders({}), show_member_improved({}), bank_account({}), email({}), website({}), info({}), type({}), contacts({}), group_specific_fields ({}), links({})".format(
             self.group_admin_id,

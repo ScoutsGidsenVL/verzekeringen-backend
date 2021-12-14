@@ -24,6 +24,7 @@ from scouts_auth.groupadmin.serializers import (
     AbstractScoutsMemberSearchResponseSerializer,
     AbstractScoutsMemberListResponseSerializer,
     AbstractScoutsMemberSerializer,
+    AbstractScoutsMemberFrontendSerializer,
 )
 
 from scouts_auth.groupadmin.utils import SettingsHelper
@@ -310,7 +311,7 @@ class GroupAdmin:
         if group_admin_id is None:
             return None
 
-        return AbstractScoutsMemberSerializer(
+        return AbstractScoutsMemberFrontendSerializer(
             self.get_member_info(active_user=active_user, group_admin_id=group_admin_id)
         ).data
 

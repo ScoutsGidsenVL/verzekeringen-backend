@@ -10,7 +10,7 @@ from apps.people.models import InuitsClaimVictim
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.utils import InsuranceAttachmentUtils
 
-from scouts_auth.groupadmin.models import AbstractScoutsMember
+from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.files import FileUtils
@@ -28,17 +28,16 @@ class InsuranceClaimReportService:
     group_admin_service = GroupAdmin()
 
     def generate_pdf(self, claim: InsuranceClaim):
-        owner: AbstractScoutsMember = self.group_admin_service.get_member_info(
-            active_user=claim.declarant, group_admin_id=claim.declarant.group_admin_id
-        )
+        declarant_member: AbstractScoutsMember = claim.declarant_member
         victim: InuitsClaimVictim = claim.victim
+
         model = {
-            "(Benaming)": claim.group_group_admin_id,
-            "(Naam_Verantwoordelijke)": owner.first_name,
-            "(Voornaam_Verantwoordelijke)": owner.last_name,
-            "(E-mail)": owner.email,
-            "(Naam_Slachtoffer)": victim.first_name,
-            "(Voornaam_Slachtoffer)": victim.last_name,
+            "(Benaming)": claim.group.full_name,
+            "(Naam_Verantwoordelijke)": declarant_member.last_name,
+            "(Voornaam_Verantwoordelijke)": declarant_member.first_name,
+            "(E-mail)": declarant_member.email,
+            "(Naam_Slachtoffer)": victim.last_name,
+            "(Voornaam_Slachtoffer)": victim.first_name,
             "(E-mail_Slachtoffer)": victim.email,
             "(Beroep)": victim.legal_representative,
             "(Straat_2)": victim.street,
@@ -64,22 +63,22 @@ class InsuranceClaimReportService:
             "(Plaats_Ongeval)": claim.location,
             "(Beoefende_sport/activiteit)": claim.activity,
             "(Andere)": claim.damage_type,
-            "(Naam_Andere)": claim.involved_party_name,
-            "(Adres_Andere)": claim.involved_party_description,
-            "(Welke_autoriteit)": claim.official_report_description,
+            "(Naam_Andere)": claim.involved_party_name if claim.has_involved_party() else "",
+            "(Adres_Andere)": claim.involved_party_description if claim.has_involved_party() else "",
+            "(Welke_autoriteit)": claim.official_report_description if claim.has_official_report() else "",
             "(Gebruikte_Vervoermiddel)": claim.used_transport,
-            "(Nr_PV)": claim.pv_number,
-            "(Naam_Getuige_1)": claim.witness_name,
-            "(Adres_getuige_1)": claim.witness_description,
-            "(Toezichthouder)": claim.leadership_description,
+            "(Nr_PV)": claim.pv_number if claim.has_official_report() else "",
+            "(Naam_Getuige_1)": claim.witness_name if claim.has_witness() else "",
+            "(Adres_getuige_1)": claim.witness_description if claim.has_witness() else "",
+            "(Toezichthouder)": claim.leadership_description if claim.has_leadership() else "",
             "(Ondertekening_Dag)": f"{claim.created_on.date().day:02d}",
             "(Ondertekening_Maand)": f"{claim.created_on.date().month:02d}",
             "(Ondertekening_Jaar)": str(claim.created_on.date().year),
-            "(Plaats_opmaak_1)": claim.declarant_city if claim.declarant_city else owner.address.city,
-            "(Identiteit_Aangever)": ("%s %s" % (owner.first_name, owner.last_name)),
+            "(Plaats_opmaak_1)": claim.declarant_city if claim.declarant_city else declarant_member.address.city,
+            "(Identiteit_Aangever)": ("%s %s" % (declarant_member.first_name, declarant_member.last_name)),
         }
 
-        if claim.involved_party_birthdate:
+        if claim.has_involved_party() and claim.involved_party_birthdate:
             model["(Geboorte_Dag_2)"] = f"{claim.involved_party_birthdate.day:02d}"
             model["(Geboorte_Maand_2)"] = f"{claim.involved_party_birthdate.month:02d}"
             model["(Geboorte_Jaar_2)"] = str(claim.involved_party_birthdate.year)
@@ -115,36 +114,40 @@ class InsuranceClaimReportService:
                 property["/Kids"][0].update(PdfDict(AS=PdfName("Lid"), V=PdfName("Lid")))
 
             if property["/T"] == "(Fout_Derde)":
-                if claim.involved_party_description:
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                else:
-                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                if claim.has_involved_party():
+                    if claim.involved_party_description:
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Vaststelling)":
-                if claim.official_report_description or claim.pv_number:
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                else:
-                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                if claim.has_official_report():
+                    if claim.official_report_description or claim.pv_number:
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Getuigen)":
-                if claim.witness_description or claim.witness_name:
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                else:
-                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                if claim.has_witness():
+                    if claim.witness_description or claim.witness_name:
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Toezicht)":
-                if claim.leadership_description:
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                else:
-                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                if claim.has_leadership():
+                    if claim.leadership_description:
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Code_activiteit)":
                 for activity_type in claim.activity_type:

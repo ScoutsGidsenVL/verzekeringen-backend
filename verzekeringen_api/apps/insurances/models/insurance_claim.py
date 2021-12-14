@@ -4,9 +4,9 @@ from django.conf import settings
 from django.db import models
 
 from apps.people.models import InuitsClaimVictim
-from apps.insurances.models.enums import ClaimActivityType
 from apps.insurances.managers import InsuranceClaimManager
 
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.models import AuditedBaseModel
@@ -72,6 +72,11 @@ class InsuranceClaim(AuditedBaseModel):
     note = OptionalCharField(max_length=1024)
     case_number = OptionalCharField(max_length=30)
 
+    # Full scouts group details
+    _group: AbstractScoutsGroup = None
+    # Full groupadmin member data for the declarant
+    _declarant_member: AbstractScoutsMember = None
+
     class Meta:
         # Basic permissions for claims are added by ExtendedDjangoModelPermission
         permissions = [
@@ -84,8 +89,32 @@ class InsuranceClaim(AuditedBaseModel):
         ]
 
     @property
-    def group(self):
-        return GroupAdmin().get_group(self.group_group_admin_id)
+    def group(self) -> AbstractScoutsGroup:
+        return self._group
+
+    @group.setter
+    def group(self, group: AbstractScoutsGroup):
+        self._group = group
+
+    @property
+    def declarant_member(self) -> AbstractScoutsMember:
+        return self._declarant_member
+
+    @declarant_member.setter
+    def declarant_member(self, declarant_member: AbstractScoutsMember):
+        self._declarant_member = declarant_member
+
+    def has_involved_party(self) -> bool:
+        return self.involved_party_name or self.involved_party_description or self.involved_party_birthdate
+
+    def has_official_report(self) -> bool:
+        return self.official_report_description or self.pv_number
+
+    def has_witness(self) -> bool:
+        return self.witness_name or self.witness_description
+
+    def has_leadership(self) -> bool:
+        return self.leadership_description
 
     def has_attachment(self):
         return hasattr(self, "attachment")

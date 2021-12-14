@@ -52,10 +52,6 @@ class InsuranceClaimService:
         if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
             raise ValidationError("Given group %s is not a valid group of user" % group_group_admin_id)
 
-        # Assuming that the group_admin_id has been loaded when adding the victim to the claim
-        # @ricardo: check this please
-        # if victim.group_admin_id:
-        #     victim.get_member_number()
         victim.save()
 
         claim = InsuranceClaim(

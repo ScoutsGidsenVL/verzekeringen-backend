@@ -19,6 +19,8 @@ from apps.insurances.services import InsuranceClaimService
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
 
+from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
+from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.utils import MultipartJsonParser
 from scouts_auth.inuits.files import StorageService
 
@@ -37,6 +39,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     filterset_class = InsuranceClaimFilter
     service = InsuranceClaimService()
     storage_service = StorageService()
+    group_admin_service = GroupAdmin()
 
     serializer_class = InsuranceClaimSerializer
     parser_classes = [MultipartJsonParser, parsers.JSONParser]
@@ -66,6 +69,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     @action(methods=["get"], detail=False, url_path="data")
     def get_create_data(self, request, *args, **kwargs):
         user: settings.AUTH_USER_MODEL = request.user
+        # @TODO also for group leader groups
         permitted_scouts_groups = user.get_section_leader_groups()
 
         data = {"permitted_scouts_groups": permitted_scouts_groups}
@@ -78,9 +82,12 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         responses={status.HTTP_201_CREATED: InsuranceClaimSerializer},
     )
     def create(self, request, *args, **kwargs):
+        file_serializer_data = {}
         try:
             file_serializer = InsuranceClaimAttachmentUploadSerializer(data=request.FILES)
             file_serializer.is_valid(raise_exception=True)
+
+            file_serializer_data = file_serializer.validated_data
         except Exception as exc:
             logger.error("Error while handling uploaded insurance claim attachment", exc)
             raise ValidationError(
@@ -88,12 +95,27 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
                 code=406,
             )
 
+        logger.debug("CREATE REQUEST DATA: %s", request.data)
         serializer = InsuranceClaimSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
-        insurance_claim = self.service.create(
-            created_by=request.user, file=file_serializer.validated_data, **serializer.validated_data
+        validated_data = serializer.validated_data
+        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+
+        insurance_claim: InsuranceClaim = self.service.create(
+            created_by=request.user, file=file_serializer_data, **validated_data
         )
+
+        # There doesn't seem to be a good way to avoid doing this here
+        declarant_member: AbstractScoutsMember = self.group_admin_service.get_member_info(
+            active_user=request.user, group_admin_id=insurance_claim.declarant.group_admin_id
+        )
+        insurance_claim.declarant_member = declarant_member
+        group: AbstractScoutsGroup = self.group_admin_service.get_group(
+            active_user=request.user, group_group_admin_id=insurance_claim.group_group_admin_id
+        )
+        insurance_claim.group = group
+
         try:
             self.service.email_claim(insurance_claim)
         except Exception as exc:

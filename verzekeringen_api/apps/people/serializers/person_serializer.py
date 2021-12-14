@@ -29,10 +29,7 @@ class PersonSerializer(serializers.Serializer):
         try:
             return obj.gender
         except:
-            try:
-                obj.get_gender()
-            except:
-                return None
+            return None
 
     def get_email(self, obj):
         try:

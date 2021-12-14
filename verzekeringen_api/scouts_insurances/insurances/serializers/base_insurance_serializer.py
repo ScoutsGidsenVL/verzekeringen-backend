@@ -39,7 +39,7 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
     scouts_group = AbstractScoutsGroupSerializer(required=False)
     # For input
     group_admin_id = serializers.CharField(required=False)
-    total_cost = serializers.SerializerMethodField()
+    # total_cost = serializers.SerializerMethodField()
     created_on = DatetypeAndTimezoneAwareDateTimeSerializerField(required=False)
     start_date = DatetypeAndTimezoneAwareDateTimeSerializerField()
     end_date = DatetypeAndTimezoneAwareDateTimeSerializerField()

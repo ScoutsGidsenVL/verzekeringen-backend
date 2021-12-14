@@ -152,6 +152,11 @@ class AbstractScoutsMember(AbstractNonModel):
     def customer_number(self):
         return self.scouts_data.customer_number
 
+    @property
+    def address(self):
+        if len(self.addresses) > 0:
+            return self.addresses[0]
+
     def __str__(self):
         return (
             self.personal_data.__str__()
@@ -183,6 +188,6 @@ class AbstractScoutsMember(AbstractNonModel):
             links=self.links,
         )
 
-        member.gender = self.get_gender()
+        member.gender = self.gender
 
         return member

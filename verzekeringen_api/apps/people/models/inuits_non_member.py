@@ -27,9 +27,3 @@ class InuitsNonMember(InuitsPerson):
     @property
     def full_name(self):
         return self.first_name + " " + self.last_name
-
-    @property
-    def get_gender(self):
-        gender = GenderHelper.parse_gender(self.gender)
-
-        return gender

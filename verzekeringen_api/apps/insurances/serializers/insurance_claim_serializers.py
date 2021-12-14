@@ -8,6 +8,7 @@ from apps.people.serializers import InuitsClaimVictimSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
 from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers.fields import AbstractScoutsGroupSerializerField
 from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.serializers import PermissionRequiredField
@@ -19,50 +20,6 @@ logger = logging.getLogger(__name__)
 class InsuranceClaimCreateDataSerializer(serializers.Serializer):
 
     permitted_scouts_groups = AbstractScoutsGroupSerializer(many=True)
-
-
-# class BaseInsuranceClaimSerializer(serializers.ModelSerializer):
-#     date_of_accident = DateTimeTimezoneSerializerField()
-#     activity_type = serializers.JSONField()
-#     victim = InuitsClaimVictimSerializer(many=True)
-#     group_group_admin_id = serializers.CharField()
-#     declarant = serializers.SerializerMethodField()
-#     group = serializers.SerializerMethodField()
-#     note = PermissionRequiredField(
-#         permission="insurances.view_insuranceclaim_note", field=serializers.CharField(max_length=1024), required=False
-#     )
-#     case_number = PermissionRequiredField(
-#         permission="insurances.view_insuranceclaim_case_number",
-#         field=serializers.CharField(max_length=30),
-#         required=False,
-#     )
-
-#     class Meta:
-#         model = InsuranceClaim
-#         fields = (
-#             "id",
-#             "date",
-#             "declarant",
-#             "date_of_accident",
-#             "activity",
-#             "activity_type",
-#             "victim",
-#             "group_group_admin_id",
-#             "group",
-#             "note",
-#             "case_number",
-#         )
-
-#     def get_declarant(self, object: InsuranceClaim):
-#         data = GroupAdmin().get_member_info(
-#             active_user=self.context["request"].user, group_admin_id=object.declarant.group_admin_id
-#         )
-#         return AbstractScoutsMemberSerializer(data).data
-
-#     def get_group(self, obj: InsuranceClaim):
-#         return AbstractScoutsGroupSerializer(
-#             GroupAdmin().get_group(self.context.get("request").user, obj.group_group_admin_id)
-#         ).data
 
 
 class InsuranceClaimSerializer(serializers.ModelSerializer):
@@ -94,9 +51,6 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
     # note                          max_length=1024     optional
     # case_number                   max_length=30       optional
 
-    # group_group_admin_id = serializers.CharField()
-    # activity_type = serializers.JSONField()
-    # bank_account = serializers.CharField(required=False, allow_null=True)
     activity_type = serializers.JSONField()
     victim = InuitsClaimVictimSerializer()
     note = PermissionRequiredField(
@@ -112,22 +66,10 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
         model = InsuranceClaim
         exclude = ["declarant"]
 
-    def to_representation(self, obj: InsuranceClaim) -> dict:
-        data = super().to_representation(obj)
-
-        data["group"] = AbstractScoutsGroupSerializer(
-            GroupAdmin().get_group(
-                active_user=self.context.get("request").user, group_group_admin_id=data["group_group_admin_id"]
-            )
-        ).data
-
-        return data
-
     def get_activity_type(self, obj: InsuranceClaim) -> str:
         return obj.activity_type
 
     def create(self, validated_data: dict) -> InsuranceClaim:
-        # Create insurance claim
         try:
             insurance_claim = InsuranceClaim.objects.create(id=validated_data.get("id", None))
         except Exception:
@@ -145,28 +87,3 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
         if not re.match(pattern, value):
             raise serializers.ValidationError("Invalid bank account number format. It has to be: BE68539007547034")
         return value
-
-
-# class InsuranceClaimSerializer(BaseInsuranceClaimSerializer):
-#     date = DateTimeTimezoneSerializerField()
-#     date_of_accident = DateTimeTimezoneSerializerField()
-#     victim = InuitsClaimVictimSerializer(many=True)
-#     group = serializers.SerializerMethodField()
-#     attachment = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = InsuranceClaim
-#         fields = "__all__"
-
-#     def get_group(self, obj: InsuranceClaim):
-#         return AbstractScoutsGroupSerializer(
-#             GroupAdmin().get_group(self.context.get("request").user, obj.group_group_admin_id)
-#         ).data
-
-#     def get_attachment(self, obj: InsuranceClaim):
-#         attachment: InsuranceClaimAttachment = obj.attachment
-
-#         if attachment:
-#             return InsuranceClaimAttachmentSerializer(attachment).data
-
-#         return None

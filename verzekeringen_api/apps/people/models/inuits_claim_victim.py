@@ -25,9 +25,6 @@ class InuitsClaimVictim(InuitsPerson):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def get_gender(self):
-        return self.gender
-
     def clean(self):
         if self.non_member and self.group_admin_id:
             raise ValidationError("Victim cannot be member and non member at same time")
