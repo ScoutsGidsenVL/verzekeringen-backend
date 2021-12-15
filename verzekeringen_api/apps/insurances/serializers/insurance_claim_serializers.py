@@ -66,6 +66,15 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
         model = InsuranceClaim
         exclude = ["declarant"]
 
+    def to_representation(self, data: dict) -> dict:
+        data = super().to_representation(data)
+
+        data["group"] = GroupAdmin().get_group_serialized(
+            active_user=self.context.get("request").user, group_group_admin_id=data.get("group_group_admin_id")
+        )
+
+        return data
+
     def get_activity_type(self, obj: InsuranceClaim) -> str:
         return obj.activity_type
 
@@ -74,6 +83,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
             insurance_claim = InsuranceClaim.objects.create(id=validated_data.get("id", None))
         except Exception:
             raise ValidationError(detail={"message": "The request is not acceptable."}, code=406)
+
         logger.debug("attachments")
         if "attachments" in self.context:  # checking if key is in context
             files: MultiValueDict = self.context["attachments"]
