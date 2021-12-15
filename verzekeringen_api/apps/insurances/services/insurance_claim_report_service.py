@@ -31,10 +31,12 @@ class InsuranceClaimReportService:
         declarant_member: AbstractScoutsMember = claim.declarant_member
         victim: InuitsClaimVictim = claim.victim
 
+        logger.debug("DECLARANT MEMBER: %s %s", declarant_member.first_name, declarant_member.last_name)
+
         model = {
             "(Benaming)": claim.group.full_name,
             "(Naam_Verantwoordelijke)": declarant_member.last_name,
-            "(Voornaam_Verantwoordelijke)": declarant_member.first_name,
+            "(Voornnaam_Verantwoordelijke)": declarant_member.first_name,
             "(E-mail)": declarant_member.email,
             "(Naam_Slachtoffer)": victim.last_name,
             "(Voornaam_Slachtoffer)": victim.first_name,
@@ -87,6 +89,18 @@ class InsuranceClaimReportService:
 
         template.Root.AcroForm.update(PdfDict(NeedAppearances=PdfObject("true")))
 
+        # TO DEBUG THE PDF
+        #
+        # for page in template.pages:
+        #     annotations = page["/Annots"]
+
+        #     if annotations is None:
+        #         continue
+
+        #     for annotation in annotations:
+        #         if annotation["/T"]:
+        #             logger.debug(annotation["/T"])
+
         for property in template.Root.AcroForm.Fields:
             if property["/T"] in model:
                 if model.get(property["/T"], False):
@@ -115,39 +129,23 @@ class InsuranceClaimReportService:
 
             if property["/T"] == "(Fout_Derde)":
                 if claim.has_involved_party():
-                    if claim.involved_party_description:
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
 
             if property["/T"] == "(Vaststelling)":
                 if claim.has_official_report():
-                    if claim.official_report_description or claim.pv_number:
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
 
             if property["/T"] == "(Getuigen)":
                 if claim.has_witness():
-                    if claim.witness_description or claim.witness_name:
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
 
             if property["/T"] == "(Toezicht)":
                 if claim.has_leadership():
-                    if claim.leadership_description:
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
-                        property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
 
             if property["/T"] == "(Code_activiteit)":
                 for activity_type in claim.activity_type:
@@ -185,8 +183,8 @@ class InsuranceClaimReportService:
 
         report_filename = InsuranceAttachmentUtils.generate_claim_report_temp_file_name(claim)
         filename = FileUtils.get_temp_file(filename=report_filename)
-        logger.debug("Generating pdf report for claim(%d) and saving it to %s", claim.id, filename)
 
+        logger.debug("Generating pdf report for claim(%d) and saving it to %s", claim.id, filename)
         PdfWriter().write(filename, template)
 
         if self.store_report:
