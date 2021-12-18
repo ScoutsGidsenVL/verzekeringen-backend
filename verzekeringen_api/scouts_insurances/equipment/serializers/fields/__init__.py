@@ -1,0 +1,1 @@
+from .vehicle_type_serializer_field import VehicleTypeSerializerField

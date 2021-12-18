@@ -1,2 +1,3 @@
-from .vehicle_trailer_option import VehicleTrailerOption
+from .temporary_vehicle_insurance_vehicle_trailer_option import TemporaryVehicleInsuranceVehicleTrailerOption
+from .travel_assistance_vehicle_trailer_option import TravelAssistanceVehicleTrailerOption
 from .vehicle_type import VehicleType

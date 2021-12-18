@@ -5,6 +5,8 @@ from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
 
 
 class GroupSizeSerializerField(ChoiceSerializerField):
+    serialize = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, choices=GroupSize, **kwargs)
 

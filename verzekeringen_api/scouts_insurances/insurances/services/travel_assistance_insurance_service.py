@@ -4,7 +4,7 @@ from decimal import Decimal
 from django.db import transaction
 
 from scouts_insurances.people.services import MemberService
-from scouts_insurances.equipment.models import Vehicle
+from scouts_insurances.equipment.models import TravelAssistanceVehicle
 from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import TravelAssistanceInsurance, InsuranceType, CostVariable
 from scouts_insurances.insurances.services import BaseInsuranceService
@@ -53,7 +53,7 @@ class TravelAssistanceInsuranceService:
         *,
         participants: list,
         country: str = None,
-        vehicle: Vehicle = None,
+        vehicle: TravelAssistanceVehicle = None,
         group_admin_id: str = "",
         **base_insurance_fields,
     ) -> Decimal:
@@ -80,7 +80,7 @@ class TravelAssistanceInsuranceService:
         *,
         participants: list,
         country: str,
-        vehicle: Vehicle = None,
+        vehicle: TravelAssistanceVehicle = None,
         **base_insurance_fields,
     ) -> TravelAssistanceInsurance:
         type = (

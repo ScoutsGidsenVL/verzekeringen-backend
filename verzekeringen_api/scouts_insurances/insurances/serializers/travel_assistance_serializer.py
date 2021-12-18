@@ -2,7 +2,7 @@ import logging
 
 from rest_framework import serializers
 
-from scouts_insurances.equipment.serializers import VehicleSerializer
+from scouts_insurances.equipment.serializers import TravelAssistanceVehicleSerializer
 from scouts_insurances.people.serializers import NonMemberSerializer
 from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
-    vehicle = VehicleSerializer()
+    vehicle = TravelAssistanceVehicleSerializer()
     participants = NonMemberSerializer(many=True)
     country = serializers.PrimaryKeyRelatedField(
         queryset=Country.objects.by_insurance_type_id(InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE),
@@ -31,7 +31,7 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
         data = super().to_internal_value(data)
 
         if vehicle:
-            vehicle_serializer = VehicleSerializer(data=vehicle)
+            vehicle_serializer = TravelAssistanceVehicleSerializer(data=vehicle)
             vehicle_serializer.is_valid(raise_exception=True)
 
             # Travel assistance vehicles don't care for the type of trailer

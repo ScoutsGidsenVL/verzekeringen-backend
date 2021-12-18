@@ -5,7 +5,7 @@ from django.db import transaction
 from django.conf import settings
 
 from scouts_insurances.people.services import MemberService
-from scouts_insurances.equipment.models import Vehicle
+from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle
 from scouts_insurances.insurances.models import (
     TemporaryVehicleInsurance,
     InsuranceType,
@@ -14,7 +14,7 @@ from scouts_insurances.insurances.models import (
 )
 from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleParticipantType,
-    TemporaryVehicleInsuranceOptionApi,
+    TemporaryVehicleInsuranceOption,
 )
 from scouts_insurances.insurances.services import BaseInsuranceService
 
@@ -31,14 +31,16 @@ class TemporaryVehicleInsuranceService:
 
         cost = 0
 
-        if TemporaryVehicleInsuranceOptionApi.OMNIUM in insurance.insurance_options:
+        insurance_options = list(map(int, list(str(insurance.insurance_options))))
+
+        if TemporaryVehicleInsuranceOption.OMNIUM in insurance_options:
             limits = (8, 15, 25, 31)
             for limit in limits:
                 if days <= limit:
                     cost += CostVariable.objects.get_variable(insurance.type, "premium_option1_%s" % str(limit)).value
                     break
 
-        if TemporaryVehicleInsuranceOptionApi.COVER_OMNIUM in insurance.insurance_options:
+        if TemporaryVehicleInsuranceOption.COVER_OMNIUM in insurance_options:
             limits = (15, 31)
             for limit in limits:
                 if days <= limit:
@@ -47,7 +49,7 @@ class TemporaryVehicleInsuranceService:
                     ).value
                     break
 
-        if TemporaryVehicleInsuranceOptionApi.RENTAL in insurance.insurance_options:
+        if TemporaryVehicleInsuranceOption.RENTAL in insurance_options:
             limits = (15, 20, 31)
             for limit in limits:
                 if days <= limit:
@@ -69,7 +71,7 @@ class TemporaryVehicleInsuranceService:
         *,
         owner: dict,
         drivers: list,
-        vehicle: Vehicle,
+        vehicle: TemporaryVehicleInsuranceVehicle,
         insurance_options: set = None,
         max_coverage: str = None,
         **base_insurance_fields,
@@ -92,7 +94,7 @@ class TemporaryVehicleInsuranceService:
         *,
         owner: dict,
         drivers: list,
-        vehicle: Vehicle,
+        vehicle: TemporaryVehicleInsuranceVehicle,
         insurance_options: set = None,
         max_coverage: str = None,
         **base_insurance_fields,

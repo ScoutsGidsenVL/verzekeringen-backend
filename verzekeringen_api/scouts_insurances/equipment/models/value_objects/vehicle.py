@@ -1,9 +1,8 @@
-from scouts_insurances.equipment.models.enums import VehicleType, VehicleTrailerOption
+from scouts_insurances.equipment.models.enums import VehicleType
 
 
 class Vehicle:
     DEFAULT_VEHICLE_TYPE = VehicleType.PASSENGER_CAR
-    DEFAULT_VEHICLE_TRAILER_OPTION = VehicleTrailerOption.NO_TRAILER
 
     id: str
     type: VehicleType
@@ -11,7 +10,6 @@ class Vehicle:
     license_plate: str
     construction_year: int
     chassis_number: str
-    trailer: VehicleTrailerOption
 
     def __init__(
         self,
@@ -21,7 +19,6 @@ class Vehicle:
         license_plate: str = "",
         construction_year: int = None,
         chassis_number: str = "",
-        trailer: VehicleTrailerOption = None,
     ):
         self.id = id
         self.type = type if type else self.DEFAULT_VEHICLE_TYPE
@@ -29,15 +26,13 @@ class Vehicle:
         self.license_plate = license_plate
         self.construction_year = construction_year
         self.chassis_number = chassis_number
-        self.trailer = trailer if trailer else self.DEFAULT_VEHICLE_TRAILER_OPTION
 
     def __str__(self):
-        return "id({}), type({}), brand({}), license_plate({}), construction_year({}), chassis_number({}), trailer({})".format(
+        return "id({}), type({}), brand({}), license_plate({}), construction_year({}), chassis_number({})".format(
             self.id,
             self.type,
             self.brand,
             self.license_plate,
             self.construction_year,
             self.chassis_number,
-            self.trailer,
         )

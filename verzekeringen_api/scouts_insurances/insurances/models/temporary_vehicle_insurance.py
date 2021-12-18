@@ -1,7 +1,7 @@
 from django.db import models
 
 from scouts_insurances.people.models import NonMember
-from scouts_insurances.insurances.models import BaseInsurance, VehicleWithChassisRelatedInsurance
+from scouts_insurances.insurances.models import BaseInsurance, VehicleWithTrailerRelatedInsurance
 from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
     TemporaryVehicleInsuranceOption,
@@ -9,7 +9,7 @@ from scouts_insurances.insurances.models.enums import (
 )
 
 
-class TemporaryVehicleInsurance(VehicleWithChassisRelatedInsurance, BaseInsurance):
+class TemporaryVehicleInsurance(VehicleWithTrailerRelatedInsurance, BaseInsurance):
 
     insurance_parent = models.OneToOneField(
         BaseInsurance,
@@ -19,7 +19,7 @@ class TemporaryVehicleInsurance(VehicleWithChassisRelatedInsurance, BaseInsuranc
         primary_key=True,
         related_name="temporary_vehicle_child",
     )
-    _insurance_option = models.IntegerField(db_column="keuze", choices=TemporaryVehicleInsuranceOption.choices)
+    insurance_options = models.IntegerField(db_column="keuze", choices=TemporaryVehicleInsuranceOption.choices)
     max_coverage = models.CharField(
         db_column="maxdekking",
         choices=TemporaryVehicleInsuranceCoverageOption.choices,
@@ -51,11 +51,11 @@ class TemporaryVehicleInsurance(VehicleWithChassisRelatedInsurance, BaseInsuranc
             )
         ]
 
-    @property
-    def insurance_options(self):
-        return [int(digit) for digit in str(self._insurance_option)]
+    # @property
+    # def insurance_options(self):
+    #     return [int(digit) for digit in str(self._insurance_option)]
 
-    @insurance_options.setter
-    def insurance_options(self, value: set):
-        print("INSURANCE OPTIONS ", value)
-        self._insurance_option = int("".join([str(sub_value) for sub_value in value]))
+    # @insurance_options.setter
+    # def insurance_options(self, value: set):
+    #     print("INSURANCE OPTIONS ", value)
+    #     self._insurance_option = int("".join([str(sub_value) for sub_value in value]))

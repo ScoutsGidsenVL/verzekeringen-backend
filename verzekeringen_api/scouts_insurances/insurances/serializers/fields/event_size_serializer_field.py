@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class EventSizeSerializerField(ChoiceSerializerField):
+    serialize = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, choices=EventSize, **kwargs)
 

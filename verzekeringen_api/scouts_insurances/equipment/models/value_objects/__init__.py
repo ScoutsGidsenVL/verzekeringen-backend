@@ -1,1 +1,3 @@
 from .vehicle import Vehicle
+from .temporary_vehicle_insurance_vehicle import TemporaryVehicleInsuranceVehicle
+from .travel_assistance_vehicle import TravelAssistanceVehicle

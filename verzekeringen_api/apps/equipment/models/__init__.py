@@ -1,3 +1,4 @@
+from .enums import InuitsVehicleTrailerOption
 from .inuits_equipment import InuitsEquipment
 from .inuits_equipment_template import InuitsEquipmentTemplate
 from .inuits_vehicle import InuitsVehicle

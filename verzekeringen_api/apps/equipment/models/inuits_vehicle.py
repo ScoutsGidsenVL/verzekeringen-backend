@@ -1,10 +1,9 @@
-import uuid
-
 from django.core.validators import MinValueValidator
 
+from apps.equipment.models.enums import InuitsVehicleTrailerOption
 from apps.equipment.managers import InuitsVehicleManager
 
-from scouts_insurances.equipment.models import Vehicle, VehicleType, VehicleTrailerOption
+from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle, VehicleType
 
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import (
@@ -30,27 +29,32 @@ class InuitsVehicle(AbstractBaseModel):
     The jointable is defined in InuitVehicleTemplate
     """
 
+    DEFAULT_VEHICLE_TRAILER_OPTION = InuitsVehicleTrailerOption.NO_TRAILER
+
     objects = InuitsVehicleManager()
 
     type = DefaultCharField(
         db_column="autotype",
         choices=VehicleType.choices,
-        default="VehicleRelatedInsurance.DEFAULT_VEHICLE_TYPE",
+        default=TemporaryVehicleInsuranceVehicle.DEFAULT_VEHICLE_TYPE,
         max_length=30,
     )
     brand = OptionalCharField(db_column="automerk", max_length=15)
     license_plate = OptionalCharField(db_column="autokenteken", max_length=10)
     construction_year = OptionalIntegerField(db_column="autobouwjaar", validators=[MinValueValidator(1900)])
     chassis_number = RequiredCharField(db_column="autochassis", max_length=20, default=None)
+
+    # Take into mind that the trailer option for travel assistance vehicle is numeric
+    # Also, travel assistance only has 0 for no trailer and 1 for trailer
     trailer = DefaultCharField(
         db_column="aanhangwagen",
-        choices=VehicleTrailerOption.choices,
+        choices=InuitsVehicleTrailerOption.choices,
         max_length=1,
-        default="VehicleRelatedInsurance.DEFAULT_VEHICLE_TRAILER_OPTION",
+        default="InuitsVehicle.DEFAULT_VEHICLE_TRAILER_OPTION",
     )
 
     @staticmethod
-    def from_vehicle(vehicle: Vehicle):
+    def from_vehicle(vehicle: TemporaryVehicleInsuranceVehicle):
         return InuitsVehicle(
             id=vehicle.id,
             type=vehicle.type,

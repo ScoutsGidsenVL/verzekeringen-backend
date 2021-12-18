@@ -2,10 +2,10 @@ import logging
 
 from rest_framework import serializers
 
-from apps.equipment.models import InuitsVehicle
+from apps.equipment.models import InuitsVehicle, InuitsVehicleTrailerOption
 
-from scouts_insurances.equipment.models import Vehicle, VehicleType, VehicleTrailerOption
-from scouts_insurances.equipment.serializers import VehicleSerializer
+from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle, VehicleType
+from scouts_insurances.equipment.serializers import TemporaryVehicleInsuranceVehicleSerializer
 
 from scouts_auth.inuits.serializers import EnumSerializer
 
@@ -13,7 +13,7 @@ from scouts_auth.inuits.serializers import EnumSerializer
 logger = logging.getLogger(__name__)
 
 
-class InuitsVehicleSerializer(VehicleSerializer, serializers.ModelSerializer):
+class InuitsVehicleSerializer(serializers.ModelSerializer):
     # id                pk
     # type              max_length=30       optional        VehicleType.choices
     # brand             max_length=15       optional
@@ -26,16 +26,21 @@ class InuitsVehicleSerializer(VehicleSerializer, serializers.ModelSerializer):
         model = InuitsVehicle
         fields = "__all__"
 
-    def to_internal_value(self, data) -> InuitsVehicle:
-        vehicle: Vehicle = super().to_internal_value(data)
+    # def to_internal_value(self, data) -> InuitsVehicle:
+    #     # @TODO fix trailer option
+    #     vehicle = TemporaryVehicleInsuranceVehicle(**super().to_internal_value(data))
 
-        logger.debug("VEHICLE: %s", vehicle)
+    #     logger.debug("VEHICLE: %s", vehicle)
 
-        return InuitsVehicle.from_vehicle(vehicle)
+    #     return InuitsVehicle.from_vehicle(vehicle)
+    def to_internal_value(self, data: dict) -> InuitsVehicle:
+        # @TODO remove group_group_admin_id from frontend serializer
+        data.pop("group_group_admin_id", None)
+        return InuitsVehicle(**data)
 
-    def to_representation(self, obj: Vehicle) -> dict:
+    def to_representation(self, obj: InuitsVehicle) -> dict:
         type = VehicleType.from_choice(obj.type)
-        trailer = VehicleTrailerOption.from_choice(obj.trailer)
+        trailer = InuitsVehicleTrailerOption.from_choice(obj.trailer)
 
         data = super().to_representation(obj)
 

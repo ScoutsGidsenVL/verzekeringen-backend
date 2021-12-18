@@ -1,12 +1,7 @@
-from datetime import datetime
-
 from django.db import transaction
 from django.conf import settings
-from django.core.exceptions import ValidationError
 
 from apps.equipment.models import InuitsVehicle
-
-from scouts_insurances.equipment.models import VehicleTrailerOption
 
 
 class InuitsVehicleService:

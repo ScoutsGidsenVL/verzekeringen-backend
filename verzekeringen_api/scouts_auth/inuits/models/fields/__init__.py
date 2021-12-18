@@ -7,6 +7,7 @@ from .django_shorthand_model_fields import (
     UniqueRequiredCharField,
     OptionalTextField,
     OptionalIntegerField,
+    DefaultIntegerField,
     RequiredIntegerField,
     OptionalEmailField,
     OptionalDateField,

@@ -3,10 +3,10 @@ from django.db import models
 from rest_framework import serializers
 
 from scouts_insurances.people.models import NonMember
-from scouts_insurances.insurances.models import BaseInsurance, VehicleRelatedInsurance
+from scouts_insurances.insurances.models import BaseInsurance, VehicleWithSimpleTrailerRelatedInsurance
 
 
-class TravelAssistanceInsurance(VehicleRelatedInsurance, BaseInsurance):
+class TravelAssistanceInsurance(VehicleWithSimpleTrailerRelatedInsurance, BaseInsurance):
     insurance_parent = models.OneToOneField(
         BaseInsurance,
         db_column="verzekeringsid",

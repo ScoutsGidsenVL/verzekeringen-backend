@@ -8,6 +8,13 @@ logger = logging.getLogger(__name__)
 
 class ChoiceSerializerField(serializers.ChoiceField):
     def __init__(self, *args, **kwargs):
+        choices = kwargs.get("choices")
+        default = kwargs.get("default", None)
+        # logger.debug(
+        #     "Choice serializer field for %s and %s",
+        #     choices,
+        #     "default(" + default + ")" if default else "no default value",
+        # )
         super().__init__(*args, **kwargs)
 
     def bind(self, field_name, parent):

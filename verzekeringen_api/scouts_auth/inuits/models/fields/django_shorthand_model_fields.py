@@ -138,6 +138,22 @@ class OptionalIntegerField(models.IntegerField):
         super().__init__(*args, **kwargs)
 
 
+class DefaultIntegerField(models.IntegerField):
+    """
+    Initializes a models.IntegerField as optional with a default.
+
+    This is equivalent to setting a models.IntegerField as such:
+    some_optional_integer_field = models.IntegerField(
+        blank=True,
+        default=<some_default_value>,
+    )
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs["blank"] = True
+        super().__init__(*args, **kwargs)
+
+
 class RequiredIntegerField(models.IntegerField):
     """
     Initializes a models.IntegerField as required.

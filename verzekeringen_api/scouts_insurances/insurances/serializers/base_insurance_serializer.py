@@ -62,7 +62,15 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
             "payment_date",
         ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def to_internal_value(self, data: dict) -> dict:
+        total_cost = data.pop("total_cost", None)
+
+        if total_cost and total_cost.rfind(".") < total_cost.rfind(","):
+            data["total_cost"] = (total_cost.replace(".", "")).replace(",", ".")
+
         group_admin_id = data.pop("group", data.pop("group_group_admin_id", None))
 
         data = super().to_internal_value(data)
@@ -75,6 +83,7 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(serializer_or_field=status)
     def get_status(self, obj: BaseInsurance) -> dict:
+        logger.debug("BASE status obj: %s", obj)
         return {"id": obj.status.value, "value": obj.status.value, "label": obj.status.label}
 
     @swagger_serializer_method(serializer_or_field=AbstractScoutsGroupSerializer)

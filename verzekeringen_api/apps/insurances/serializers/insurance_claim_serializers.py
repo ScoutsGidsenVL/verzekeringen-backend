@@ -66,6 +66,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
         model = InsuranceClaim
         exclude = ["declarant"]
 
+    # @TODO see if adding the group can't be done with a AbstractScoutsGroupSerializerField
     def to_representation(self, data: dict) -> dict:
         data = super().to_representation(data)
 
