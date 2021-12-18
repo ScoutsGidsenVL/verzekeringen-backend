@@ -40,7 +40,7 @@ class InuitsEquipmentInsuranceViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("CREATE VALIDATED DATA: %s", validated_data)
 
-        created_insurance = self.equipment_insurance_service.equipment_insurance_create(
+        created_insurance = self.equipment_insurance_service.inuits_equipment_insurance_create(
             **validated_data, created_by=request.user
         )
 

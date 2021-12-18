@@ -52,3 +52,17 @@ class InuitsEquipmentService:
         equipment.save()
 
         return equipment
+    
+    @transaction.atomic
+    def inuits_equipment_update_obj(self, equipment: InuitsEquipment, updated_equipment: InuitsEquipment) -> InuitsEquipment:
+        equipment.nature = updated_equipment.nature
+        equipment.description = updated_equipment.description
+        equipment.total_value = updated_equipment.total_value
+        equipment.owner_non_member = updated_equipment.owner_non_member
+        equipment.owner_member = updated_equipment.owner_member
+        equipment.owner_group = updated_equipment.owner_group
+
+        equipment.full_clean()
+        equipment.save()
+
+        return equipment

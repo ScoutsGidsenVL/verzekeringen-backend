@@ -3,7 +3,6 @@ import logging
 from rest_framework import serializers
 
 from apps.equipment.models import InuitsEquipment
-from apps.people.models import InuitsNonMember
 from apps.people.serializers.fields import InuitsNonMemberSerializerField
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
