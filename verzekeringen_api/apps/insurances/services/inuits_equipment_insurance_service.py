@@ -19,33 +19,31 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
     base_insurance_service = BaseInsuranceService()
     inuits_equipment_service = InuitsEquipmentService()
     equipment_service = EquipmentService()
-    
+
     @transaction.atomic
     def inuits_equipment_insurance_create(
         self,
         *args,
-        equipment: List[InuitsEquipment],
+        inuits_equipment: List[InuitsEquipment],
         **base_insurance_fields,
     ) -> EquipmentInsurance:
-        
+
         # Create the insurance
         insurance = self.equipment_insurance_create(
             *args,
             **base_insurance_fields,
         )
-        
+
         # Save the equipment instances and link them in a template
-        for inuits_equipment in equipment:
+        for item in inuits_equipment:
             # Update if necessary
-            inuits_equipment.full_clean()
-            inuits_equipment.save()
-            
-            equipment = self.equipment_service.equipment_create(insurance, inuits_equipment.description, inuits_equipment.total_value, inuits_equipment.nature)
-            
-            
-        
+            item.full_clean()
+            item.save()
+
+            equipment = self.equipment_service.equipment_create(
+                insurance, item.description, item.total_value, item.nature, owner_non_member, owner_member
+            )
 
         self.base_insurance_service.handle_insurance_created(insurance)
-        
-        return insurance
 
+        return insurance

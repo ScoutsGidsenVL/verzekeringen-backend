@@ -7,7 +7,6 @@ from apps.people.models import InuitsClaimVictim
 from apps.insurances.managers import InsuranceClaimManager
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
-from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import (

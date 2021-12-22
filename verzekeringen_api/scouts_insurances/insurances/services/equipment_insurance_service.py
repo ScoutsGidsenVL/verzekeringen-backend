@@ -10,7 +10,7 @@ from scouts_insurances.equipment.services import EquipmentService
 
 from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import EquipmentInsurance, InsuranceType, CostVariable
-from scouts_insurances.insurances.models.enums import InsuranceStatus, InsuranceTypeEnum
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.services import BaseInsuranceService
 
 

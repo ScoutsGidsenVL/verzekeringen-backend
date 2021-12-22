@@ -48,7 +48,7 @@ class InsuranceClaimService:
         leadership_description: str = "",
         victim: InuitsClaimVictim,
     ) -> InsuranceClaim:
-        # validate if person have rights to create claim for this group
+        # validate if person has rights to create claim for this group
         if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
             raise ValidationError("Given group %s is not a valid group of user" % group_group_admin_id)
 

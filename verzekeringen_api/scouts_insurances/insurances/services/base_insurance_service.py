@@ -5,7 +5,6 @@ from decimal import Decimal
 from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 
 from scouts_insurances.people.models import Member
 from scouts_insurances.people.services import MemberService

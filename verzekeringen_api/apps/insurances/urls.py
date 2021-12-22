@@ -8,7 +8,6 @@ from apps.insurances.views import (
     TemporaryVehicleInsuranceCoverageOptionViewSet,
     TemporaryVehicleInsuranceOptionViewSet,
     BaseInsuranceViewSet,
-    TemporaryInsuranceViewSet,
     InsuranceClaimViewSet,
     InsuranceClaimAttachmentViewSet,
     InsuranceDraftViewSet,
@@ -16,6 +15,7 @@ from apps.insurances.views import (
     EventInsuranceAttachmentViewSet,
     InuitsEventInsuranceViewSet,
     InuitsActivityInsuranceViewSet,
+    InuitsTemporaryInsuranceViewSet,
     InuitsTemporaryVehicleInsuranceViewSet,
     InuitsTravelAssistanceInsuranceViewSet,
     InuitsEquipmentInsuranceViewSet,
@@ -37,7 +37,7 @@ router.register(
     TemporaryVehicleInsuranceOptionViewSet,
     "VehicleInsuranceOption",
 )
-router.register(r"insurances/temporary", TemporaryInsuranceViewSet, "TemporaryInsurance")
+router.register(r"insurances/temporary", InuitsTemporaryInsuranceViewSet, "TemporaryInsurance")
 
 router.register(r"insurances/event", InuitsEventInsuranceViewSet, "EventInsurance")
 router.register(r"insurances/activity", InuitsActivityInsuranceViewSet, "ActivityInsurance")

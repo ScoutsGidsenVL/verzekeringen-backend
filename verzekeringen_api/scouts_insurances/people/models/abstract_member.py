@@ -40,6 +40,9 @@ class AbstractMember(models.Model):
     #         self._birth_date = value
 
     def __str__(self):
+        return self.abstract_member_to_str()
+
+    def abstract_member_to_str(self):
         return "first_name({}), last_name({}), phone_number({}), birth_date({})".format(
             self.first_name, self.last_name, self.phone_number, self.birth_date
         )

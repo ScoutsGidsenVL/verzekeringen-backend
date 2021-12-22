@@ -7,13 +7,15 @@ from django.db import transaction
 from apps.equipment.models import InuitsEquipment
 from apps.people.models import InuitsNonMember
 
+from scouts_insurances.equipment.services import EquipmentService
+
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
 
 
 logger = logging.getLogger(__name__)
 
 
-class InuitsEquipmentService:
+class InuitsEquipmentService(EquipmentService):
     @transaction.atomic
     def inuits_equipment_create(
         self,
@@ -32,6 +34,7 @@ class InuitsEquipmentService:
             owner_group=owner_group.group_admin_id if owner_group else None,
             owner_non_member=owner_non_member,
             owner_member=owner_member.group_admin_id if owner_member else None,
+            created_by=created_by,
         )
 
         equipment.full_clean()
@@ -40,21 +43,26 @@ class InuitsEquipmentService:
         return equipment
 
     @transaction.atomic
-    def inuits_equipment_update(self, *, equipment: InuitsEquipment, **fields) -> InuitsEquipment:
+    def inuits_equipment_update(
+        self, *, equipment: InuitsEquipment, updated_by=settings.AUTH_USER_MODEL, **fields
+    ) -> InuitsEquipment:
         equipment.nature = fields.get("nature", equipment.nature)
         equipment.description = fields.get("description", equipment.description)
         equipment.total_value = fields.get("total_value", equipment.total_value)
         equipment.owner_non_member = fields.get("owner_non_member", equipment.owner_non_member)
         equipment.owner_member = fields.get("owner_member", equipment.owner_member)
         equipment.owner_group = fields.get("owner_group", equipment.owner_group)
+        equipment.updated_by = updated_by
 
         equipment.full_clean()
         equipment.save()
 
         return equipment
-    
+
     @transaction.atomic
-    def inuits_equipment_update_obj(self, equipment: InuitsEquipment, updated_equipment: InuitsEquipment) -> InuitsEquipment:
+    def inuits_equipment_update_obj(
+        self, equipment: InuitsEquipment, updated_equipment: InuitsEquipment
+    ) -> InuitsEquipment:
         equipment.nature = updated_equipment.nature
         equipment.description = updated_equipment.description
         equipment.total_value = updated_equipment.total_value

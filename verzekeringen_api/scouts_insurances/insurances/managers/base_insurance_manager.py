@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 
@@ -28,6 +29,9 @@ class BaseInsuranceQuerySet(models.QuerySet):
             _status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING],
             responsible_member__group_admin_id=user.group_admin_id,
         )
+
+    def non_editable(self, user: settings.AUTH_USER_MODEL):
+        return self.filter(~Q(_status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING]))
 
 
 class BaseInsuranceManager(models.Manager):

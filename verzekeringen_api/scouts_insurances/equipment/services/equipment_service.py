@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.db import transaction
 
+
 from scouts_insurances.people.services import MemberService
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import EquipmentInsurance
@@ -24,12 +25,10 @@ class EquipmentService:
         nature: str = None,
         owner_non_member: dict = None,
         owner_member: dict = None,
-        id: str = None,
-        inuits_equipment_id: str = None,
     ) -> Equipment:
         equipment = Equipment(nature=nature, description=description, total_value=total_value, insurance=insurance)
         if owner_non_member:
-            equipment.owner_non_member = self.member_service.non_member_create(**owner_non_member)
+            equipment.owner_non_member = self.non_member_service.non_member_create(**owner_non_member)
         if owner_member:
             equipment.owner_member = self.member_service.member_create(**owner_member)
         equipment.full_clean()

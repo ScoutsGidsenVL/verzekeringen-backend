@@ -57,9 +57,9 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("VALIDATED REQUEST DATA: %s", validated_data)
 
-        created_non_member = self.service.inuits_non_member_create(**validated_data)
+        non_member = self.service.inuits_non_member_create(**validated_data)
 
-        output_serializer = InuitsNonMemberSerializer(created_non_member, context={"request": request})
+        output_serializer = InuitsNonMemberSerializer(non_member, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -68,15 +68,17 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsNonMemberSerializer},
     )
     def partial_update(self, request, pk=None):
-        non_member = self.get_object()
+        inuits_non_member = InuitsNonMember.objects.all().get(template__non_member=pk)
 
         serializer = InuitsNonMemberSerializer(
-            data=request.data, instance=non_member, context={"request": request}, partial=True
+            instance=inuits_non_member, data=request.data, context={"request": request}, partial=True
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_non_member = self.service.inuits_non_member_update(non_member=non_member, **serializer.validated_data)
+        inuits_non_member = self.service.inuits_non_member_update(
+            inuits_non_member=inuits_non_member, updated_inuits_non_member=serializer.validated_data
+        )
 
-        output_serializer = InuitsNonMemberSerializer(updated_non_member)
+        output_serializer = InuitsNonMemberSerializer(inuits_non_member)
 
         return Response(output_serializer.data, status=status.HTTP_200_OK)

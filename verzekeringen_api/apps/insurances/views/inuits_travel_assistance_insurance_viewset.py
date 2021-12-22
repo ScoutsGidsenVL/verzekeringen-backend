@@ -7,10 +7,10 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.insurances.serializers import InuitsTravelAssistanceInsuranceSerializer
+from apps.insurances.services import InuitsTravelAssistanceInsuranceService
 
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
 from scouts_insurances.insurances.serializers import InsuranceCostSerializer
-from scouts_insurances.insurances.services import TravelAssistanceInsuranceService
 
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
 
-    travel_assistance_insurance_service = TravelAssistanceInsuranceService()
+    travel_assistance_insurance_service = InuitsTravelAssistanceInsuranceService()
 
     def get_queryset(self):
         return TravelAssistanceInsurance.objects.all().allowed(self.request.user)

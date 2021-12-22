@@ -1,11 +1,7 @@
 import logging
 
-from django.db.models import Q
-from rest_framework import serializers
-from drf_yasg2.utils import swagger_serializer_method
-
-from apps.equipment.models import InuitsVehicle
 from apps.equipment.serializers import InuitsVehicleSerializer
+from apps.people.serializers import InuitsNonMemberSerializer
 
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
 from scouts_insurances.insurances.serializers import TravelAssistanceInsuranceSerializer
@@ -15,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class InuitsTravelAssistanceInsuranceSerializer(TravelAssistanceInsuranceSerializer):
+    participants = InuitsNonMemberSerializer(many=True)
     # vehicle = serializers.SerializerMethodField(required=False)
     vehicle = InuitsVehicleSerializer()
 

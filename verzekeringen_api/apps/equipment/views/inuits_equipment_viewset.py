@@ -78,7 +78,9 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
-        updated_equipment = self.service.inuits_equipment_update(equipment=equipment, **serializer.validated_data)
+        updated_equipment = self.service.inuits_equipment_update(
+            equipment=equipment, updated_by=request.user, **serializer.validated_data
+        )
 
         output_serializer = InuitsEquipmentSerializer(updated_equipment, context={"request": request})
 

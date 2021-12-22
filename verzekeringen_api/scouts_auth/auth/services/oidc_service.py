@@ -1,6 +1,4 @@
-import logging, requests
-
-from django.conf import settings
+import logging
 
 from scouts_auth.auth.utils import SettingsHelper
 from scouts_auth.groupadmin.services import GroupAdmin

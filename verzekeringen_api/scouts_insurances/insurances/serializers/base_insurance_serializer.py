@@ -83,12 +83,12 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(serializer_or_field=status)
     def get_status(self, obj: BaseInsurance) -> dict:
-        logger.debug("BASE status obj: %s", obj)
+        # logger.debug("BASE status obj: %s", obj)
         return {"id": obj.status.value, "value": obj.status.value, "label": obj.status.label}
 
     @swagger_serializer_method(serializer_or_field=AbstractScoutsGroupSerializer)
     def get_scouts_group(self, obj) -> AbstractScoutsGroup:
-        logger.debug("SCOUTS_GROUP OBJ BASE: %s", obj)
+        # logger.debug("SCOUTS_GROUP OBJ BASE: %s", obj)
         return AbstractScoutsGroupSerializer(obj).data
 
     @swagger_serializer_method(serializer_or_field=InsuranceCostSerializer)

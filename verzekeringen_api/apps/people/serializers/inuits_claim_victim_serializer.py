@@ -28,36 +28,38 @@ class InuitsClaimVictimSerializer(InuitsPersonSerializer):
     # comment               max_length=500          optional
     # legal_representative  max_length=128          optional
     # group_admin_id        max_length=255          optional
+
+    # Removed from model and serializers, since it isn't used
     # non_member            InuitsNonMember         optional
-    non_member = InuitsNonMemberSerializerField(required=False, allow_null=True)
+    # non_member = InuitsNonMemberSerializerField(required=False, allow_null=True)
 
     class Meta:
         model = InuitsClaimVictim
         fields = "__all__"
 
-    def validate_group_admin_id(self, group_admin_id: str) -> str:
-        if not group_admin_id or len(group_admin_id.strip()) == 0:
-            raise serializers.ValidationError("Can't validate victim without a group admin id")
+    # def validate_group_admin_id(self, group_admin_id: str) -> str:
+    #     if not group_admin_id or len(group_admin_id.strip()) == 0:
+    #         raise serializers.ValidationError("Can't validate victim without a group admin id")
 
-        # Validate whether membership number of member is valid
-        victim: AbstractScoutsMember = None
-        try:
-            # logger.debug("Validating claim victim as scouts member with group admin id %s", group_admin_id)
-            victim = GroupAdmin().get_member_info(
-                active_user=self.context["request"].user, group_admin_id=group_admin_id
-            )
+    #     # Validate whether membership number of member is valid
+    #     victim: AbstractScoutsMember = None
+    #     try:
+    #         # logger.debug("Validating claim victim as scouts member with group admin id %s", group_admin_id)
+    #         victim = GroupAdmin().get_member_info(
+    #             active_user=self.context["request"].user, group_admin_id=group_admin_id
+    #         )
 
-            if not victim or victim.group_admin_id != group_admin_id:
-                victim = None
-        except:
-            raise serializers.ValidationError("Couldn't validate victim with group admin id {}".format(group_admin_id))
+    #         if not victim or victim.group_admin_id != group_admin_id:
+    #             victim = None
+    #     except:
+    #         raise serializers.ValidationError("Couldn't validate victim with group admin id {}".format(group_admin_id))
 
-        if victim is None:
-            raise serializers.ValidationError(
-                "Victim with group admin id {} not found by groupadmin".format(group_admin_id)
-            )
+    #     if victim is None:
+    #         raise serializers.ValidationError(
+    #             "Victim with group admin id {} not found by groupadmin".format(group_admin_id)
+    #         )
 
-        return group_admin_id
+    #     return group_admin_id
 
     def validate(self, data: dict) -> InuitsClaimVictim:
         return InuitsClaimVictim(**data)

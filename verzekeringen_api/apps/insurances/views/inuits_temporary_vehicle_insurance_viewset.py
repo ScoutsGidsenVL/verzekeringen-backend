@@ -7,9 +7,10 @@ from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 
 from apps.insurances.serializers import InuitsTemporaryVehicleInsuranceSerializer
-from scouts_insurances.insurances.models import BaseInsurance, TemporaryVehicleInsurance
+from apps.insurances.services import InuitsTemporaryVehicleInsuranceService
+
+from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.serializers import InsuranceCostSerializer
-from scouts_insurances.insurances.services import TemporaryVehicleInsuranceService
 
 
 logger = logging.getLogger(__name__)
@@ -22,8 +23,7 @@ class InuitsTemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
     ordering_fields = ["created_on"]
     ordering = ["-created_on"]
 
-    inuits_vehicle_template_service = ()
-    temporary_vehicle_insurance_service = TemporaryVehicleInsuranceService()
+    temporary_vehicle_insurance_service = InuitsTemporaryVehicleInsuranceService()
 
     def get_queryset(self):
         return TemporaryVehicleInsurance.objects.all().allowed(self.request.user)

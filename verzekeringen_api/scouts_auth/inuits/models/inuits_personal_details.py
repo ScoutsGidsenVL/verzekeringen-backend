@@ -22,3 +22,14 @@ class InuitsPersonalDetails(AbstractNonModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def personal_details_to_str(self):
+        return "first_name({}), last_name({}), phone_number({}), cell_number({}), email({}), birth_date({}), gender({})".format(
+            self.first_name,
+            self.last_name,
+            self.phone_number,
+            self.cell_number,
+            self.email,
+            self.birth_date,
+            self.gender,
+        )

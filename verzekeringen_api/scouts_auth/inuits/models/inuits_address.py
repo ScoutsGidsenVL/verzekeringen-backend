@@ -15,3 +15,8 @@ class InuitsAddress(AbstractNonModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def address_details_to_str(self):
+        return "street({}), number({}), letter_box({}), postal_code({}), city({})".format(
+            self.street, self.number, self.letter_box, self.postal_code, self.city
+        )

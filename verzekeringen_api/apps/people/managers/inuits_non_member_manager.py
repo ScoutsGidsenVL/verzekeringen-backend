@@ -4,8 +4,24 @@ from django.db import models
 from django.db.models import Q
 from django.conf import settings
 
+from scouts_insurances.equipment.models import Equipment
+from scouts_insurances.insurances.models import (
+    NonMemberTemporaryInsurance,
+    ParticipantTemporaryVehicleInsurance,
+    ParticipantTravelAssistanceInsurance,
+)
+
 
 class InuitsNonMemberQuerySet(models.QuerySet):
+
+    FIELD_EQUIPMENT = Equipment.owner_non_member.field.name
+    # Links a non-member to a temporary insurance through a jointable
+    FIELD_NON_MEMBER_TEMPORARY_INSURANCE = NonMemberTemporaryInsurance.non_member_id.field.name
+    # Links a non-member to a temporary vehicle insurance through a jointable
+    FIELD_TEMPORARY_VEHICLE_INSURANCE = ParticipantTemporaryVehicleInsurance.participant.field.name
+    # Links a non-member to a travel assistance insurance through a jointable
+    FIELD_TRAVEL_ASSISTANCE = ParticipantTravelAssistanceInsurance.participant.field.name
+
     def allowed(self, user: settings.AUTH_USER_MODEL):
         groups = [group.group_admin_id for group in user.scouts_groups]
         return self.filter(
@@ -48,4 +64,5 @@ class InuitsNonMemberQuerySet(models.QuerySet):
 
 class InuitsNonMemberManager(models.Manager):
     def get_queryset(self):
+        # Return InuitsNonMember instances that can show up in searches
         return InuitsNonMemberQuerySet(self.model, using=self._db)

@@ -2,10 +2,10 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from scouts_insurances.insurances.models import BaseInsurance
-from scouts_insurances.insurances.models.enums import GroupSize
 
 
 class ActivityInsurance(BaseInsurance):
+
     insurance_parent = models.OneToOneField(
         BaseInsurance,
         db_column="verzekeringsid",

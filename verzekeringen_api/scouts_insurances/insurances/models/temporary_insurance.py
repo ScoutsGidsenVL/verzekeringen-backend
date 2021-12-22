@@ -22,7 +22,7 @@ class TemporaryInsurance(BaseInsurance):
     _country = models.CharField(db_column="land", max_length=45, blank=True)
 
     non_members = models.ManyToManyField(
-        NonMember, through="scouts_insurances.NonMemberTemporaryInsurance", related_name="temporary_insurances"
+        NonMember, through="NonMemberTemporaryInsurance", related_name="temporary_insurances"
     )
 
     class Meta:

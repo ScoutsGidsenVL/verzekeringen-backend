@@ -65,7 +65,7 @@ class BaseInsurance(models.Model):
     # Special group setter that accepts group class
     @scouts_group.setter
     def scouts_group(self, value: AbstractScoutsGroup):
-        logger.debug("SETTING SCOUTS GROUP: %s", value.group_admin_id)
+        # logger.debug("SETTING SCOUTS GROUP: %s", value.group_admin_id)
         self._group_group_admin_id = value.group_admin_id
         self._group_name = value.name
         self._group_location = value.addresses[0].city

@@ -3,7 +3,6 @@ import logging
 from rest_framework import serializers
 
 from scouts_auth.inuits.models import InuitsAddress
-from scouts_auth.inuits.serializers import NonModelSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -20,3 +19,6 @@ class InuitsAddressSerializer(serializers.Serializer):
     class Meta:
         model = InuitsAddress
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
