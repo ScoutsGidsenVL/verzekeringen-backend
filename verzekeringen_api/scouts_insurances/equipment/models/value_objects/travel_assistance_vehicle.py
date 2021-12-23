@@ -23,4 +23,4 @@ class TravelAssistanceVehicle(Vehicle):
         self.trailer = trailer if trailer else self.DEFAULT_VEHICLE_TRAILER_OPTION
 
     def __str__(self):
-        return super().__str__() + ", trailer({})".format(self.trailer)
+        return "{}, trailer({})".format(super().__str__(), self.trailer)

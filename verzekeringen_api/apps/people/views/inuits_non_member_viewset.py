@@ -35,14 +35,18 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsNonMemberSerializer})
     def list(self, request):
-        non_members = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(non_members)
+        inuits_non_members = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(inuits_non_members)
+
+        logger.debug("Found %s InuitsNonMember instances", len(inuits_non_members))
+        for inuits_non_member in inuits_non_members:
+            logger.debug("INUITS NON MEMBER: %s", str(inuits_non_member))
 
         if page is not None:
             serializer = InuitsNonMemberSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = InuitsNonMemberSerializer(non_members, many=True)
+            serializer = InuitsNonMemberSerializer(inuits_non_members, many=True)
             return Response(serializer.data)
 
     @swagger_auto_schema(
@@ -57,7 +61,7 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("VALIDATED REQUEST DATA: %s", validated_data)
 
-        non_member = self.service.inuits_non_member_create(**validated_data)
+        non_member = self.service.inuits_non_member_create(inuits_non_member=validated_data, created_by=request.user)
 
         output_serializer = InuitsNonMemberSerializer(non_member, context={"request": request})
 
@@ -68,7 +72,8 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsNonMemberSerializer},
     )
     def partial_update(self, request, pk=None):
-        inuits_non_member = InuitsNonMember.objects.all().get(template__non_member=pk)
+        # inuits_non_member = InuitsNonMember.objects.all().get(template__non_member=pk)
+        inuits_non_member = self.get_object()
 
         serializer = InuitsNonMemberSerializer(
             instance=inuits_non_member, data=request.data, context={"request": request}, partial=True
@@ -76,7 +81,9 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         inuits_non_member = self.service.inuits_non_member_update(
-            inuits_non_member=inuits_non_member, updated_inuits_non_member=serializer.validated_data
+            inuits_non_member=inuits_non_member,
+            updated_inuits_non_member=serializer.validated_data,
+            updated_by=request.user,
         )
 
         output_serializer = InuitsNonMemberSerializer(inuits_non_member)

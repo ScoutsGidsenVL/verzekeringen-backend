@@ -4,10 +4,10 @@ from rest_framework import serializers
 
 from apps.equipment.models import InuitsVehicle, InuitsVehicleTrailerOption
 
-from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle, VehicleType
-from scouts_insurances.equipment.serializers import TemporaryVehicleInsuranceVehicleSerializer
+from scouts_insurances.equipment.models import VehicleType
 
 from scouts_auth.inuits.serializers import EnumSerializer
+from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
 
 
 logger = logging.getLogger(__name__)
@@ -35,8 +35,11 @@ class InuitsVehicleSerializer(serializers.ModelSerializer):
     #     return InuitsVehicle.from_vehicle(vehicle)
     def to_internal_value(self, data: dict) -> InuitsVehicle:
         # @TODO remove group_group_admin_id from frontend serializer
+        # logger.debug("DATA: %s", data)
         data.pop("group_group_admin_id", None)
-        return InuitsVehicle(**data)
+        # logger.debug("DATA: %s", data)
+        # return InuitsVehicle(**data)
+        return data
 
     def to_representation(self, obj: InuitsVehicle) -> dict:
         type = VehicleType.from_choice(obj.type)
@@ -53,3 +56,6 @@ class InuitsVehicleSerializer(serializers.ModelSerializer):
         data["trailer"] = EnumSerializer((trailer[0], trailer[1])).data
 
         return data
+
+    def validate(self, data: dict) -> InuitsVehicle:
+        return InuitsVehicle(**data)

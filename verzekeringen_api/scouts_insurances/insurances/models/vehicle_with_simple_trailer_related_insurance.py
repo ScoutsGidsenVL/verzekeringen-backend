@@ -5,16 +5,16 @@ from scouts_insurances.equipment.models.enums import TravelAssistanceVehicleTrai
 from scouts_insurances.insurances.models import VehicleRelatedInsurance
 
 from scouts_auth.inuits.models.fields import (
-    DefaultIntegerField,
+    OptionalIntegerField,
 )
 
 
 class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
 
-    _vehicle_trailer = DefaultIntegerField(
+    _vehicle_trailer = OptionalIntegerField(
         db_column="aanhangwagen",
         choices=TravelAssistanceVehicleTrailerOption.choices,
-        default=TravelAssistanceVehicle.DEFAULT_VEHICLE_TRAILER_OPTION,
+        # default=TravelAssistanceVehicle.DEFAULT_VEHICLE_TRAILER_OPTION,
         validators=[MinValueValidator(0), MaxValueValidator(1)],
     )
 
@@ -28,7 +28,7 @@ class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
     @property
     def vehicle(self) -> TravelAssistanceVehicle:
         # If no vehicle type all other fields are empty aswell
-        if not self._vehicle_type:
+        if not self.get_vehicle():
             return None
 
         return TravelAssistanceVehicle(
@@ -41,6 +41,8 @@ class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
 
     @vehicle.setter
     def vehicle(self, obj: TravelAssistanceVehicle = None):
+        self._vehicle_trailer = None
+
         super().set_vehicle(obj)
 
         if obj:
@@ -53,3 +55,9 @@ class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
     @property
     def has_heavy_trailer(self):
         return False
+
+    def __str__(self):
+        return self.vehicle_with_simple_trailer_to_str()
+
+    def vehicle_with_simple_trailer_to_str(self):
+        return "{}, trailer({})".format(self.vehicle_to_str(), self._vehicle_trailer)

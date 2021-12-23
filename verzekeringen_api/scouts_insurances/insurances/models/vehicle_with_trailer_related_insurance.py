@@ -3,17 +3,17 @@ from scouts_insurances.equipment.models.enums import TemporaryVehicleInsuranceVe
 from scouts_insurances.insurances.models import VehicleRelatedInsurance
 
 from scouts_auth.inuits.models.fields import (
-    DefaultCharField,
+    OptionalCharField,
 )
 
 
 class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
 
-    _vehicle_trailer = DefaultCharField(
+    _vehicle_trailer = OptionalCharField(
         db_column="aanhangwagen",
         choices=TemporaryVehicleInsuranceVehicleTrailerOption.choices,
         max_length=1,
-        default=TemporaryVehicleInsuranceVehicle.DEFAULT_VEHICLE_TRAILER_OPTION,
+        # default=TemporaryVehicleInsuranceVehicle.DEFAULT_VEHICLE_TRAILER_OPTION,
     )
 
     def __init__(self, *args, **kwargs):
@@ -26,7 +26,7 @@ class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
     @property
     def vehicle(self) -> TemporaryVehicleInsuranceVehicle:
         # If no vehicle type all other fields are empty aswell
-        if not self._vehicle_type:
+        if not self.get_vehicle():
             return None
 
         return TemporaryVehicleInsuranceVehicle(
@@ -40,6 +40,8 @@ class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
 
     @vehicle.setter
     def vehicle(self, obj: TemporaryVehicleInsuranceVehicle = None):
+        self._vehicle_trailer = None
+
         super().set_vehicle(obj)
 
         if obj:
@@ -52,3 +54,9 @@ class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
     @property
     def has_heavy_trailer(self):
         return self._vehicle_trailer == TemporaryVehicleInsuranceVehicleTrailerOption.TRAILER_MORE_750
+
+    def __str__(self):
+        return self.vehicle_with_trailer_to_str()
+
+    def vehicle_with_trailer_to_str(self):
+        return "{}, trailer({})".format(self.vehicle_to_str(), self._vehicle_trailer)

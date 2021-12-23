@@ -39,6 +39,7 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
 
         validated_data = input_serializer.validated_data
         logger.debug("CREATE VALIDATED DATA: %s", validated_data)
+        logger.debug("CREATE VALIDATED DATA FOR VEHICLE: %s", str(validated_data.get("vehicle")))
 
         created_insurance = self.travel_assistance_insurance_service.travel_assistance_insurance_create(
             **validated_data, created_by=request.user

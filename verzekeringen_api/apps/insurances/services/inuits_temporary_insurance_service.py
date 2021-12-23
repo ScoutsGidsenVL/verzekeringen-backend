@@ -45,7 +45,9 @@ class InuitsTemporaryInsuranceService(TemporaryInsuranceService):
         # Save insurance here already so we can create non members linked to it
         # This whole function is atomic so if non members cant be created this will rollback aswell
         for non_member in non_members:
-            non_member = self.non_member_service.non_member_create(non_member)
+            non_member = self.non_member_service.linked_non_member_create(
+                inuits_non_member=non_member, created_by=base_insurance_fields.get("created_by")
+            )
             insurance.non_members.add(non_member)
 
         insurance.full_clean()

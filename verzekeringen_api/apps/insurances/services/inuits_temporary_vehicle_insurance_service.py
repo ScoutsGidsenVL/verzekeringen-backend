@@ -1,8 +1,10 @@
 import logging
+from typing import List
 
 from django.db import transaction
 from django.conf import settings
 
+from apps.people.models import InuitsNonMember
 from apps.people.services import InuitsNonMemberService
 
 from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle
@@ -25,8 +27,8 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
     def temporary_vehicle_insurance_create(
         self,
         *,
-        owner: dict,
-        drivers: list,
+        owner: InuitsNonMember,
+        drivers: List[InuitsNonMember],
         vehicle: TemporaryVehicleInsuranceVehicle,
         insurance_options: set = None,
         max_coverage: str = None,
@@ -54,7 +56,9 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
         # Save insurance here already so we can create non members linked to it
         # This whole function is atomic so if non members cant be created this will rollback aswell
         for driver in drivers:
-            driver = self.non_member_service.non_member_create(driver)
+            driver = self.non_member_service.linked_non_member_create(
+                inuits_non_member=driver, created_by=base_insurance_fields.get("created_by")
+            )
             driver_insurance = ParticipantTemporaryVehicleInsurance(
                 participant=driver, insurance=insurance, type=TemporaryVehicleParticipantType.DRIVER
             )
@@ -70,9 +74,12 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
             owner.first_name = settings.COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME
             owner.last_name = owner.company_name
 
-        owner_model = self.non_member_service.non_member_create(owner)
+        owner = self.non_member_service.linked_non_member_create(
+            inuits_non_member=owner, created_by=base_insurance_fields.get("created_by")
+        )
+
         owner_insurance = ParticipantTemporaryVehicleInsurance(
-            participant=owner_model, insurance=insurance, type=TemporaryVehicleParticipantType.OWNER
+            participant=owner, insurance=insurance, type=TemporaryVehicleParticipantType.OWNER
         )
         owner_insurance.full_clean()
         owner_insurance.save()

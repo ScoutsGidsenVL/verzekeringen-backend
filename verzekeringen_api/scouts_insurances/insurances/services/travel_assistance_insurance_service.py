@@ -1,4 +1,4 @@
-import math
+import logging, math
 from decimal import Decimal
 
 from django.db import transaction
@@ -9,6 +9,9 @@ from scouts_insurances.insurances.models import TravelAssistanceInsurance, Insur
 from scouts_insurances.insurances.services import BaseInsuranceService
 
 from scouts_auth.groupadmin.services import GroupAdmin
+
+
+logger = logging.getLogger(__name__)
 
 
 class TravelAssistanceInsuranceService:

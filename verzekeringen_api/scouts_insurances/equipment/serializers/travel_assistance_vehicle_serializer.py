@@ -18,5 +18,5 @@ class TravelAssistanceVehicleSerializer(VehicleSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def validate(self, data: dict) -> TravelAssistanceVehicle:
-        return TravelAssistanceVehicle(**data)
+    # def validate(self, data: dict) -> TravelAssistanceVehicle:
+    #     return TravelAssistanceVehicle(**data)

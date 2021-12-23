@@ -96,6 +96,7 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
         return obj.total_cost
 
     def validate(self, data: dict) -> dict:
+        logger.debug("VALIDATING BASE")
         start_date = data.get("start_date", None)
         end_date = data.get("end_date", None)
 

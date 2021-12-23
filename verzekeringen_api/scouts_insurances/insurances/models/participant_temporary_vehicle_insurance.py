@@ -19,7 +19,6 @@ class ParticipantTemporaryVehicleInsurance(models.Model):
         on_delete=models.CASCADE,
         related_name="insurance_participants",
     )
-
     type = models.CharField(db_column="soort", choices=TemporaryVehicleParticipantType.choices, max_length=10)
 
     class Meta:

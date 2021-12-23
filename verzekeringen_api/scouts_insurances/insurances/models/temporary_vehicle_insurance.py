@@ -45,10 +45,8 @@ class TemporaryVehicleInsurance(VehicleWithTrailerRelatedInsurance, BaseInsuranc
     @property
     def drivers(self):
         return [
-            insurance_participant.participant
-            for insurance_participant in self.insurance_participants.filter(
-                type=TemporaryVehicleParticipantType.DRIVER
-            )
+            participant.participant
+            for participant in self.insurance_participants.filter(type=TemporaryVehicleParticipantType.DRIVER)
         ]
 
     # @property

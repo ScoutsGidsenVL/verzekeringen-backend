@@ -41,11 +41,3 @@ class TravelAssistanceInsurance(VehicleWithSimpleTrailerRelatedInsurance, BaseIn
             and not self._vehicle_construction_year
         ):
             raise serializers.ValidationError("If one vehicle field given all vehicle fields need to be given")
-
-    # @property
-    # def country(self):
-    #     return Country.objects.get(name=self.country)
-
-    # @country.setter
-    # def country(self, value: Country):
-    #     self.country = value.name

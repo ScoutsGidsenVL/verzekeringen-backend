@@ -5,29 +5,27 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from rest_framework import serializers
 
-from scouts_insurances.equipment.models import Vehicle, TemporaryVehicleInsuranceVehicle
-from scouts_insurances.equipment.models.enums import VehicleType, TemporaryVehicleInsuranceVehicleTrailerOption
+from scouts_insurances.equipment.models import Vehicle
+from scouts_insurances.equipment.models.enums import VehicleType
 
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,
-    DefaultCharField,
-    RequiredCharField,
     OptionalIntegerField,
 )
 
 
 class VehicleRelatedInsurance(models.Model):
 
-    _vehicle_type = DefaultCharField(
+    _vehicle_type = OptionalCharField(
         db_column="autotype",
         choices=VehicleType.choices,
-        default=Vehicle.DEFAULT_VEHICLE_TYPE,
+        # default=Vehicle.DEFAULT_VEHICLE_TYPE,
         max_length=30,
     )
     _vehicle_brand = OptionalCharField(db_column="automerk", max_length=15)
     _vehicle_license_plate = OptionalCharField(db_column="autokenteken", max_length=10)
     _vehicle_construction_year = OptionalIntegerField(db_column="autobouwjaar", validators=[MinValueValidator(1900)])
-    _vehicle_chassis_number = RequiredCharField(db_column="autochassis", max_length=20)
+    _vehicle_chassis_number = OptionalCharField(db_column="autochassis", max_length=20)
 
     class Meta:
         abstract = True
@@ -62,6 +60,12 @@ class VehicleRelatedInsurance(models.Model):
         )
 
     def set_vehicle(self, obj: Vehicle = None):
+        self._vehicle_type = None
+        self._vehicle_brand = None
+        self._vehicle_license_plate = None
+        self._vehicle_construction_year = None
+        self._vehicle_chassis_number = None
+
         if not obj:
             return
 
@@ -75,3 +79,15 @@ class VehicleRelatedInsurance(models.Model):
         if datetime.strptime("1900", "%Y") > value:
             raise ValidationError("Invalid construction year")
         return value
+
+    def __str__(self):
+        return self.vehicle_to_str()
+
+    def vehicle_to_str(self):
+        return "type({}), brand({}), license_plate({}), construction_year({}), chassis_number({})".format(
+            self._vehicle_type,
+            self._vehicle_brand,
+            self._vehicle_license_plate,
+            self._vehicle_construction_year,
+            self._vehicle_chassis_number,
+        )

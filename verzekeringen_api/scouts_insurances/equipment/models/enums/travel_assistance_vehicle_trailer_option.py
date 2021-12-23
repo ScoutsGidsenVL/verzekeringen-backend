@@ -1,9 +1,9 @@
 from django.db import models
 
 
-class TravelAssistanceVehicleTrailerOption(models.TextChoices):
-    NO_TRAILER = "0", "Geen"
-    TRAILER = "1", "Aanhangwagen"
+class TravelAssistanceVehicleTrailerOption(models.IntegerChoices):
+    NO_TRAILER = 0, "Geen"
+    TRAILER = 1, "Aanhangwagen"
 
     @staticmethod
     def from_choice(choice: str):

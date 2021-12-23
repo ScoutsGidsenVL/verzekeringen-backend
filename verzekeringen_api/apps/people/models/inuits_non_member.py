@@ -35,6 +35,9 @@ class InuitsNonMember(InuitsPerson):
     # postal_code   number                  optional
     # city          max_length=40           optional
 
+    # If set, this denotes a member that will be linked to an insurance that
+    # links all people as NonMember
+    group_admin_id = OptionalCharField()
     comment = OptionalCharField(max_length=500)
     company_name = OptionalCharField()
 
@@ -44,6 +47,39 @@ class InuitsNonMember(InuitsPerson):
     @property
     def full_name(self):
         return self.first_name + " " + self.last_name
+
+    def has_id(self) -> bool:
+        return self.id is not None
+
+    def has_group_admin_id(self) -> bool:
+        return self.group_admin_id is not None and len(self.group_admin_id.strip()) > 0
+
+    def is_member(self) -> bool:
+        return self.has_group_admin_id()
+
+    def equals(self, instance) -> bool:
+        logger.debug(type(instance).__name__)
+        logger.debug(self)
+        logger.debug(instance)
+        return (
+            instance is not None
+            and type(instance).__name__ == "InuitsNonMember"
+            and self.first_name == instance.first_name
+            and self.last_name == instance.last_name
+            and self.phone_number == instance.phone_number
+            and self.cell_number == instance.cell_number
+            and self.email == instance.email
+            and self.birth_date == instance.birth_date
+            and self.gender == instance.gender
+            and self.street == instance.street
+            and self.number == instance.number
+            and self.letter_box == instance.letter_box
+            and self.postal_code == instance.postal_code
+            and self.city == instance.city
+            and self.comment == instance.comment
+            and self.group_admin_id == instance.group_admin_id
+            and self.company_name == instance.company_name
+        )
 
     def __str__(self):
         return "id({}), {}, comment({})".format(self.id, self.person_to_str(), self.comment)
