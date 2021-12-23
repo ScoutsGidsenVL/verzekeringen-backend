@@ -1,7 +1,7 @@
 import logging
 
 from django.conf import settings
-
+from django.core.exceptions import ObjectDoesNotExist
 
 from apps.people.models import InuitsNonMember, InuitsNonMemberTemplate
 
@@ -18,12 +18,15 @@ class InuitsNonMemberService(NonMemberService):
     ) -> InuitsNonMember:
         # Check if the instance already exists
         if inuits_non_member.has_id():
-            object = InuitsNonMember.objects.get(pk=inuits_non_member.id)
-            if object:
-                return inuits_non_member
-                # return self.inuits_non_member_update(
-                #     inuits_non_member=inuits_non_member, updated_inuits_non_member=object, updated_by=created_by
-                # )
+            try:
+                object = InuitsNonMember.objects.get(pk=inuits_non_member.id)
+                if object:
+                    return inuits_non_member
+                    # return self.inuits_non_member_update(
+                    #     inuits_non_member=inuits_non_member, updated_inuits_non_member=object, updated_by=created_by
+                    # )
+            except ObjectDoesNotExist:
+                pass
 
         inuits_non_member = InuitsNonMember(
             first_name=inuits_non_member.first_name,
@@ -163,6 +166,21 @@ class InuitsNonMemberService(NonMemberService):
             inuits_non_member=inuits_non_member, non_member__in=list(NonMember.objects.all().editable(user=None))
         )
         logger.debug("NON_MEMBERs: %s", non_members)
+
+        for non_member in non_members:
+            self.non_member_update(
+                non_member=non_member,
+                first_name=inuits_non_member.first_name,
+                last_name=inuits_non_member.last_name,
+                phone_number=inuits_non_member.phone_number,
+                birth_date=inuits_non_member.birth_date,
+                street=inuits_non_member.street,
+                number=inuits_non_member.number,
+                letter_box=inuits_non_member.letter_box,
+                postal_code=inuits_non_member.postal_code,
+                city=inuits_non_member.city,
+                comment=inuits_non_member.comment,
+            )
 
         return inuits_non_member
 

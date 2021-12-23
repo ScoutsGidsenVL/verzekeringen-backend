@@ -13,6 +13,9 @@ logger = logging.getLogger(__name__)
 class InuitsNonMemberSerializerField(serializers.PrimaryKeyRelatedField):
     serialize = True
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, read_only=True, **kwargs)
+
     def get_queryset(self):
         request = self.context.get("request", None)
 

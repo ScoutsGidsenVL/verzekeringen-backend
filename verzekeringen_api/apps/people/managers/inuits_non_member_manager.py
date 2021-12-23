@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from django.db import models
@@ -12,6 +13,9 @@ from scouts_insurances.insurances.models import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 class InuitsNonMemberQuerySet(models.QuerySet):
 
     FIELD_EQUIPMENT = Equipment.owner_non_member.field.name
@@ -21,6 +25,9 @@ class InuitsNonMemberQuerySet(models.QuerySet):
     FIELD_TEMPORARY_VEHICLE_INSURANCE = ParticipantTemporaryVehicleInsurance.participant.field.name
     # Links a non-member to a travel assistance insurance through a jointable
     FIELD_TRAVEL_ASSISTANCE = ParticipantTravelAssistanceInsurance.participant.field.name
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def allowed(self, user: settings.AUTH_USER_MODEL):
         groups = [group.group_admin_id for group in user.scouts_groups]

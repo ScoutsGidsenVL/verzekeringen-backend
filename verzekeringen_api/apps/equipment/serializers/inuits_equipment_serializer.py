@@ -3,6 +3,8 @@ import logging
 from rest_framework import serializers
 
 from apps.equipment.models import InuitsEquipment
+from apps.people.models import InuitsNonMember
+from apps.people.serializers import InuitsNonMemberSerializer
 from apps.people.serializers.fields import InuitsNonMemberSerializerField
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
@@ -16,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class InuitsEquipmentSerializer(serializers.ModelSerializer):
+    serialize = True
 
     # id                            pk
     # nature                        max_length=50                   is optional
@@ -43,10 +46,25 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
             "owner_group",
         )
 
-    def validate(self, data):
+    def to_internal_value(self, data: dict):
+        logger.debug("SERIALIZER DATA: %s", data)
+
+        # @TODO
+        # if data.get("owner_non_member", None) or data.get("owner_member", None):
+        #     data.pop("owner_group", None)
+
+        data = super().to_internal_value(data)
+
+        logger.debug("SERIALIZER DATA: %s", data)
+
+        return data
+
+    def validate(self, data: dict) -> InuitsEquipment:
         owner_non_member = data.get("owner_non_member", None)
         owner_member = data.get("owner_member", None)
         owner_group = data.get("owner_group", None)
+
+        logger.debug("OWNER NON MEMBER: %s", owner_non_member)
 
         if not owner_member and not owner_non_member and not owner_group:
             raise serializers.ValidationError("A piece of equipment needs an owner")
@@ -68,4 +86,4 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
                 "AbstractScoutsGroup instance couldn't be loaded with the provided group admin id"
             )
 
-        return data
+        return InuitsEquipment(**data)

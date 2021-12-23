@@ -55,11 +55,10 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         input_serializer = InuitsEquipmentSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        logger.debug("CREATE VALIDATED DATA: %s", request.data)
+        validated_data = input_serializer.validated_data
+        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
 
-        created_equipment = self.service.inuits_equipment_create(
-            **input_serializer.validated_data, created_by=request.user
-        )
+        created_equipment = self.service.inuits_equipment_create(validated_data, created_by=request.user)
 
         output_serializer = InuitsEquipmentSerializer(created_equipment, context={"request": request})
 
@@ -70,7 +69,7 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsEquipmentSerializer},
     )
     def partial_update(self, request, pk=None):
-        logger.debug("UPDATE: request data: %s", request.data)
+        logger.debug("UPDATE REQUEST DATA: %s", request.data)
         equipment = self.get_object()
 
         serializer = InuitsEquipmentSerializer(
@@ -78,8 +77,11 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         )
         serializer.is_valid(raise_exception=True)
 
+        validated_data = serializer.validated_data
+        logger.debug("UPDATE VALIDATED DATA: %s", validated_data)
+
         updated_equipment = self.service.inuits_equipment_update(
-            equipment=equipment, updated_by=request.user, **serializer.validated_data
+            inuits_equipment=equipment, updated_inuits_equipment=validated_data, updated_by=request.user
         )
 
         output_serializer = InuitsEquipmentSerializer(updated_equipment, context={"request": request})

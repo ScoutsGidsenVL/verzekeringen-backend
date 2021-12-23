@@ -51,17 +51,17 @@ class InuitsNonMemberSerializer(InuitsPersonSerializer, serializers.ModelSeriali
         return data
 
     def to_representation(self, obj: InuitsNonMember = None) -> dict:
+        logger.debug("HERE: %s", obj)
         # HACKETY HACK
         non_member = InuitsNonMember.objects.all().filter(template__non_member=obj.id).last()
 
         if non_member:
             obj.id = non_member.id
 
-        logger.debug("INUITS_NON_MEMBER INSTANCE: %s", str(obj))
-
         return super().to_representation(obj)
 
     def validate(self, data: dict) -> InuitsNonMember:
+        logger.debug("DATA: %s", data)
         return InuitsNonMember(
             id=data.get("id", None),
             first_name=data.get("first_name", ""),

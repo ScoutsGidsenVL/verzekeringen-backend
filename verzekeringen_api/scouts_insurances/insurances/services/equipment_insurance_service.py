@@ -6,7 +6,6 @@ from django.db import transaction
 from django.db.models import Q
 
 from scouts_insurances.equipment.models import Equipment
-from scouts_insurances.equipment.services import EquipmentService
 
 from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import EquipmentInsurance, InsuranceType, CostVariable
@@ -19,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 class EquipmentInsuranceService:
     base_insurance_service = BaseInsuranceService()
-    equipment_service = EquipmentService()
 
     def _calculate_total_cost(self, insurance: EquipmentInsurance, equipment_list: List[Equipment] = []) -> Decimal:
         equipment_cost = 0
@@ -122,38 +120,3 @@ class EquipmentInsuranceService:
 
         insurance.total_cost = self._calculate_total_cost(insurance)
         insurance.full_clean()
-
-    #     insurance.save()
-
-    # def update_equipment(self, insurance: EquipmentInsurance, equipment: list):
-    #     # If a piece of equipment was removed from the list, also remove it from the database.
-    #     # Make sure the equipment is not part of an insurance request that is not new or waiting (i.e. already approved or billed).
-    #     logger.debug("Updating equipment list on insurance %s", insurance.id)
-    #     existing_equipment_list = [
-    #         equipment.id
-    #         for equipment in Equipment.objects.filter(
-    #             Q(insurance=insurance)
-    #             & Q(insurance__insurance_parent___status__in=[InsuranceStatus.NEW, InsuranceStatus.WAITING])
-    #         )
-    #     ]
-
-    #     logger.debug(
-    #         "List of existing equipment for insurance %s that are not NEW or WAITING: %s",
-    #         insurance.id,
-    #         existing_equipment_list,
-    #     )
-
-    #     for equipment_data in equipment:
-    #         equipment_id = equipment_data.get("id", None)
-    #         inuits_equipment_id = equipment_data.get("inuits_equipment_id", None)
-
-    #         equipment = self.equipment_service.equipment_create_or_update(**equipment_data, insurance=insurance)
-
-    #         if equipment_id and equipment_id in existing_equipment_list:
-    #             existing_equipment_list.remove(equipment.id)
-
-    #     for equipment_id in existing_equipment_list:
-    #         logger.debug("Deleting unused equipment %s from insurance %s", equipment_id, insurance.id)
-    #         equipment = Equipment.objects.get(pk=equipment_id)
-
-    #         equipment.delete()

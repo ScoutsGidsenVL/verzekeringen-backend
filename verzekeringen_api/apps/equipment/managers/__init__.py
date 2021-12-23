@@ -1,2 +1,4 @@
 from .inuits_equipment_manager import InuitsEquipmentManager
+from .inuits_equipment_template_manager import InuitsEquipmentTemplateManager
 from .inuits_vehicle_manager import InuitsVehicleManager
+from .inuits_vehicle_template_manager import InuitsVehicleTemplateManager

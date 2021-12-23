@@ -5,10 +5,13 @@ from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 
 from scouts_insurances.people.models import Member, NonMember
+from scouts_insurances.equipment.managers import EquipmentManager
 from scouts_insurances.insurances.models import EquipmentInsurance
 
 
 class Equipment(models.Model):
+
+    objects = EquipmentManager()
 
     id = models.AutoField(db_column="materiaalid", primary_key=True)
     nature = models.CharField(db_column="aard", max_length=50, blank=True)

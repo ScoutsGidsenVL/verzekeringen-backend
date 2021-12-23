@@ -6,8 +6,6 @@ from django.db import transaction
 from apps.equipment.models import InuitsEquipment
 from apps.equipment.services import InuitsEquipmentService
 
-from scouts_insurances.equipment.models import Equipment
-from scouts_insurances.equipment.services import EquipmentService
 from scouts_insurances.insurances.models import EquipmentInsurance
 from scouts_insurances.insurances.services import BaseInsuranceService, EquipmentInsuranceService
 
@@ -17,8 +15,7 @@ logger = logging.getLogger(__name__)
 
 class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
     base_insurance_service = BaseInsuranceService()
-    inuits_equipment_service = InuitsEquipmentService()
-    equipment_service = EquipmentService()
+    equipment_service = InuitsEquipmentService()
 
     @transaction.atomic
     def inuits_equipment_insurance_create(
@@ -40,8 +37,8 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
             item.full_clean()
             item.save()
 
-            equipment = self.equipment_service.equipment_create(
-                insurance, item.description, item.total_value, item.nature, owner_non_member, owner_member
+            equipment = self.equipment_service.linked_equipment_create(
+                insurance=insurance, inuits_equipment=item, created_by=base_insurance_fields.get("created_by")
             )
 
         self.base_insurance_service.handle_insurance_created(insurance)

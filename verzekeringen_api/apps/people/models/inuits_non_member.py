@@ -41,8 +41,12 @@ class InuitsNonMember(InuitsPerson):
     comment = OptionalCharField(max_length=500)
     company_name = OptionalCharField()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+
+    #     self.first_name = kwargs.get("first_name", "")
+    #     self.last_name = kwargs.get("last_name", "")
+    #     self.
 
     @property
     def full_name(self):

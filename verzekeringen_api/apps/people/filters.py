@@ -2,7 +2,7 @@ import logging
 
 from django.db import models
 from django.db.models.functions import Concat
-from django.db.models import Value, Q
+from django.db.models import Q
 from django_filters import FilterSet, CharFilter
 
 from apps.people.models import InuitsNonMember

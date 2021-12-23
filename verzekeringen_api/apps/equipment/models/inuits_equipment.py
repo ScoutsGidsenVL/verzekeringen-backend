@@ -48,3 +48,19 @@ class InuitsEquipment(AuditedBaseModel):
             raise ValidationError("There needs to be only one owner")
         if not self.owner_non_member and not self.owner_member and not self.owner_group:
             raise ValidationError("A piece of equipment needs to have an owner")
+
+    def has_id(self):
+        return self.id is not None
+
+    def equals(self, instance) -> bool:
+        return (
+            instance is not None
+            and type(instance).__name__ == "InuitsEquipment"
+            and self.nature == instance.nature
+            and self.description == instance.description
+            and self.amount == instance.amount
+            and self.total_value == instance.total_value
+            and self.owner_non_member == instance.owner_non_member
+            and self.owner_member == instance.owner_member
+            and self.owner_group == instance.owner_group
+        )

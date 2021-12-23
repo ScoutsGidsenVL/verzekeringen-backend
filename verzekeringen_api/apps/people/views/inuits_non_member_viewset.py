@@ -38,10 +38,6 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         inuits_non_members = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(inuits_non_members)
 
-        logger.debug("Found %s InuitsNonMember instances", len(inuits_non_members))
-        for inuits_non_member in inuits_non_members:
-            logger.debug("INUITS NON MEMBER: %s", str(inuits_non_member))
-
         if page is not None:
             serializer = InuitsNonMemberSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
