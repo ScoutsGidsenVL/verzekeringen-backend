@@ -14,7 +14,7 @@ class InuitsNonMemberSerializerField(serializers.PrimaryKeyRelatedField):
     serialize = True
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, read_only=True, **kwargs)
+        super().__init__(*args, read_only=False, **kwargs)
 
     def get_queryset(self):
         request = self.context.get("request", None)
@@ -27,9 +27,18 @@ class InuitsNonMemberSerializerField(serializers.PrimaryKeyRelatedField):
         # return InuitsNonMember.objects.all().allowed(request.user)
         return InuitsNonMember.objects.all()
 
-    def to_internal_value(self, pk) -> dict:
-        return super().to_internal_value(pk)
+    def to_internal_value(self, data: any) -> dict:
+        if isinstance(data, dict):
+            data = data.get("id")
+        # logger.debug("NON MEMBER pk: %s", data)
+        data = super().to_internal_value(data)
+        # logger.debug("NON MEMBER DATA: %s", data)
+
+        return data
 
     def to_representation(self, pk) -> dict:
         logger.debug("PK: %s (type: %s)", pk, type(pk))
         return InuitsNonMemberSerializer().to_representation(InuitsNonMember.objects.get(pk=str(pk)))
+
+    def validate(self, data: dict) -> InuitsNonMember:
+        return InuitsNonMember(**data)

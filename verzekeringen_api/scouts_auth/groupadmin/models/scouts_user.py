@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from datetime import date
+from datetime import date, datetime
 
 from django.db import models
 
@@ -15,6 +15,7 @@ from scouts_auth.groupadmin.models import (
 from scouts_auth.groupadmin.utils import SettingsHelper
 
 from scouts_auth.inuits.models import Gender
+from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
 
 
 class ScoutsUser(User):
@@ -28,6 +29,12 @@ class ScoutsUser(User):
     membership_number: str = models.CharField(max_length=48, blank=True)
     customer_number: str = models.CharField(max_length=48, blank=True)
     birth_date: date = models.DateField(blank=True, null=True)
+
+    #
+    # Convenience fields to avoid a profile call to groupadmin at every authentication event.
+    #
+    last_authenticated: datetime = TimezoneAwareDateTimeField(default=datetime.now)
+    last_refreshed: datetime = TimezoneAwareDateTimeField(default=datetime.now)
 
     #
     # Fields inherited from scouts_auth.auth.models.User that may need to be updated after a call to groupadmin

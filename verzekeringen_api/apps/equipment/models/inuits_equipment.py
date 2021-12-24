@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from apps.equipment.managers import InuitsEquipmentManager
 from apps.people.models import InuitsNonMember
 
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import OptionalCharField
 
@@ -42,8 +43,8 @@ class InuitsEquipment(AuditedBaseModel):
     owner_group = OptionalCharField(max_length=6, null=True)
 
     def clean(self):
-        if self.owner_member and self.nature:
-            raise ValidationError("If owner member then nature can not be given")
+        # if self.owner_member and self.nature:
+        #     raise ValidationError("If owner member then nature can not be given")
         if self.owner_non_member and self.owner_member:
             raise ValidationError("There needs to be only one owner")
         if not self.owner_non_member and not self.owner_member and not self.owner_group:
@@ -63,4 +64,20 @@ class InuitsEquipment(AuditedBaseModel):
             and self.owner_non_member == instance.owner_non_member
             and self.owner_member == instance.owner_member
             and self.owner_group == instance.owner_group
+        )
+
+    def __str__(self):
+        return "id({}), nature({}), description({}), amount({}), total_value({}), owner_non_member({}), owner_member({}), owner_group({})".format(
+            self.id,
+            self.nature,
+            self.description,
+            self.amount,
+            self.total_value,
+            self.owner_non_member.id if self.owner_non_member else "",
+            self.owner_member.group_admin_id if self.owner_member else "",
+            self.owner_group.group_admin_id
+            if self.owner_group and isinstance(self.owner_group, AbstractScoutsGroup)
+            else self.owner_group
+            if self.owner_group
+            else "",
         )

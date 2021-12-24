@@ -61,7 +61,7 @@ class EquipmentInsuranceService:
         # Create some fake equipment data for cost calc (only need total value)
         equipment_objects = []
         for equipment_data in equipment:
-            equipment_objects.append(Equipment(total_value=equipment_data.get("total_value")))
+            equipment_objects.append(Equipment(total_value=equipment_data.total_value))
         return self._calculate_total_cost(insurance, equipment_objects)
 
     @transaction.atomic
@@ -69,7 +69,6 @@ class EquipmentInsuranceService:
         self,
         *,
         nature: str,
-        equipment: list,
         postal_code: int = None,
         city: str = None,
         country: str = None,
@@ -102,21 +101,3 @@ class EquipmentInsuranceService:
         insurance = self.base_insurance_service.base_insurance_delete_relations(insurance=insurance)
         insurance.equipment.clear()
         insurance.delete()
-
-    @transaction.atomic
-    def equipment_insurance_update(self, *, insurance: EquipmentInsurance, **fields) -> EquipmentInsurance:
-        # The equipment list contains instances that are already persisted in InuitsEquipment
-        # No need to update the InuitsEquipment instances.
-        insurance.start_date = fields.get("start_date", insurance.start_date)
-        insurance.end_date = fields.get("end_date", insurance.end_date)
-        insurance.nature = fields.get("nature", insurance.nature)
-        insurance.postal_code = fields.get("postal_code", insurance.postal_code)
-        insurance.city = fields.get("city", insurance.city)
-
-        insurance.full_clean()
-        insurance.save()
-
-        self.update_equipment(insurance, fields.get("equipment", []))
-
-        insurance.total_cost = self._calculate_total_cost(insurance)
-        insurance.full_clean()

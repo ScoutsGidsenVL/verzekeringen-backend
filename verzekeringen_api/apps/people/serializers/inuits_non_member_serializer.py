@@ -1,4 +1,4 @@
-import logging
+import logging, uuid
 
 from rest_framework import serializers
 
@@ -48,7 +48,7 @@ class InuitsNonMemberSerializer(InuitsPersonSerializer, serializers.ModelSeriali
         # if group_admin_id:
         #     logger.warn("Discarding irrelevent group admin id for non-member")
 
-        return data
+        return super().to_internal_value(data)
 
     def to_representation(self, obj: InuitsNonMember = None) -> dict:
         logger.debug("HERE: %s", obj)
@@ -60,7 +60,7 @@ class InuitsNonMemberSerializer(InuitsPersonSerializer, serializers.ModelSeriali
 
         return super().to_representation(obj)
 
-    def validate(self, data: dict) -> InuitsNonMember:
+    def validate(self, data: any) -> InuitsNonMember:
         logger.debug("DATA: %s", data)
         return InuitsNonMember(
             id=data.get("id", None),

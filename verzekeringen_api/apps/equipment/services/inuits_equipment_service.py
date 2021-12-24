@@ -26,17 +26,24 @@ class InuitsEquipmentService:
         # Check if the instance already exists
         if inuits_equipment.has_id():
             try:
+                logger.debug("QUERYING FOR INUITS EQUIPMENT WITH ID: %s", inuits_equipment.id)
                 object = InuitsEquipment.objects.get(pk=inuits_equipment.id)
                 if object:
+                    logger.debug("INUITS EQUIPMENT ALREADY EXISTS: %s", inuits_equipment)
                     return inuits_equipment
                     # return self.inuits_equipment_update(
                     #     inuits_equipment=inuits_equipment, updated_inuits_equipment=object, updated_by=created_by
                     # )
             except ObjectDoesNotExist:
                 pass
-
+        logger.debug("INUITS EQUIPMENT WILL BE CREATED: %s (%s)", inuits_equipment, type(inuits_equipment).__name__)
         if inuits_equipment.owner_non_member:
-            inuits_equipment.owner_non_member = self.non_member_service.linked_non_member_create(
+            logger.debug(
+                "INUITS EQUIPMENT OWNER_NON_MEMBER: %s (%s)",
+                inuits_equipment.owner_non_member,
+                type(inuits_equipment.owner_non_member).__name__,
+            )
+            self.non_member_service.linked_non_member_create(
                 inuits_non_member=inuits_equipment.owner_non_member, created_by=created_by
             )
 

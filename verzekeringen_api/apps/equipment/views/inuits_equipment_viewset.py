@@ -58,7 +58,9 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         validated_data = input_serializer.validated_data
         logger.debug("CREATE VALIDATED DATA: %s", validated_data)
 
-        created_equipment = self.service.inuits_equipment_create(validated_data, created_by=request.user)
+        created_equipment = self.service.inuits_equipment_create(
+            inuits_equipment=validated_data, created_by=request.user
+        )
 
         output_serializer = InuitsEquipmentSerializer(created_equipment, context={"request": request})
 

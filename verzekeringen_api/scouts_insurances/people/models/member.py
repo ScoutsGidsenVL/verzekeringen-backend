@@ -31,3 +31,6 @@ class Member(AbstractMember, models.Model):
         return "{}, group_admin_id({}), membership_number({})".format(
             super().__str__(), self.group_admin_id, self.membership_number
         )
+
+    def full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)

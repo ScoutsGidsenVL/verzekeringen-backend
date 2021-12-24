@@ -54,7 +54,7 @@ class InuitsEquipmentInsuranceViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["post"], detail=False, url_path="cost")
     def cost_calculation_equipment(self, request):
-        logger.debug("COST CALCULATION DATA: %s", request.data)
+        logger.debug("COST CALCULATION REQUEST DATA: %s", request.data)
         input_serializer = InuitsEquipmentInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
@@ -77,11 +77,16 @@ class InuitsEquipmentInsuranceViewSet(viewsets.GenericViewSet):
         existing_insurance = get_object_or_404(
             EquipmentInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
+
+        logger.debug("UPDATE REQUEST DATA: %s", request.data)
         input_serializer = InuitsEquipmentInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = self.equipment_insurance_service.equipment_insurance_update(
-            insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
+        validated_data = input_serializer.validated_data
+        logger.debug("UPDATE VALIDATED DATA: %s", validated_data)
+
+        updated_insurance = self.equipment_insurance_service.inuits_equipment_insurance_update(
+            insurance=existing_insurance, **validated_data, created_by=request.user
         )
 
         output_serializer = InuitsEquipmentInsuranceSerializer(updated_insurance)

@@ -49,3 +49,6 @@ class NonMember(AbstractMember, models.Model):
             self.city,
             self.comment,
         )
+
+    def full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)

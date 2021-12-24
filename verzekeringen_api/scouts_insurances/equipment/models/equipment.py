@@ -57,3 +57,23 @@ class Equipment(models.Model):
             raise ValidationError("There needs to be only one owner")
         if self.owner_member and self.nature:
             raise ValidationError("If the equipment owner is a member then equipment nature can not be given")
+
+    @property
+    def owner_group(self):
+        return self.insurance.scouts_group.group_admin_id
+
+    @owner_group.setter
+    def owner_group(self, owner_group):
+        # do nothing
+        pass
+
+    def __str__(self):
+        return "id({}), nature({}), description({}), amount({}), total_value({}), owner_non_member({}), owner_member({})".format(
+            self.id,
+            self.nature,
+            self.description,
+            self.amount,
+            self.total_value,
+            self.owner_non_member.full_name() if self.owner_non_member else "",
+            self.owner_member.full_name() if self.owner_member else "",
+        )
