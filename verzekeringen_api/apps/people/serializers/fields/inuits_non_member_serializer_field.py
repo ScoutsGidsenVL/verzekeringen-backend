@@ -5,6 +5,8 @@ from rest_framework import serializers
 from apps.people.models import InuitsNonMember
 from apps.people.serializers import InuitsNonMemberSerializer
 
+from scouts_insurances.people.models import Member, NonMember
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +40,16 @@ class InuitsNonMemberSerializerField(serializers.PrimaryKeyRelatedField):
 
     def to_representation(self, pk) -> dict:
         logger.debug("PK: %s (type: %s)", pk, type(pk))
-        return InuitsNonMemberSerializer().to_representation(InuitsNonMember.objects.get(pk=str(pk)))
+        logger.debug("PK: %s", str(pk))
+        # HACKETY HACK
+        inuits_non_member = InuitsNonMember.objects.all().filter(template__non_member=int(str(pk))).last()
+        if inuits_non_member:
+            return InuitsNonMemberSerializer().to_representation(InuitsNonMember.objects.get(pk=inuits_non_member.id))
+        return InuitsNonMemberSerializer().to_representation(NonMember.objects.get(pk=int(str(pk))))
+        # EVEN WORSE
+        # member = Member.objects.get(id=str(pk))
+        # if member:
+        #     return InuitsNonMemberSerializer().to_representation(member)
 
     def validate(self, data: dict) -> InuitsNonMember:
         return InuitsNonMember(**data)

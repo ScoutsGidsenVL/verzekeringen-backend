@@ -61,8 +61,8 @@ class InsuranceSignalHandler:
     @receiver(refreshed, sender=ScoutsAuthSignalSender.sender, dispatch_uid=ScoutsAuthSignalSender.refreshed_uid)
     def handle_refreshed(user: settings.AUTH_USER_MODEL, **kwargs) -> settings.AUTH_USER_MODEL:
         logger.debug("SIGNAL received: 'refreshed' from %s", ScoutsAuthSignalSender.sender)
-        user.last_refreshed = timezone.now()
-        user.full_clean()
-        user.save()
+        # user.last_refreshed = timezone.now()
+        # user.full_clean()
+        # user.save()
 
         return user

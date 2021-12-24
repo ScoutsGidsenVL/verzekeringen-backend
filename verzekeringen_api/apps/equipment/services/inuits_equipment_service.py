@@ -24,19 +24,21 @@ class InuitsEquipmentService:
         self, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
     ) -> InuitsEquipment:
         # Check if the instance already exists
+        create = True
         if inuits_equipment.has_id():
             try:
                 logger.debug("QUERYING FOR INUITS EQUIPMENT WITH ID: %s", inuits_equipment.id)
                 object = InuitsEquipment.objects.get(pk=inuits_equipment.id)
                 if object:
                     logger.debug("INUITS EQUIPMENT ALREADY EXISTS: %s", inuits_equipment)
-                    return inuits_equipment
+                    create = False
+                    # return inuits_equipment
                     # return self.inuits_equipment_update(
                     #     inuits_equipment=inuits_equipment, updated_inuits_equipment=object, updated_by=created_by
                     # )
             except ObjectDoesNotExist:
                 pass
-        logger.debug("INUITS EQUIPMENT WILL BE CREATED: %s (%s)", inuits_equipment, type(inuits_equipment).__name__)
+
         if inuits_equipment.owner_non_member:
             logger.debug(
                 "INUITS EQUIPMENT OWNER_NON_MEMBER: %s (%s)",
@@ -47,18 +49,22 @@ class InuitsEquipmentService:
                 inuits_non_member=inuits_equipment.owner_non_member, created_by=created_by
             )
 
-        inuits_equipment = InuitsEquipment(
-            nature=inuits_equipment.nature,
-            description=inuits_equipment.description,
-            total_value=inuits_equipment.total_value,
-            owner_group=inuits_equipment.owner_group.group_admin_id if inuits_equipment.owner_group else None,
-            owner_non_member=inuits_equipment.owner_non_member,
-            owner_member=inuits_equipment.owner_member.group_admin_id if inuits_equipment.owner_member else None,
-            created_by=created_by,
-        )
+        if create:
+            logger.debug(
+                "INUITS EQUIPMENT WILL BE CREATED: %s (%s)", inuits_equipment, type(inuits_equipment).__name__
+            )
+            inuits_equipment = InuitsEquipment(
+                nature=inuits_equipment.nature,
+                description=inuits_equipment.description,
+                total_value=inuits_equipment.total_value,
+                owner_group=inuits_equipment.owner_group.group_admin_id if inuits_equipment.owner_group else None,
+                owner_non_member=inuits_equipment.owner_non_member,
+                owner_member=inuits_equipment.owner_member.group_admin_id if inuits_equipment.owner_member else None,
+                created_by=created_by,
+            )
 
-        inuits_equipment.full_clean()
-        inuits_equipment.save()
+            inuits_equipment.full_clean()
+            inuits_equipment.save()
 
         return inuits_equipment
 

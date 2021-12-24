@@ -18,9 +18,11 @@ class InuitsNonMemberService(NonMemberService):
     ) -> InuitsNonMember:
         # Check if the instance already exists
         if inuits_non_member.has_id():
+            logger.debug("Querying for InuitsNonMember with id %s", inuits_non_member.id)
             try:
                 object = InuitsNonMember.objects.get(pk=inuits_non_member.id)
                 if object:
+                    logger.debug("Found InuitsNonMember with id %s, not creating", inuits_non_member.id)
                     return inuits_non_member
                     # return self.inuits_non_member_update(
                     #     inuits_non_member=inuits_non_member, updated_inuits_non_member=object, updated_by=created_by
@@ -28,6 +30,9 @@ class InuitsNonMemberService(NonMemberService):
             except ObjectDoesNotExist:
                 pass
 
+        logger.debug(
+            "Creating InuitsNonMember with name %s %s", inuits_non_member.first_name, inuits_non_member.last_name
+        )
         inuits_non_member = InuitsNonMember(
             first_name=inuits_non_member.first_name,
             last_name=inuits_non_member.last_name,
@@ -75,6 +80,7 @@ class InuitsNonMemberService(NonMemberService):
             #     logger.debug("Returning already existing NonMember (id: %s)", non_member_template.non_member.id)
             #     return non_member_template.non_member
 
+            logger.debug("Link NonMember(%s) to InuitsNonMember(%s)", non_member.id, inuits_non_member.id)
             non_member_template = InuitsNonMemberTemplate()
             non_member_template.non_member = non_member
             non_member_template.inuits_non_member = inuits_non_member

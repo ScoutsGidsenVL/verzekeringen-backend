@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 class PersonSerializer(serializers.Serializer):
 
+    id = serializers.SerializerMethodField()
     group_admin_id = serializers.SerializerMethodField()
     gender = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
@@ -18,6 +19,12 @@ class PersonSerializer(serializers.Serializer):
     postal_code = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
     is_member = serializers.SerializerMethodField()
+
+    def get_id(self, obj):
+        try:
+            return obj.id
+        except:
+            return None
 
     def get_group_admin_id(self, obj):
         try:

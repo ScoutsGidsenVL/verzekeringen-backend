@@ -1,8 +1,12 @@
+import logging
 from datetime import datetime
 
 from django.conf import settings
 
 from scouts_insurances.people.models import Member
+
+
+logger = logging.getLogger(__name__)
 
 
 class MemberService:
@@ -32,6 +36,15 @@ class MemberService:
         membership_number: int,
         group_admin_id: str,
     ) -> Member:
+        try:
+            member = Member.objects.get(group_admin_id=group_admin_id)
+
+            if member:
+                logger.debug("Member with group admin id %s already exists in Member", group_admin_id)
+                return member
+        except Exception:
+            pass
+
         member = Member(
             first_name=first_name,
             last_name=last_name,

@@ -40,7 +40,8 @@ class InuitsNonMemberSerializer(InuitsPersonSerializer, serializers.ModelSeriali
         fields = "__all__"
 
     def to_internal_value(self, data):
-        # logger.debug("DATA: %s", data)
+        logger.debug("INUITS NON MEMBER DESERIALIZER DATA: %s", data)
+        id = data.get("id")
 
         # This is removed because actual members can be added as InuitsNonMembers for some insurances
         #
@@ -48,15 +49,19 @@ class InuitsNonMemberSerializer(InuitsPersonSerializer, serializers.ModelSeriali
         # if group_admin_id:
         #     logger.warn("Discarding irrelevent group admin id for non-member")
 
-        return super().to_internal_value(data)
+        data = super().to_internal_value(data)
+
+        data["id"] = id
+
+        return data
 
     def to_representation(self, obj: InuitsNonMember = None) -> dict:
         logger.debug("HERE: %s", obj)
         # HACKETY HACK
-        non_member = InuitsNonMember.objects.all().filter(template__non_member=obj.id).last()
+        inuits_non_member = InuitsNonMember.objects.all().filter(template__non_member=obj.id).last()
 
-        if non_member:
-            obj.id = non_member.id
+        if inuits_non_member:
+            obj.id = inuits_non_member.id
 
         return super().to_representation(obj)
 
