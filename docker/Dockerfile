@@ -32,9 +32,9 @@ RUN apt-get update; \
     libpq-dev \
     libffi-dev \
     python3-dev \
-    default-libmysqlclient-dev \
-    openssh-client \
-    git
+    default-libmysqlclient-dev
+# openssh-client \
+# git
 
 RUN python -m pip install "poetry==${POETRY_VERSION}"
 
