@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.core.files.storage import default_storage
 
 from apps.people.models import InuitsClaimVictim
 from apps.insurances.utils import InuitsInsuranceSettingsHelper
@@ -12,7 +11,7 @@ from apps.insurances.models import (
 
 from scouts_insurances.insurances.services import InsuranceMailService
 
-from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
+from scouts_auth.inuits.mail import Email, EmailAttachment
 from scouts_auth.inuits.utils import TextUtils
 
 logger = logging.getLogger(__name__)
@@ -170,4 +169,4 @@ class InuitsInsuranceMailService(InsuranceMailService):
                 logger.debug("Adding attachment with path %s to claim(%d) email", attachment.file.file.name, claim.id)
                 mail.add_attachment(EmailAttachment(attachment.file.file.name, self.file_service))
 
-        self.mail_service.send(mail)
+        self.send(mail)

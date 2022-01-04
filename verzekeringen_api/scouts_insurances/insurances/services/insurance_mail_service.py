@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 from scouts_insurances.insurances.models import BaseInsurance
 from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
-from scouts_auth.inuits.mail import Email, EmailAttachment, EmailService
+from scouts_auth.inuits.mail import Email, EmailService
 from scouts_auth.inuits.utils import TextUtils
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,6 @@ class InsuranceMailService(EmailService):
     insurance_request_address = ""
 
     file_service = default_storage
-    mail_service = EmailService()
 
     def send_insurance(self, insurance: BaseInsurance):
         """Send the claim to the insurer."""
@@ -124,4 +123,4 @@ class InsuranceMailService(EmailService):
         #             )
         #             mail.add_attachment(EmailAttachment(attachment.file.name, self.file_service))
 
-        self.mail_service.send(mail)
+        self.send(mail)

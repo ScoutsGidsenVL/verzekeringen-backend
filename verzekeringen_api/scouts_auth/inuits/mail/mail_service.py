@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from anymail.message import AnymailMessage
 
-from scouts_auth.inuits.mail import Email
+from scouts_auth.inuits.mail import EmailSettingsUtil, Email
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +106,10 @@ class EmailService:
 
         from_email, to, cc, bcc, reply_to = self.validate_email_arguments(from_email, to, cc, bcc, reply_to)
 
-        if self.backend == "anymail.backends.sendinblue.EmailBackend":
+        EmailSettingsUtil.log_email_settings()
+
+        if EmailSettingsUtil.is_send_in_blue():
+            logger.debug("Sending mail with SendInBlue")
             return self.send_send_in_blue_email(
                 body=body,
                 html_body=html_body,
@@ -122,6 +125,7 @@ class EmailService:
                 is_html=is_html,
             )
         else:
+            logger.debug("Sending mail with Django")
             return self.send_django_email(
                 body=body,
                 html_body=html_body,

@@ -342,6 +342,7 @@ EMAIL_DEBUG_RECIPIENT = env.str("EMAIL_DEBUG_RECIPIENT")
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing code
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
 def setup_mail():
+    global USE_SEND_IN_BLUE
     global EMAIL_BACKEND
     global ANYMAIL
     global EMAIL_INSURANCE_FROM
