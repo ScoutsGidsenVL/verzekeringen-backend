@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 class EmailSettingsUtil(SettingsHelper):
     @staticmethod
-    def is_send_in_blue() -> bool:
-        return EmailSettingsUtil.get_bool("USE_SEND_IN_BLUE") and EmailSettingsUtil.get("EMAIL_BACKEND")
+    def is_SENDINBLUE() -> bool:
+        return EmailSettingsUtil.get_bool("USE_SENDINBLUE") and EmailSettingsUtil.get("EMAIL_BACKEND")
 
     @staticmethod
     def log_email_settings():
@@ -90,7 +90,7 @@ class EmailSettingsUtil(SettingsHelper):
         logger.info("EMAIL_HOST                 : %s", EmailSettingsUtil.get("EMAIL_HOST", "- NOT SET -"))
         logger.info("EMAIL_PORT                 : %s", EmailSettingsUtil.get("EMAIL_PORT", "- NOT SET -"))
         logger.info(
-            "USE_SEND_IN_BLUE           : %s", EmailSettingsUtil.get_bool("USE_SEND_IN_BLUE", False, "- NOT SET -")
+            "USE_SENDINBLUE           : %s", EmailSettingsUtil.get_bool("USE_SENDINBLUE", False, "- NOT SET -")
         )
         logger.info(
             "======================================================================================================"

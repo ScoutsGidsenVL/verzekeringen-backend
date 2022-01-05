@@ -342,7 +342,7 @@ EMAIL_DEBUG_RECIPIENT = env.str("EMAIL_DEBUG_RECIPIENT")
 # We are going to use anymail which maps multiple providers like sendinblue with default django mailing code
 # For more info see https://anymail.readthedocs.io/en/stable/esps/sendinblue/
 def setup_mail():
-    global USE_SEND_IN_BLUE
+    global USE_SENDINBLUE
     global EMAIL_BACKEND
     global ANYMAIL
     global EMAIL_INSURANCE_FROM
@@ -351,14 +351,14 @@ def setup_mail():
     global EMAIL_TEMPLATE
     global EMAIL_INSURER_ADDRESS
 
-    if USE_SEND_IN_BLUE:
-        API_KEY = env.str("SEND_IN_BLUE_API_KEY")
+    if USE_SENDINBLUE:
+        API_KEY = env.str("SENDINBLUE_API_KEY")
         if DEBUG:
-            API_KEY = env.str("SEND_IN_BLUE_API_KEY_DEBUG")
+            API_KEY = env.str("SENDINBLUE_API_KEY_DEBUG")
 
-        EMAIL_BACKEND = env.str("SEND_IN_BLUE_BACKEND")
+        EMAIL_BACKEND = env.str("SENDINBLUE_BACKEND")
         ANYMAIL["SENDINBLUE_API_KEY"] = API_KEY
-        ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SEND_IN_BLUE_TEMPLATE_ID")
+        ANYMAIL["SENDINBLUE_TEMPLATE_ID"] = env.str("SENDINBLUE_TEMPLATE_ID")
         EMAIL_TEMPLATE = ANYMAIL["SENDINBLUE_TEMPLATE_ID"]
     else:
         EMAIL_TEMPLATE = None
@@ -382,8 +382,8 @@ EMAIL_SENDER = env.str("EMAIL_SENDER")
 EMAIL_RECIPIENTS = env.str("EMAIL_RECIPIENTS", EMAIL_DEBUG_RECIPIENT)
 EMAIL_HOST = env.str("EMAIL_HOST")
 EMAIL_PORT = env.str("EMAIL_PORT")
-# SEND_IN_BLUE EMAIL SETTINGS
-USE_SEND_IN_BLUE = env.bool("USE_SEND_IN_BLUE", False)
+# SENDINBLUE EMAIL SETTINGS
+USE_SENDINBLUE = env.bool("USE_SENDINBLUE", False)
 # SCOUTS VERZEKERINGEN EMAIL SETTINGS
 EMAIL_INSURANCE_FROM = None
 EMAIL_INSURANCE_REPLY_TO = EMAIL_INSURANCE_FROM
