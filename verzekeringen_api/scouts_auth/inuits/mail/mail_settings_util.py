@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class EmailSettingsUtil(SettingsHelper):
     @staticmethod
-    def is_SENDINBLUE() -> bool:
+    def is_send_in_blue() -> bool:
         return EmailSettingsUtil.get_bool("USE_SENDINBLUE") and EmailSettingsUtil.get("EMAIL_BACKEND")
 
     @staticmethod
