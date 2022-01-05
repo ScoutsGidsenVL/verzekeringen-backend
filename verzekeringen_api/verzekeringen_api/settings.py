@@ -354,7 +354,7 @@ def setup_mail():
     if USE_SENDINBLUE:
         API_KEY = env.str("SENDINBLUE_API_KEY")
         if DEBUG:
-            API_KEY = env.str("SENDINBLUE_API_KEY_DEBUG")
+            API_KEY = env.str("SENDINBLUE_API_KEY_DEBUG", API_KEY)
 
         EMAIL_BACKEND = env.str("SENDINBLUE_BACKEND")
         ANYMAIL["SENDINBLUE_API_KEY"] = API_KEY
