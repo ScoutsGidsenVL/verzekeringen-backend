@@ -15,7 +15,7 @@ from scouts_auth.groupadmin.models import (
 from scouts_auth.groupadmin.utils import SettingsHelper
 
 from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
+from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField, OptionalCharField
 
 
 class ScoutsUser(User):
@@ -25,9 +25,9 @@ class ScoutsUser(User):
     #
     group_admin_id: str = models.CharField(max_length=48, db_column="ga_id", blank=True)
     gender: Gender = models.CharField(max_length=16, choices=Gender.choices, default=Gender.UNKNOWN)
-    phone_number: str = models.CharField(max_length=48, blank=True)
-    membership_number: str = models.CharField(max_length=48, blank=True)
-    customer_number: str = models.CharField(max_length=48, blank=True)
+    phone_number: str = models.CharField(max_length=48, blank=True, null=True)
+    membership_number: str = models.CharField(max_length=48, blank=True, null=True)
+    customer_number: str = models.CharField(max_length=48, blank=True, null=True)
     birth_date: date = models.DateField(blank=True, null=True)
 
     #
