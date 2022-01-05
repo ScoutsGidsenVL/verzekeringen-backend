@@ -46,52 +46,52 @@ class EmailSettingsUtil(SettingsHelper):
                     + ")"
                 )
 
-        logger.debug(
+        logger.info(
             "======================================================================================================"
         )
-        logger.debug("EMAIL SETTINGS")
-        logger.debug(
+        logger.info("EMAIL SETTINGS")
+        logger.info(
             "======================================================================================================"
         )
-        logger.debug("Mail will be sent with %s", EmailSettingsUtil.get("EMAIL_BACKEND"))
-        logger.debug(
+        logger.info("Mail will be sent with %s", EmailSettingsUtil.get("EMAIL_BACKEND"))
+        logger.info(
             "======================================================================================================"
         )
-        logger.debug("%s:", InsuranceSettingsHelper.__class__.__name__)
-        logger.debug("is_test()                                            : %s", InsuranceSettingsHelper.is_test())
-        logger.debug(
+        logger.info("%s:", InsuranceSettingsHelper.__class__.__name__)
+        logger.info("is_test()                                            : %s", InsuranceSettingsHelper.is_test())
+        logger.info(
             "is_acceptance()                                      : %s", InsuranceSettingsHelper.is_acceptance()
         )
-        logger.debug("INSURANCES: Insurance requester mails will be sent to: %s", insurance_requester_address)
-        logger.debug("CLAIMS: Insurer mails will be sent to                : %s", insurer_address)
-        logger.debug("CLAIMS: Victim emails will be sent to                : %s", victim_address)
-        logger.debug("CLAIMS: Declarant emails will be sent to             : %s", declarant_address)
-        logger.debug(
+        logger.info("INSURANCES: Insurance requester mails will be sent to: %s", insurance_requester_address)
+        logger.info("CLAIMS: Insurer mails will be sent to                : %s", insurer_address)
+        logger.info("CLAIMS: Victim emails will be sent to                : %s", victim_address)
+        logger.info("CLAIMS: Declarant emails will be sent to             : %s", declarant_address)
+        logger.info(
             "======================================================================================================"
         )
-        logger.debug("DEBUG                      : %s", EmailSettingsUtil.get_bool("DEBUG", False, "- NOT SET -"))
-        logger.debug(
+        logger.info("DEBUG                      : %s", EmailSettingsUtil.get_bool("DEBUG", False, "- NOT SET -"))
+        logger.info(
             "IS_ACCEPTANCE              : %s", EmailSettingsUtil.get_bool("IS_ACCEPTANCE", False, "- NOT SET -")
         )
-        logger.debug("EMAIL_DEBUG_RECIPIENT      : %s", EmailSettingsUtil.get("EMAIL_DEBUG_RECIPIENT", "- NOT SET -"))
-        logger.debug("EMAIL_BACKEND              : %s", EmailSettingsUtil.get("EMAIL_BACKEND", "- NOT SET -"))
-        logger.debug("ANYMAIL                    : %s", EmailSettingsUtil.get("ANYMAIL", "- NOT SET -"))
-        logger.debug("EMAIL_INSURANCE_FROM       : %s", EmailSettingsUtil.get("EMAIL_INSURANCE_FROM", "- NOT SET -"))
-        logger.debug("EMAIL_INSURANCE_CC         : %s", EmailSettingsUtil.get("EMAIL_INSURANCE_CC", "- NOT SET -"))
-        logger.debug("EMAIL_INSURANCE_BCC        : %s", EmailSettingsUtil.get("EMAIL_INSURANCE_BCC", "- NOT SET -"))
-        logger.debug("EMAIL_TEMPLATE             : %s", EmailSettingsUtil.get("EMAIL_TEMPLATE", "- NOT SET -"))
-        logger.debug("EMAIL_INSURER_ADDRESS      : %s", EmailSettingsUtil.get("EMAIL_INSURER_ADDRESS", "- NOT SET -"))
-        logger.debug(
+        logger.info("EMAIL_DEBUG_RECIPIENT      : %s", EmailSettingsUtil.get("EMAIL_DEBUG_RECIPIENT", "- NOT SET -"))
+        logger.info("EMAIL_BACKEND              : %s", EmailSettingsUtil.get("EMAIL_BACKEND", "- NOT SET -"))
+        logger.info("ANYMAIL                    : %s", EmailSettingsUtil.get("ANYMAIL", "- NOT SET -"))
+        logger.info("EMAIL_INSURANCE_FROM       : %s", EmailSettingsUtil.get("EMAIL_INSURANCE_FROM", "- NOT SET -"))
+        logger.info("EMAIL_INSURANCE_CC         : %s", EmailSettingsUtil.get("EMAIL_INSURANCE_CC", "- NOT SET -"))
+        logger.info("EMAIL_INSURANCE_BCC        : %s", EmailSettingsUtil.get("EMAIL_INSURANCE_BCC", "- NOT SET -"))
+        logger.info("EMAIL_TEMPLATE             : %s", EmailSettingsUtil.get("EMAIL_TEMPLATE", "- NOT SET -"))
+        logger.info("EMAIL_INSURER_ADDRESS      : %s", EmailSettingsUtil.get("EMAIL_INSURER_ADDRESS", "- NOT SET -"))
+        logger.info(
             "EMAIL_INSURER_ADDRESS_DEBUG: %s", EmailSettingsUtil.get("EMAIL_INSURER_ADDRESS_DEBUG", "- NOT SET -")
         )
-        logger.debug("EMAIL_URL                  : %s", EmailSettingsUtil.get("EMAIL_URL", "- NOT SET -"))
-        logger.debug("EMAIL_SENDER               : %s", EmailSettingsUtil.get("EMAIL_SENDER", "- NOT SET -"))
-        logger.debug("EMAIL_RECIPIENTS           : %s", EmailSettingsUtil.get("EMAIL_RECIPIENTS", "- NOT SET -"))
-        logger.debug("EMAIL_HOST                 : %s", EmailSettingsUtil.get("EMAIL_HOST", "- NOT SET -"))
-        logger.debug("EMAIL_PORT                 : %s", EmailSettingsUtil.get("EMAIL_PORT", "- NOT SET -"))
-        logger.debug(
+        logger.info("EMAIL_URL                  : %s", EmailSettingsUtil.get("EMAIL_URL", "- NOT SET -"))
+        logger.info("EMAIL_SENDER               : %s", EmailSettingsUtil.get("EMAIL_SENDER", "- NOT SET -"))
+        logger.info("EMAIL_RECIPIENTS           : %s", EmailSettingsUtil.get("EMAIL_RECIPIENTS", "- NOT SET -"))
+        logger.info("EMAIL_HOST                 : %s", EmailSettingsUtil.get("EMAIL_HOST", "- NOT SET -"))
+        logger.info("EMAIL_PORT                 : %s", EmailSettingsUtil.get("EMAIL_PORT", "- NOT SET -"))
+        logger.info(
             "USE_SEND_IN_BLUE           : %s", EmailSettingsUtil.get_bool("USE_SEND_IN_BLUE", False, "- NOT SET -")
         )
-        logger.debug(
+        logger.info(
             "======================================================================================================"
         )
