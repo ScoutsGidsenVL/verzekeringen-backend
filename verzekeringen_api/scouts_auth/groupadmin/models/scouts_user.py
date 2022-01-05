@@ -15,7 +15,7 @@ from scouts_auth.groupadmin.models import (
 from scouts_auth.groupadmin.utils import SettingsHelper
 
 from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
+from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField, OptionalCharField
 
 
 class ScoutsUser(User):
