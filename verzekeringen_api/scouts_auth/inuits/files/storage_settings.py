@@ -25,9 +25,5 @@ class StorageSettings(SettingsHelper):
         return StorageSettings.get("AWS_STORAGE_BUCKET_NAME")
 
     @staticmethod
-    def get_s3_default_acl():
-        return StorageSettings.get("AWS_DEFAULT_ACL")
-
-    @staticmethod
     def get_s3_file_overwrite():
         return StorageSettings.get("AWS_S3_FILE_OVERWRITE")
