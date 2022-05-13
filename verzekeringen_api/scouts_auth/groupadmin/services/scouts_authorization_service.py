@@ -67,6 +67,11 @@ class ScoutsAuthorizationService(AuthorizationService):
         # Initialize authorizations we can derive from membership of a scouts group
         if user.has_role_administrator():
             user = self.add_user_as_admin(user)
+        else:
+            user = self.add_user_to_group(user, ScoutsAuthorizationService.SECTION_LEADER)
+
+        # if user.has_role_section_leader():
+        #     user = self.add_user_to_group(user, ScoutsAuthorizationService.SECTION_LEADER)
 
         if user.has_role_district_commissioner():
             user = self.add_user_to_group(user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER)
