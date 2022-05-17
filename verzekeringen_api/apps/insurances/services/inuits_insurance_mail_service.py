@@ -62,7 +62,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
 
         subject = self.insurer_subject
         subject = subject.replace("(((claim.id)))", str(claim.id))
-        subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.date()))
+        subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.strftime("%d-%m-%Y")).lower())
 
         self._send_prepared_claim_email(
             claim=claim,
@@ -79,7 +79,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
         logger.debug("Preparing to send claim #%d to the victim", claim.id)
 
         subject = self.victim_subject
-        subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.date()))
+        subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.strftime("%d-%m-%Y")).lower())
 
         victim: InuitsClaimVictim = claim.victim
         self._send_prepared_claim_email(
@@ -98,7 +98,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
 
         subject = self.stakeholder_subject
         subject = subject.replace("(((claim.id)))", str(claim.id))
-        subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.date()))
+        subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.strftime("%d-%m-%Y")).lower())
         self._send_prepared_claim_email(
             claim=claim,
             dictionary=dictionary,

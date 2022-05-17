@@ -46,8 +46,8 @@ class InsuranceMailService(EmailService):
 
         subject = self.insurance_request_subject
         subject = subject.replace("(((insurance__type)))", str(insurance.type.description).lower())
-        subject = subject.replace("(((insurance__start_date)))", str(insurance.start_date.strftime("%d/%m/%Y")).lower())
-        subject = subject.replace("(((insurance__end_date)))", str(insurance.end_date.strftime("%d/%m/%Y")).lower())
+        subject = subject.replace("(((insurance__start_date)))", str(insurance.start_date.strftime("%d-%m-%Y")).lower())
+        subject = subject.replace("(((insurance__end_date)))", str(insurance.end_date.strftime("%d-%m-%Y")).lower())
 
 
         self._send_prepared_insurance_email(
