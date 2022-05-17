@@ -7,10 +7,14 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
 
     user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
-
+    city = serializers.SerializerMethodField()
     class Meta:
         model = ScoutsUser
         exclude = ["password"]
+
+    def get_city(self, obj: ScoutsUser):
+        if len(obj.addresses) > 0:
+            return obj.addresses[0].city
 
     def get_user_permissions(self, obj: ScoutsUser):
         return obj.permissions

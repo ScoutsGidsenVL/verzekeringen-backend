@@ -165,6 +165,8 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
 
         user: settings.AUTH_USER_MODEL = request.user
 
+        logger.debug('@@@@@@REQUEST USER', user)
+
         serializer = ScoutsUserSerializer(user)
 
         return Response(serializer.data)
