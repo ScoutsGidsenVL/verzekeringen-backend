@@ -34,14 +34,14 @@ class InuitsInsuranceMailService(InsuranceMailService):
     template_path_end = settings.RESOURCES_MAIL_TEMPLATE_END
 
     insurer_template_path = settings.RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH
-    insurer_subject = "Schadeaangifte van (((date_of_accident)))"
+    insurer_subject = "Aangifte schade van (((date_of_accident)))"
     insurer_address = ""
 
     victim_template_path = settings.RESOURCES_CLAIMS_VICTIM_TEMPLATE_PATH
-    victim_subject = "Bevestiging schadeaangifte"
+    victim_subject = "Bevestiging aangifte schade van (((date_of_accident)))"
 
     stakeholder_template_path = settings.RESOURCES_CLAIMS_STAKEHOLDER_TEMPLATE_PATH
-    stakeholder_subject = "Bevestiging schadeaangifte van (((date_of_accident)))"
+    stakeholder_subject = "Bevestiging aangifte schade van (((date_of_accident)))"
 
     template_id = settings.EMAIL_TEMPLATE
 
@@ -78,11 +78,14 @@ class InuitsInsuranceMailService(InsuranceMailService):
         """Notify the victim that the claim was sent to the insurer."""
         logger.debug("Preparing to send claim #%d to the victim", claim.id)
 
+        subject = self.victim_subject
+        subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.date()))
+
         victim: InuitsClaimVictim = claim.victim
         self._send_prepared_claim_email(
             claim=claim,
             dictionary=dictionary,
-            subject=self.victim_subject,
+            subject=subject,
             template_path=self.victim_template_path,
             to=InuitsInsuranceSettingsHelper.get_victim_email(victim.email, claim.declarant.email),
             add_attachments=True,
