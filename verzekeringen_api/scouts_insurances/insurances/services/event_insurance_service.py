@@ -1,4 +1,7 @@
+import sys
+from datetime import timedelta
 from decimal import Decimal
+from math import ceil
 
 from django.db import transaction
 
@@ -10,7 +13,7 @@ class EventInsuranceService:
     base_insurance_service = BaseInsuranceService()
 
     def _calculate_total_cost(self, insurance: EventInsurance) -> Decimal:
-        days = (insurance.end_date - insurance.start_date).days
+        days = ceil(((insurance.end_date.timestamp() - insurance.start_date.timestamp())/3600)/24)
         if days == 0:
             days = 1
 
