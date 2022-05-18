@@ -14,7 +14,6 @@ from scouts_insurances.insurances.services import InsuranceMailService
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -23,20 +22,20 @@ class BaseInsuranceService:
     member_service = MemberService()
 
     def base_insurance_creation_fields(
-        self,
-        *,
-        id: str = None,
-        status: str = "",  # Calculated value
-        scouts_group: AbstractScoutsGroup = None,
-        total_cost: Decimal = None,  # Handled by the BaseInsuranceSerializer
-        comment: str = "",
-        vvksm_comment: str = "",
-        created_on: datetime = None,  # Calculated value
-        responsible_member: Member = None,  # Calculated value
-        type: InsuranceType = None,
-        start_date: datetime = None,
-        end_date: datetime = None,
-        created_by: settings.AUTH_USER_MODEL,
+            self,
+            *,
+            id: str = None,
+            status: str = "",  # Calculated value
+            scouts_group: AbstractScoutsGroup = None,
+            total_cost: Decimal = None,  # Handled by the BaseInsuranceSerializer
+            comment: str = "",
+            vvksm_comment: str = "",
+            created_on: datetime = None,  # Calculated value
+            responsible_member: Member = None,  # Calculated value
+            type: InsuranceType = None,
+            start_date: datetime = None,
+            end_date: datetime = None,
+            created_by: settings.AUTH_USER_MODEL,
     ) -> dict:
         # validate group
         group_object = next(
@@ -63,7 +62,7 @@ class BaseInsuranceService:
 
     @transaction.atomic
     def base_insurance_delete_relations(self, *, insurance: BaseInsurance):
-        insurance.responsible_member.delete()
+        # insurance.responsible_member.delete() # why?
         return insurance
 
     def handle_insurance_created(self, insurance: BaseInsurance):
