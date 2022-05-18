@@ -42,14 +42,16 @@ class InuitsNonMemberSerializerField(serializers.PrimaryKeyRelatedField):
         logger.debug("PK: %s (type: %s)", pk, type(pk))
         logger.debug("PK: %s", str(pk))
         # HACKETY HACK
-        inuits_non_member = InuitsNonMember.objects.all().filter(template__non_member=int(str(pk))).last()
-        if inuits_non_member:
-            return InuitsNonMemberSerializer().to_representation(InuitsNonMember.objects.get(pk=inuits_non_member.id))
-        return InuitsNonMemberSerializer().to_representation(NonMember.objects.get(pk=int(str(pk))))
-        # EVEN WORSE
-        # member = Member.objects.get(id=str(pk))
-        # if member:
-        #     return InuitsNonMemberSerializer().to_representation(member)
+        try:
+            inuits_non_member = InuitsNonMember.objects.all().filter(template__inuits_non_member=str(pk)).last()
+            if inuits_non_member:
+                return InuitsNonMemberSerializer().to_representation(inuits_non_member)
+        except:
+            return InuitsNonMemberSerializer().to_representation(NonMember.objects.get(pk=int(str(pk))))
+            # EVEN WORSE
+            # member = Member.objects.get(id=str(pk))
+            # if member:
+            #     return InuitsNonMemberSerializer().to_representation(member)
 
     def validate(self, data: dict) -> InuitsNonMember:
         return InuitsNonMember(**data)
