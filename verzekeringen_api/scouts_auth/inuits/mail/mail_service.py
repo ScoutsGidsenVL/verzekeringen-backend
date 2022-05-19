@@ -64,8 +64,10 @@ class EmailService:
                 name, contents = attachment.get_file_and_contents()
                 message.attach(os.path.basename(name), contents)
 
-    def send(self, mail: Email):
+    def send(self, mail: Email, tags: list = None):
         """Convenience method to send email using an Email instance."""
+        if tags is None:
+            tags = []
         return self.send_email(
             subject=mail.subject,
             body=mail.body,
@@ -79,6 +81,7 @@ class EmailService:
             template_id=mail.template_id,
             attachments=mail.attachments,
             is_html=mail.is_html,
+            tags=tags
         )
 
     def send_email(
@@ -95,8 +98,11 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
+        tags=None
     ):
         """Decides wether to send email through the django backend or SendInBlue."""
+        if tags is None:
+            tags = []
         logger.debug("Sending mail through backend %s", self.backend)
 
         if is_html and (not body or len(body.strip()) == 0):
@@ -123,6 +129,7 @@ class EmailService:
                 attachments=attachments,
                 template_id=template_id,
                 is_html=is_html,
+                tags=tags
             )
         else:
             logger.debug("Sending mail with Django")
@@ -197,13 +204,16 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
+        tags=None
     ):
+        if tags is None:
+            tags = []
         message = AnymailMessage(
             subject=subject,
             body=body,
             from_email=from_email,
             to=to,
-            tags=["Schadeclaim"],  # Anymail extra in constructor
+            tags=tags,  # Anymail extra in constructor
         )
         # if is_html:
         #     message.extra_headers["Content-Type"] = "text/html; charset=UTF8"

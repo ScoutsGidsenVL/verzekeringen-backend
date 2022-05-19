@@ -49,7 +49,6 @@ class InsuranceMailService(EmailService):
         subject = subject.replace("(((insurance__start_date)))", str(insurance.start_date.strftime("%d-%m-%Y")).lower())
         subject = subject.replace("(((insurance__end_date)))", str(insurance.end_date.strftime("%d-%m-%Y")).lower())
 
-
         self._send_prepared_insurance_email(
             insurance=insurance,
             dictionary=dictionary,
@@ -59,6 +58,7 @@ class InsuranceMailService(EmailService):
                 self.insurance_request_address, insurance.responsible_member.email
             ),
             add_attachments=True,
+            tags=["Verzekeringsaanvraag"]
         )
 
     def _prepare_insurance_dictionary(self, insurance: BaseInsurance):
@@ -77,18 +77,21 @@ class InsuranceMailService(EmailService):
         )
 
     def _send_prepared_insurance_email(
-        self,
-        insurance: BaseInsurance,
-        dictionary: dict,
-        subject: str,
-        template_path: str,
-        to: list = None,
-        cc: list = None,
-        bcc: list = None,
-        reply_to: str = None,
-        template_id: str = None,
-        add_attachments: bool = False,
+            self,
+            insurance: BaseInsurance,
+            dictionary: dict,
+            subject: str,
+            template_path: str,
+            to: list = None,
+            cc: list = None,
+            bcc: list = None,
+            reply_to: str = None,
+            template_id: str = None,
+            add_attachments: bool = False,
+            tags=None
     ):
+        if tags is None:
+            tags = []
         dictionary["title_mail"] = subject
         body = None
         html_body = self._prepare_email_body(template_path, dictionary)
@@ -126,4 +129,4 @@ class InsuranceMailService(EmailService):
         #             )
         #             mail.add_attachment(EmailAttachment(attachment.file.name, self.file_service))
 
-        self.send(mail)
+        self.send(mail, tags=tags)

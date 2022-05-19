@@ -72,6 +72,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
             to=InuitsInsuranceSettingsHelper.get_insurer_address(self.insurer_address, claim.declarant.email),
             add_attachments=True,
             claim_report_path=claim_report_path,
+            tags=["Schadeaangifte"]
         )
 
     def notify_victim(self, claim: InsuranceClaim, claim_report_path: str, dictionary: dict):
@@ -90,6 +91,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
             to=InuitsInsuranceSettingsHelper.get_victim_email(victim.email, claim.declarant.email),
             add_attachments=True,
             claim_report_path=claim_report_path,
+            tags=["Schadeaangifte"]
         )
 
     def notify_stakeholder(self, claim: InsuranceClaim, dictionary: dict):
@@ -106,6 +108,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
             template_path=self.stakeholder_template_path,
             to=InuitsInsuranceSettingsHelper.get_declarant_email(claim.declarant.email, claim.declarant.email),
             add_attachments=False,
+            tags=["Schadeaangifte"]
         )
 
     def _prepare_claim_dictionary(self, claim: InsuranceClaim):
@@ -141,7 +144,10 @@ class InuitsInsuranceMailService(InsuranceMailService):
         template_id: str = None,
         claim_report_path: str = None,
         add_attachments: bool = False,
+        tags=None
     ):
+        if tags is None:
+            tags = []
         dictionary["title_mail"] = subject
         # @TODO load txt body ?
         body = None
@@ -172,4 +178,4 @@ class InuitsInsuranceMailService(InsuranceMailService):
                 logger.debug("Adding attachment with path %s to claim(%d) email", attachment.file.file.name, claim.id)
                 mail.add_attachment(EmailAttachment(attachment.file.file.name, self.file_service))
 
-        self.send(mail)
+        self.send(mail, tags=tags)
