@@ -25,7 +25,7 @@ class InsuranceClaimFilter(filters.FilterSet):
             logger.debug(
                 "Filtering InsuranceClaim instance with year %s and groups [%s]", year_of_accident, ", ".join(groups)
             )
-            return parent.filter(Q(date_of_accident__year=year_of_accident) | Q(group_group_admin_id__in=groups))
+            return parent.filter(Q(date_of_accident__year=year_of_accident) & Q(group_group_admin_id__in=groups))
 
         if year_of_accident:
             logger.debug("Filtering InsuranceClaim instances with year %s", year_of_accident)
