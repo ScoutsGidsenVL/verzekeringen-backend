@@ -82,7 +82,7 @@ class InuitsNonMemberSerializer(InuitsPersonSerializer, serializers.ModelSeriali
             postal_code=data.get("postal_code", ""),
             city=data.get("city", ""),
             comment=data.get("comment", ""),
-            # group_admin_id=data.get("group_admin_id", ""),
+            group_admin_id=data.get("group_admin_id", ""),
             company_name=data.get("company_name", ""),
             created_by=data.get("created_by", None),
         )

@@ -24,7 +24,8 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
     service = InuitsNonMemberService()
 
     def get_queryset(self):
-        return InuitsNonMember.objects.all()
+        group = self.request.query_params.get('group')
+        return InuitsNonMember.objects.filter(group_admin_id=group)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsNonMemberSerializer})
     def retrieve(self, request, pk=None):
