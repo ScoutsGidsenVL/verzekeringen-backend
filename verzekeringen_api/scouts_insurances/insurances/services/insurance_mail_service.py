@@ -64,7 +64,7 @@ class InsuranceMailService(EmailService):
     def _prepare_insurance_dictionary(self, insurance: BaseInsurance):
         """Replaces the keys in the mail template with the actual values."""
         return {
-            "date_of_request": insurance.created_on.date(),
+            "date_of_request": insurance.created_on.strftime("%d-%m-%Y"),
             "title_mail": "",
             "insurance__type": insurance.type.description.lower(),
             "requester__first_name": insurance.responsible_member.first_name,
