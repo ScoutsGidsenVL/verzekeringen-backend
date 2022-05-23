@@ -89,6 +89,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
         if "attachments" in self.context:  # checking if key is in context
             files: MultiValueDict = self.context["attachments"]
             for file in files.getlist("file"):
+                print('@@@@@FILE@@@@@: ', file)
                 InsuranceClaimAttachment.objects.create(insurance_claim=insurance_claim, file=file)
 
         return insurance_claim

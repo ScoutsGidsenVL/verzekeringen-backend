@@ -141,6 +141,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         claim = self.get_object()
         serializer = InsuranceClaimSerializer(claim, context={"request": request})
+        print('@@@@@@@@@@@@@@ CLAIM: ', serializer.data)
 
         return Response(serializer.data)
 

@@ -69,7 +69,18 @@ class InsuranceMailService(EmailService):
             "insurance__type": insurance.type.description.lower(),
             "requester__first_name": insurance.responsible_member.first_name,
             "total_price": insurance.total_cost,
+            "extra": self._extra_text(insurance)
         }
+
+    def _extra_text(self, insurance: BaseInsurance) -> str:
+        frontend_base_url = settings.FRONTEND_BASE_URL
+        if (insurance.type.description.lower() == 'eenmalige activiteit') or (insurance.type.description.lower() == 'evenementen verzekering'):
+            return f"<div>&nbsp;</div>Vergeet niet om na de activiteit <a style='text-decoration: underline;' href='https://www.scoutsengidsenvlaanderen.be/media/1317/download'>de deelnemerslijst</a> in te vullen en te bezorgen, ook als er geen ongeval gebeurde. Je kan het in <a style='text-decoration: underline;' href='{frontend_base_url}/#/eenmalige-activiteit-detail/{insurance.id}'>je aanvraag</a> opladen.<div>&nbsp;</div>"
+        
+        if insurance.type.description.lower() == 'een reisbijstand, met auto':
+            return f"<div>&nbsp;</div>Voor eigen voertuigen kan Ethias deze aanvraag pas goedkeuren na ontvangst van het ingevulde expertiseverslag. Voor gehuurde voertuigen kan Scouts en Gidsen Vlaanderen deze aanvraag pas goedkeuren na ontvangst van het huurcontract met beschrijving van de staat van het voertuig. Je kan het in <a style='text-decoration: underline;' href='{frontend_base_url}/#/eenmalige-activiteit-detail/{insurance.id}'>je aanvraag</a> opladen.<div>&nbsp;</div>"
+        
+        return ''
 
     def _prepare_email_body(self, template_path: str, dictionary: dict) -> str:
         return TextUtils.replace(
