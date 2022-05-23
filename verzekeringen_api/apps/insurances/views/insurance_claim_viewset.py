@@ -39,7 +39,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         "victim__membership_number"
     ]
     ordering_fields = ["created_on"]
-    ordering = ["-created_on"]
+    ordering = ["-date_of_accident", "-created_on"]
 
     # Filters on the year of the accident
     filterset_class = InsuranceClaimFilter
@@ -141,7 +141,6 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         claim = self.get_object()
         serializer = InsuranceClaimSerializer(claim, context={"request": request})
-        print('@@@@@@@@@@@@@@ CLAIM: ', serializer.data)
 
         return Response(serializer.data)
 

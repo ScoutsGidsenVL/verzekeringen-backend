@@ -15,4 +15,5 @@ class InsuranceClaimQuerySet(models.QuerySet):
 
 class InsuranceClaimManager(models.Manager):
     def get_queryset(self):
-        return InsuranceClaimQuerySet(self.model, using=self._db).order_by("date_of_accident")
+        ordered = InsuranceClaimQuerySet(self.model, using=self._db)
+        return ordered
