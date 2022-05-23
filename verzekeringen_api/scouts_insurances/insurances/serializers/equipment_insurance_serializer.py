@@ -2,6 +2,8 @@ import logging
 
 from rest_framework import serializers
 
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
+from scouts_insurances.locations.models import Country
 from scouts_insurances.locations.serializers import CountrySerializer
 
 from scouts_insurances.equipment.serializers import EquipmentSerializer
@@ -13,7 +15,10 @@ logger = logging.getLogger(__name__)
 
 class EquipmentInsuranceSerializer(BaseInsuranceSerializer):
     equipment = EquipmentSerializer(many=True)
-    country = CountrySerializer(required=False)
+    country = serializers.PrimaryKeyRelatedField(
+        queryset=Country.objects.by_insurance_type_id(InsuranceTypeEnum.EQUIPMENT),
+        required=False,
+    )
 
     class Meta:
         model = EquipmentInsurance

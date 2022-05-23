@@ -13,3 +13,8 @@ class Country(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=60, unique=True)
     insurance_types = models.ManyToManyField(InsuranceType, related_name="country_options")
+
+    def __str__(self):
+        return "{}".format(
+            self.id
+        )
