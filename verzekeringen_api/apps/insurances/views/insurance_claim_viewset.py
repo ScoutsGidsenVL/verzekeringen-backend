@@ -15,6 +15,7 @@ from apps.insurances.serializers import (
 )
 from apps.insurances.filters import InsuranceClaimFilter
 from apps.insurances.models import InsuranceClaim
+from apps.insurances.permissions import InsuranceClaimsPermission
 from apps.insurances.services import InsuranceClaimService
 
 from scouts_auth.auth.permissions import CustomDjangoPermission
@@ -49,6 +50,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
 
     serializer_class = InsuranceClaimSerializer
     parser_classes = [MultipartJsonParser, parsers.JSONParser]
+    permission_classes = [InsuranceClaimsPermission]
 
     def get_queryset(self):
         return InsuranceClaim.objects.all().allowed(self.request.user)
