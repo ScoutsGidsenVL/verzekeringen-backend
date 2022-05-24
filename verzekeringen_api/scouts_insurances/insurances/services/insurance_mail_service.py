@@ -73,7 +73,8 @@ class InsuranceMailService(EmailService):
         }
 
     def _extra_text(self, insurance: BaseInsurance) -> str:
-        frontend_base_url = settings.FRONTEND_BASE_URL
+        # frontend_base_url = settings.FRONTEND_BASE_URL #USE THIS ENV VAR FOR LOCAL
+        frontend_base_url = settings.BASE_URL  #USE THIS ENV VAR FOR ACC AND PROD
         if (insurance.type.description.lower() == 'eenmalige activiteit') or (insurance.type.description.lower() == 'evenementen verzekering'):
             return f"<div>&nbsp;</div>Vergeet niet om na de activiteit <a style='text-decoration: underline;' href='https://www.scoutsengidsenvlaanderen.be/media/1317/download'>de deelnemerslijst</a> in te vullen en te bezorgen, ook als er geen ongeval gebeurde. Je kan het in <a style='text-decoration: underline;' href='{frontend_base_url}/#/eenmalige-activiteit-detail/{insurance.id}'>je aanvraag</a> opladen.<div>&nbsp;</div>"
         
