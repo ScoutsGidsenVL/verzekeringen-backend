@@ -248,7 +248,6 @@ class Migration(migrations.Migration):
                 ('_vehicle_brand', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalCharField(blank=True, db_column='automerk', max_length=15)),
                 ('_vehicle_license_plate', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalCharField(blank=True, db_column='autokenteken', max_length=10)),
                 ('_vehicle_construction_year', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalIntegerField(blank=True, db_column='autobouwjaar', null=True, validators=[django.core.validators.MinValueValidator(1900)])),
-                ('_vehicle_chassis_number', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalCharField(blank=True, db_column='autochassis', max_length=20)),
                 ('_vehicle_trailer', scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalIntegerField(blank=True, choices=[(0, 'Geen'), (1, 'Aanhangwagen')], db_column='aanhangwagen', null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(1)])),
                 ('insurance_parent', models.OneToOneField(db_column='verzekeringsid', on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, related_name='travel_assistance_child', serialize=False, to='scouts_insurances.baseinsurance')),
                 ('country', models.CharField(db_column='bestemmingsland', max_length=40)),
