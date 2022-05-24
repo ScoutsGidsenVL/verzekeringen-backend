@@ -302,7 +302,8 @@ COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME = "FIRMA:"
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = "static/"
 STATIC_ROOT = env.str("STATIC_ROOT")
-FRONTEND_BASE_URL = env.str("FRONTEND_BASE_URL")
+# FRONTEND_BASE_URL = env.str("FRONTEND_BASE_URL")
+BASE_URL = env.str("BASE_URL")
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 

@@ -22,7 +22,7 @@ class EquipmentInsuranceSerializer(BaseInsuranceSerializer):
 
     class Meta:
         model = EquipmentInsurance
-        fields = BaseInsuranceFields + ["nature", "country", "postal_code", "city", "equipment"]
+        fields = BaseInsuranceFields + ["nature", "_country", "postal_code", "city", "equipment"]
 
     def validate_equipment(self, value):
         if len(value) < 1:
@@ -32,10 +32,17 @@ class EquipmentInsuranceSerializer(BaseInsuranceSerializer):
     def validate(self, data):
         postal_code = data.get("postal_code", None)
         city = data.get("city", None)
-        country = data.get("country", None)
+        country = data.get("_country", None)
 
         if not (postal_code and city) and not country:
             raise serializers.ValidationError("Either postal code/city or country is required")
         elif (postal_code and city) and country:
             raise serializers.ValidationError("Country and postal_code/city are mutually exclusive fields")
+        return data
+
+    def to_representation(self, obj: EquipmentInsurance) -> dict:
+        data = super().to_representation(obj)
+
+        data["country"] = data.pop("_country")
+
         return data
