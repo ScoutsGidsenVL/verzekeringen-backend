@@ -44,7 +44,6 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
         created_insurance = self.travel_assistance_insurance_service.travel_assistance_insurance_create(
             **validated_data, created_by=request.user
         )
-
         output_serializer = InuitsTravelAssistanceInsuranceSerializer(created_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

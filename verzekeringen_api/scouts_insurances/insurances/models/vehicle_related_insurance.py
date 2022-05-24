@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.db.models import UUIDField
 from rest_framework import serializers
 
 from scouts_insurances.equipment.models import Vehicle
@@ -15,7 +16,7 @@ from scouts_auth.inuits.models.fields import (
 
 
 class VehicleRelatedInsurance(models.Model):
-
+    _vehicle_id = UUIDField(db_column="inuits_vehicle_id", null=True, default=None)
     _vehicle_type = OptionalCharField(
         db_column="autotype",
         choices=VehicleType.choices,
@@ -33,15 +34,15 @@ class VehicleRelatedInsurance(models.Model):
     def clean(self):
         super().clean()
         if not (
-            self._vehicle_type
-            and self._vehicle_brand
-            and self._vehicle_license_plate
-            and self._vehicle_construction_year
+                self._vehicle_type
+                and self._vehicle_brand
+                and self._vehicle_license_plate
+                and self._vehicle_construction_year
         ) and not (
-            not self._vehicle_type
-            and not self._vehicle_brand
-            and not self._vehicle_license_plate
-            and not self._vehicle_construction_year
+                not self._vehicle_type
+                and not self._vehicle_brand
+                and not self._vehicle_license_plate
+                and not self._vehicle_construction_year
         ):
             raise serializers.ValidationError("If one vehicle field given all vehicle fields need to be given")
 
