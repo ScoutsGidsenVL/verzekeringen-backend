@@ -30,7 +30,8 @@ class PersonSearch(viewsets.GenericViewSet):
     service = GroupAdminMemberService()
 
     def get_queryset(self):
-        return InuitsNonMember.objects.all().allowed(self.request.user)
+        group = self.request.query_params.get('group')
+        return InuitsNonMember.objects.filter(group_admin_id=group).allowed(self.request.user)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: PersonSerializer})
     def list(self, request):
