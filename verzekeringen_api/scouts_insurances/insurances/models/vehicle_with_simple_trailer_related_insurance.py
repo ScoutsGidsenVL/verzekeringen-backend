@@ -33,6 +33,7 @@ class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
 
         return TravelAssistanceVehicle(
             id=self._vehicle_id,
+            chassis_number=self._vehicle_chassis_number,
             type=self._vehicle_type,
             brand=self._vehicle_brand,
             license_plate=self._vehicle_license_plate,
