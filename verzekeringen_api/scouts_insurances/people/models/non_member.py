@@ -20,6 +20,7 @@ class NonMember(AbstractMember, models.Model):
     objects = NonMemberManager()
 
     id = models.AutoField(db_column="nietlidid", primary_key=True)
+    inuits_id = models.UUIDField(db_column="inuits_id", blank=True, null=True, default=None)
     street = models.CharField(db_column="straat", max_length=100, blank=True)
     number = models.CharField(db_column="nr", max_length=5, blank=True)
     letter_box = models.CharField(db_column="bus", max_length=5, blank=True)

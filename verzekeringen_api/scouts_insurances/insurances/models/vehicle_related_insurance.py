@@ -16,7 +16,7 @@ from scouts_auth.inuits.models.fields import (
 
 
 class VehicleRelatedInsurance(models.Model):
-    _vehicle_id = UUIDField(db_column="inuits_vehicle_id", null=True, default=None)
+    _vehicle_id = UUIDField(db_column="inuits_vehicle_id", null=True, default=None, blank=True)
     _vehicle_type = OptionalCharField(
         db_column="autotype",
         choices=VehicleType.choices,
