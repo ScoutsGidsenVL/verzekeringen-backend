@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, filters, permissions
@@ -10,8 +11,7 @@ from apps.insurances.serializers import InuitsTemporaryInsuranceSerializer
 from apps.insurances.services import InuitsTemporaryInsuranceService
 
 from scouts_insurances.insurances.models import TemporaryInsurance
-from scouts_insurances.insurances.serializers import InsuranceCostSerializer
-
+from scouts_insurances.insurances.serializers import InsuranceCostSerializer, TemporaryInsuranceSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class InuitsTemporaryInsuranceViewSet(viewsets.ViewSet):
 
     @swagger_auto_schema(
         request_body=InuitsTemporaryInsuranceSerializer,
-        responses={status.HTTP_201_CREATED: InuitsTemporaryInsuranceSerializer},
+        responses={status.HTTP_201_CREATED: TemporaryInsuranceSerializer},
     )
     def create(self, request, *args, **kwargs):
         logger.debug("REQUEST DATA: %s", request.data)
@@ -43,8 +43,7 @@ class InuitsTemporaryInsuranceViewSet(viewsets.ViewSet):
         created_insurance = self.temporary_insurance_service.inuits_temporary_insurance_create(
             **validated_data, created_by=request.user
         )
-
-        output_serializer = InuitsTemporaryInsuranceSerializer(created_insurance)
+        output_serializer = TemporaryInsuranceSerializer(created_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -71,7 +70,7 @@ class InuitsTemporaryInsuranceViewSet(viewsets.ViewSet):
 
     @swagger_auto_schema(
         request_body=InuitsTemporaryInsuranceSerializer,
-        responses={status.HTTP_201_CREATED: InuitsTemporaryInsuranceSerializer},
+        responses={status.HTTP_201_CREATED: TemporaryInsuranceSerializer},
     )
     def partial_update(self, request, pk=None):
         existing_insurance = get_object_or_404(
@@ -84,6 +83,6 @@ class InuitsTemporaryInsuranceViewSet(viewsets.ViewSet):
             insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
         )
 
-        output_serializer = InuitsTemporaryInsuranceSerializer(updated_insurance)
+        output_serializer = TemporaryInsuranceSerializer(updated_insurance)
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

@@ -40,8 +40,9 @@ class NonMember(AbstractMember, models.Model):
             raise ValidationError("Street, number, postal code and city need to be either filled in or blank together")
 
     def __str__(self):
-        return "id({}), {}, street({}), number({}), letter_box({}), postal_code({}), city({}), comment({})".format(
+        return "id({}), inuits_id({}), {}, street({}), number({}), letter_box({}), postal_code({}), city({}), comment({})".format(
             self.id,
+            self.inuits_id,
             self.abstract_member_to_str(),
             self.street,
             self.number,

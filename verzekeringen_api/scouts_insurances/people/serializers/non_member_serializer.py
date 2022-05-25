@@ -1,3 +1,5 @@
+import sys
+
 from rest_framework import serializers
 
 from scouts_insurances.people.models import NonMember

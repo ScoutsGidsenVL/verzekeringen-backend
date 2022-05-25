@@ -97,6 +97,7 @@ class InuitsNonMemberService(NonMemberService):
         """
 
         non_member = super().non_member_create(
+            inuits_id=inuits_non_member.id,
             first_name=inuits_non_member.first_name,
             last_name=inuits_non_member.last_name,
             phone_number=inuits_non_member.phone_number,
