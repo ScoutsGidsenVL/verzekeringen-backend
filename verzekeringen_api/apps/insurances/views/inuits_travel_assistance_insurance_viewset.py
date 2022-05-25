@@ -77,6 +77,11 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
         existing_insurance = get_object_or_404(
             TravelAssistanceInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
+        new_participants = list()
+        for participant in request.data["participants"]:
+            participant.pop("id", None)
+            new_participants.append(participant)
+        request.data["participants"] = new_participants
         input_serializer = InuitsTravelAssistanceInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
