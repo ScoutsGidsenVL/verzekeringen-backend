@@ -69,8 +69,7 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_200_OK: InuitsNonMemberSerializer},
     )
     def partial_update(self, request, pk=None):
-        # inuits_non_member = InuitsNonMember.objects.all().get(template__non_member=pk)
-        inuits_non_member = self.get_object()
+        inuits_non_member = InuitsNonMember.objects.get(id=request.data.get('inuits_id'))
 
         serializer = InuitsNonMemberSerializer(
             instance=inuits_non_member, data=request.data, context={"request": request}, partial=True
