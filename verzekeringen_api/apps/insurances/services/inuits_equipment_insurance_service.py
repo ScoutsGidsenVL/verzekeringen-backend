@@ -70,6 +70,7 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
         insurance.full_clean()
 
         insurance.save()
+        return insurance
 
     def _update_equipment(
         self,

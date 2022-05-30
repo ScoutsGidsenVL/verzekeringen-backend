@@ -11,17 +11,18 @@ from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import EquipmentInsurance
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
-
+from scouts_insurances.people.services.member_service import MemberService
 
 logger = logging.getLogger(__name__)
 
 
 class InuitsEquipmentService:
     non_member_service = InuitsNonMemberService()
+    member_service = MemberService()
 
     @transaction.atomic
     def inuits_equipment_create(
-        self, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
+            self, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
     ) -> InuitsEquipment:
         # Check if the instance already exists
         create = True
@@ -70,7 +71,7 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def linked_equipment_create(
-        self, insurance: EquipmentInsurance, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
+            self, insurance: EquipmentInsurance, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
     ) -> Equipment:
         """
         Creates an Equipment instance.
@@ -89,9 +90,9 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def equipment_create(
-        self,
-        insurance: EquipmentInsurance,
-        inuits_equipment: InuitsEquipment,
+            self,
+            insurance: EquipmentInsurance,
+            inuits_equipment: InuitsEquipment,
     ) -> Equipment:
         equipment = Equipment(
             insurance=insurance,
@@ -101,7 +102,15 @@ class InuitsEquipmentService:
         if inuits_equipment.owner_non_member:
             equipment.owner_non_member = self.non_member_service.non_member_create(inuits_equipment.owner_non_member)
         if inuits_equipment.owner_member:
-            equipment.owner_member = self.member_service.member_create(inuits_equipment.owner_member)
+            equipment.owner_member = self.member_service.member_create(
+                first_name=inuits_equipment.owner_member.first_name,
+                last_name=inuits_equipment.owner_member.last_name,
+                phone_number=inuits_equipment.owner_member.phone_number,
+                birth_date=inuits_equipment.owner_member.birth_date,
+                email=inuits_equipment.owner_member.email,
+                membership_number=inuits_equipment.owner_member.membership_number,
+                group_admin_id=inuits_equipment.owner_member.group_admin_id
+            )
         equipment.full_clean()
         equipment.save()
 
@@ -109,11 +118,11 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def inuits_equipment_update(
-        self,
-        *,
-        inuits_equipment: InuitsEquipment,
-        updated_inuits_equipment: InuitsEquipment,
-        updated_by: settings.AUTH_USER_MODEL,
+            self,
+            *,
+            inuits_equipment: InuitsEquipment,
+            updated_inuits_equipment: InuitsEquipment,
+            updated_by: settings.AUTH_USER_MODEL,
     ) -> InuitsEquipment:
         # logger.debug("UPDATED EQUIPMENT: %s", updated_inuits_equipment)
         if inuits_equipment.equals(updated_inuits_equipment):
@@ -169,10 +178,10 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def equipment_update(
-        self,
-        *,
-        equipment: Equipment,
-        updated_equipment: InuitsEquipment,
+            self,
+            *,
+            equipment: Equipment,
+            updated_equipment: InuitsEquipment,
     ) -> Equipment:
         # equipment.insurance = insurance
         equipment.nature = updated_equipment.nature if updated_equipment.nature else equipment.nature
