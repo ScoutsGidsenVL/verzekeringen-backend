@@ -44,7 +44,7 @@ class ScoutsAuthorizationService(AuthorizationService):
     def load_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
         scouts_groups: List[AbstractScoutsGroup] = self.service.get_groups(active_user=user).scouts_groups
 
-        user.scouts_groups = scouts_groups
+        user.scouts_groups = [group for group in scouts_groups if user.has_role_group_leader(group)]
 
         user = self.update_user_scouts_groups(user)
 
