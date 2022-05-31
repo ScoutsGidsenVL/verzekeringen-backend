@@ -9,7 +9,7 @@ from apps.equipment.filters import InuitsEquipmentFilter
 from apps.equipment.serializers import InuitsEquipmentSerializer
 from apps.equipment.services import InuitsEquipmentService
 from apps.equipment.models import InuitsEquipment
-from scouts_insurances.equipment.serializers import EquipmentSerializer
+
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
             inuits_equipment=validated_data, created_by=request.user
         )
 
-        output_serializer = EquipmentSerializer(created_equipment, context={"request": request})
+        output_serializer = InuitsEquipmentSerializer(created_equipment, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
