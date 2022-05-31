@@ -6,6 +6,8 @@ role_group_leader:
   - insurances.add_insuranceclaim
   - insurances.change_insuranceclaim
   - insurances.list_insuranceclaims                   # https://redmine.inuits.eu/issues/79995
+role_district_commissioner:
+  - insurances.list_insuranceclaims                   # View the list of claims
 role_administrator:
   - insurances.list_insuranceclaims
   - insurances.add_insuranceclaim_note                # https://redmine.inuits.eu/issues/78579
