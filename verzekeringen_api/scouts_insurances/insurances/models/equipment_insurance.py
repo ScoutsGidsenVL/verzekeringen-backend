@@ -33,7 +33,9 @@ class EquipmentInsurance(BaseInsurance):
 
     @property
     def country(self):
-        return Country.objects.get(name=self._country)
+        if self._country:
+            return Country.objects.get(name=self._country)
+        return None
 
     @country.setter
     def country(self, value):

@@ -42,6 +42,6 @@ class EquipmentInsuranceSerializer(BaseInsuranceSerializer):
     def to_representation(self, obj: EquipmentInsurance) -> dict:
         data = super().to_representation(obj)
 
-        data["country"] = data.pop("_country")
+        data["country"] = data.pop("_country", None)
 
         return data
