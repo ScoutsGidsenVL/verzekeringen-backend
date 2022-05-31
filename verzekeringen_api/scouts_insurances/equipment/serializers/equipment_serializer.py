@@ -28,6 +28,6 @@ class EquipmentSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        if data.get("owner_member") and data.get("owner_non_member"):
+        if data.get("owner_member", None) and data.get("owner_non_member", None):
             raise serializers.ValidationError("There can only be one owner")
         return data
