@@ -10,8 +10,7 @@ from apps.insurances.serializers import InuitsEquipmentInsuranceSerializer
 from apps.insurances.services import InuitsEquipmentInsuranceService
 
 from scouts_insurances.insurances.models import EquipmentInsurance
-from scouts_insurances.insurances.serializers import InsuranceCostSerializer
-
+from scouts_insurances.insurances.serializers import InsuranceCostSerializer, EquipmentInsuranceSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +43,7 @@ class InuitsEquipmentInsuranceViewSet(viewsets.GenericViewSet):
             **validated_data, created_by=request.user
         )
 
-        output_serializer = InuitsEquipmentInsuranceSerializer(created_insurance, context={"request": request})
+        output_serializer = EquipmentInsuranceSerializer(created_insurance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
