@@ -7,7 +7,7 @@ from rest_framework import serializers
 from apps.people.serializers import InuitsClaimVictimSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 
-from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer, ScoutsUserSerializer
 from scouts_auth.groupadmin.serializers.fields import AbstractScoutsGroupSerializerField
 from scouts_auth.groupadmin.services import GroupAdmin
 
@@ -53,6 +53,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
 
     activity_type = serializers.JSONField()
     victim = InuitsClaimVictimSerializer()
+    declarant = ScoutsUserSerializer()
     note = PermissionRequiredField(
         permission="insurances.view_insuranceclaim_note", field=serializers.CharField(max_length=1024), required=False
     )
@@ -64,7 +65,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InsuranceClaim
-        exclude = ["declarant"]
+        exclude = []
 
     # @TODO see if adding the group can't be done with a AbstractScoutsGroupSerializerField
     def to_representation(self, data: dict) -> dict:
