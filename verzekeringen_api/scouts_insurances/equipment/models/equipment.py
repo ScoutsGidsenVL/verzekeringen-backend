@@ -14,6 +14,7 @@ class Equipment(models.Model):
     objects = EquipmentManager()
 
     id = models.AutoField(db_column="materiaalid", primary_key=True)
+    inuits_id = models.UUIDField(db_column="inuits_id", blank=True, null=True, default=None)
     nature = models.CharField(db_column="aard", max_length=50, blank=True)
     description = models.CharField(db_column="materieomschrijving", max_length=500)
     # Amount will not be used in the future so we will put it default 1 and ignore it
@@ -68,8 +69,9 @@ class Equipment(models.Model):
         pass
 
     def __str__(self):
-        return "id({}), nature({}), description({}), amount({}), total_value({}), owner_non_member({}), owner_member({})".format(
+        return "id({}), inuits_id({}), nature({}), description({}), amount({}), total_value({}), owner_non_member({}), owner_member({})".format(
             self.id,
+            self.inuits_id,
             self.nature,
             self.description,
             self.amount,

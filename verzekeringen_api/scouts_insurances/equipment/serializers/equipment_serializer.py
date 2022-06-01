@@ -20,6 +20,7 @@ class EquipmentSerializer(serializers.ModelSerializer):
         model = Equipment
         fields = (
             "id",
+            "inuits_id",
             "nature",
             "description",
             "total_value",
