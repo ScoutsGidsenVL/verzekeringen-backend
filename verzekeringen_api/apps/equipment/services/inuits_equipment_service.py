@@ -97,6 +97,7 @@ class InuitsEquipmentService:
     ) -> Equipment:
         equipment = Equipment(
             inuits_id=inuits_equipment.id,
+            nature=inuits_equipment.nature,
             insurance=insurance,
             description=inuits_equipment.description,
             total_value=inuits_equipment.total_value,
