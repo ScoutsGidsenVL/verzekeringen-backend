@@ -121,8 +121,8 @@ class InuitsInsuranceMailService(InsuranceMailService):
             "victim__first_name": claim.victim.first_name,
             "victim__name": claim.victim.first_name + " " + claim.victim.last_name,
             "victim__email": claim.victim.email,
-            "date_of_accident": claim.date_of_accident.date(),
-            "date_of_declaration": claim.created_on.date(),
+            "date_of_accident": claim.date_of_accident.date().strftime("%d-%m-%Y"),
+            "date_of_declaration": claim.created_on.date().strftime("%d-%m-%Y"),
             "title_mail--": "",
         }
 
