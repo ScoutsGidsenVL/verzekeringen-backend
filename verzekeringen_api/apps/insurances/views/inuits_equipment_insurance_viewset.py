@@ -88,6 +88,6 @@ class InuitsEquipmentInsuranceViewSet(viewsets.GenericViewSet):
             insurance=existing_insurance, **validated_data, created_by=request.user
         )
 
-        output_serializer = InuitsEquipmentInsuranceSerializer(updated_insurance, context={"request": request})
+        output_serializer = EquipmentInsuranceSerializer(updated_insurance, context={"request": request})
 
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

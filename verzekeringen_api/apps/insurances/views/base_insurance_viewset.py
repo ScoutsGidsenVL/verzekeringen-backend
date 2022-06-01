@@ -18,7 +18,7 @@ from scouts_insurances.insurances.models import BaseInsurance
 from scouts_insurances.insurances.serializers import (
     BaseInsuranceSerializer,
     ActivityInsuranceSerializer,
-    EventInsuranceSerializer, TemporaryInsuranceSerializer,
+    EventInsuranceSerializer, TemporaryInsuranceSerializer, EquipmentInsuranceSerializer,
 )
 
 
@@ -64,7 +64,7 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
                     insurance.temporary_vehicle_child, context={"request": request}
                 )
             elif insurance.type.is_equipment_insurance():
-                serializer = InuitsEquipmentInsuranceSerializer(
+                serializer = EquipmentInsuranceSerializer(
                     insurance.equipment_child, context={"request": request}
                 )
         elif insurance.type.is_activity_insurance():

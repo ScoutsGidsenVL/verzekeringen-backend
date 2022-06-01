@@ -11,6 +11,7 @@ from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import EquipmentInsurance
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_insurances.people.models import NonMember
 from scouts_insurances.people.services.member_service import MemberService
 
 logger = logging.getLogger(__name__)
@@ -191,8 +192,9 @@ class InuitsEquipmentService:
         equipment.total_value = (
             updated_equipment.total_value if updated_equipment.total_value else equipment.total_value
         )
+        owner_non_member = NonMember.objects.all().filter(inuits_id=updated_equipment.owner_non_member.id).last() if updated_equipment.owner_non_member else equipment.owner_non_member
         equipment.owner_non_member = (
-            updated_equipment.owner_non_member if updated_equipment.owner_non_member else equipment.owner_non_member
+            owner_non_member
         )
         equipment.owner_member = (
             updated_equipment.owner_member if updated_equipment.owner_member else equipment.owner_member

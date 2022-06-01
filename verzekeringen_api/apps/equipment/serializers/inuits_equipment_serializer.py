@@ -13,7 +13,6 @@ from scouts_auth.groupadmin.serializers.fields import (
     AbstractScoutsGroupSerializerField,
 )
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -48,9 +47,15 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
         )
 
     def to_internal_value(self, data: dict):
+        owner_non_member = data.get("owner_non_member", None)
+        if not isinstance(owner_non_member, str) and owner_non_member and owner_non_member.get("inuits_id", None):
+            data["owner_non_member"] = owner_non_member.get("inuits_id", None)
+            inuits_equipment = InuitsEquipment.objects.all().filter(template__equipment=data.get("id", None)).last()
+            if inuits_equipment:
+                data["id"] = inuits_equipment.id
+        id = data.get("id", None)
         logger.debug("INUITS EQUIPMENT SERIALIZER DATA: %s", data)
 
-        id = data.get("id", None)
         group_admin_id = data.get("group_admin_id", data.get("group_group_admin_id", None))
         owner_non_member = data.get("owner_non_member", None)
         owner_member = data.get("owner_member", None)
