@@ -174,7 +174,7 @@ class InuitsEquipmentService:
         # logger.debug("EQUIPMENT: %s", equipment)
 
         for item in equipment:
-            self.equipment_update(equipment=item, inuits_equipment=inuits_equipment)
+            self.equipment_update(equipment=item.equipment, updated_equipment=inuits_equipment)
 
         return inuits_equipment
 
