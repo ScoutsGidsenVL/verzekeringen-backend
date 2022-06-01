@@ -72,7 +72,7 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
     )
     def partial_update(self, request, pk=None):
         logger.debug("UPDATE REQUEST DATA: %s", request.data)
-        equipment = self.get_object()
+        equipment = InuitsEquipment.objects.filter(id=pk).last()
 
         serializer = InuitsEquipmentSerializer(
             data=request.data, instance=equipment, partial=True, context={"request": request}

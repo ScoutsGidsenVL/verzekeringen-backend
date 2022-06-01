@@ -75,7 +75,7 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
         return data
 
     def to_representation(self, data: dict) -> dict:
-        logger.debug("INUITS EQUIPMENT REPRESENTATION DATA: %s (%s)", data, type(data).__name__)
+        # logger.debug("INUITS EQUIPMENT REPRESENTATION DATA: %s (%s)", data, type(data).__name__)
         # HACKETY HACK
         inuits_equipment = InuitsEquipment.objects.all().filter(template__equipment=data.id).last()
 

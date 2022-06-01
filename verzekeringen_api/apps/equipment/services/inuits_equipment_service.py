@@ -11,7 +11,7 @@ from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import EquipmentInsurance
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
-from scouts_insurances.people.models import NonMember
+from scouts_insurances.people.models import NonMember, Member
 from scouts_insurances.people.services.member_service import MemberService
 
 logger = logging.getLogger(__name__)
@@ -151,7 +151,7 @@ class InuitsEquipmentService:
             else inuits_equipment.owner_non_member
         )
         inuits_equipment.owner_member = (
-            updated_inuits_equipment.owner_member
+            updated_inuits_equipment.owner_member.group_admin_id
             if updated_inuits_equipment.owner_member
             else inuits_equipment.owner_member
         )
@@ -198,9 +198,9 @@ class InuitsEquipmentService:
         equipment.owner_non_member = (
             owner_non_member
         )
-        equipment.owner_member = (
-            updated_equipment.owner_member if updated_equipment.owner_member else equipment.owner_member
-        )
+        owner_member = Member.get(ga_id=updated_equipment.owner_member).last() if updated_equipment.owner_member else equipment.owner_member
+        equipment.owner_member = owner_member.id
+
         equipment.owner_group = (
             updated_equipment.owner_group if updated_equipment.owner_group else equipment.owner_group
         )
