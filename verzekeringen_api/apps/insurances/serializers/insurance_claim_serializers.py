@@ -53,7 +53,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
 
     activity_type = serializers.JSONField()
     victim = InuitsClaimVictimSerializer()
-    declarant = ScoutsUserSerializer()
+    declarant = ScoutsUserSerializer(required=False)
     note = PermissionRequiredField(
         permission="insurances.view_insuranceclaim_note", field=serializers.CharField(max_length=1024), required=False
     )
