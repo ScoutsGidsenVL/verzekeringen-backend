@@ -200,7 +200,7 @@ class InuitsEquipmentService:
         equipment.owner_non_member = (
             owner_non_member
         )
-        owner_member = Member.objects.filter(group_admin_id=updated_equipment.owner_member).last() if updated_equipment.owner_member else equipment.owner_member
+        owner_member = Member.objects.filter(group_admin_id=updated_equipment.owner_member if isinstance(updated_equipment.owner_member, str) else updated_equipment.owner_member.group_admin_id).last() if updated_equipment.owner_member else equipment.owner_member
         equipment.owner_member = owner_member
 
         equipment.owner_group = (

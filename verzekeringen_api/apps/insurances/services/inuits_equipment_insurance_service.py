@@ -83,9 +83,7 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
 
         # First update the list of equipment that was submitted
         for inuits_equipment in inuits_equipment_list:
-            equipment = Equipment.objects.filter(
-                Q(insurance=insurance) & Q(template__inuits_equipment=inuits_equipment)
-            ).last()
+            equipment = Equipment.objects.filter(id=inuits_equipment.id).last()
 
             logger.debug("INUITS EQUIPMENT TO UPDATE: %s", inuits_equipment)
             logger.debug("EQUIPMENT TO UPDATE: %s", equipment)
