@@ -198,8 +198,8 @@ class InuitsEquipmentService:
         equipment.owner_non_member = (
             owner_non_member
         )
-        owner_member = Member.get(ga_id=updated_equipment.owner_member).last() if updated_equipment.owner_member else equipment.owner_member
-        equipment.owner_member = owner_member.id
+        owner_member = Member.objects.filter(group_admin_id=updated_equipment.owner_member).last() if updated_equipment.owner_member else equipment.owner_member
+        equipment.owner_member = owner_member
 
         equipment.owner_group = (
             updated_equipment.owner_group if updated_equipment.owner_group else equipment.owner_group
