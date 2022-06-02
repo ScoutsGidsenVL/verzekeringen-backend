@@ -100,8 +100,9 @@ class ScoutsUser(User):
         Determines if the user is a group leader based on a function in the specified group
         """
         for function in self.functions:
-            if function.is_group_leader(group):
-                return True
+            for scouts_group in function.scouts_groups:
+                if scouts_group.group_admin_id == group.group_admin_id and function.is_group_leader(group):
+                    return True
 
         return False
 

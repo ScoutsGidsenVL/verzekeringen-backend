@@ -1,4 +1,6 @@
-import logging
+import logging, requests
+
+from django.http import Http404
 
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMemberPersonalData,
@@ -179,7 +181,9 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
             "group_admin_id": data.pop("id", None),
             "addresses": AbstractScoutsAddressSerializer(many=True).to_internal_value(data.pop("adressen", [])),
             "contacts": AbstractScoutsContactSerializer(many=True).to_internal_value(data.pop("contacten", [])),
-            "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(data.pop("functies", [])),
+            "functions": AbstractScoutsFunctionSerializer(many=True).to_internal_value(
+                self._get_functions_from_user_profile(data.pop("functies", []), data.get("access_token", None))
+            ),
             "scouts_groups": AbstractScoutsGroupSerializer(many=True).to_internal_value(data.pop("groepen", [])),
             "group_specific_fields": AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
                 data.pop("groepseigenVelden", {})
@@ -230,6 +234,30 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
             logger.debug("UNPARSED JSON DATA: %s", str(remaining_keys))
 
         return instance
+
+    def _get_functions_from_user_profile(self, functions: list, access_token: str):
+        parsed_functions = []
+
+        for links in functions:
+            for link in links.pop("links", []):
+                rel = link.pop("rel", None)
+                if rel == "functie":
+                    href = link.pop("href", None)
+                    parsed_functions.append(self._fetch_functions(href, access_token))
+
+        return parsed_functions
+
+    def _fetch_functions(self, endpoint: str, access_token: str):
+        logger.debug("GA: Fetching data from endpoint %s", endpoint)
+        try:
+            response = requests.get(endpoint, headers={"Authorization": "Bearer {0}".format(access_token)})
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as error:
+            if error.response.status_code == 404:
+                raise Http404
+            raise error
+
+        return response.json()
 
 
 class AbstractScoutsMemberSearchFrontendSerializer(NonModelSerializer):

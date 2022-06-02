@@ -3,6 +3,7 @@ from datetime import date, datetime
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
+from scouts_auth.groupadmin.utils import SettingsHelper
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
 
@@ -80,7 +81,10 @@ class AbstractScoutsFunction(AbstractNonModel):
         return self.groups_section_leader.get(group.group_admin_id, False)
 
     def is_group_leader(self, group: AbstractScoutsGroup) -> bool:
-        return self.function_code.is_group_leader() and self.scouts_group.group_admin_id == group.group_admin_id
+        for grouping in self.groupings:
+            if grouping.name.lower() == SettingsHelper.get_section_leader_identifier().lower():
+                return True
+        return False
 
     def is_district_commissioner(self) -> bool:
         return self.function_code.is_district_commissioner()
