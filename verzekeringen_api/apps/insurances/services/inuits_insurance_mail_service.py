@@ -72,7 +72,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
             to=InuitsInsuranceSettingsHelper.get_insurer_address(self.insurer_address, claim.declarant.email),
             add_attachments=True,
             claim_report_path=claim_report_path,
-            tags=["Schadeaangifte"]
+            tags=["Schadeaangifte"],
         )
 
     def notify_victim(self, claim: InsuranceClaim, claim_report_path: str, dictionary: dict):
@@ -91,7 +91,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
             to=InuitsInsuranceSettingsHelper.get_victim_email(victim.email, claim.declarant.email),
             add_attachments=True,
             claim_report_path=claim_report_path,
-            tags=["Schadeaangifte"]
+            tags=["Schadeaangifte"],
         )
 
     def notify_stakeholder(self, claim: InsuranceClaim, dictionary: dict):
@@ -108,7 +108,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
             template_path=self.stakeholder_template_path,
             to=InuitsInsuranceSettingsHelper.get_declarant_email(claim.declarant.email, claim.declarant.email),
             add_attachments=False,
-            tags=["Schadeaangifte"]
+            tags=["Schadeaangifte"],
         )
 
     def _prepare_claim_dictionary(self, claim: InsuranceClaim):
@@ -144,7 +144,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
         template_id: str = None,
         claim_report_path: str = None,
         add_attachments: bool = False,
-        tags=None
+        tags=None,
     ):
         if tags is None:
             tags = []
@@ -155,7 +155,7 @@ class InuitsInsuranceMailService(InsuranceMailService):
         html_body = TextUtils.compose_html_email(self.template_path_start, html_body, self.template_path_end)
 
         if not reply_to:
-            reply_to = self.from_email
+            reply_to = InuitsInsuranceSettingsHelper.get_email_insurance_reply_to(self.from_email)
 
         mail = Email(
             subject=dictionary["title_mail"],

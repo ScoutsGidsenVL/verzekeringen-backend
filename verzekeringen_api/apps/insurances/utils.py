@@ -27,6 +27,10 @@ class InuitsInsuranceSettingsHelper:
         return getattr(settings, "EMAIL_INSURANCE_FROM")
 
     @staticmethod
+    def get_email_insurance_reply_to(from_email: str):
+        return getattr(settings, "EMAIL_INSURANCE_REPLY_TO", from_email)
+
+    @staticmethod
     def get_insurance_requester_address(insurance_requester_address: str = None, send_to: str = None) -> str:
         if InuitsInsuranceSettingsHelper.is_test():
             # When on acceptance, send everything to the requester

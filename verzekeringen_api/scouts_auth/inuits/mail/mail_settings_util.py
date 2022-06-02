@@ -84,11 +84,6 @@ class EmailSettingsUtil(SettingsHelper):
         logger.info(
             "EMAIL_INSURER_ADDRESS_DEBUG: %s", EmailSettingsUtil.get("EMAIL_INSURER_ADDRESS_DEBUG", "- NOT SET -")
         )
-        logger.info("EMAIL_URL                  : %s", EmailSettingsUtil.get("EMAIL_URL", "- NOT SET -"))
-        logger.info("EMAIL_SENDER               : %s", EmailSettingsUtil.get("EMAIL_SENDER", "- NOT SET -"))
-        logger.info("EMAIL_RECIPIENTS           : %s", EmailSettingsUtil.get("EMAIL_RECIPIENTS", "- NOT SET -"))
-        logger.info("EMAIL_HOST                 : %s", EmailSettingsUtil.get("EMAIL_HOST", "- NOT SET -"))
-        logger.info("EMAIL_PORT                 : %s", EmailSettingsUtil.get("EMAIL_PORT", "- NOT SET -"))
         logger.info(
             "USE_SENDINBLUE           : %s", EmailSettingsUtil.get_bool("USE_SENDINBLUE", False, "- NOT SET -")
         )
