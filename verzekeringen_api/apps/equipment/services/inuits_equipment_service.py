@@ -148,12 +148,12 @@ class InuitsEquipmentService:
         inuits_equipment.owner_non_member = (
             updated_inuits_equipment.owner_non_member
             if updated_inuits_equipment.owner_non_member
-            else inuits_equipment.owner_non_member
+            else None
         )
         inuits_equipment.owner_member = (
             updated_inuits_equipment.owner_member.group_admin_id
             if updated_inuits_equipment.owner_member
-            else inuits_equipment.owner_member
+            else None
         )
         if updated_inuits_equipment.owner_group:
             if isinstance(updated_inuits_equipment.owner_group, AbstractScoutsGroup):
