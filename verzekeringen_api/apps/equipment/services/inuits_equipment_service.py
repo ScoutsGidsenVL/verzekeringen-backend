@@ -133,7 +133,7 @@ class InuitsEquipmentService:
 
         # Update the InuitsNonMember instance
         inuits_equipment.nature = (
-            updated_inuits_equipment.nature if updated_inuits_equipment.nature and not updated_inuits_equipment.owner_member else None if updated_inuits_equipment.owner_member else inuits_equipment.nature
+            updated_inuits_equipment.nature if updated_inuits_equipment.nature else inuits_equipment.nature
         )
         inuits_equipment.description = (
             updated_inuits_equipment.description
@@ -196,11 +196,11 @@ class InuitsEquipmentService:
         equipment.total_value = (
             updated_equipment.total_value if updated_equipment.total_value else equipment.total_value
         )
-        owner_non_member = NonMember.objects.all().filter(inuits_id=updated_equipment.owner_non_member.id).last() if updated_equipment.owner_non_member else equipment.owner_non_member
+        owner_non_member = NonMember.objects.all().filter(inuits_id=updated_equipment.owner_non_member.id).last() if updated_equipment.owner_non_member else None
         equipment.owner_non_member = (
             owner_non_member
         )
-        owner_member = Member.objects.filter(group_admin_id=updated_equipment.owner_member if isinstance(updated_equipment.owner_member, str) else updated_equipment.owner_member.group_admin_id).last() if updated_equipment.owner_member else equipment.owner_member
+        owner_member = Member.objects.filter(group_admin_id=updated_equipment.owner_member if isinstance(updated_equipment.owner_member, str) else updated_equipment.owner_member.group_admin_id).last() if updated_equipment.owner_member else None
         equipment.owner_member = owner_member
 
         equipment.owner_group = (

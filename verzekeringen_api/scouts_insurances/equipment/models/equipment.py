@@ -56,9 +56,6 @@ class Equipment(models.Model):
     def clean(self):
         if self.owner_non_member and self.owner_member:
             raise ValidationError("There needs to be only one owner")
-        if self.owner_member and self.nature is not None:
-
-            raise ValidationError(f"{self.nature} If the equipment owner is a member then equipment nature can not be given")
 
     @property
     def owner_group(self):
