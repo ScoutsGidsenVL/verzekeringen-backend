@@ -74,15 +74,15 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
 
         return data
 
-    def to_representation(self, data: dict) -> dict:
-        # logger.debug("INUITS EQUIPMENT REPRESENTATION DATA: %s (%s)", data, type(data).__name__)
-        # HACKETY HACK
-        inuits_equipment = InuitsEquipment.objects.all().filter(template__equipment=data.id).last()
-
-        if inuits_equipment:
-            data.id = inuits_equipment.id
-
-        return super().to_representation(data)
+    # def to_representation(self, data: dict) -> dict:
+    #     # logger.debug("INUITS EQUIPMENT REPRESENTATION DATA: %s (%s)", data, type(data).__name__)
+    #     # HACKETY HACK
+    #     inuits_equipment = InuitsEquipment.objects.all().filter(template__equipment=data.id).last()
+    #
+    #     if inuits_equipment:
+    #         data.id = inuits_equipment.id
+    #
+    #     return super().to_representation(data)
 
     def validate(self, data: dict) -> InuitsEquipment:
         # @TODO should be either one, not both

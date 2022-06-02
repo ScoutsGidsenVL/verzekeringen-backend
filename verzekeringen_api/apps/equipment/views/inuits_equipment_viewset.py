@@ -87,5 +87,5 @@ class InuitsEquipmentViewSet(viewsets.GenericViewSet):
         )
 
         output_serializer = InuitsEquipmentSerializer(updated_equipment, context={"request": request})
-
+        output_serializer.data["id"] = request.data.get("id")
         return Response(output_serializer.data, status=status.HTTP_200_OK)
