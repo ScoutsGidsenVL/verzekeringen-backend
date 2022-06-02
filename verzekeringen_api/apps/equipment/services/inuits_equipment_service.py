@@ -133,7 +133,7 @@ class InuitsEquipmentService:
 
         # Update the InuitsNonMember instance
         inuits_equipment.nature = (
-            updated_inuits_equipment.nature if updated_inuits_equipment.nature else inuits_equipment.nature
+            updated_inuits_equipment.nature if updated_inuits_equipment.nature and not updated_inuits_equipment.owner_member else None if updated_inuits_equipment.owner_member else inuits_equipment.nature
         )
         inuits_equipment.description = (
             updated_inuits_equipment.description
@@ -187,7 +187,9 @@ class InuitsEquipmentService:
             updated_equipment: InuitsEquipment,
     ) -> Equipment:
         # equipment.insurance = insurance
-        equipment.nature = updated_equipment.nature if updated_equipment.nature else equipment.nature
+        equipment.nature = (
+            updated_equipment.nature if updated_equipment.nature and not updated_equipment.owner_member else None if updated_equipment.owner_member else equipment.nature
+        )
         equipment.description = (
             updated_equipment.description if updated_equipment.description else equipment.description
         )
