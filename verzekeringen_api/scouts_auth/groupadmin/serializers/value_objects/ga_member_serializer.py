@@ -238,13 +238,15 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
     def _get_functions_from_user_profile(self, functions: list, access_token: str):
         parsed_functions = []
 
+        if access_token is None:
+            return functions
+
         for function in functions:
             for link in function.pop("links", []):
                 rel = link.pop("rel", None)
                 if rel == "functie":
                     href = link.pop("href", None)
                     parsed_function = self._fetch_function(href, access_token)
-                    logger.info(f"The functions parsed from profile: {functions}")
                     parsed_function["groep"] = function.pop("groep", None)
                     parsed_functions.append(parsed_function)
 
