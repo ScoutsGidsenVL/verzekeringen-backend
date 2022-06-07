@@ -26,7 +26,7 @@ class VehicleRelatedInsurance(models.Model):
     _vehicle_brand = OptionalCharField(db_column="automerk", max_length=15)
     _vehicle_license_plate = OptionalCharField(db_column="autokenteken", max_length=10)
     _vehicle_construction_year = OptionalIntegerField(db_column="autobouwjaar", validators=[MinValueValidator(1900)])
-    _vehicle_chassis_number = OptionalCharField(db_column="autochassis", max_length=20)
+    _vehicle_chassis_number = OptionalCharField(db_column="autochassis", max_length=20, null=True, default=None, blank=True)
 
     class Meta:
         abstract = True

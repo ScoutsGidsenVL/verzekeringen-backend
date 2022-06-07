@@ -44,11 +44,12 @@ class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
     @vehicle.setter
     def vehicle(self, obj: TravelAssistanceVehicle = None):
         self._vehicle_trailer = None
-        self._vehicle_id = obj.id
+        self._vehicle_id = None
         super().set_vehicle(obj)
 
         if obj:
             self._vehicle_trailer = obj.trailer
+            self._vehicle_id = obj.id
 
     @property
     def has_trailer(self):
