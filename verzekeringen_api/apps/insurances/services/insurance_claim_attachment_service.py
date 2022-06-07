@@ -9,12 +9,10 @@ from apps.insurances.utils import InsuranceAttachmentUtils
 from scouts_auth.inuits.files import StorageService
 from scouts_auth.inuits.models import PersistedFile
 
-
 logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimAttachmentService:
-
     file_service: StorageService = default_storage
 
     def store_attachment(self, *, uploaded_file: File, claim: InsuranceClaimAttachment) -> InsuranceClaimAttachment:

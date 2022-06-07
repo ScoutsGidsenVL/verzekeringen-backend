@@ -77,6 +77,7 @@ class InsuranceClaim(AuditedBaseModel):
     note = OptionalCharField(max_length=1024)
     case_number = OptionalCharField(max_length=30)
 
+    attachment_name = OptionalCharField(max_length=1024, blank=True, null=True, default=None)
     # Full scouts group details
     _group: AbstractScoutsGroup = None
     # Full groupadmin member data for the declarant
