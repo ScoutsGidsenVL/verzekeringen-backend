@@ -1,3 +1,4 @@
+from django.db.models import BooleanField
 from jsonfield import JSONField
 
 from django.conf import settings
@@ -52,19 +53,24 @@ class InsuranceClaim(AuditedBaseModel):
     damage_type = OptionalCharField(max_length=128)
 
     # Was there someone else involved in the accident ?
+    involved_party = BooleanField(blank=True, null=True, default=None)
     involved_party_name = OptionalCharField(max_length=1024)
     involved_party_description = OptionalCharField(max_length=1024)
     involved_party_birthdate = OptionalDateField()
 
     # Was the accident reported by an official instance ?
+    official_report = BooleanField(blank=True, null=True, default=None)
+
     official_report_description = OptionalCharField(max_length=1024)
     pv_number = OptionalCharField(max_length=30)
 
     # Was there a witness to the accident ?
+    witness = BooleanField(blank=True, null=True, default=None)
     witness_name = OptionalCharField(max_length=128)
     witness_description = OptionalCharField(max_length=1024)
 
     # Was someone keeping watch over the scouts group while the accident happened ?
+    leadership = BooleanField(blank=True,null=True,default=None)
     leadership_description = OptionalCharField(max_length=1024)
 
     # Administrative personel can add case notes and insurance company case number
