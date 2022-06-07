@@ -109,16 +109,16 @@ class InsuranceClaim(AuditedBaseModel):
     def declarant_member(self, declarant_member: AbstractScoutsMember):
         self._declarant_member = declarant_member
 
-    def has_involved_party(self) -> bool|None:
+    def has_involved_party(self) -> bool:
         return self.involved_party
 
-    def has_official_report(self) -> bool|None:
+    def has_official_report(self) -> bool:
         return self.official_report
 
-    def has_witness(self) -> bool|None:
+    def has_witness(self) -> bool:
         return self.witness
 
-    def has_leadership(self) -> bool|None:
+    def has_leadership(self) -> bool:
         return self.leadership
 
     def has_attachment(self):
