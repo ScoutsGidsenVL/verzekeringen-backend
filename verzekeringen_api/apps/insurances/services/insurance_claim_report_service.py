@@ -15,12 +15,10 @@ from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.files import FileUtils
 
-
 logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimReportService:
-
     store_report = settings.STORE_INSURANCE_CLAIM_REPORT_WHILE_DEBUGGING
 
     local_storage = FileSystemStorage()
@@ -128,24 +126,40 @@ class InsuranceClaimReportService:
                 property["/Kids"][0].update(PdfDict(AS=PdfName("Lid"), V=PdfName("Lid")))
 
             if property["/T"] == "(Fout_Derde)":
-                if claim.has_involved_party():
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                if claim.has_involved_party() is not None:
+                    if claim.has_involved_party():
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
 
             if property["/T"] == "(Vaststelling)":
-                if claim.has_official_report():
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                if claim.has_official_report() is not None:
+                    if claim.has_official_report():
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
 
             if property["/T"] == "(Getuigen)":
-                if claim.has_witness():
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                if claim.has_witness() is not None:
+                    if claim.has_witness():
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
 
             if property["/T"] == "(Toezicht)":
-                if claim.has_leadership():
-                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                if claim.has_leadership() is not None:
+                    if claim.has_leadership():
+                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    else:
+                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
 
             if property["/T"] == "(Code_activiteit)":
                 for activity_type in claim.activity_type:
