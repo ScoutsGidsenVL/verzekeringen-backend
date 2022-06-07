@@ -17,10 +17,10 @@ class InsuranceClaimFilter(filters.FilterSet):
         parent = super().qs
 
         year_of_accident = self.request.query_params.get("year", None)
-        # 83797
-        # 79995 Section leader can see all claims for all authorized groups
-        # @TODO also for group leader groups
-        groups: list = [group.group_admin_id for group in self.request.user.get_section_leader_groups()]
+
+        groups = None
+        if not self.request.user.has_role_administrator():
+            groups: list = [group.group_admin_id for group in self.request.user.get_section_leader_groups()]
         if year_of_accident and groups:
             logger.debug(
                 "Filtering InsuranceClaim instance with year %s and groups [%s]", year_of_accident, ", ".join(groups)
