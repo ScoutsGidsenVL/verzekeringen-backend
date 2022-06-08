@@ -13,12 +13,10 @@ from scouts_auth.groupadmin.services import GroupAdmin
 
 from scouts_auth.inuits.serializers import PermissionRequiredField
 
-
 logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimCreateDataSerializer(serializers.Serializer):
-
     permitted_scouts_groups = AbstractScoutsGroupSerializer(many=True)
 
 

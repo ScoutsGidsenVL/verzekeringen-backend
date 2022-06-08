@@ -126,40 +126,36 @@ class InsuranceClaimReportService:
                 property["/Kids"][0].update(PdfDict(AS=PdfName("Lid"), V=PdfName("Lid")))
 
             if property["/T"] == "(Fout_Derde)":
-                if claim.has_involved_party() is not None:
-                    if claim.has_involved_party():
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                if claim.involved_party == "yes":
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                elif claim.involved_party == "no":
+                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Vaststelling)":
-                if claim.has_official_report() is not None:
-                    if claim.has_official_report():
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                if claim.official_report == "yes":
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                elif claim.official_report == "no":
+                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Getuigen)":
-                if claim.has_witness() is not None:
-                    if claim.has_witness():
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                if claim.witness == "yes":
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                elif claim.witness == "no":
+                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Toezicht)":
-                if claim.has_leadership() is not None:
-                    if claim.has_leadership():
-                        property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
-                    else:
-                        property.update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
-                        property["/Kids"][0].update(PdfDict(AS=PdfName("Nee"), V=PdfName("Nee")))
+                if claim.leadership == "yes":
+                    property.update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                    property["/Kids"][0].update(PdfDict(AS=PdfName("Ja"), V=PdfName("Ja")))
+                elif claim.leadership == "no":
+                    property.update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
+                    property["/Kids"][1].update(PdfDict(AS=PdfName("Neen"), V=PdfName("Neen")))
 
             if property["/T"] == "(Code_activiteit)":
                 for activity_type in claim.activity_type:

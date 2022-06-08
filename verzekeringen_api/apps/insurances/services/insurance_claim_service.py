@@ -47,6 +47,11 @@ class InsuranceClaimService:
             witness_description: str = "",
             leadership_description: str = "",
             victim: InuitsClaimVictim,
+            witness: bool = None,
+            involved_party: bool = None,
+            official_report: bool = None,
+            leadership: bool = None
+
     ) -> InsuranceClaim:
         # validate if person has rights to create claim for this group
         if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
@@ -74,6 +79,10 @@ class InsuranceClaimService:
             witness_description=witness_description,
             leadership_description=leadership_description,
             victim=victim,
+            witness=witness,
+            involved_party=involved_party,
+            official_report=official_report,
+            leadership=leadership,
             attachment_name=file.get("file").name if file.get("file", None) else None
         )
 

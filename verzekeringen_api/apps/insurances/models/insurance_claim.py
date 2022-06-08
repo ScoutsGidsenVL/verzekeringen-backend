@@ -53,24 +53,24 @@ class InsuranceClaim(AuditedBaseModel):
     damage_type = OptionalCharField(max_length=128)
 
     # Was there someone else involved in the accident ?
-    involved_party = BooleanField(blank=True, null=True, default=None)
+    involved_party = OptionalCharField(max_length=30, blank=True, null=True, default=None)
     involved_party_name = OptionalCharField(max_length=1024)
     involved_party_description = OptionalCharField(max_length=1024)
     involved_party_birthdate = OptionalDateField()
 
     # Was the accident reported by an official instance ?
-    official_report = BooleanField(blank=True, null=True, default=None)
+    official_report = OptionalCharField(max_length=30, blank=True, null=True, default=None)
 
     official_report_description = OptionalCharField(max_length=1024)
     pv_number = OptionalCharField(max_length=30)
 
     # Was there a witness to the accident ?
-    witness = BooleanField(blank=True, null=True, default=None)
+    witness = OptionalCharField(max_length=30, blank=True, null=True, default=None)
     witness_name = OptionalCharField(max_length=128)
     witness_description = OptionalCharField(max_length=1024)
 
     # Was someone keeping watch over the scouts group while the accident happened ?
-    leadership = BooleanField(blank=True,null=True,default=None)
+    leadership = OptionalCharField(max_length=30, blank=True, null=True, default=None)
     leadership_description = OptionalCharField(max_length=1024)
 
     # Administrative personel can add case notes and insurance company case number
@@ -110,17 +110,17 @@ class InsuranceClaim(AuditedBaseModel):
     def declarant_member(self, declarant_member: AbstractScoutsMember):
         self._declarant_member = declarant_member
 
-    def has_involved_party(self) -> bool:
-        return self.involved_party
+    def has_involved_party(self):
+        return True if self.involved_party == "yes" else False
 
-    def has_official_report(self) -> bool:
-        return self.official_report
+    def has_official_report(self):
+        return True if self.official_report == "yes" else False
 
-    def has_witness(self) -> bool:
-        return self.witness
+    def has_witness(self):
+        return True if self.witness == "yes" else False
 
-    def has_leadership(self) -> bool:
-        return self.leadership
+    def has_leadership(self):
+        return True if self.leadership == "yes" else False
 
     def has_attachment(self):
         return hasattr(self, "attachment")
