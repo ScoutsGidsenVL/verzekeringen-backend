@@ -46,7 +46,7 @@ class InuitsInsuranceSettingsHelper:
         if not insurance_requester_address:
             raise ValidationError("Insurance requester address is not set !")
 
-        return None
+        return insurance_requester_address
 
     @staticmethod
     def get_insurer_address(insurer_address: str = None, send_to: str = None) -> str:
@@ -67,7 +67,7 @@ class InuitsInsuranceSettingsHelper:
         if not insurer_address:
             raise ValidationError("Insurer address is not set !")
 
-        return None
+        return insurer_address
 
     @staticmethod
     def get_victim_email(victim_email: str = None, send_to: str = None) -> str:
