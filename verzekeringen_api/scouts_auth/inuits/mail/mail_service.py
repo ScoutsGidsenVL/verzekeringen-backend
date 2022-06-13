@@ -92,7 +92,7 @@ class EmailService:
         from_email: str = None,
         to: list = None,
         cc: list = None,
-        bcc: list = None,
+        bcc: list = settings.EMAIL_INSURANCE_BCC,
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
@@ -213,7 +213,9 @@ class EmailService:
             body=body,
             from_email=from_email,
             to=to,
-            tags=tags,  # Anymail extra in constructor
+            tags=tags,
+            bcc=bcc
+            # Anymail extra in constructor
         )
         # if is_html:
         #     message.extra_headers["Content-Type"] = "text/html; charset=UTF8"

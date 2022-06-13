@@ -96,7 +96,7 @@ class InsuranceMailService(EmailService):
             template_path: str,
             to: list = None,
             cc: list = None,
-            bcc: list = None,
+            bcc: list = settings.EMAIL_INSURANCE_BCC,
             reply_to: str = None,
             template_id: str = None,
             add_attachments: bool = False,
