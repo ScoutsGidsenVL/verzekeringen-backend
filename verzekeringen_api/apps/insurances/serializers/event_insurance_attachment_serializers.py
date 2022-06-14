@@ -51,4 +51,4 @@ class EventInsuranceAttachmentSerializer(serializers.Serializer):
         return self.context.get("request").build_absolute_uri("/api/events/participants/" + str(obj.id) + "/download")
 
     def get_filename(self, obj: EventInsuranceAttachment):
-        return obj.file.name
+        return str(obj.file.file)
