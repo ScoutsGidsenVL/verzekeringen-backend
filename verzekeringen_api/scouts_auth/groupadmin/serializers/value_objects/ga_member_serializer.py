@@ -247,7 +247,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
                 if rel == "functie":
                     href = link.pop("href", None)
                     parsed_function = self._fetch_function(href, access_token)
-                    parsed_function["groep"] = function.pop("groep", None)
+                    parsed_function = self._merge_function_values(parsed_function, function)
                     parsed_functions.append(parsed_function)
 
         return parsed_functions
@@ -263,6 +263,12 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
             raise error
 
         return response.json()
+
+    def _merge_function_values(self, new_function: dict, old_function: dict):
+        new_function["groep"] = old_function.pop("groep", None)
+        new_function["begin"] = old_function.pop("begin", None)
+        new_function["einde"] = old_function.pop("einde", None)
+        return new_function
 
 
 class AbstractScoutsMemberSearchFrontendSerializer(NonModelSerializer):

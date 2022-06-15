@@ -1,5 +1,6 @@
 from typing import List, Dict
 from datetime import date, datetime
+from django.utils import timezone
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
@@ -83,6 +84,8 @@ class AbstractScoutsFunction(AbstractNonModel):
     def is_group_leader(self, group: AbstractScoutsGroup) -> bool:
         for grouping in self.groupings:
             if grouping.name.lower() == SettingsHelper.get_section_leader_identifier().lower():
+                if isinstance(self.end, datetime) and self.end < timezone.now():
+                    return False
                 return True
         return False
 
