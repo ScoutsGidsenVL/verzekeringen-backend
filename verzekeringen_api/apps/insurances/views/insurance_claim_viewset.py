@@ -171,7 +171,18 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
 
         if page is not None:
             serializer = InsuranceClaimSerializer(page, many=True, context={"request": request})
-            return self.get_paginated_response(serializer.data)
+            return self.get_paginated_response(self._filter_claim_list_data(serializer.data))
         else:
             serializer = InsuranceClaimSerializer(insurances, many=True, context={"request": request})
-            return Response(serializer.data)
+            return Response(self._filter_claim_list_data(serializer.data))
+
+    def _filter_claim_list_data(self, insurance_claims_data):
+        fields_to_show = ['id', 'date_of_accident', 'victim', 'group', 'declarant']
+        new_claims = []
+        for claim in insurance_claims_data:
+            new_claim = dict()
+            for claim_item in claim:
+                if claim_item in fields_to_show:
+                    new_claim[claim_item] = claim[claim_item]
+            new_claims.append(new_claim)
+        return new_claims
