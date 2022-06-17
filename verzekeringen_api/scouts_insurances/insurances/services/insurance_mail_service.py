@@ -73,15 +73,17 @@ class InsuranceMailService(EmailService):
         }
 
     def _extra_text(self, insurance: BaseInsurance) -> str:
+
         # frontend_base_url = settings.FRONTEND_BASE_URL #USE THIS ENV VAR FOR LOCAL
         frontend_base_url = settings.BASE_URL  #USE THIS ENV VAR FOR ACC AND PROD
         if (insurance.type.description.lower() == 'eenmalige activiteit') or (insurance.type.description.lower() == 'evenementen verzekering'):
             return f"<div>&nbsp;</div>Vergeet niet om na de activiteit <a style='text-decoration: underline;' href='https://www.scoutsengidsenvlaanderen.be/media/1317/download'>de deelnemerslijst</a> in te vullen en te bezorgen, ook als er geen ongeval gebeurde. Je kan het in <a style='text-decoration: underline;' href='{frontend_base_url}/#/eenmalige-activiteit-detail/{insurance.id}'>je aanvraag</a> opladen.<div>&nbsp;</div>"
         
-        if insurance.type.description.lower() == 'een reisbijstand, met auto':
-            return f"<div>&nbsp;</div>Voor eigen voertuigen kan Ethias deze aanvraag pas goedkeuren na ontvangst van het ingevulde expertiseverslag. Voor gehuurde voertuigen kan Scouts en Gidsen Vlaanderen deze aanvraag pas goedkeuren na ontvangst van het huurcontract met beschrijving van de staat van het voertuig. Je kan het in <a style='text-decoration: underline;' href='{frontend_base_url}/#/eenmalige-activiteit-detail/{insurance.id}'>je aanvraag</a> opladen.<div>&nbsp;</div>"
+        if insurance.type.description.lower() == 'autoverzekering':
+            # return f"<div>&nbsp;</div>Voor eigen voertuigen kan Ethias deze aanvraag pas goedkeuren na ontvangst van het ingevulde expertiseverslag. Voor gehuurde voertuigen kan Scouts en Gidsen Vlaanderen deze aanvraag pas goedkeuren na ontvangst van het huurcontract met beschrijving van de staat van het voertuig. Je kan het in <a style='text-decoration: underline;' href='{frontend_base_url}/#/eenmalige-activiteit-detail/{insurance.id}'>je aanvraag</a> opladen.<div>&nbsp;</div>"
+            return f"<div>&nbsp;</div>Ten vroegste 2 werkdagen en minimum 1 werkdag voor je op scoutsactiviteit vertrekt moet je online het <a style='text-decoration: underline;' href='https://forms.office.com/Pages/ResponsePage.aspx?id=_EiNAphkiESNwUyecUlr-F2-J9LUk9NNsZ0o6D7lSvhUN1pGQ1k5NDNWT1ZCTDFVUDdFT09ZQk9XRSQlQCN0PWcu'>expertiseformulier</a> van Ethias invullen. Meer uitleg over deze procedure vind je <a style='text-decoration: underline;' href='https://www.scoutsengidsenvlaanderen.be/leiding/ondersteuning/groepsleiding/verzekeringen/autoverzekering#expertiseformulier'>op onze website</a>.<div>&nbsp;</div>"
         
-        return ''
+        return '<div>&nbsp;</div>'
 
     def _prepare_email_body(self, template_path: str, dictionary: dict) -> str:
         return TextUtils.replace(
