@@ -66,6 +66,7 @@ env.read_env()
 LOGGING_CONFIG = None
 LOGGING_LEVEL = env.str("LOGGING_LEVEL", "INFO")
 LOGGING_LEVEL_ROOT = env.str("LOGGING_LEVEL_ROOT", "ERROR")
+LOGGING_LEVEL_DB = env.str("LOGGING_LEVEL_DB", "DEBUG")
 # LOGGING_LEVEL = "DEBUG"
 # LOGGING_LEVEL_ROOT = "DEBUG"
 LOGGING = {
@@ -116,6 +117,11 @@ LOGGING = {
             "level": LOGGING_LEVEL,
             "propagate": False,
         },
+        # "django.db.backends": {
+        #     "handlers": ["console"],
+        #     "level": LOGGING_LEVEL_DB,
+        #     "propagate": False,
+        # },
     },
 }
 logging.config.dictConfig(LOGGING)

@@ -1,3 +1,6 @@
+from datetime import datetime
+import uuid
+
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
@@ -74,6 +77,19 @@ class NonMemberQuerySet(models.QuerySet):
             )
         )
         # equipment insurance ?
+
+    def currently_insured(self, start: datetime, end: datetime, inuits_non_member_ids: list = None, type=None):
+        from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
+
+        if inuits_non_member_ids and type:
+            if type is InsuranceTypeEnum.TEMPORARY:
+                return self.filter(Q(inuits_id__in=inuits_non_member_ids))
+            else:
+                return self.filter(
+                    Q(temporary_insurances__non_members__in=inuits_non_member_ids)
+                    and Q(insurance_parent__start_date__gte=start)
+                    and Q(insurance_parent__end_date__lte=end)
+                )
 
 
 class NonMemberManager(models.Manager):

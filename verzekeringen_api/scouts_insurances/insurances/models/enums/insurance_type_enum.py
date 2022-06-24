@@ -9,3 +9,14 @@ class InsuranceTypeEnum(models.IntegerChoices):
     TEMPORARY_VEHICLE = 5
     EQUIPMENT = 6
     EVENT = 10
+
+    @staticmethod
+    def parse_type(type: int):
+        if not type:
+            return None
+
+        for choice in InsuranceTypeEnum.choices:
+            if choice[1] == type:
+                return choice
+
+        return None

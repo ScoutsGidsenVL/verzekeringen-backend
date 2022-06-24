@@ -37,3 +37,13 @@ class InsuranceType(models.Model):
 
     def is_event_insurance(self) -> bool:
         return self.id == InsuranceTypeEnum.EVENT
+
+    @staticmethod
+    def get_non_member_types():
+        return [
+            InsuranceTypeEnum.EQUIPMENT,
+            InsuranceTypeEnum.TEMPORARY,
+            InsuranceTypeEnum.TEMPORARY_VEHICLE,
+            InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE,
+            InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE,
+        ]
