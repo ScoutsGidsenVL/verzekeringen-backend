@@ -66,7 +66,7 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         insurance.full_clean()
         insurance.save()
 
-        self.base_insurance_service.handle_insurance_created(insurance)
+        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("responsible_member"))
 
         return insurance
 

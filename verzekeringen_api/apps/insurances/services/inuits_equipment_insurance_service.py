@@ -45,7 +45,7 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
                 insurance=insurance, inuits_equipment=item, created_by=base_insurance_fields.get("created_by")
             )
 
-        self.base_insurance_service.handle_insurance_created(insurance)
+        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("created_by"))
 
         return insurance
 

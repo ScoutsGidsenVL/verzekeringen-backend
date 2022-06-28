@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.core.files.storage import default_storage
 
+from scouts_auth.auth.models import User
 from scouts_insurances.insurances.models import BaseInsurance
 from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
@@ -34,7 +35,7 @@ class InsuranceMailService(EmailService):
 
     file_service = default_storage
 
-    def send_insurance(self, insurance: BaseInsurance):
+    def send_insurance(self, insurance: BaseInsurance, created_by: User):
         """Send the claim to the insurer."""
         logger.debug(
             "Preparing to send insurance request confirmation #%d to requester %s",
@@ -54,9 +55,9 @@ class InsuranceMailService(EmailService):
             dictionary=dictionary,
             subject=subject,
             template_path=self.insurance_request_template_path,
-            to=InsuranceSettingsHelper.get_insurance_requester_address(
-                self.insurance_request_address, insurance.responsible_member.email
-            ),
+            to=[InsuranceSettingsHelper.get_insurance_requester_address(
+                created_by.email, insurance.responsible_member.email
+            )],
             add_attachments=True,
             tags=["Verzekeringsaanvraag"]
         )

@@ -6,6 +6,7 @@ from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
+from scouts_auth.auth.models import User
 from scouts_insurances.people.models import Member
 from scouts_insurances.people.services import MemberService
 from scouts_insurances.insurances.models import BaseInsurance, InsuranceType
@@ -65,5 +66,5 @@ class BaseInsuranceService:
         # insurance.responsible_member.delete() # why?
         return insurance
 
-    def handle_insurance_created(self, insurance: BaseInsurance):
-        return self.mail_service.send_insurance(insurance)
+    def handle_insurance_created(self, insurance: BaseInsurance, created_by: User):
+        return self.mail_service.send_insurance(insurance,created_by=created_by)
