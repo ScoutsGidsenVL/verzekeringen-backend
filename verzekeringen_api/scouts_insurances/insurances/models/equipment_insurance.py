@@ -18,7 +18,7 @@ class EquipmentInsurance(BaseInsurance):
     nature = models.CharField(db_column="aardactiviteit", max_length=500)
     postal_code = models.IntegerField(db_column="postcode", null=True, blank=True)
     city = models.CharField(db_column="gemeente", max_length=40, blank=True)
-    _country = models.CharField(db_column="land", max_length=45, blank=True)
+    _country = models.CharField(db_column="land", max_length=60, blank=True)
 
     class Meta:
         db_table = "vrzktypemateriaal"

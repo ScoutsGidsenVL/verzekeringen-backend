@@ -15,7 +15,7 @@ class TravelAssistanceInsurance(VehicleWithSimpleTrailerRelatedInsurance, BaseIn
         primary_key=True,
         related_name="travel_assistance_child",
     )
-    country = models.CharField(db_column="bestemmingsland", max_length=40)
+    country = models.CharField(db_column="bestemmingsland", max_length=60)
 
     # Even though this is an insurance only for members the participants are saved in the NonMember table
     # Cant change this because external database
