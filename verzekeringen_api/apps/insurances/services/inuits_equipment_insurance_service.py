@@ -44,7 +44,9 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
             item = self.equipment_service.linked_equipment_create(
                 insurance=insurance, inuits_equipment=item, created_by=base_insurance_fields.get("created_by")
             )
-
+        insurance.total_cost = self._calculate_total_cost(insurance)
+        insurance.full_clean()
+        insurance.save()
         self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("created_by"))
 
         return insurance
