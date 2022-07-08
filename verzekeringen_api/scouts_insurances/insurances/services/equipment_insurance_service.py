@@ -25,13 +25,10 @@ class EquipmentInsuranceService:
         if not equipment_list:
             equipment_list = insurance.equipment.all()
 
-        logger.warn('Equiment insurance / materiaalverzekering')
         for equipment in equipment_list:
             equipment_cost += equipment.amount * equipment.total_value
-            logger.warn('vars: %s', (equipment_cost, equipment.amount, equipment.total_value))
 
         cost = equipment_cost * CostVariable.objects.get_variable(insurance.type, "premium_percentage").value
-        logger.warn('cost 1: %s', cost)
         if cost < CostVariable.objects.get_variable(insurance.type, "premium_minimum").value:
             cost = CostVariable.objects.get_variable(insurance.type, "premium_minimum").value
 
