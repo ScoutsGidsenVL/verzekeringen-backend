@@ -11,8 +11,9 @@ from apps.equipment.services import InuitsEquipmentService
 
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import EquipmentInsurance
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.services import BaseInsuranceService, EquipmentInsuranceService
-
+from scouts_insurances.locations.models import Country
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +57,9 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
         insurance.start_date = fields.get("start_date", insurance.start_date)
         insurance.end_date = fields.get("end_date", insurance.end_date)
         insurance.nature = fields.get("nature", insurance.nature)
-        insurance.postal_code = fields.get("postal_code", insurance.postal_code)
-        insurance.city = fields.get("city", insurance.city)
+        insurance.postal_code = fields.get("postal_code", None)
+        insurance.city = fields.get("city", None)
+        insurance.country = fields.get("country", insurance.country.id if insurance.city is None and insurance.postal_code is None else None)
 
         insurance.full_clean()
         insurance.save()
