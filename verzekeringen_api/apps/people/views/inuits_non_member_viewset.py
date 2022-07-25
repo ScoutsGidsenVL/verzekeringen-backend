@@ -9,6 +9,8 @@ from apps.people.serializers import InuitsNonMemberSerializer
 from apps.people.filters import InuitsNonMemberFilter
 from apps.people.services import InuitsNonMemberService
 from apps.people.models import InuitsNonMember
+from apps.utils.utils import AuthenticationHelper
+
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +27,7 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
 
     def get_queryset(self):
         group = self.request.query_params.get('group')
+
         return InuitsNonMember.objects.filter(group_admin_id=group)
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsNonMemberSerializer})
@@ -36,6 +39,8 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsNonMemberSerializer})
     def list(self, request):
+        group = self.request.query_params.get('group')
+        AuthenticationHelper.has_rights_for_group(request.user, group)
         inuits_non_members = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(inuits_non_members)
 

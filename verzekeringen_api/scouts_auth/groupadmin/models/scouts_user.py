@@ -144,6 +144,8 @@ class ScoutsUser(User):
             ", ".join(group.group_admin_id for group in self.scouts_groups),
             ", ".join(address.to_descriptive_string() for address in self.addresses),
             ", ".join(function.to_descriptive_string() for function in self.functions),
+            '',
+            '',
         )
 
     def to_descriptive_string(self):
