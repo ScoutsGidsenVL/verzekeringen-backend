@@ -90,6 +90,8 @@ DEBUG = env.bool("DEBUG", default=False)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = env.str("BASE_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BASE_URL = env.str("BASE_URL")
+# FRONTEND_BASE_URL = env.str("FRONTEND_BASE_URL")
+
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 # Application definition
@@ -101,6 +103,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "apps.utils",
     "rest_framework",
     "django_filters",
     "drf_yasg2",
