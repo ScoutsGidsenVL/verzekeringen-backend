@@ -7,6 +7,7 @@ from drf_yasg2.utils import swagger_auto_schema
 from apps.insurances.models import InsuranceDraft
 from apps.insurances.serializers import InsuranceDraftSerializer
 from apps.insurances.services import InsuranceDraftService
+from apps.utils.utils import AuthenticationHelper
 
 
 logger = logging.getLogger(__name__)
@@ -27,13 +28,12 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         responses={status.HTTP_201_CREATED: InsuranceDraftSerializer},
     )
     def create(self, request):
-        logger.debug("CREATE REQUEST DATA: %s", request.data)
+        group = self.request.data["data"]["scouts_group"]["group_admin_id"]
+        AuthenticationHelper.has_rights_for_group(request.user, group)
         input_serializer = InsuranceDraftSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
         validated_data = input_serializer.validated_data
-        logger.debug("CREATE VALIDATED DATA: %s", validated_data)
-
         draft = self.service.insurance_draft_create(**validated_data, created_by=request.user)
 
         output_serializer = InsuranceDraftSerializer(draft)
@@ -51,20 +51,11 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         request_body=InsuranceDraftSerializer,
         responses={status.HTTP_201_CREATED: InsuranceDraftSerializer},
     )
-    def update(self, request, pk=None):
-        draft = self.get_object()
-        input_serializer = InsuranceDraftSerializer(data=request.data, context={"request": request})
-        input_serializer.is_valid(raise_exception=True)
-        new_draft = self.service.insurance_draft_update(
-            draft=draft, **input_serializer.validated_data, created_by=request.user
-        )
-
-        output_serializer = InsuranceDraftSerializer(new_draft)
-
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, pk=None):
         draft = self.get_object()
+        group =  draft.data["group_group_admin_id"]
+        AuthenticationHelper.has_rights_for_group(request.user, group)
         self.service.insurance_draft_delete(draft=draft)
         return Response(status=status.HTTP_200_OK)
 

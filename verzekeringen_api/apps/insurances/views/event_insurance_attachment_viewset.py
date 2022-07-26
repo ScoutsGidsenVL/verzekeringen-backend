@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg2.utils import swagger_auto_schema
 from drf_yasg2.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_FILE, TYPE_ARRAY
+from apps.utils.utils import AuthenticationHelper
 
 from apps.insurances.models import EventInsuranceAttachment
 from apps.insurances.services import EventInsuranceAttachmentService
@@ -51,11 +52,14 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
             return HttpResponse(404, "Insurance instance id not supplied with file upload !")
 
         insurance = EventInsurance.objects.get(pk=insurance_id)
+
         if not insurance:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"message": "Insurance instance not found !"},
             )
+
+        AuthenticationHelper.has_rights_for_group(request.user, insurance.scouts_group.group_admin_id)
 
         if not insurance.accepted:
             return Response(
@@ -103,6 +107,8 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
     @action(methods=["get"], detail=True, url_path="download")
     def download(self, request, pk=None):
         attachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
+        group = attachment.insurance.scouts_group.group_admin_id
+        AuthenticationHelper.has_rights_for_group(request.user, group)
         response = HttpResponse(attachment.file, content_type=attachment.file.content_type)
         response["Content-Disposition"] = "attachment; filename={}".format(str(attachment.file.file))
         return response
@@ -117,6 +123,8 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         tags=["Files"],
     )
     def destroy(self, request, pk):
-        attachement: EventInsuranceAttachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
-        attachement.delete()
+        attachment: EventInsuranceAttachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
+        group = attachment.insurance.scouts_group.group_admin_id
+        AuthenticationHelper.has_rights_for_group(request.user, group)
+        attachment.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

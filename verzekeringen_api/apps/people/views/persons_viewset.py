@@ -20,6 +20,7 @@ from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.inuits.utils import DateUtils
+from apps.utils.utils import AuthenticationHelper
 
 
 logger = logging.getLogger(__name__)
@@ -51,6 +52,7 @@ class PersonSearch(viewsets.GenericViewSet):
     def _list(self, request, include_inactive: bool = False):
         search_term = self.request.GET.get("term", None)
         group_group_admin_id = self.request.GET.get("group", None)
+        AuthenticationHelper.has_rights_for_group(request.user, group_group_admin_id)
         start = DateUtils.datetime_from_isoformat(self.request.GET.get("start", None))
         end = DateUtils.datetime_from_isoformat(self.request.GET.get("end", None))
         type = InsuranceTypeEnum.parse_type(self.request.GET.get("type", None))

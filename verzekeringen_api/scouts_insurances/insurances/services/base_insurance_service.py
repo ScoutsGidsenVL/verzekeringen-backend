@@ -4,14 +4,14 @@ from decimal import Decimal
 
 from django.db import transaction
 from django.conf import settings
-from django.core.exceptions import ValidationError
-
+from django.core.exceptions import ValidationError, PermissionDenied
 from scouts_auth.auth.models import User
 from scouts_insurances.people.models import Member
 from scouts_insurances.people.services import MemberService
 from scouts_insurances.insurances.models import BaseInsurance, InsuranceType
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.services import InsuranceMailService
+
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 
@@ -44,7 +44,13 @@ class BaseInsuranceService:
             None,
         )
         if not group_object:
-            raise ValidationError("Given group %s is not a valid group of user" % scouts_group.group_admin_id)
+            raise PermissionDenied(
+                {
+                    "message": "Given group {} is not a valid group of user".format(
+                        scouts_group.group_admin_id
+                    )
+                }
+            )
         member = self.member_service.member_create_from_user(user=created_by)
         fields = {
             "status": InsuranceStatus.NEW,
