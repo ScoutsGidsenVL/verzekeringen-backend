@@ -53,10 +53,6 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
         detail=False,
     )
     def view_member_info_internal(self, request, group_admin_id: str) -> Response:
-        logger.debug(
-            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GA: Received request for member info (group_admin_id: %s)", group_admin_id
-        )
-
         member: AbstractScoutsMember = self.service.get_member_info(
             request.user, group_admin_id
         )
@@ -97,7 +93,6 @@ class AbstractScoutsMemberView(viewsets.ViewSet):
     def search_members(
         self, request, term: str, group_group_admin_id: str = None
     ) -> Response:
-        logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@GA: Received request to search for members")
         logger.debug(
             "GA: Member search parameters: term(%s) - group_group_admin_id(%s)",
             term if term else "",

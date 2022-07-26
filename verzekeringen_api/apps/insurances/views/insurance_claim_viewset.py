@@ -153,7 +153,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     )
     def partial_update(self, request, pk=None):
         claim = self.get_object()
-
+        AuthenticationHelper.has_rights_for_group(request.user,  claim.group_group_admin_id)
         serializer = InsuranceClaimSerializer(
             data=request.data, instance=InsuranceClaim, context={"request": request}, partial=True
         )
