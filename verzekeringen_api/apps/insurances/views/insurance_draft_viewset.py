@@ -51,6 +51,17 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         request_body=InsuranceDraftSerializer,
         responses={status.HTTP_201_CREATED: InsuranceDraftSerializer},
     )
+    def update(self, request, pk=None):
+        draft = self.get_object()
+        input_serializer = InsuranceDraftSerializer(data=request.data, context={"request": request})
+        input_serializer.is_valid(raise_exception=True)
+        new_draft = self.service.insurance_draft_update(
+            draft=draft, **input_serializer.validated_data, created_by=request.user
+        )
+
+        output_serializer = InsuranceDraftSerializer(new_draft)
+
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, pk=None):
         draft = self.get_object()

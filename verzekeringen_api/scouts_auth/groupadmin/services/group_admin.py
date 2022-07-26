@@ -368,9 +368,6 @@ class GroupAdmin:
         url = self.url_member_search.format(term)
         json_data = self.get(url, active_user)
 
-        logger.info("~~~~~~~~~~~~~~~~~~~~GA CALL: %s (%s)", "search_member", url)
-        logger.debug("GA RESPONSE: %s", json_data)
-
         return json_data
 
     def search_member(self, active_user: settings.AUTH_USER_MODEL, term: str) -> AbstractScoutsMemberSearchResponse:
