@@ -57,6 +57,8 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
     )
     def create(self, request):
         logger.debug("REQUEST DATA: %s", request.data)
+        group = request.data["group_admin_id"]
+        AuthenticationHelper.has_rights_for_group(request.user, group)
         input_serializer = InuitsNonMemberSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 

@@ -24,6 +24,7 @@ from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGr
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.utils import MultipartJsonParser
 from scouts_auth.inuits.files import StorageService
+from apps.utils.utils import AuthenticationHelper
 
 
 logger = logging.getLogger(__name__)
@@ -92,6 +93,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         responses={status.HTTP_201_CREATED: InsuranceClaimSerializer},
     )
     def create(self, request, *args, **kwargs):
+        AuthenticationHelper.has_rights_for_group(request.user, request.data["group_group_admin_id"])
         file_serializer_data = {}
         try:
             file_serializer = InsuranceClaimAttachmentUploadSerializer(data=request.FILES)
@@ -104,8 +106,6 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
                 message={"file": "Error while handling file upload"},
                 code=406,
             )
-
-        logger.debug("CREATE REQUEST DATA: %s", request.data)
         serializer = InsuranceClaimSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
@@ -115,6 +115,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         insurance_claim: InsuranceClaim = self.service.create(
             created_by=request.user, file=file_serializer_data, **validated_data
         )
+
 
         # There doesn't seem to be a good way to avoid doing this here
         declarant_member: AbstractScoutsMember = self.group_admin_service.get_member_info(
