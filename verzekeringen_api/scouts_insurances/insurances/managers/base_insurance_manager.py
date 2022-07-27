@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 
 from django.conf import settings
@@ -5,6 +6,7 @@ from django.db import models
 from django.db.models import Q
 
 from scouts_insurances.insurances.models.enums import InsuranceStatus
+logger = logging.getLogger(__name__)
 
 
 class BaseInsuranceQuerySet(models.QuerySet):
@@ -20,7 +22,12 @@ class BaseInsuranceQuerySet(models.QuerySet):
         # groups = section_leader_groups + list(set(group_leader_groups) - set(section_leader_groups))
 
         # return self.filter(_group_group_admin_id__in=groups)
-        return self.filter(responsible_member__group_admin_id=user.group_admin_id)
+
+        user_groups: str = []
+        for scouts_group in user.scouts_groups:
+            user_groups.append(scouts_group.number)
+
+        return self.filter(_group_group_admin_id__in=user_groups)
 
     def editable(self, user: settings.AUTH_USER_MODEL):
         # Only section leaders can edit and only their own requests
