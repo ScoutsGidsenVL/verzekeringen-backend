@@ -3,8 +3,12 @@ from django.db import models
 
 class InsuranceDraftQuerySet(models.QuerySet):
     def allowed(self, user):
-        return self.filter(created_by=user)
 
+        user_groups: str = []
+        for scouts_group in user.scouts_groups:
+            user_groups.append(scouts_group.number)
+
+        return self.filter(data__group_group_admin_id__in=user_groups)
 
 class InsuranceDraftManager(models.Manager):
     def get_queryset(self):
