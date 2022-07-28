@@ -65,7 +65,7 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
 
     def destroy(self, request, pk=None):
         draft = self.get_object()
-        group =  draft.data["group_group_admin_id"]
+        group =  draft.data["scouts_group"]["group_admin_id"]
         AuthenticationHelper.has_rights_for_group(request.user, group)
         self.service.insurance_draft_delete(draft=draft)
         return Response(status=status.HTTP_200_OK)

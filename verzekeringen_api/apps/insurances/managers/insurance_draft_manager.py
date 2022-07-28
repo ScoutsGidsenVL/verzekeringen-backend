@@ -8,7 +8,7 @@ class InsuranceDraftQuerySet(models.QuerySet):
         for scouts_group in user.scouts_groups:
             user_groups.append(scouts_group.number)
 
-        return self.filter(data__group_group_admin_id__in=user_groups)
+        return self.filter(data__scouts_group__group_admin_id__in=user_groups)
 
 class InsuranceDraftManager(models.Manager):
     def get_queryset(self):
