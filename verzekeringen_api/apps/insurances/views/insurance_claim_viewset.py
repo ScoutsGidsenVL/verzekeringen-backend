@@ -178,12 +178,29 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
             return Response(self._filter_claim_list_data(serializer.data))
 
     def _filter_claim_list_data(self, insurance_claims_data):
-        fields_to_show = ['id', 'date_of_accident', 'victim', 'group', 'declarant']
         new_claims = []
         for claim in insurance_claims_data:
-            new_claim = dict()
-            for claim_item in claim:
-                if claim_item in fields_to_show:
-                    new_claim[claim_item] = claim[claim_item]
-            new_claims.append(new_claim)
+            new_claims.append(self._filter_fields_in_claim(claim))
         return new_claims
+
+    def _filter_fields_in_claim(self, claim):
+        fields_to_show = ['id', 'date_of_accident', 'group', 'declarant', 'victim']
+        new_claim = dict()
+        for claim_item in claim:
+            if claim_item in fields_to_show:
+                new_claim[claim_item] = self._filter_nested_fields_in_claim(claim_item, claim[claim_item])
+        return new_claim
+
+    def _filter_nested_fields_in_claim(self, claim_item_key, claim_item):
+        nested_fields_to_show = {
+            'victim': ['first_name', 'last_name', 'membership_number'],
+            'declarant': ['first_name', 'last_name', 'membership_number'],
+            'group': ['email', 'full_name', 'group_admin_id', 'name', 'number']
+        }
+        if claim_item_key in nested_fields_to_show:
+            new_claim_item = dict()
+            for nested_claim_item in claim_item:
+                if nested_claim_item in nested_fields_to_show[claim_item_key]:
+                    new_claim_item[nested_claim_item] = claim_item[nested_claim_item]
+            return new_claim_item
+        return claim_item
