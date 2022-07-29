@@ -51,7 +51,7 @@ class InsuranceDraftViewSet(viewsets.GenericViewSet):
         request_body=InsuranceDraftSerializer,
         responses={status.HTTP_201_CREATED: InsuranceDraftSerializer},
     )
-    def update(self, request, pk=None):
+    def partial_update(self, request, pk=None):
         draft = self.get_object()
         input_serializer = InsuranceDraftSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
