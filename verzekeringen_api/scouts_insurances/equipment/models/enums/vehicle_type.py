@@ -2,9 +2,9 @@ from django.db import models
 
 
 class VehicleType(models.TextChoices):
-    PASSENGER_CAR = "PERSONENWAGEN", "Personenwagen (maximum 5 inzittenden)"
-    MINIBUS = "MINIBUS", "Minibus (maximum 8 inzittenden)"
-    TRUCK = "VRACHTWAGEN", "Vrachtwagen tot 3.5 ton (maximum 8 inzittenden)"
+    PASSENGER_CAR = "PERSONENWAGEN", "Personenwagen (max. 4+1 inzittenden)"
+    MINIBUS = "MINIBUS", "Minibus (max. 8+1 inzittenden)"
+    TRUCK = "VRACHTWAGEN", "Lichte vrachtauto tot 3,5 ton (max. 8+1 inzittenden)"
 
     @staticmethod
     def from_choice(choice: str):
