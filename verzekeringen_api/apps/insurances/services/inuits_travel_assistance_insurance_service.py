@@ -42,6 +42,7 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             scouts_group=scouts_group, **base_insurance_fields, type=type
         )
+
         insurance = TravelAssistanceInsurance(
             country=country,
             **base_insurance_fields,
@@ -51,6 +52,10 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         else:
             insurance.vehicle = None
         insurance.total_cost = self._calculate_total_cost(insurance, len(participants))
+
+        # result = Country.objects.by_insurance_type_id(insurance.country.name)
+
+        insurance.country = insurance.country.name
         insurance.full_clean()
         insurance.save()
 
