@@ -30,6 +30,7 @@ class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
             return None
 
         return TemporaryVehicleInsuranceVehicle(
+            id=self._vehicle_id,
             type=self._vehicle_type,
             brand=self._vehicle_brand,
             license_plate=self._vehicle_license_plate,
@@ -41,11 +42,13 @@ class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
     @vehicle.setter
     def vehicle(self, obj: TemporaryVehicleInsuranceVehicle = None):
         self._vehicle_trailer = None
+        self._vehicle_id = None
 
         super().set_vehicle(obj)
 
         if obj:
             self._vehicle_trailer = obj.trailer
+            self._vehicle_id = obj.id
 
     @property
     def has_trailer(self):
