@@ -51,8 +51,8 @@ class InuitsTemporaryInsuranceService(TemporaryInsuranceService):
             )
             non_member.inuits_id = inuits_non_member.id
             insurance.non_members.add(non_member)
-
-        insurance.country = insurance.country.name
+        if insurance.country:
+            insurance.country = insurance.country.name
 
         insurance.full_clean()
         insurance.save()

@@ -34,6 +34,7 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
         max_coverage: str = None,
         **base_insurance_fields,
     ) -> TemporaryVehicleInsurance:
+
         type = InsuranceType.objects.temporary_vehicle()
         base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
             **base_insurance_fields, type=type
@@ -55,6 +56,7 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
 
         # Save insurance here already so we can create non members linked to it
         # This whole function is atomic so if non members cant be created this will rollback aswell
+
         for driver in drivers:
             driver = self.non_member_service.linked_non_member_create(
                 inuits_non_member=driver, created_by=base_insurance_fields.get("created_by")
@@ -62,8 +64,10 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
             driver_insurance = ParticipantTemporaryVehicleInsurance(
                 participant=driver, insurance=insurance, type=TemporaryVehicleParticipantType.DRIVER
             )
+
             driver_insurance.full_clean()
             driver_insurance.save()
+       
 
         # Check if owner is a company and change fields to non member
         # if owner.get("company_name"):
@@ -73,6 +77,7 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
         if owner.company_name:
             owner.first_name = settings.COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME
             owner.last_name = owner.company_name
+
 
         owner = self.non_member_service.linked_non_member_create(
             inuits_non_member=owner, created_by=base_insurance_fields.get("created_by")
@@ -95,6 +100,8 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
     def temporary_vehicle_insurance_update(
         self, *, insurance: TemporaryVehicleInsurance, **fields
     ) -> TemporaryVehicleInsurance:
+
+
         # For this update we just delete the old one and create a new one with the given fields (but same id)
         # Bit of a cheat but it matches expectations of customer
         old_id = insurance.id
