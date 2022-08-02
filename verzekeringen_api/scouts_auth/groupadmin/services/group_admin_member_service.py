@@ -3,6 +3,7 @@ from typing import List
 from datetime import date, datetime, timedelta
 
 from django.conf import settings
+from django.utils import timezone
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsMemberSearchResponse
 from scouts_auth.groupadmin.services import GroupAdmin
@@ -65,6 +66,8 @@ class GroupAdminMemberService(GroupAdmin):
 
             for function in member.functions:
                 if function.scouts_group.group_admin_id == group_group_admin_id:
+                    if not include_inactive and isinstance(function.end, datetime) and function.end < timezone.now():
+                        continue
                     results.append(member)
                     break
 
