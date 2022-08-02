@@ -54,8 +54,9 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         insurance.total_cost = self._calculate_total_cost(insurance, len(participants))
 
         # result = Country.objects.by_insurance_type_id(insurance.country.name)
-
-        insurance.country = insurance.country.name
+        if insurance.country:
+            insurance.country = insurance.country.name
+            
         insurance.full_clean()
         insurance.save()
 

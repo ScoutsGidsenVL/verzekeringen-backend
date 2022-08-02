@@ -77,6 +77,7 @@ class InuitsTemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
         existing_insurance = get_object_or_404(
             TemporaryVehicleInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
+
         input_serializer = InuitsTemporaryVehicleInsuranceSerializer(data=request.data, context={"request": request})
         input_serializer.is_valid(raise_exception=True)
 
