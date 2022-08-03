@@ -53,4 +53,4 @@ class ActivityInsuranceAttachmentSerializer(serializers.Serializer):
         )
 
     def get_filename(self, obj: ActivityInsuranceAttachment):
-        return obj.file.name
+        return str(obj.file.file)

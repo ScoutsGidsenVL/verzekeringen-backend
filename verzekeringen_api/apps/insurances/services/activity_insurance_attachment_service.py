@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 from apps.insurances.models import ActivityInsuranceAttachment
 from apps.insurances.utils import InsuranceAttachmentUtils
 from scouts_auth.inuits.files import StorageService
-
+from scouts_auth.inuits.models import PersistedFile
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +25,14 @@ class ActivityInsuranceAttachmentService:
         logger.debug("Storing attachment for insurance(%d) to %s", insurance.id, file_name)
 
         attachment = ActivityInsuranceAttachment()
-        attachment.insurance = insurance
-        attachment.file.save(name=file_name, content=uploaded_file)
-        attachment.content_type = uploaded_file.content_type
+        file = PersistedFile()
+        file.file.save(name=file_name, content=uploaded_file)
+        file.content_type = uploaded_file.content_type
         try:
+            file.full_clean()
+            file.save()
+            attachment.insurance = insurance
+            attachment.file = file
             attachment.full_clean()
             attachment.save()
         except Exception as exc:
