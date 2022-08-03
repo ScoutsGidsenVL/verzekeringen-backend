@@ -1,5 +1,6 @@
 import logging
 
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from apps.insurances.serializers import InuitsEquipmentInsuranceSerializer
 from apps.insurances.services import InuitsEquipmentInsuranceService
 
 from scouts_insurances.insurances.models import EquipmentInsurance
+from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.serializers import InsuranceCostSerializer, EquipmentInsuranceSerializer
 
 logger = logging.getLogger(__name__)
@@ -76,18 +78,25 @@ class InuitsEquipmentInsuranceViewSet(viewsets.GenericViewSet):
         existing_insurance = get_object_or_404(
             EquipmentInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
+        if existing_insurance._status != InsuranceStatus.BILLED:
 
-        logger.debug("UPDATE REQUEST DATA: %s", request.data)
-        input_serializer = InuitsEquipmentInsuranceSerializer(data=request.data, context={"request": request})
-        input_serializer.is_valid(raise_exception=True)
+            logger.debug("UPDATE REQUEST DATA: %s", request.data)
+            input_serializer = InuitsEquipmentInsuranceSerializer(data=request.data, context={"request": request})
+            input_serializer.is_valid(raise_exception=True)
 
-        validated_data = input_serializer.validated_data
-        logger.debug("UPDATE VALIDATED DATA: %s", validated_data)
+            validated_data = input_serializer.validated_data
+            logger.debug("UPDATE VALIDATED DATA: %s", validated_data)
 
-        updated_insurance = self.equipment_insurance_service.inuits_equipment_insurance_update(
-            insurance=existing_insurance, **validated_data, created_by=request.user
-        )
+            updated_insurance = self.equipment_insurance_service.inuits_equipment_insurance_update(
+                insurance=existing_insurance, **validated_data, created_by=request.user
+            )
 
-        output_serializer = EquipmentInsuranceSerializer(updated_insurance, context={"request": request})
+            output_serializer = EquipmentInsuranceSerializer(updated_insurance, context={"request": request})
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            raise PermissionDenied(
+                {
+                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
+                }
+            )

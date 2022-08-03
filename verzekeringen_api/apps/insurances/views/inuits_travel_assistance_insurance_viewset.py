@@ -1,5 +1,6 @@
 import logging
 
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from apps.insurances.serializers import InuitsTravelAssistanceInsuranceSerialize
 from apps.insurances.services import InuitsTravelAssistanceInsuranceService
 
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
+from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.serializers import InsuranceCostSerializer
 
 
@@ -77,18 +79,26 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
         existing_insurance = get_object_or_404(
             TravelAssistanceInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
-        new_participants = list()
-        for participant in request.data["participants"]:
-            participant.pop("id", None)
-            new_participants.append(participant)
-        request.data["participants"] = new_participants
-        input_serializer = InuitsTravelAssistanceInsuranceSerializer(data=request.data, context={"request": request})
-        input_serializer.is_valid(raise_exception=True)
+        if existing_insurance._status != InsuranceStatus.BILLED:
 
-        updated_insurance = self.travel_assistance_insurance_service.travel_assistance_insurance_update(
-            insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
-        )
+            new_participants = list()
+            for participant in request.data["participants"]:
+                participant.pop("id", None)
+                new_participants.append(participant)
+            request.data["participants"] = new_participants
+            input_serializer = InuitsTravelAssistanceInsuranceSerializer(data=request.data, context={"request": request})
+            input_serializer.is_valid(raise_exception=True)
 
-        output_serializer = InuitsTravelAssistanceInsuranceSerializer(updated_insurance)
+            updated_insurance = self.travel_assistance_insurance_service.travel_assistance_insurance_update(
+                insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
+            )
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+            output_serializer = InuitsTravelAssistanceInsuranceSerializer(updated_insurance)
+
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            raise PermissionDenied(
+                {
+                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
+                }
+            )

@@ -1,6 +1,7 @@
 import logging
 import sys
 
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
@@ -11,6 +12,7 @@ from apps.insurances.serializers import InuitsTemporaryInsuranceSerializer
 from apps.insurances.services import InuitsTemporaryInsuranceService
 
 from scouts_insurances.insurances.models import TemporaryInsurance
+from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.serializers import InsuranceCostSerializer, TemporaryInsuranceSerializer
 
 logger = logging.getLogger(__name__)
@@ -76,13 +78,20 @@ class InuitsTemporaryInsuranceViewSet(viewsets.ViewSet):
         existing_insurance = get_object_or_404(
             TemporaryInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
-        input_serializer = InuitsTemporaryInsuranceSerializer(data=request.data, context={"request": request})
-        input_serializer.is_valid(raise_exception=True)
+        if existing_insurance._status != InsuranceStatus.BILLED:
+            input_serializer = InuitsTemporaryInsuranceSerializer(data=request.data, context={"request": request})
+            input_serializer.is_valid(raise_exception=True)
 
-        updated_insurance = self.temporary_insurance_service.temporary_insurance_update(
-            insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
-        )
+            updated_insurance = self.temporary_insurance_service.temporary_insurance_update(
+                insurance=existing_insurance, **input_serializer.validated_data, created_by=request.user
+            )
 
-        output_serializer = TemporaryInsuranceSerializer(updated_insurance)
+            output_serializer = TemporaryInsuranceSerializer(updated_insurance)
 
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            raise PermissionDenied(
+                {
+                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
+                }
+            )
