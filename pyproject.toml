@@ -6,7 +6,7 @@ authors = ["Jonas Elst <jonas.elst@inuits.eu>", "Stijn Verholen <boro@inuits.eu>
 
 [tool.poetry.dependencies]
 python = "^3.7"
-Django = "^3.2.2"
+Django = "^3.2.15"
 mozilla-django-oidc = "^2.0.0" # @TODO
 djangorestframework = "^3.12.4"
 django-cors-headers = "^3.7.0"
