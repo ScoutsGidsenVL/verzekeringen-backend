@@ -4,7 +4,7 @@ from django.db import models
 class InsuranceDraftQuerySet(models.QuerySet):
     def allowed(self, user):
 
-        user_groups: str = []
+        user_groups = list()
         for scouts_group in user.scouts_groups:
             user_groups.append(scouts_group.number)
 

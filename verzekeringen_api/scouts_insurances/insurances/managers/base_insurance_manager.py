@@ -23,9 +23,10 @@ class BaseInsuranceQuerySet(models.QuerySet):
 
         # return self.filter(_group_group_admin_id__in=groups)
 
-        user_groups: str = []
+        user_groups = list()
         for scouts_group in user.scouts_groups:
-            user_groups.append(scouts_group.number)
+            if user.has_role_group_leader(scouts_group):
+                user_groups.append(scouts_group.number)
 
         return self.filter(_group_group_admin_id__in=user_groups)
 
