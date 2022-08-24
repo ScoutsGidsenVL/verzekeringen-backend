@@ -3,6 +3,7 @@ class AbstractScoutsFunctionCode:
     GROUP_LEADER = "GRL"
     ADJUNCT_GROUP_LEADER = "AGRL"
     GROUP_LEADER_TEAM = "GRLP"
+    BEGELEIDING_VORMING = "BVGO"
 
     DISTRICT_COMMISSIONER = "DC"
     ADJUNCT_DISCTRICT_COMMISSIONER = "ADC"
@@ -18,7 +19,7 @@ class AbstractScoutsFunctionCode:
         self.code = code
 
     def is_group_leader(self):
-        return self.code in (self.GROUP_LEADER, self.ADJUNCT_GROUP_LEADER, self.GROUP_LEADER_TEAM)
+        return self.code in (self.GROUP_LEADER, self.ADJUNCT_GROUP_LEADER, self.GROUP_LEADER_TEAM, self.BEGELEIDING_VORMING)
 
     def is_district_commissioner(self):
         return self.code in (
