@@ -55,7 +55,7 @@ class InsuranceSignalHandler:
             for scouts_group in scouts_groups:
                 if scouts_group.group_admin_id == function.scouts_group.group_admin_id:
                     function.scouts_group.name = scouts_group.name
-                    if scouts_group not in user_scouts_groups:
+                    if scouts_group.group_admin_id not in [g.group_admin_id for g in user_scouts_groups]:
                         user_scouts_groups.append(scouts_group)
         
         user.scouts_groups = user_scouts_groups
