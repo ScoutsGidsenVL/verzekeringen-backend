@@ -24,7 +24,7 @@ ENV APP_ENV=${APP_ENV} \
     PIP_DEFAULT_TIMEOUT=100 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
-    POETRY_VERSION=1.1.4
+    POETRY_VERSION=1.1.5
 
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
