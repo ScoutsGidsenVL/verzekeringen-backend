@@ -10,7 +10,7 @@ class BaseInsuranceQuerySet(models.QuerySet):
     def allowed(self, user: settings.AUTH_USER_MODEL):
         # Administrators can see all claims
         if user.has_role_administrator():
-            return self
+            return self.qs
 
         # @TODO
         # Section and group leaders can view and change requests they made themselves
