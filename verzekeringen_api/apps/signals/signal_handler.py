@@ -47,7 +47,7 @@ class InsuranceSignalHandler:
 
         logger.debug("USER FUNCTIONS: %s", abstract_functions)
 
-        leader_functions: List[AbstractScoutsFunction()] = service.get_user_leader_functions(user=user)
+        leader_functions: List[AbstractScoutsFunction()] = service.get_active_leader_functions(user=user)
         scouts_groups: List[AbstractScoutsGroup] = groupadmin.get_groups(active_user=user).scouts_groups
         user_scouts_groups: List[AbstractScoutsGroup] = []
         
@@ -59,7 +59,6 @@ class InsuranceSignalHandler:
                         user_scouts_groups.append(scouts_group)
         
         user.scouts_groups = user_scouts_groups
-        user.functions = leader_functions
 
         # @TODO
         # now = timezone.now()
