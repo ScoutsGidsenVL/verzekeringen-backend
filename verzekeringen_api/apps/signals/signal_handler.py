@@ -7,7 +7,8 @@ from django.dispatch import receiver
 from scouts_auth.auth.signals import ScoutsAuthSignalSender, app_ready, authenticated, refreshed
 from scouts_auth.auth.services import PermissionService
 
-from scouts_auth.groupadmin.services import ScoutsAuthorizationService
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.groupadmin.services import ScoutsAuthorizationService, GroupAdminMemberService
 from scouts_auth.auth.utils import SettingsHelper
 
 
@@ -37,19 +38,42 @@ class InsuranceSignalHandler:
         """
         logger.debug("SIGNAL received: 'authenticated' from %s", ScoutsAuthSignalSender.sender)
 
+        service = ScoutsAuthorizationService()
+        groupadmin = GroupAdminMemberService()
+
+        logger.debug("USER DATA: %s", user)
+
+        abstract_functions: List[AbstractScoutsFunction] = user.functions
+
+        logger.debug("USER FUNCTIONS: %s", abstract_functions)
+
+        leader_functions: List[AbstractScoutsFunction()] = service.get_user_leader_functions(user=user)
+        scouts_groups: List[AbstractScoutsGroup] = groupadmin.get_groups(active_user=user).scouts_groups
+        user_scouts_groups: List[AbstractScoutsGroup] = []
+        
+        for function in leader_functions:
+            for scouts_group in scouts_groups:
+                if scouts_group.group_admin_id == function.scouts_group.group_admin_id:
+                    function.scouts_group.name = scouts_group.name
+                    if scouts_group not in user_scouts_groups:
+                        user_scouts_groups.append(scouts_group)
+        
+        user.scouts_groups = user_scouts_groups
+        user.functions = leader_functions
+
         # @TODO
         # now = timezone.now()
         # timedelta = now - (user.last_refreshed)
         # if now > (user.last_refreshed + datetime.timedelta(hours=SettingsHelper.get_profile_refresh_time())):
-        if True:
-            service = ScoutsAuthorizationService()
+        # if True:
+        #     service = ScoutsAuthorizationService()
 
-            if not user.fully_loaded:
-                logger.debug("SIGNAL handling for 'authenticated' -> Loading additional user groups")
-                user = service.load_user_scouts_groups(user)
-                logger.debug("SIGNAL handling for 'authenticated' -> Loading scouts functions")
-                user = service.load_user_functions(user)
-            user.fully_loaded = True
+        #     if not user.fully_loaded:
+        #         logger.debug("SIGNAL handling for 'authenticated' -> Loading additional user groups")
+        #         user = service.load_user_scouts_groups(user)
+        #         logger.debug("SIGNAL handling for 'authenticated' -> Loading scouts functions")
+        #         user = service.load_user_functions(user)
+        #     user.fully_loaded = True
         # else:
         #     logger.debug("Not refreshing user profile, not enough time has passed (%s)", timedelta)
 

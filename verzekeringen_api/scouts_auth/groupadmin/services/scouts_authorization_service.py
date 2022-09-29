@@ -1,5 +1,6 @@
 import logging
 from typing import List
+from datetime import datetime
 
 from django.conf import settings
 
@@ -116,3 +117,19 @@ class ScoutsAuthorizationService(AuthorizationService):
         user.save()
 
         return user
+
+    def get_user_leader_functions(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
+        leader_functions: List[AbstractScoutsFunction()] = []
+        functions: List[AbstractScoutsFunction] = self.service.get_functions(active_user=user).functions
+        now = datetime.now()
+
+        for user_function in user.functions:
+            if user_function.end is None or user_function.end >= now:
+                for function in functions:
+                    if function.group_admin_id == user_function.group_admin_id or function.group_admin_id == user_function.function:
+                        for grouping in function.groupings:
+                            if grouping.name == SettingsHelper.get_section_leader_identifier():
+                                if user_function.group_admin_id not in [f.group_admin_id for f in leader_functions]:
+                                    leader_functions.append(user_function)
+
+        return leader_functions

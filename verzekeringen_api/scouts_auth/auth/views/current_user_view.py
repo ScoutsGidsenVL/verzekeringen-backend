@@ -28,12 +28,12 @@ class CurrentUserView(views.APIView):
 
             logger.debug("USER: %s", user.username)
 
-            group_data = self.service.get_groups(request.user)
-            group_serializer = AbstractScoutsGroupSerializer(data=group_data, many=True)
-            group_serializer.is_valid(raise_exception=True)
+            # group_data = self.service.get_groups(request.user)
+            # group_serializer = AbstractScoutsGroupSerializer(data=group_data, many=True)
+            # group_serializer.is_valid(raise_exception=True)
 
-            scouts_groups: List[AbstractScoutsGroup] = group_serializer.validated_data
-            user.scouts_groups = scouts_groups
+            # scouts_groups: List[AbstractScoutsGroup] = group_serializer.validated_data
+            # user.scouts_groups = scouts_groups
 
             serializer = UserSerializer(request.user)
             data = serializer.data
