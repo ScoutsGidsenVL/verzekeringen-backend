@@ -1,16 +1,13 @@
-import logging, datetime
+import logging
+from typing import List
 
 from django.conf import settings
-from django.utils import timezone
 from django.dispatch import receiver
 
-from scouts_auth.auth.signals import ScoutsAuthSignalSender, app_ready, authenticated, refreshed
 from scouts_auth.auth.services import PermissionService
-
-from scouts_auth.groupadmin.models import AbstractScoutsFunction
+from scouts_auth.auth.signals import ScoutsAuthSignalSender, app_ready, authenticated, refreshed
+from scouts_auth.groupadmin.models import AbstractScoutsFunction, AbstractScoutsGroup
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService, GroupAdminMemberService
-from scouts_auth.auth.utils import SettingsHelper
-
 
 logger = logging.getLogger(__name__)
 
