@@ -92,3 +92,6 @@ class VehicleRelatedInsurance(models.Model):
             self._vehicle_construction_year,
             self._vehicle_chassis_number,
         )
+
+    def vehicle_to_str_mail(self):
+        return f"Type: {self._vehicle_type.lower()}, Merk: {self._vehicle_brand}, Nummerplaat: {self._vehicle_license_plate}, Bouwjaar: {self._vehicle_construction_year}, Chassisnummer: {self._vehicle_chassis_number})"

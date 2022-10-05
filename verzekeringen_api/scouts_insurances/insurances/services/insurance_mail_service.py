@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 
 from scouts_auth.auth.models import User
-from scouts_insurances.insurances.models import BaseInsurance, TemporaryInsurance
+from scouts_insurances.insurances.models import BaseInsurance, TemporaryInsurance, TemporaryVehicleInsurance
 from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
 from scouts_auth.inuits.mail import Email, EmailService
@@ -86,6 +86,25 @@ class InsuranceMailService(EmailService):
                    f'<li>Land: {insurance.country.name if insurance.country else "België"}</li>' \
                    + city +\
                    f'<li>Deelnemers: {", ".join(non_member_list)}</li>' \
+                   f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
+        elif isinstance(insurance, TemporaryVehicleInsurance):
+            driver_list = list()
+            for driver in insurance.drivers:
+                driver_list.append(driver.full_name())
+            insurance_options_list = list()
+            for number in str(insurance.insurance_options):
+                if number == "1":
+                    insurance_options_list.append("Optie 1: Omniumverzekering.")
+                if number == "2":
+                    insurance_options_list.append("Optie 2: Vrijstelling van eigen omnium dekken.")
+                if number == "3":
+                    insurance_options_list.append("Optie 3: Huurvoertuig: vrijstelling verzekering burgerlijke aansprakelijkheid dekken tot 500 euro.")
+
+            return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
+                   f'<li>Bestuurders: {", ".join(driver_list)}</li>' \
+                   f'<li>Eigenaar: {insurance.owner.full_name()}</li>' \
+                   f'<li>Verzekering opties: {", ".join(insurance_options_list)}</li>' \
+                   f'<li>Voertuig: {insurance.vehicle_to_str_mail()}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         return ''
 

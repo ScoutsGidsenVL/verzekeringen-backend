@@ -63,3 +63,6 @@ class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
 
     def vehicle_with_trailer_to_str(self):
         return "{}, trailer({})".format(self.vehicle_to_str(), self._vehicle_trailer)
+
+    def vehicle_to_str_mail(self):
+        return f"Type: {self._vehicle_type.lower()}, Merk: {self._vehicle_brand}, Nummerplaat: {self._vehicle_license_plate}, Bouwjaar: {self._vehicle_construction_year}, Chassisnummer: {self._vehicle_chassis_number}, Aanhangwagen: {self._vehicle_trailer}"
