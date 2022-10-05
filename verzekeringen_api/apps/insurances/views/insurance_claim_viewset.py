@@ -81,7 +81,8 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     def get_create_data(self, request, *args, **kwargs):
         user: settings.AUTH_USER_MODEL = request.user
         # @TODO also for group leader groups
-        permitted_scouts_groups = user.get_section_leader_groups()
+        #permitted_scouts_groups = user.get_section_leader_groups()
+        permitted_scouts_groups = user.scouts_groups
 
         data = {"permitted_scouts_groups": permitted_scouts_groups}
         serializer = InsuranceClaimCreateDataSerializer(data, context={"request": request})
