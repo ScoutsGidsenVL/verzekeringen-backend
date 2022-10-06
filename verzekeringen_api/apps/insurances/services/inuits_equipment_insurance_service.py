@@ -59,7 +59,7 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
         insurance.nature = fields.get("nature", insurance.nature)
         insurance.postal_code = fields.get("postal_code", None)
         insurance.city = fields.get("city", None)
-        insurance.country = fields.get("country", insurance.country.id if insurance.city is None and insurance.postal_code is None else None)
+        insurance.country = fields.get("country", insurance.country if insurance.country and insurance.city is None and insurance.postal_code is None else None)
 
         insurance.full_clean()
         insurance.save()
