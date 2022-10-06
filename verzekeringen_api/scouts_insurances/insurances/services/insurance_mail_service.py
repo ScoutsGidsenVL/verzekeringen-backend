@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 from scouts_auth.auth.models import User
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import BaseInsurance, TemporaryInsurance, TemporaryVehicleInsurance, \
-    EquipmentInsurance
+    EquipmentInsurance, ActivityInsurance, EventInsurance
 from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
 from scouts_auth.inuits.mail import Email, EmailService
@@ -86,7 +86,7 @@ class InsuranceMailService(EmailService):
             return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
                    f'<li>Aard van activiteit: {insurance.nature}</li>' \
                    f'<li>Land: {insurance.country.name if insurance.country else "België"}</li>' \
-                   + city +\
+                   + city + \
                    f'<li>Deelnemers: {", ".join(non_member_list)}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         elif isinstance(insurance, TemporaryVehicleInsurance):
@@ -100,7 +100,8 @@ class InsuranceMailService(EmailService):
                 if number == "2":
                     insurance_options_list.append("Optie 2: Vrijstelling van eigen omnium dekken.")
                 if number == "3":
-                    insurance_options_list.append("Optie 3: Huurvoertuig: vrijstelling verzekering burgerlijke aansprakelijkheid dekken tot 500 euro.")
+                    insurance_options_list.append(
+                        "Optie 3: Huurvoertuig: vrijstelling verzekering burgerlijke aansprakelijkheid dekken tot 500 euro.")
 
             return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
                    f'<li>Bestuurders: {", ".join(driver_list)}</li>' \
@@ -122,6 +123,22 @@ class InsuranceMailService(EmailService):
                    f'<li>Land: {insurance.country.name if insurance.country else "België"}</li>' \
                    + city + \
                    f'<li>Materiaal:  {equipment_list_string}</li>' \
+                   f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
+        elif isinstance(insurance, EventInsurance):
+            city = f'<li>Locatie: {insurance.city}</li>' if insurance.city else ""
+            event_sizes = {
+                1: '1-500 (65,55 eur/dag)',
+                2: '500-1000 (131,10 eur/dag)',
+                3: '1000-1500 (163,88 eur/dag)',
+                4: '1500-2500 (229,43 eur/dag)',
+                5: 'meer dan 2500 (in overleg met Ethias)'
+            }
+
+            return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y %H:%M")} - {insurance.end_date.strftime("%d %b %Y %H:%M")}</li>' \
+                   f'<li>Aard van activiteit: {insurance.nature}</li>' \
+                   f'<li>Land: België</li>' \
+                   + city + \
+                   f'<li>Grootte van evenement:  {event_sizes[insurance.event_size]}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         return ''
 
