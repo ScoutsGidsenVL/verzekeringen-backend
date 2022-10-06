@@ -94,8 +94,9 @@ class PersonSearch(viewsets.GenericViewSet):
         
         unique_non_members = []
         for non_member in inuits_non_members:
-            if non_member not in unique_non_members:
-                unique_non_members.append(non_member)
+            for unique_non_member in unique_non_members:
+                if non_member.last_name != unique_non_member.last_name or non_member.first_name != unique_non_member.first_name or non_member.birth_date != unique_non_member.birth_date:
+                    unique_non_members.append(non_member)
 
         results = [*members, *unique_non_members]
         output_serializer = PersonSerializer(results, many=True)
