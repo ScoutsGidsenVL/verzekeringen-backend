@@ -4,7 +4,9 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 
 from scouts_auth.auth.models import User
-from scouts_insurances.insurances.models import BaseInsurance, TemporaryInsurance, TemporaryVehicleInsurance
+from scouts_insurances.equipment.models import Equipment
+from scouts_insurances.insurances.models import BaseInsurance, TemporaryInsurance, TemporaryVehicleInsurance, \
+    EquipmentInsurance
 from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
 from scouts_auth.inuits.mail import Email, EmailService
@@ -105,6 +107,21 @@ class InsuranceMailService(EmailService):
                    f'<li>Eigenaar: {insurance.owner.full_name()}</li>' \
                    f'<li>Verzekering opties: {", ".join(insurance_options_list)}</li>' \
                    f'<li>Voertuig: {insurance.vehicle_to_str_mail()}</li>' \
+                   f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
+        elif isinstance(insurance, EquipmentInsurance):
+            city = f'<li>Locatie: {insurance.city}</li>' if insurance.city else ""
+            equipment_list = list()
+            equipment_list_string = "<ul>"
+            for equipment in Equipment.objects.all().filter(insurance_id=insurance.id):
+                equipment_list.append(equipment.to_string_mail())
+            for item in equipment_list:
+                equipment_list_string = equipment_list_string + f"<li>{item}</li>"
+            equipment_list_string = equipment_list_string + "</ul>"
+            return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
+                   f'<li>Aard van activiteit: {insurance.nature}</li>' \
+                   f'<li>Land: {insurance.country.name if insurance.country else "België"}</li>' \
+                   + city + \
+                   f'<li>Materiaal:  {equipment_list_string}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         return ''
 

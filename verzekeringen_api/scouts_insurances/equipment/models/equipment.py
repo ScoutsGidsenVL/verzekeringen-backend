@@ -77,3 +77,14 @@ class Equipment(models.Model):
             self.owner_non_member.full_name() if self.owner_non_member else "",
             self.owner_member.full_name() if self.owner_member else "",
         )
+
+    def to_string_mail(self):
+        owner = ""
+        if not self.owner_non_member and not self.owner_member:
+            owner = "Type: Groepsmateriaal"
+        elif isinstance(self.owner_member, Member):
+            owner = f"Type: Persoonlijk materiaal van {self.owner_member.full_name()}"
+        elif isinstance(self.owner_non_member, NonMember):
+            owner = f"Type: Gehuurd of geleend materiaal van {self.owner_non_member.full_name()}"
+        nature = f"Soort: {self.nature}," if self.nature else ""
+        return  nature + f"Beschrijving: {self.description}, Aantal: {self.amount}, Nieuwwaarde: {self.total_value}, {owner}"
