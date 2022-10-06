@@ -91,7 +91,13 @@ class PersonSearch(viewsets.GenericViewSet):
             inuits_non_members = NonMember.objects.get_queryset().currently_insured(
                 start, end, [str(inuits_non_member.id) for inuits_non_member in inuits_non_members], type
             )
-        results = [*members, *inuits_non_members]
+        
+        unique_non_members = []
+        for non_member in inuits_non_members:
+            if non_member not in unique_non_members:
+                unique_non_members.append(non_member)
+
+        results = [*members, *unique_non_members]
         output_serializer = PersonSerializer(results, many=True)
 
         return Response(output_serializer.data)
