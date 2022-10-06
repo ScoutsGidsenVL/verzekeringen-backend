@@ -1,5 +1,6 @@
 import logging
 from typing import List
+from operator import attrgetter
 
 from django.conf import settings
 from django.dispatch import receiver
@@ -38,11 +39,11 @@ class InsuranceSignalHandler:
         service = ScoutsAuthorizationService()
         groupadmin = GroupAdminMemberService()
 
-        logger.debug("USER DATA: %s", user)
+        # logger.debug("USER DATA: %s", user)
 
-        abstract_functions: List[AbstractScoutsFunction] = user.functions
+        # abstract_functions: List[AbstractScoutsFunction] = user.functions
 
-        logger.debug("USER FUNCTIONS: %s", abstract_functions)
+        # logger.debug("USER FUNCTIONS: %s", abstract_functions)
 
         leader_functions: List[AbstractScoutsFunction()] = service.get_active_leader_functions(user=user)
         scouts_groups: List[AbstractScoutsGroup] = groupadmin.get_groups(active_user=user).scouts_groups
@@ -55,8 +56,8 @@ class InsuranceSignalHandler:
                     if scouts_group.group_admin_id not in [g.group_admin_id for g in user_scouts_groups]:
                         user_scouts_groups.append(scouts_group)
         
+        user_scouts_groups.sort(key=attrgetter('group_admin_id'))
         user.scouts_groups = user_scouts_groups
-
         # @TODO
         # now = timezone.now()
         # timedelta = now - (user.last_refreshed)
@@ -72,7 +73,6 @@ class InsuranceSignalHandler:
         #     user.fully_loaded = True
         # else:
         #     logger.debug("Not refreshing user profile, not enough time has passed (%s)", timedelta)
-
         logger.debug(user.to_descriptive_string())
 
         return user

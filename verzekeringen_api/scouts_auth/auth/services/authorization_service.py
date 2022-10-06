@@ -20,7 +20,7 @@ class AuthorizationService:
                 group: Group = Group.objects.get(name=group_name)
             except ObjectDoesNotExist:
                 logger.error("Auth group with name %s does not exist", group_name)
-                raise Exception
+                raise Exception(f"Auth group with name {group_name} does not exist")
 
         logger.debug("Adding user %s to auth group %s", user.username, group.name)
         group.user_set.add(user)
