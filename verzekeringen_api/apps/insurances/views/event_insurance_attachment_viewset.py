@@ -77,7 +77,8 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
             raise serializers.ValidationError("; ".join(e.messages))
 
         output_serializer = EventInsuranceAttachmentSerializer(result, context={"request": request})
-
+        insurance._listed = "J"
+        insurance.save()
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(
@@ -127,4 +128,6 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         group = attachment.insurance.scouts_group.group_admin_id
         AuthenticationHelper.has_rights_for_group(request.user, group)
         attachment.delete()
+        attachment.insurance._listed = "N"
+        attachment.insurance.save()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

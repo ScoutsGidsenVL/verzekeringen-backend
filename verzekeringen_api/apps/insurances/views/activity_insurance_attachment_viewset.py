@@ -73,7 +73,8 @@ class ActivityInsuranceAttachmentViewSet(viewsets.GenericViewSet):
             raise serializers.ValidationError("; ".join(e.messages))
 
         output_serializer = ActivityInsuranceAttachmentSerializer(result, context={"request": request})
-
+        insurance._listed = "J"
+        insurance.save()
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(
@@ -119,4 +120,6 @@ class ActivityInsuranceAttachmentViewSet(viewsets.GenericViewSet):
     def destroy(self, request, pk):
         attachement: ActivityInsuranceAttachment = get_object_or_404(ActivityInsuranceAttachment.objects, pk=pk)
         attachement.delete()
+        attachement.insurance._listed = "N"
+        attachement.insurance.save()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
