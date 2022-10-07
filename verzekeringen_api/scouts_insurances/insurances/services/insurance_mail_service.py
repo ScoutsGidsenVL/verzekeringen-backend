@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 from scouts_auth.auth.models import User
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import BaseInsurance, TemporaryInsurance, TemporaryVehicleInsurance, \
-    EquipmentInsurance, ActivityInsurance, EventInsurance, GroupSize
+    EquipmentInsurance, ActivityInsurance, EventInsurance, GroupSize, TravelAssistanceInsurance
 from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
 from scouts_auth.inuits.mail import Email, EmailService
@@ -63,6 +63,7 @@ class InsuranceMailService(EmailService):
             add_attachments=True,
             tags=["Verzekeringsaanvraag"]
         )
+
     def _prepare_insurance_dictionary(self, insurance: BaseInsurance):
         """Replaces the keys in the mail template with the actual values."""
         return {
@@ -106,7 +107,7 @@ class InsuranceMailService(EmailService):
                    f'<li>Bestuurders: {", ".join(driver_list)}</li>' \
                    f'<li>Eigenaar: {insurance.owner.full_name()}</li>' \
                    f'<li>Verzekering opties: {", ".join(insurance_options_list)}</li>' \
-                   f'<li>Voertuig: {insurance.vehicle_to_str_mail()}</li>' \
+                   f'<li>Voertuig: {insurance.vehicle}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         elif isinstance(insurance, EquipmentInsurance):
             city = f'<li>Locatie: {insurance.city}</li>' if insurance.city else ""
@@ -147,6 +148,16 @@ class InsuranceMailService(EmailService):
                    f'<li>Land: België</li>' \
                    + city + \
                    f'<li>Aantal extra te verzekeren personen:  {GroupSize.from_choice(insurance.group_size)[1]}</li>' \
+                   f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
+        elif isinstance(insurance, TravelAssistanceInsurance):
+            participants = list()
+            for participant in insurance.participants.all():
+                participants.append(participant.full_name())
+            vehicle = f"<li>Voertuig: {insurance.vehicle_with_simple_trailer_to_str_mail()}</li>" if insurance.vehicle else ""
+            return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
+                   f'<li>Land: {insurance.country if insurance.country else "België"}</li>' \
+                   f'<li>Deelnemers: {", ".join(participants)}</li>' \
+                   + vehicle + \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         return ''
 
