@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 from scouts_auth.auth.models import User
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import BaseInsurance, TemporaryInsurance, TemporaryVehicleInsurance, \
-    EquipmentInsurance, ActivityInsurance, EventInsurance
+    EquipmentInsurance, ActivityInsurance, EventInsurance, GroupSize
 from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
 from scouts_auth.inuits.mail import Email, EmailService
@@ -63,7 +63,7 @@ class InsuranceMailService(EmailService):
             add_attachments=True,
             tags=["Verzekeringsaanvraag"]
         )
-
+        exit(0)
     def _prepare_insurance_dictionary(self, insurance: BaseInsurance):
         """Replaces the keys in the mail template with the actual values."""
         return {
@@ -139,6 +139,15 @@ class InsuranceMailService(EmailService):
                    f'<li>Land: België</li>' \
                    + city + \
                    f'<li>Grootte van evenement:  {event_sizes[insurance.event_size]}</li>' \
+                   f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
+        elif isinstance(insurance, ActivityInsurance):
+            city = f'<li>Locatie: {insurance.city}</li>' if insurance.city else ""
+
+            return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
+                   f'<li>Aard van activiteit: {insurance.nature}</li>' \
+                   f'<li>Land: België</li>' \
+                   + city + \
+                   f'<li>Aantal extra te verzekeren personen:  {GroupSize.from_choice(insurance.group_size)[1]}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         return ''
 
