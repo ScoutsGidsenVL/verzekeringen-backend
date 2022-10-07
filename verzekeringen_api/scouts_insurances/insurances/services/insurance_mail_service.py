@@ -63,7 +63,6 @@ class InsuranceMailService(EmailService):
             add_attachments=True,
             tags=["Verzekeringsaanvraag"]
         )
-        exit(0)
     def _prepare_insurance_dictionary(self, insurance: BaseInsurance):
         """Replaces the keys in the mail template with the actual values."""
         return {
