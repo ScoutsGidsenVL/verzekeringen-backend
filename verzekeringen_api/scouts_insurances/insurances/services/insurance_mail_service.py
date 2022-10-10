@@ -79,15 +79,16 @@ class InsuranceMailService(EmailService):
     def _extra_list_items(self, insurance: BaseInsurance) -> str:
 
         if isinstance(insurance, TemporaryInsurance):
-            non_member_list = list()
+            non_member_list = "<ul>"
             for non_member in insurance.non_members.all():
-                non_member_list.append(non_member.full_name())
+                non_member_list = non_member_list + f"<li>{non_member.full_name()} {non_member.street} {non_member.number}{non_member.letter_box if non_member.letter_box else ''} {non_member.postal_code} {non_member.city} {non_member.birth_date.strftime('%d %b %Y') if non_member.birth_date else ''} </li>"
+            non_member_list = non_member_list + "</ul>"
             city = f'<li>Locatie: {insurance.city}</li>' if insurance.city else ""
             return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
                    f'<li>Aard van activiteit: {insurance.nature}</li>' \
                    f'<li>Land: {insurance.country.name if insurance.country else "België"}</li>' \
                    + city + \
-                   f'<li>Deelnemers: {", ".join(non_member_list)}</li>' \
+                   f'<li>Deelnemers: {non_member_list}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         elif isinstance(insurance, TemporaryVehicleInsurance):
             driver_list = list()
