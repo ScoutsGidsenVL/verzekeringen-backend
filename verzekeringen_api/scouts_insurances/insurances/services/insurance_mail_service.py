@@ -64,6 +64,7 @@ class InsuranceMailService(EmailService):
             tags=["Verzekeringsaanvraag"]
         )
 
+
     def _prepare_insurance_dictionary(self, insurance: BaseInsurance):
         """Replaces the keys in the mail template with the actual values."""
         return {
@@ -94,21 +95,32 @@ class InsuranceMailService(EmailService):
             driver_list = list()
             for driver in insurance.drivers:
                 driver_list.append(driver.full_name())
-            insurance_options_list = list()
+            insurance_options_list = "<ul>"
+            max_coverage = ""
+            if insurance.max_coverage:
+                if insurance.max_coverage == "A":
+                    max_coverage = "vrijstelling dekken tot 250 EUR"
+                if insurance.max_coverage == "B":
+                    max_coverage = "vrijstelling dekken tot 500 EUR"
+                if insurance.max_coverage == "C":
+                    max_coverage = "vrijstelling dekken tot 750 EUR"
+
             for number in str(insurance.insurance_options):
                 if number == "1":
-                    insurance_options_list.append("Optie 1: Omniumverzekering.")
+                    insurance_options_list = insurance_options_list + "<li>Optie 1: Omniumverzekering.</li>"
                 if number == "2":
-                    insurance_options_list.append("Optie 2: Vrijstelling van eigen omnium dekken.")
+                    insurance_options_list = insurance_options_list + "<li>Optie 2: Vrijstelling van eigen omnium " \
+                                                                      f"dekken. {max_coverage}</li>"
                 if number == "3":
-                    insurance_options_list.append(
-                        "Optie 3: Huurvoertuig: vrijstelling verzekering burgerlijke aansprakelijkheid dekken tot 500 euro.")
-
+                    insurance_options_list = insurance_options_list + "<li>Optie 3: Huurvoertuig: vrijstelling " \
+                                                                      "verzekering burgerlijke aansprakelijkheid " \
+                                                                      "dekken tot 500 euro.</li> "
+            insurance_options_list = insurance_options_list + "</ul>"
             return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
                    f'<li>Bestuurders: {", ".join(driver_list)}</li>' \
-                   f'<li>Eigenaar: {insurance.owner.full_name()}</li>' \
-                   f'<li>Verzekering opties: {", ".join(insurance_options_list)}</li>' \
-                   f'<li>Voertuig: {insurance.vehicle}</li>' \
+                   f'<li>Eigenaar: {insurance.owner.full_name()} {insurance.owner.street} {insurance.owner.number}{insurance.owner.letter_box if insurance.owner.letter_box else ""} {insurance.owner.postal_code} {insurance.owner.city} {insurance.owner.phone_number}</li>' \
+                   f'<li>Gekozen verzekering: {insurance_options_list}</li>' \
+                   f'<li>Voertuig: {insurance.vehicle.vehicle_to_str_mail()}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
         elif isinstance(insurance, EquipmentInsurance):
             city = f'<li>Locatie: {insurance.city}</li>' if insurance.city else ""

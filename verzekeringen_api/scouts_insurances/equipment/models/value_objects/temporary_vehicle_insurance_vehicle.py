@@ -24,3 +24,6 @@ class TemporaryVehicleInsuranceVehicle(Vehicle):
 
     def __str__(self):
         return super().__str__() + ", trailer({})".format(self.trailer)
+
+    def vehicle_to_str_mail(self):
+        return f"Type: {self.type.lower()}, Merk: {self.brand}, Nummerplaat: {self.license_plate}, Bouwjaar: {self.construction_year}, Chassisnummer: {self.chassis_number}, Aanhangwagen: {self.trailer.from_choice(self.trailer)[1]}"
