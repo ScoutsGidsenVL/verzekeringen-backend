@@ -98,7 +98,6 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
             member.group_admin_id,
             user=user,
         )
-        self.scouts_user_service.handle_oidc_login(user=user)
 
         return user
 
