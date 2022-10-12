@@ -82,7 +82,7 @@ class InsuranceMailService(EmailService):
         if isinstance(insurance, TemporaryInsurance):
             non_member_list = "<ul>"
             for non_member in insurance.non_members.all():
-                non_member_list = non_member_list + f"<li>{non_member.full_name()} {non_member.street} {non_member.number}{non_member.letter_box if non_member.letter_box else ''} {non_member.postal_code} {non_member.city} {non_member.birth_date.strftime('%d %b %Y') if non_member.birth_date else ''} </li>"
+                non_member_list = non_member_list + f"<li>{non_member.full_name()} {non_member.street} {non_member.number} {f'Bus {non_member.letter_box}' if non_member.letter_box else ''} {non_member.postal_code} {non_member.city} {non_member.birth_date.strftime('%d %b %Y') if non_member.birth_date else ''} {f'Opmerking: {non_member.comment}' if non_member.comment else ''}</li>"
             non_member_list = non_member_list + "</ul>"
             city = f'<li>Locatie: {insurance.city}</li>' if insurance.city else ""
             return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
@@ -118,7 +118,7 @@ class InsuranceMailService(EmailService):
             insurance_options_list = insurance_options_list + "</ul>"
             return f'<li>Periode: {insurance.start_date.strftime("%d %b %Y")} - {insurance.end_date.strftime("%d %b %Y")}</li>' \
                    f'<li>Bestuurders: {", ".join(driver_list)}</li>' \
-                   f'<li>Eigenaar: {insurance.owner.full_name()} {insurance.owner.street} {insurance.owner.number}{insurance.owner.letter_box if insurance.owner.letter_box else ""} {insurance.owner.postal_code} {insurance.owner.city} {insurance.owner.phone_number}</li>' \
+                   f'<li>Eigenaar: {insurance.owner.full_name()} {insurance.owner.street} {insurance.owner.number}  {f"Bus {insurance.owner.letter_box}" if insurance.owner.letter_box else ""} {insurance.owner.postal_code} {insurance.owner.city} {insurance.owner.phone_number} {f"Opmerking: {insurance.owner.comment}" if insurance.owner.comment else ""}</li>' \
                    f'<li>Gekozen verzekering: {insurance_options_list}</li>' \
                    f'<li>Voertuig: {insurance.vehicle.vehicle_to_str_mail()}</li>' \
                    f'<li>Opmerkingen: {insurance.comment if insurance.comment else "geen"}</li>'
