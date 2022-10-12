@@ -96,7 +96,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         logger.info(
             "SCOUTS OIDC AUTHENTICATION: Created user from group admin member %s",
             member.group_admin_id,
-            user=user,
+            user,
         )
 
         return user

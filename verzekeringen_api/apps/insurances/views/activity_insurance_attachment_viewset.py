@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from django.http.response import HttpResponse
@@ -73,7 +74,7 @@ class ActivityInsuranceAttachmentViewSet(viewsets.GenericViewSet):
             raise serializers.ValidationError("; ".join(e.messages))
 
         output_serializer = ActivityInsuranceAttachmentSerializer(result, context={"request": request})
-        insurance._listed = "J"
+        insurance._attachment = datetime.datetime.now()
         insurance.save()
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -120,6 +121,6 @@ class ActivityInsuranceAttachmentViewSet(viewsets.GenericViewSet):
     def destroy(self, request, pk):
         attachement: ActivityInsuranceAttachment = get_object_or_404(ActivityInsuranceAttachment.objects, pk=pk)
         attachement.delete()
-        attachement.insurance._listed = "N"
+        attachement.insurance._attachment = None
         attachement.insurance.save()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

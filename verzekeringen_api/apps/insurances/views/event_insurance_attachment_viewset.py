@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from django.http.response import HttpResponse
@@ -77,7 +78,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
             raise serializers.ValidationError("; ".join(e.messages))
 
         output_serializer = EventInsuranceAttachmentSerializer(result, context={"request": request})
-        insurance._listed = "J"
+        insurance._attachment = datetime.datetime.now()
         insurance.save()
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
 
@@ -128,6 +129,6 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         group = attachment.insurance.scouts_group.group_admin_id
         AuthenticationHelper.has_rights_for_group(request.user, group)
         attachment.delete()
-        attachment.insurance._listed = "N"
+        attachment.insurance._attachment = None
         attachment.insurance.save()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

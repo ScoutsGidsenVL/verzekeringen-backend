@@ -37,6 +37,7 @@ class BaseInsurance(models.Model):
     _printed = models.CharField(db_column="afgedrukt", max_length=1, default="N")
     _finished = models.CharField(db_column="afgewerkt", max_length=1, default="N")
     _listed = models.CharField(db_column="lijstok", max_length=1, default="N")
+    _attachment = TimezoneAwareDateTimeField(db_column="bijlage", null=True, blank=True)
 
     created_on = TimezoneAwareDateTimeField(db_column="datumvaninvulling", null=True)
     start_date = TimezoneAwareDateTimeField(db_column="begindatum", null=True)
