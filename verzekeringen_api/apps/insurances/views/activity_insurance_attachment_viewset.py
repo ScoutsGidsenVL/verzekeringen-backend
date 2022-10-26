@@ -105,7 +105,7 @@ class ActivityInsuranceAttachmentViewSet(viewsets.GenericViewSet):
     @action(methods=["get"], detail=True, url_path="download")
     def download(self, request, pk=None):
         attachment = get_object_or_404(ActivityInsuranceAttachment.objects, pk=pk)
-        response = HttpResponse(attachment.file, content_type=attachment.file.content_type)
+        response = HttpResponse(attachment.file.file, content_type=attachment.file.content_type)
         response["Content-Disposition"] = "attachment; filename={}".format(str(attachment.file.file))
         return response
 

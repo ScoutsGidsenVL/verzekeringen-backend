@@ -111,7 +111,7 @@ class EventInsuranceAttachmentViewSet(viewsets.GenericViewSet):
         attachment = get_object_or_404(EventInsuranceAttachment.objects, pk=pk)
         group = attachment.insurance.scouts_group.group_admin_id
         AuthenticationHelper.has_rights_for_group(request.user, group)
-        response = HttpResponse(attachment.file, content_type=attachment.file.content_type)
+        response = HttpResponse(attachment.file.file, content_type=attachment.file.content_type)
         response["Content-Disposition"] = "attachment; filename={}".format(str(attachment.file.file))
         return response
 
