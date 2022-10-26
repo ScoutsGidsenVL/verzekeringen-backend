@@ -50,5 +50,4 @@ class BaseInsuranceManager(models.Manager):
             .order_by("_group_group_admin_id")
             .order_by("start_date")
             .order_by("end_date")
-            .order_by("type.name")
         )
