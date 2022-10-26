@@ -11,6 +11,8 @@ from apps.people.services import InuitsNonMemberService
 from apps.people.models import InuitsNonMember
 from apps.utils.utils import AuthenticationHelper
 
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
+
 
 
 logger = logging.getLogger(__name__)
@@ -40,8 +42,22 @@ class InuitsNonMemberViewSet(viewsets.GenericViewSet):
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsNonMemberSerializer})
     def list(self, request):
         group = self.request.query_params.get('group')
+        type = int(self.request.query_params.get('type', 0))
+        start = self.request.query_params.get('start', None)
+        end = self.request.query_params.get('end', None)
+
         AuthenticationHelper.has_rights_for_group(request.user, group)
+
+        logger.debug(f"inuits_non_member query: group {group}, type {type}, start {start}, end {end}")
+        logger.debug(f"temporary: {InsuranceTypeEnum.TEMPORARY}")
+        logger.debug(f"equal ? {type is int(InsuranceTypeEnum.TEMPORARY)}")
+
         inuits_non_members = self.filter_queryset(self.get_queryset())
+        if type is int(InsuranceTypeEnum.TEMPORARY):
+            logger.debug("uhu")
+            inuits_non_members = InuitsNonMember.objects.not_currently_temporarily_insured(
+                request.user, start, end, inuits_non_members)
+        
         page = self.paginate_queryset(inuits_non_members)
 
         if page is not None:

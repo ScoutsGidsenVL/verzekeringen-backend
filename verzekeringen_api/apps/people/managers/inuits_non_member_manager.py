@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Q
 from django.conf import settings
 
+from scouts_insurances.people.models import NonMember
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import (
     NonMemberTemporaryInsurance,
@@ -32,6 +33,11 @@ class InuitsNonMemberQuerySet(models.QuerySet):
     def allowed(self, user: settings.AUTH_USER_MODEL):
         groups = [group.group_admin_id for group in user.scouts_groups]
         return self.filter(group_admin_id__in=groups)
+    
+    def not_currently_temporarily_insured(self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None):
+        from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
+
+        return self.allowed(user).filter(group_admin_id__in=[non_member.inuits_id for non_member in NonMember.objects.not_currently_temporarily_insured(start, end, inuits_non_members)])
 
     # def allowed(self, user: settings.AUTH_USER_MODEL):
     #     groups = [group.group_admin_id for group in user.scouts_groups]

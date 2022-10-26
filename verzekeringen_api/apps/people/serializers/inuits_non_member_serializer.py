@@ -56,7 +56,6 @@ class InuitsNonMemberSerializer(InuitsPersonSerializer, serializers.ModelSeriali
         return data
 
     def to_representation(self, obj: InuitsNonMember = None) -> dict:
-        logger.debug("HERE: %s", obj)
         # HACKETY HACK
         inuits_non_member = InuitsNonMember.objects.all().filter(template__non_member=obj.id).last()
 

@@ -75,28 +75,35 @@ class PersonSearch(viewsets.GenericViewSet):
         # Include non-members with a running insurance in the search results if needed
         queryset = self.get_queryset()
         inuits_non_members = self.filter_queryset(queryset)
-        if type and inuits_non_members and start and end:
-            if type is InsuranceTypeEnum.EQUIPMENT:
-                pass
-            elif type is InsuranceTypeEnum.TEMPORARY:
-                pass
-            elif type is InsuranceTypeEnum.TEMPORARY_VEHICLE:
-                pass
-            elif (
-                type is InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE
-                or InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE
-            ):
-                pass
+        if type:
+            if inuits_non_members and start and end:
+                if type in (
+                    InsuranceTypeEnum.TEMPORARY_VEHICLE,
+                    InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE,
+                    InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE
+                ):
+                    pass
+                elif type is InsuranceTypeEnum.TEMPORARY:
+                    inuits_non_members = NonMember.objects.get_queryset().not_currently_temporarily_insured(
+                        start, end, inuits_non_members)
 
-            inuits_non_members = NonMember.objects.get_queryset().currently_insured(
-                start, end, [str(inuits_non_member.id) for inuits_non_member in inuits_non_members], type
-            )
+                inuits_non_members = NonMember.objects.get_queryset().currently_insured(
+                    start, end, [str(inuits_non_member.id) for inuits_non_member in inuits_non_members], type
+                )
+        logger.debug("InuitsNonMember: %s", ",".join([person.last_name for person in inuits_non_members]))
         
         unique_non_members = []
-        for non_member in inuits_non_members:
+        for inuits_non_member in inuits_non_members:
+            result_appended = False
             for unique_non_member in unique_non_members:
-                if non_member.last_name != unique_non_member.last_name or non_member.first_name != unique_non_member.first_name or non_member.birth_date != unique_non_member.birth_date:
-                    unique_non_members.append(non_member)
+                if inuits_non_member.last_name == unique_non_member.last_name and (
+                    inuits_non_member.first_name == unique_non_member.first_name) and (
+                    inuits_non_member.birth_date == unique_non_member.birth_date):
+                    result_appended = True
+            
+            if not result_appended:
+                unique_non_members.append(inuits_non_member)
+        logger.debug("UNIQUE InuitsNonMember: %s", ",".join([person.last_name for person in unique_non_members]))
 
         results = [*members, *unique_non_members]
         output_serializer = PersonSerializer(results, many=True)
