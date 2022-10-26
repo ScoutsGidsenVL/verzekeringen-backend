@@ -1,6 +1,11 @@
 asgiref==3.5.2; python_version >= "3.7"
+<<<<<<< HEAD
 boto3==1.24.89; python_version >= "3.7"
 botocore==1.27.89; python_version >= "3.7"
+=======
+boto3==1.25.1; python_version >= "3.7"
+botocore==1.28.1; python_version >= "3.7"
+>>>>>>> 8cd6137 (Django restframework dependency fixed version)
 certifi==2022.9.24; python_version >= "3.7" and python_version < "4"
 cffi==1.15.1; python_version >= "3.6"
 charset-normalizer==2.1.1; python_version >= "3.7" and python_version < "4" and python_full_version >= "3.6.0"
@@ -13,7 +18,11 @@ django-cors-headers==3.13.0; python_version >= "3.7"
 django-filter==2.4.0; python_version >= "3.5"
 django-storages==1.13.1; python_version >= "3.7"
 django==3.2.16; python_version >= "3.6"
+<<<<<<< HEAD
 djangorestframework==3.14.0; python_version >= "3.6"
+=======
+djangorestframework==3.13.1; python_version >= "3.6"
+>>>>>>> 8cd6137 (Django restframework dependency fixed version)
 drf-yasg2==1.19.4
 environs==9.5.0; python_version >= "3.6"
 idna==3.4; python_version >= "3.7" and python_version < "4"
@@ -28,17 +37,30 @@ marshmallow==3.18.0; python_version >= "3.7"
 mozilla-django-oidc==2.0.0
 packaging==20.9; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 pdfrw==0.4
+<<<<<<< HEAD
 psycopg2-binary==2.9.4; python_version >= "3.6"
 pycparser==2.21; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 pyjwt==2.5.0; python_version >= "3.7"
+=======
+psycopg2-binary==2.9.5; python_version >= "3.6"
+pycparser==2.21; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
+pyjwt==2.6.0; python_version >= "3.7"
+>>>>>>> 8cd6137 (Django restframework dependency fixed version)
 pyopenssl==22.1.0; python_version >= "3.6"
 pyparsing==3.0.9; python_full_version >= "3.6.8" and python_version >= "3.7"
 python-dateutil==2.8.2; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.7"
 python-dotenv==0.21.0; python_version >= "3.7"
+<<<<<<< HEAD
 pytz==2022.4; python_version >= "3.7"
 pyyaml==5.4.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
 requests==2.28.1; python_version >= "3.7" and python_version < "4"
 ruamel.yaml.clib==0.2.6; platform_python_implementation == "CPython" and python_version < "3.11" and python_version >= "3.5"
+=======
+pytz==2022.5; python_version >= "3.7"
+pyyaml==5.4.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
+requests==2.28.1; python_version >= "3.7" and python_version < "4"
+ruamel.yaml.clib==0.2.7; platform_python_implementation == "CPython" and python_version < "3.11" and python_version >= "3.5"
+>>>>>>> 8cd6137 (Django restframework dependency fixed version)
 ruamel.yaml==0.17.21; python_version >= "3"
 s3transfer==0.6.0; python_version >= "3.7"
 six==1.16.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.7"
