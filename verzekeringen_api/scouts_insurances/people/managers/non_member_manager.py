@@ -82,32 +82,35 @@ class NonMemberQuerySet(models.QuerySet):
         )
         # equipment insurance ?
 
-    def currently_insured(self, start: datetime, end: datetime, inuits_non_member_ids: list = None, type=None):
+    def currently_insured(self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None, type=None):
         from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 
-        if inuits_non_member_ids and type:
-            if type is InsuranceTypeEnum.TEMPORARY:
-                return self.filter(Q(inuits_id__in=inuits_non_member_ids))
-            else:
-                return self.filter(
-                    Q(temporary_insurances__non_members__in=inuits_non_member_ids)
-                    and Q(insurance_parent__start_date__gte=start)
-                    and Q(insurance_parent__end_date__lte=end)
-                )
-    
-    def not_currently_temporarily_insured(self, start: datetime, end: datetime, inuits_non_members: list = None):
-        from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
+        if inuits_non_members and type:
+            inuits_non_member_ids = [str(inuits_non_member.id) for inuits_non_member in inuits_non_members]
 
-        if not start or not end:
-            logger.warn("Start and end date are necessary to filter correctly, returning provided list")
-            return inuits_non_members
+            logger.debug(f"start: {start} - end: {end}")
 
-        if inuits_non_member_ids and type:
             return self.filter(
-                    Q(temporary_insurances__non_members__inuits_id__not_in=[str(inuits_non_member.id) for inuits_non_member in inuits_non_members])
-                    and Q(insurance_parent__start_date__gte=start)
-                    and Q(insurance_parent__end_date__lte=end)
-                )
+                Q(inuits_id__in=inuits_non_member_ids)
+                & Q(temporary_insurances__insurance_parent__start_date__gte=start)
+                & Q(temporary_insurances__insurance_parent__end_date__lte=end)
+            )
+        
+        return []
+    
+    # def not_currently_temporarily_insured(self, start: datetime, end: datetime, inuits_non_members: list = None):
+    #     from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
+
+    #     if not start or not end:
+    #         logger.warn("Start and end date are necessary to filter correctly, returning provided list")
+    #         return inuits_non_members
+
+    #     if inuits_non_members and type:
+    #         return self.filter(
+    #                 Q(temporary_insurances__non_members__inuits_id__in=[str(inuits_non_member.id) for inuits_non_member in inuits_non_members])
+    #                 and Q(temporary_insurances__insurance_parent__start_date__gte=start)
+    #                 and Q(temporary_insurances__insurance_parent__end_date__lte=end)
+    #             )
 
 
 class NonMemberManager(models.Manager):

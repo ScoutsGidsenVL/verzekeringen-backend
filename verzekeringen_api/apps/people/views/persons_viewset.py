@@ -88,7 +88,7 @@ class PersonSearch(viewsets.GenericViewSet):
                         start, end, inuits_non_members)
 
                 inuits_non_members = NonMember.objects.get_queryset().currently_insured(
-                    start, end, [str(inuits_non_member.id) for inuits_non_member in inuits_non_members], type
+                    start, end, inuits_non_members, type
                 )
         logger.debug("InuitsNonMember: %s", ",".join([person.last_name for person in inuits_non_members]))
         
