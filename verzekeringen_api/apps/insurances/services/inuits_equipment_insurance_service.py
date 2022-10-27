@@ -36,7 +36,7 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
             **base_insurance_fields,
         )
 
-        # Save the equipment instances and link them in a template
+        # Save the equipment instances
         for item in equipment:
             # Update if necessary
             # item.full_clean()

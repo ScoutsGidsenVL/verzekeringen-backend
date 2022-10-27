@@ -50,7 +50,7 @@ class InuitsEquipmentSerializer(serializers.ModelSerializer):
         owner_non_member = data.get("owner_non_member", None)
         if not isinstance(owner_non_member, str) and owner_non_member and owner_non_member.get("inuits_id", None):
             data["owner_non_member"] = owner_non_member.get("inuits_id", None)
-            inuits_equipment = InuitsEquipment.objects.all().filter(template__equipment=data.get("id", None)).last()
+            inuits_equipment = InuitsEquipment.objects.all().filter(id=data.get("inuits_id", None)).last()
             if inuits_equipment:
                 data["id"] = inuits_equipment.id
         id = data.get("id", None)

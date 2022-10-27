@@ -81,11 +81,11 @@ class InuitsEquipmentService:
 
         equipment = self.equipment_create(insurance=insurance, inuits_equipment=inuits_equipment)
 
-        equipment_template = InuitsEquipmentTemplate()
-        equipment_template.equipment = equipment
-        equipment_template.inuits_equipment = inuits_equipment
-        equipment_template.full_clean()
-        equipment_template.save()
+        # equipment_template = InuitsEquipmentTemplate()
+        # equipment_template.equipment = equipment
+        # equipment_template.inuits_equipment = inuits_equipment
+        # equipment_template.full_clean()
+        # equipment_template.save()
 
         return equipment
 
@@ -169,13 +169,12 @@ class InuitsEquipmentService:
         inuits_equipment.save()
 
         # Check to see if the scouts Equipment instance can also be updated
-        equipment = InuitsEquipmentTemplate.objects.all().filter(
-            inuits_equipment=inuits_equipment, equipment__in=list(Equipment.objects.all().editable(user=None))
-        )
+        equipment = Equipment.objects.filter(inuits_id=inuits_equipment.id)
+
         # logger.debug("EQUIPMENT: %s", equipment)
 
         for item in equipment:
-            self.equipment_update(equipment=item.equipment, updated_equipment=inuits_equipment)
+            self.equipment_update(equipment=item, updated_equipment=inuits_equipment)
 
         return inuits_equipment
 
@@ -188,7 +187,7 @@ class InuitsEquipmentService:
     ) -> Equipment:
         # equipment.insurance = insurance
         equipment.nature = (
-            updated_equipment.nature if updated_equipment.nature and not updated_equipment.owner_member else None if updated_equipment.owner_member else equipment.nature
+            updated_equipment.nature if updated_equipment.nature else equipment.nature
         )
         equipment.description = (
             updated_equipment.description if updated_equipment.description else equipment.description
