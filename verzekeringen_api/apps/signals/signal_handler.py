@@ -7,8 +7,10 @@ from django.dispatch import receiver
 
 from scouts_auth.auth.services import PermissionService
 from scouts_auth.auth.signals import ScoutsAuthSignalSender, app_ready, authenticated, refreshed
+
 from scouts_auth.groupadmin.models import AbstractScoutsFunction, AbstractScoutsGroup
 from scouts_auth.groupadmin.services import ScoutsAuthorizationService, GroupAdminMemberService
+from scouts_auth.groupadmin.utils import SettingsHelper
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +53,8 @@ class InsuranceSignalHandler:
         
         for function in leader_functions:
             for scouts_group in scouts_groups:
-                if scouts_group.group_admin_id == function.scouts_group.group_admin_id:
-                    function.scouts_group.name = scouts_group.name
+                if (scouts_group.group_admin_id in SettingsHelper.get_administrator_groups() or
+                    scouts_group.group_admin_id == function.scouts_group.group_admin_id):
                     if scouts_group.group_admin_id not in [g.group_admin_id for g in user_scouts_groups]:
                         user_scouts_groups.append(scouts_group)
         
