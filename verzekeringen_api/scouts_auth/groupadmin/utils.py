@@ -51,6 +51,10 @@ class SettingsHelper:
     @staticmethod
     def get_administrator_groups() -> List[str]:
         return settings.KNOWN_ADMIN_GROUPS
+        
+    @staticmethod
+    def get_personnel_group() -> str:
+        return settings.KNOWN_PERSONNEL_GROUP
 
     @staticmethod
     def get_test_groups() -> List[str]:
