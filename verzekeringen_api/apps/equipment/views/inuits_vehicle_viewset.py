@@ -24,7 +24,7 @@ class InuitsVehicleViewSet(viewsets.GenericViewSet):
     service = InuitsVehicleService()
 
     def get_queryset(self):
-        return InuitsVehicle.objects.all().allowed(self.request.user)
+        return InuitsVehicle.objects.all().allowed(self.request.user, self.request.query_params.get("group"))
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: InuitsVehicleSerializer})
     def retrieve(self, request, pk=None):
