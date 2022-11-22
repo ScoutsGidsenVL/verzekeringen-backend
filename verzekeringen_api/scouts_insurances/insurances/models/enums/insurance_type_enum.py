@@ -15,8 +15,11 @@ class InsuranceTypeEnum(models.IntegerChoices):
         if not type:
             return None
 
+        # to be sure, to be sure
+        type = int(type)
+
         for choice in InsuranceTypeEnum.choices:
-            if choice[1] == type:
+            if choice[0] == type:
                 return choice
 
         return None
