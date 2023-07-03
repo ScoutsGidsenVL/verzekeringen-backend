@@ -17,6 +17,6 @@ class TemporaryVehicleInsuranceOptionSerializerField(ChoiceSerializerField):
 
     def to_internal_value(self, data):
         if isinstance(data, list):
-            data = int("".join([str(sub_value) for sub_value in data]))
+            data = int("".join([str(sub_value) for sub_value in data if sub_value]))
 
         return super().to_internal_value(data)
