@@ -32,8 +32,6 @@ class InsuranceMailService(EmailService):
     template_path_end = settings.RESOURCES_MAIL_TEMPLATE_END
 
     insurance_request_template_path = settings.RESOURCES_INSURANCES_TEMPLATE_PATH
-    insurance_request_subject = "Bevestiging aanvraag (((insurance__type))) van (((insurance__start_date))) tot (((insurance__end_date)))"
-    insurance_request_address = ""
 
     file_service = default_storage
 
@@ -47,10 +45,12 @@ class InsuranceMailService(EmailService):
 
         dictionary = self._prepare_insurance_dictionary(insurance)
 
-        subject = self.insurance_request_subject
-        subject = subject.replace("(((insurance__type)))", str(insurance.type.description).lower())
-        subject = subject.replace("(((insurance__start_date)))", str(insurance.start_date.strftime("%d-%m-%Y")).lower())
-        subject = subject.replace("(((insurance__end_date)))", str(insurance.end_date.strftime("%d-%m-%Y")).lower())
+        subject = "Bevestiging aanvraag {} van {} tot {} [Ref {}]".format(
+            str(insurance.type.description).lower(),
+            insurance.start_date.strftime("%d-%m-%Y"),
+            insurance.end_date.strftime("%d-%m-%Y"),
+            insurance.id
+        )
 
         self._send_prepared_insurance_email(
             insurance=insurance,
