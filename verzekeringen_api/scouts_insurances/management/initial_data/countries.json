@@ -11,7 +11,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -47,7 +48,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -89,7 +91,8 @@
     "name": "Armenië",
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
-      "TypeEthiasAssistanceZonderAuto"
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -111,7 +114,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -153,7 +157,8 @@
     "name": "Belarus; Wit-Rusland",
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
-      "TypeEthiasAssistanceZonderAuto"
+      "TypeEthiasAssistanceZonderAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -208,7 +213,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -573,7 +579,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -820,7 +827,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -863,7 +871,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -959,11 +968,12 @@
     ]
   },
   {
-    "name": "Macedonië",
+    "name": "Noord-Macedonië",
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1072,7 +1082,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1080,7 +1091,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1095,7 +1107,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1235,7 +1248,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1381,7 +1395,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1438,7 +1453,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1474,7 +1490,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1690,7 +1707,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1747,7 +1765,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
@@ -1762,7 +1781,8 @@
     "applicable_types": [
       "TypeTijdelijkeVerzekering",
       "TypeEthiasAssistanceZonderAuto",
-      "TypeEthiasAssistanceMetAuto"
+      "TypeEthiasAssistanceMetAuto",
+      "TypeGroepsmateriaalVerzekering"
     ]
   },
   {
