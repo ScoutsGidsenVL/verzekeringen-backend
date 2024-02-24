@@ -1,3 +1,5 @@
+import logging
+
 from requests.exceptions import HTTPError
 
 from rest_framework import status, views, permissions
@@ -10,6 +12,9 @@ from scouts_auth.auth.serializers import (
     TokenSerializer,
 )
 from scouts_auth.auth.exceptions import TokenRequestException
+
+
+logger = logging.getLogger(__name__)
 
 
 class OIDCRefreshView(views.APIView):
@@ -29,8 +34,9 @@ class OIDCRefreshView(views.APIView):
             tokens = self.service.get_tokens_by_refresh_token(
                 user=request.user, refresh_token=data.get("refreshToken")
             )
-        except HTTPError as e:
-            raise TokenRequestException(e)
+        except HTTPError as exc:
+            logger.error("Failed to refresh tokens: {exc}")
+            raise TokenRequestException("Failed to refresh tokens.")
 
         output_serializer = TokenSerializer(tokens)
 
