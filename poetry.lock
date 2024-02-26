@@ -55,6 +55,21 @@ tests-mypy = ["mypy (>=1.6)", "pytest-mypy-plugins"]
 tests-no-zope = ["attrs[tests-mypy]", "cloudpickle", "hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist[psutil]"]
 
 [[package]]
+name = "autoread-dotenv"
+version = "1.0.2"
+description = "Automatically set env-vars at the beginning of every python-process in your in-project virtualenv."
+optional = false
+python-versions = ">=3.8.0"
+files = [
+    {file = "autoread_dotenv-1.0.2-py3-none-any.whl", hash = "sha256:745d3ca5d33714d34ee1993cb2947d8d90c573c5688e911f38a6f38057259d08"},
+    {file = "autoread_dotenv-1.0.2.tar.gz", hash = "sha256:fbc25cbad12d9991825037741bba8a2b748eb7df7c52d99f9eb0e91885a72d73"},
+]
+
+[package.dependencies]
+python-dotenv = ">=1.0.0"
+sitecustomize-entrypoints = ">=1.1.0"
+
+[[package]]
 name = "boto3"
 version = "1.34.50"
 description = "The AWS SDK for Python"
@@ -1675,6 +1690,17 @@ botocore = ">=1.33.2,<2.0a.0"
 crt = ["botocore[crt] (>=1.33.2,<2.0a.0)"]
 
 [[package]]
+name = "sitecustomize-entrypoints"
+version = "1.1.0"
+description = "Sitecustomize-module that executes all correctly registered ``sitecustomize``-entypoints."
+optional = false
+python-versions = ">=3.7.2"
+files = [
+    {file = "sitecustomize-entrypoints-1.1.0.tar.gz", hash = "sha256:8bf9c9f3572e1709331f435a9bffd465320be77d65adda0f82b504594dc507b4"},
+    {file = "sitecustomize_entrypoints-1.1.0-py3-none-any.whl", hash = "sha256:ca80648c58d9ebcad31de46a4726213ae322fe829b285a0105da0eae3f74cb53"},
+]
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -1809,4 +1835,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.10"
-content-hash = "09f2ba59235378f21ed559f877dc772fab6257d5907e77a3db51353e6cda4848"
+content-hash = "c549b09b720ed9b074b7e40808c55941f4e5b747e50655cb5f718d4b542ee826"

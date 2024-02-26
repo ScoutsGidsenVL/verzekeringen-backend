@@ -72,6 +72,7 @@ urllib3 = "1.26.18"
 
 
 [tool.poetry.group.dev.dependencies]
+autoread-dotenv = ">=1.0.2"
 ruff = ">=0.0"
 
 [tool.poetry.group.ipython.dependencies]
@@ -92,6 +93,20 @@ pytest-django = ">=4.5.2"
 pytest-mock = ">=3.6"
 pytest-xdist = ">=3.2"
 # tox = ">=4.0"
+
+
+[tool.pytest.ini_options]
+# cache_dir = "var/cache/pytest"  # relative to $PWD, use PYTEST_CACHE_DIR instead
+log_cli = false                   # enable to show log-output
+log_cli_level = "NOTSET"
+filterwarnings = []
+markers = ["unit", "integration"]
+testpaths = ["tests"]
+# the junit-report is used to report coverage in gitlab
+addopts = "--color=yes --junit-xml='var/coverage/pytest.xml'"
+DJANGO_SETTINGS_MODULE = "verzekeringen_api.settings"
+pythonpath = [".", "verzekeringen_api"]
+
 
 
 [tool.ruff]
