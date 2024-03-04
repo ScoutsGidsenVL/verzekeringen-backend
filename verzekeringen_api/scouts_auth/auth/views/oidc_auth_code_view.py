@@ -4,7 +4,7 @@ from requests.exceptions import HTTPError
 
 from rest_framework import status, views, permissions
 from rest_framework.response import Response
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.auth.services import OIDCService
 from scouts_auth.auth.serializers import (
@@ -33,7 +33,7 @@ class OIDCAuthCodeView(views.APIView):
                 auth_code=data.get("authCode"), redirect_uri=data.get("redirectUri")
             )
         except HTTPError as exc:
-            logger.error("Failed to refresh tokens: {exc}")
+            logger.error(f"Failed to refresh tokens: {exc}")
             raise TokenRequestException("Failed to refresh tokens.")
 
         output_serializer = TokenSerializer(tokens)

@@ -106,7 +106,7 @@ INSTALLED_APPS = [
     "apps.utils",
     "rest_framework",
     "django_filters",
-    "drf_yasg2",
+    "drf_yasg",
     "scouts_auth",
 ]
 

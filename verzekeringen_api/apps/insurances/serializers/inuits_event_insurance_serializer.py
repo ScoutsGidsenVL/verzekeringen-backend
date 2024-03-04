@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
-from drf_yasg2.utils import swagger_serializer_method
+from drf_yasg.utils import swagger_serializer_method
 
 from apps.insurances.models import EventInsuranceAttachment
 from apps.insurances.serializers import EventInsuranceAttachmentSerializer

@@ -4,7 +4,7 @@ from re import I
 
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
-from drf_yasg2.utils import swagger_serializer_method
+from drf_yasg.utils import swagger_serializer_method
 
 from scouts_insurances.people.serializers import MemberSerializer
 from scouts_insurances.insurances.models import BaseInsurance

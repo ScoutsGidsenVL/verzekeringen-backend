@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.response import Response
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 
 from scouts_insurances.insurances.models import InsuranceType
 from scouts_insurances.insurances.serializers import InsuranceTypeSerializer
