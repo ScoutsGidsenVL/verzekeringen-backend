@@ -14,6 +14,7 @@ from scouts_auth.auth.exceptions import TokenRequestException
 
 logger = logging.getLogger(__name__)
 
+
 class OIDCRefreshView(views.APIView):
     permission_classes = [permissions.AllowAny]
     service = OIDCService()

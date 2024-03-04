@@ -1,3 +1,16 @@
+# syntax-documentation:
+#  - https://python-poetry.org/docs/pyproject
+#  - https://flit.readthedocs.io/en/latest/pyproject_toml.html
+#
+# NOTE: you have to use single-quoted strings in TOML for regular expressions.
+# It's the equivalent of r-strings in Python.  Multiline strings are treated as
+# verbose regular expressions by Black.  Use [ ] to denote a significant space
+# character.
+#
+#   > poetry install
+#   > poetry install --only docs
+#   > poetry install (--with|--without) (docs|dev|ipython|profiling|testing|typing)
+
 [build-system]
 requires = ["poetry-core>=1.4.0"]
 build-backend = "poetry.core.masonry.api"
@@ -31,8 +44,7 @@ repository = "https://github.com/ScoutsGidsenVL/verzekeringen-backend"
 keywords = ["django", "scouts", "verzekeringen"]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
-
+python = ">=3.9,<3.10"
 boto3 = ">=1.30"
 django = ">=4.2,<5.0"
 dj-email-url = ">=1.0"
@@ -50,19 +62,16 @@ pdfrw = ">=0.4"
 psycopg2-binary = ">=2.9"
 pyjwt = ">=2.3"
 PyYAML = ">=6.0"
+# scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}  # @TODO
 urllib3= "1.26.18"
-# urllib3= ">=1.26.18"
-
-# @TODO
-#scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}
 
 [tool.poetry.dev-dependencies]
+autoread-dotenv = ">=1.0.2"
 ruff = ">=0.0"
 
 [tool.poetry.group.ipython.dependencies]
 ipdb = ">=0.13"
 ipython = ">=8.18"
-autoread-dotenv = ">=1.0.2"
 
 [tool.poetry.group.testing.dependencies]
 coverage = { extras = ["toml"], version = ">=6.2" }
@@ -77,7 +86,7 @@ pytest-click = ">=1.1"
 pytest-django = ">=4.5.2"
 pytest-mock = ">=3.6"
 pytest-xdist = ">=3.2"
-tox = ">=4.0"
+# tox = ">=4.0"
 
 
 [tool.pytest.ini_options]
