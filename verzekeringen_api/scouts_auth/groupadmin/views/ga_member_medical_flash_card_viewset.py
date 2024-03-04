@@ -2,7 +2,7 @@ import logging
 
 from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import action
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import AbstractScoutsMedicalFlashCard
 from scouts_auth.groupadmin.serializers import AbstractScoutsMedicalFlashCardSerializer

@@ -3,7 +3,7 @@ import logging, requests
 from django.conf import settings
 from django.http import Http404
 from rest_framework import status
-from drf_yasg2.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 
 from scouts_auth.groupadmin.models import (
     ScoutsAllowedCalls,
