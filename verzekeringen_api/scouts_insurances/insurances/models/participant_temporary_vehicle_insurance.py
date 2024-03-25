@@ -1,8 +1,8 @@
 from django.db import models
 
-from scouts_insurances.people.models import NonMember
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.models.enums import TemporaryVehicleParticipantType
+from scouts_insurances.people.models import NonMember
 
 
 class ParticipantTemporaryVehicleInsurance(models.Model):

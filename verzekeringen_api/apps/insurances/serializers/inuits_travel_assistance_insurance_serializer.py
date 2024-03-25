@@ -1,10 +1,8 @@
 import logging
 
 from apps.people.serializers import InuitsNonMemberSerializer
-
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
 from scouts_insurances.insurances.serializers import TravelAssistanceInsuranceSerializer
-
 
 logger = logging.getLogger(__name__)
 

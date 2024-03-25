@@ -1,10 +1,7 @@
+from scouts_auth.inuits.models.fields import OptionalCharField
 from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle
 from scouts_insurances.equipment.models.enums import TemporaryVehicleInsuranceVehicleTrailerOption
 from scouts_insurances.insurances.models import VehicleRelatedInsurance
-
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-)
 
 
 class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):

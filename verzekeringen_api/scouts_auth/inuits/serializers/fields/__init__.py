@@ -1,12 +1,12 @@
 from .choice_serializer_field import ChoiceSerializerField
-from .multiple_choice_serializer_field import MultipleChoiceSerializerField
 from .fields import (
     OptionalCharField,
-    OptionalIntegerField,
-    RequiredIntegerField,
     OptionalChoiceField,
-    RequiredYearField,
     OptionalDateField,
     OptionalDateTimeField,
+    OptionalIntegerField,
+    RequiredIntegerField,
+    RequiredYearField,
 )
+from .multiple_choice_serializer_field import MultipleChoiceSerializerField
 from .recursive_serializer_field import RecursiveSerializerField

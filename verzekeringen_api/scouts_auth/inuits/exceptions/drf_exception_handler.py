@@ -6,7 +6,6 @@ from rest_framework.views import exception_handler
 
 from scouts_auth.inuits.mail import EmailServiceException
 
-
 logger = logging.getLogger(__name__)
 
 

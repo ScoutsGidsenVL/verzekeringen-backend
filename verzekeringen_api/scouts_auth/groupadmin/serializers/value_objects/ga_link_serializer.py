@@ -2,9 +2,7 @@ import logging
 from typing import List
 
 from scouts_auth.groupadmin.models import AbstractScoutsLink
-
 from scouts_auth.inuits.serializers import NonModelSerializer
-
 
 logger = logging.getLogger(__name__)
 

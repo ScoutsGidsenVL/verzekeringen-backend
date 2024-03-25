@@ -1,10 +1,8 @@
 from django.db import models
 
 from apps.insurances.managers import InsuranceDraftManager
-
-from scouts_insurances.insurances.models import InsuranceType
-
 from scouts_auth.inuits.models import AuditedBaseModel
+from scouts_insurances.insurances.models import InsuranceType
 
 
 class InsuranceDraft(AuditedBaseModel):

@@ -1,8 +1,8 @@
-import os, logging
+import logging
+import os
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-
 
 logger = logging.getLogger(__name__)
 

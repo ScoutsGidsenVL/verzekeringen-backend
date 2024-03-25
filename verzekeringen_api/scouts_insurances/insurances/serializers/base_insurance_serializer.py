@@ -3,21 +3,16 @@ from decimal import Decimal
 from re import I
 
 from django.core.exceptions import ValidationError
-from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
-
-from scouts_insurances.people.serializers import MemberSerializer
-from scouts_insurances.insurances.models import BaseInsurance
-from scouts_insurances.insurances.serializers import (
-    InsuranceTypeSerializer,
-    InsuranceCostSerializer,
-)
+from rest_framework import serializers
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
 from scouts_auth.inuits.serializers import DatetypeAndTimezoneAwareDateTimeSerializerField
-
+from scouts_insurances.insurances.models import BaseInsurance
+from scouts_insurances.insurances.serializers import InsuranceCostSerializer, InsuranceTypeSerializer
+from scouts_insurances.people.serializers import MemberSerializer
 
 logger = logging.getLogger(__name__)
 

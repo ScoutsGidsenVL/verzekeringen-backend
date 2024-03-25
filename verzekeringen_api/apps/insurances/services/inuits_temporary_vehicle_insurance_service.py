@@ -1,21 +1,19 @@
 import logging
 from typing import List
 
-from django.db import transaction
 from django.conf import settings
+from django.db import transaction
 
 from apps.people.models import InuitsNonMember
 from apps.people.services import InuitsNonMemberService
-
 from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle
 from scouts_insurances.insurances.models import (
-    TemporaryVehicleInsurance,
     InsuranceType,
     ParticipantTemporaryVehicleInsurance,
+    TemporaryVehicleInsurance,
 )
 from scouts_insurances.insurances.models.enums import TemporaryVehicleParticipantType
 from scouts_insurances.insurances.services import TemporaryVehicleInsuranceService
-
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +65,6 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
 
             driver_insurance.full_clean()
             driver_insurance.save()
-       
 
         # Check if owner is a company and change fields to non member
         # if owner.get("company_name"):
@@ -77,7 +74,6 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
         if owner.company_name:
             owner.first_name = settings.COMPANY_NON_MEMBER_DEFAULT_FIRST_NAME
             owner.last_name = owner.company_name
-
 
         owner = self.non_member_service.linked_non_member_create(
             inuits_non_member=owner, created_by=base_insurance_fields.get("created_by")
@@ -92,7 +88,9 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
         insurance.full_clean()
         insurance.save()
 
-        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("responsible_member"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, created_by=base_insurance_fields.get("responsible_member")
+        )
 
         return insurance
 
@@ -100,7 +98,6 @@ class InuitsTemporaryVehicleInsuranceService(TemporaryVehicleInsuranceService):
     def temporary_vehicle_insurance_update(
         self, *, insurance: TemporaryVehicleInsurance, **fields
     ) -> TemporaryVehicleInsurance:
-
 
         # For this update we just delete the old one and create a new one with the given fields (but same id)
         # Bit of a cheat but it matches expectations of customer

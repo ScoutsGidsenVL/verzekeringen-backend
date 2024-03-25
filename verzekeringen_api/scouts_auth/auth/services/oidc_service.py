@@ -3,10 +3,9 @@ from datetime import datetime
 
 from django.conf import settings
 
-from scouts_auth.auth.utils import SettingsHelper
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
+from scouts_auth.auth.utils import SettingsHelper
 from scouts_auth.groupadmin.services import GroupAdmin
-
 
 logger = logging.getLogger(__name__)
 

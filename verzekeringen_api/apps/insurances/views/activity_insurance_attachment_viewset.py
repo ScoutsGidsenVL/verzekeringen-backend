@@ -1,22 +1,21 @@
 import datetime
 import logging
 
+from django.core.exceptions import ValidationError
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.core.exceptions import ValidationError
-from rest_framework import status, serializers, viewsets, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
+from drf_yasg.openapi import TYPE_ARRAY, TYPE_FILE, TYPE_OBJECT, TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_FILE, TYPE_ARRAY
+from rest_framework import permissions, serializers, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from apps.insurances.models import ActivityInsuranceAttachment
 from apps.insurances.serializers import (
-    ActivityInsuranceAttachmentUploadSerializer,
     ActivityInsuranceAttachmentSerializer,
+    ActivityInsuranceAttachmentUploadSerializer,
 )
 from apps.insurances.services import ActivityInsuranceAttachmentService
-
 from scouts_insurances.insurances.models import ActivityInsurance
 
 responses = {

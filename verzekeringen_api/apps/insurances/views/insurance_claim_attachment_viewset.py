@@ -1,19 +1,16 @@
 import logging
 
+from django.core.exceptions import ValidationError
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.core.exceptions import ValidationError
-from rest_framework import status, serializers, viewsets, permissions
-from rest_framework.response import Response
+from drf_yasg.openapi import TYPE_ARRAY, TYPE_FILE, TYPE_OBJECT, TYPE_STRING, Schema
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_FILE, TYPE_ARRAY
+from rest_framework import permissions, serializers, status, viewsets
+from rest_framework.response import Response
 
 from apps.insurances.models import InsuranceClaimAttachment
+from apps.insurances.serializers import InsuranceClaimAttachmentSerializer, InsuranceClaimAttachmentUploadSerializer
 from apps.insurances.services import InsuranceClaimAttachmentService
-from apps.insurances.serializers import (
-    InsuranceClaimAttachmentUploadSerializer,
-    InsuranceClaimAttachmentSerializer,
-)
 
 responses = {
     status.HTTP_400_BAD_REQUEST: Schema(type=TYPE_ARRAY, items=Schema(type=TYPE_STRING)),

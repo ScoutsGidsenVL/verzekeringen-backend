@@ -2,17 +2,12 @@ import logging
 
 from django.conf import settings
 
-from apps.people.models import InuitsClaimVictim
+from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
 from apps.insurances.utils import InuitsInsuranceSettingsHelper
-from apps.insurances.models import (
-    InsuranceClaim,
-    InsuranceClaimAttachment,
-)
-
-from scouts_insurances.insurances.services import InsuranceMailService
-
+from apps.people.models import InuitsClaimVictim
 from scouts_auth.inuits.mail import Email, EmailAttachment
 from scouts_auth.inuits.utils import TextUtils
+from scouts_insurances.insurances.services import InsuranceMailService
 
 logger = logging.getLogger(__name__)
 

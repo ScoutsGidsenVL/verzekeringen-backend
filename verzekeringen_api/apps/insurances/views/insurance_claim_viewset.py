@@ -1,31 +1,28 @@
 import logging
 
-from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status, filters, parsers, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters, parsers, permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
-from apps.insurances.serializers import (
-    InsuranceClaimAttachmentUploadSerializer,
-    InsuranceClaimSerializer,
-    InsuranceClaimCreateDataSerializer,
-)
 from apps.insurances.filters import InsuranceClaimFilter
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.permissions import InsuranceClaimsPermission
+from apps.insurances.serializers import (
+    InsuranceClaimAttachmentUploadSerializer,
+    InsuranceClaimCreateDataSerializer,
+    InsuranceClaimSerializer,
+)
 from apps.insurances.services import InsuranceClaimService
-
-from scouts_auth.auth.permissions import CustomDjangoPermission
-
-from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
-from scouts_auth.groupadmin.services import GroupAdmin
-from scouts_auth.inuits.utils import MultipartJsonParser
-from scouts_auth.inuits.files import StorageService
 from apps.utils.utils import AuthenticationHelper
-
+from scouts_auth.auth.permissions import CustomDjangoPermission
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
+from scouts_auth.groupadmin.services import GroupAdmin
+from scouts_auth.inuits.files import StorageService
+from scouts_auth.inuits.utils import MultipartJsonParser
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +35,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         "victim__last_name",
         "group_group_admin_id",
         "victim__group_admin_id",
-        "victim__membership_number"
+        "victim__membership_number",
     ]
     ordering_fields = ["created_on"]
     ordering = ["-date_of_accident", "-created_on"]
@@ -81,7 +78,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     def get_create_data(self, request, *args, **kwargs):
         user: settings.AUTH_USER_MODEL = request.user
         # @TODO also for group leader groups
-        #permitted_scouts_groups = user.get_section_leader_groups()
+        # permitted_scouts_groups = user.get_section_leader_groups()
         permitted_scouts_groups = user.scouts_groups
 
         data = {"permitted_scouts_groups": permitted_scouts_groups}
@@ -116,7 +113,6 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         insurance_claim: InsuranceClaim = self.service.create(
             created_by=request.user, file=file_serializer_data, **validated_data
         )
-
 
         # There doesn't seem to be a good way to avoid doing this here
         declarant_member: AbstractScoutsMember = self.group_admin_service.get_member_info(
@@ -154,7 +150,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
     )
     def partial_update(self, request, pk=None):
         claim = self.get_object()
-        AuthenticationHelper.has_rights_for_group(request.user,  claim.group_group_admin_id)
+        AuthenticationHelper.has_rights_for_group(request.user, claim.group_group_admin_id)
         serializer = InsuranceClaimSerializer(
             data=request.data, instance=InsuranceClaim, context={"request": request}, partial=True
         )
@@ -185,7 +181,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         return new_claims
 
     def _filter_fields_in_claim(self, claim):
-        fields_to_show = ['id', 'date_of_accident', 'group', 'declarant', 'victim']
+        fields_to_show = ["id", "date_of_accident", "group", "declarant", "victim"]
         new_claim = dict()
         for claim_item in claim:
             if claim_item in fields_to_show:
@@ -194,9 +190,9 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
 
     def _filter_nested_fields_in_claim(self, claim_item_key, claim_item):
         nested_fields_to_show = {
-            'victim': ['first_name', 'last_name', 'membership_number'],
-            'declarant': ['first_name', 'last_name', 'membership_number'],
-            'group': ['email', 'full_name', 'group_admin_id', 'name', 'number']
+            "victim": ["first_name", "last_name", "membership_number"],
+            "declarant": ["first_name", "last_name", "membership_number"],
+            "group": ["email", "full_name", "group_admin_id", "name", "number"],
         }
         if claim_item_key in nested_fields_to_show:
             new_claim_item = dict()

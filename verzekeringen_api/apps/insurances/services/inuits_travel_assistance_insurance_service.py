@@ -4,11 +4,9 @@ from django.conf import settings
 from django.db import transaction
 
 from apps.people.services import InuitsNonMemberService
-
 from scouts_insurances.equipment.models import TravelAssistanceVehicle
-from scouts_insurances.insurances.models import TravelAssistanceInsurance, InsuranceType
+from scouts_insurances.insurances.models import InsuranceType, TravelAssistanceInsurance
 from scouts_insurances.insurances.services import TravelAssistanceInsuranceService
-
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +54,7 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         # result = Country.objects.by_insurance_type_id(insurance.country.name)
         if insurance.country:
             insurance.country = insurance.country.name
-            
+
         insurance.full_clean()
         insurance.save()
 
@@ -72,7 +70,9 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         insurance.full_clean()
         insurance.save()
 
-        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("responsible_member"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, created_by=base_insurance_fields.get("responsible_member")
+        )
 
         return insurance
 

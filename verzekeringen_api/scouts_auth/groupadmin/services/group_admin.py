@@ -1,34 +1,33 @@
-import logging, requests
+import logging
 
+import requests
 from django.conf import settings
 from django.http import Http404
-from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 
 from scouts_auth.groupadmin.models import (
-    ScoutsAllowedCalls,
     AbstractScoutsFunction,
     AbstractScoutsFunctionListResponse,
     AbstractScoutsGroup,
     AbstractScoutsGroupListResponse,
-    AbstractScoutsMemberSearchResponse,
     AbstractScoutsMember,
     AbstractScoutsMemberListResponse,
+    AbstractScoutsMemberSearchResponse,
+    ScoutsAllowedCalls,
 )
 from scouts_auth.groupadmin.serializers import (
-    ScoutsAllowedCallsSerializer,
-    AbstractScoutsFunctionSerializer,
     AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsGroupSerializer,
+    AbstractScoutsFunctionSerializer,
     AbstractScoutsGroupListResponseSerializer,
-    AbstractScoutsMemberSearchResponseSerializer,
-    AbstractScoutsMemberListResponseSerializer,
-    AbstractScoutsMemberSerializer,
+    AbstractScoutsGroupSerializer,
     AbstractScoutsMemberFrontendSerializer,
+    AbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberSearchResponseSerializer,
+    AbstractScoutsMemberSerializer,
+    ScoutsAllowedCallsSerializer,
 )
-
 from scouts_auth.groupadmin.utils import SettingsHelper
-
 
 logger = logging.getLogger(__name__)
 

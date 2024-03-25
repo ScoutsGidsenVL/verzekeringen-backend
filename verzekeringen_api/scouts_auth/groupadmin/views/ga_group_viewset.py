@@ -1,14 +1,13 @@
 import logging
 
-from rest_framework import status, viewsets, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsGroupListResponse
-from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer, AbstractScoutsGroupListResponseSerializer
+from scouts_auth.groupadmin.serializers import AbstractScoutsGroupListResponseSerializer, AbstractScoutsGroupSerializer
 from scouts_auth.groupadmin.services import GroupAdmin
-
 
 logger = logging.getLogger(__name__)
 

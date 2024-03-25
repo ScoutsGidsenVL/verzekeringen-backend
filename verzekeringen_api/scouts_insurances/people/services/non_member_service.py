@@ -17,7 +17,7 @@ class NonMemberService:
         postal_code: int = None,
         city: str = None,
         comment: str = None,
-        inuits_id: str = None
+        inuits_id: str = None,
     ) -> NonMember:
         non_member = NonMember(
             inuits_id=inuits_id,

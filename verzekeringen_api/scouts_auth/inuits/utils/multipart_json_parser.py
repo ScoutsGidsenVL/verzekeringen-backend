@@ -1,7 +1,7 @@
-import logging, json
+import json
+import logging
 
 from rest_framework import parsers
-
 
 logger = logging.getLogger(__name__)
 

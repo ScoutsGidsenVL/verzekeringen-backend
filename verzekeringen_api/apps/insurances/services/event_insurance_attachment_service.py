@@ -1,4 +1,5 @@
-import logging, os
+import logging
+import os
 
 from django.core.files.base import File
 from django.core.files.storage import default_storage

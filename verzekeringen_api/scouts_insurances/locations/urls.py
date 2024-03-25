@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from scouts_insurances.locations.views import CountryViewSet, BelgianPostalCodeCitySearch
+from scouts_insurances.locations.views import BelgianPostalCodeCitySearch, CountryViewSet
 
 router = routers.SimpleRouter()
 router.register(r"", CountryViewSet, "Country")

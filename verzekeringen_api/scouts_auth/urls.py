@@ -1,11 +1,7 @@
-from django.urls import path
 from django.conf.urls import include
+from django.urls import path
 
-from scouts_auth.auth.views import (
-    CurrentUserView,
-    OIDCAuthCodeView,
-    OIDCRefreshView,
-)
+from scouts_auth.auth.views import CurrentUserView, OIDCAuthCodeView, OIDCRefreshView
 
 urlpatterns = [
     # The infamous "me" call

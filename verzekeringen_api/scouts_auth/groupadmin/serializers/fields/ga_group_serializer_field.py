@@ -5,7 +5,6 @@ from rest_framework import serializers
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.groupadmin.services import GroupAdmin
 
-
 logger = logging.getLogger(__name__)
 
 

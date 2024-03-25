@@ -1,19 +1,16 @@
 import logging
 
 from django.conf import settings
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
-
-from scouts_insurances.people.models import Member
-from scouts_insurances.insurances.models import InsuranceType
-from scouts_insurances.insurances.models.enums import InsuranceStatus
-from scouts_insurances.insurances.managers import BaseInsuranceManager
-
-from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsAddress
+from scouts_auth.groupadmin.models import AbstractScoutsAddress, AbstractScoutsGroup
 from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField
 from scouts_auth.inuits.utils import BooleanParser
-
+from scouts_insurances.insurances.managers import BaseInsuranceManager
+from scouts_insurances.insurances.models import InsuranceType
+from scouts_insurances.insurances.models.enums import InsuranceStatus
+from scouts_insurances.people.models import Member
 
 logger = logging.getLogger(__name__)
 

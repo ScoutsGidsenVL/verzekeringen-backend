@@ -2,7 +2,6 @@ from django.db import models
 
 from apps.people.managers import InuitsNonMemberTemplateManager
 from apps.people.models import InuitsNonMember
-
 from scouts_insurances.people.models import NonMember
 
 

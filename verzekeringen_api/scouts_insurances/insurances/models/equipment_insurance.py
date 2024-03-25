@@ -1,9 +1,8 @@
-from django.db import models
 from django.core.exceptions import ValidationError
-
-from scouts_insurances.locations.models import Country
+from django.db import models
 
 from scouts_insurances.insurances.models import BaseInsurance
+from scouts_insurances.locations.models import Country
 
 
 class EquipmentInsurance(BaseInsurance):

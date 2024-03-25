@@ -4,7 +4,6 @@ from rest_framework import serializers
 
 from scouts_auth.inuits.models import InuitsAddress
 
-
 logger = logging.getLogger(__name__)
 
 

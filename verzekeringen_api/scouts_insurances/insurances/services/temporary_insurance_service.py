@@ -1,12 +1,10 @@
 import logging
-
 from decimal import Decimal
 
 from django.db import transaction
 
-from scouts_insurances.insurances.models import TemporaryInsurance, InsuranceType, CostVariable
+from scouts_insurances.insurances.models import CostVariable, InsuranceType, TemporaryInsurance
 from scouts_insurances.insurances.services import BaseInsuranceService
-
 
 logger = logging.getLogger(__name__)
 

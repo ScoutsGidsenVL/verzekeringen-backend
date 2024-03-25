@@ -1,17 +1,15 @@
 import logging
 
 from django.conf import settings
-from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 
-from apps.people.services import InuitsNonMemberService
 from apps.equipment.models import InuitsEquipment, InuitsEquipmentTemplate
-
+from apps.people.services import InuitsNonMemberService
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import EquipmentInsurance
-
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
-from scouts_insurances.people.models import NonMember, Member
+from scouts_insurances.people.models import Member, NonMember
 from scouts_insurances.people.services.member_service import MemberService
 
 logger = logging.getLogger(__name__)
@@ -23,7 +21,7 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def inuits_equipment_create(
-            self, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
+        self, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
     ) -> InuitsEquipment:
         # Check if the instance already exists
         create = True
@@ -72,7 +70,7 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def linked_equipment_create(
-            self, insurance: EquipmentInsurance, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
+        self, insurance: EquipmentInsurance, inuits_equipment: InuitsEquipment, created_by: settings.AUTH_USER_MODEL
     ) -> Equipment:
         """
         Creates an Equipment instance.
@@ -91,9 +89,9 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def equipment_create(
-            self,
-            insurance: EquipmentInsurance,
-            inuits_equipment: InuitsEquipment,
+        self,
+        insurance: EquipmentInsurance,
+        inuits_equipment: InuitsEquipment,
     ) -> Equipment:
         equipment = Equipment(
             inuits_id=inuits_equipment.id,
@@ -112,7 +110,7 @@ class InuitsEquipmentService:
                 birth_date=inuits_equipment.owner_member.birth_date,
                 email=inuits_equipment.owner_member.email,
                 membership_number=inuits_equipment.owner_member.membership_number,
-                group_admin_id=inuits_equipment.owner_member.group_admin_id
+                group_admin_id=inuits_equipment.owner_member.group_admin_id,
             )
         equipment.full_clean()
         equipment.save()
@@ -121,11 +119,11 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def inuits_equipment_update(
-            self,
-            *,
-            inuits_equipment: InuitsEquipment,
-            updated_inuits_equipment: InuitsEquipment,
-            updated_by: settings.AUTH_USER_MODEL,
+        self,
+        *,
+        inuits_equipment: InuitsEquipment,
+        updated_inuits_equipment: InuitsEquipment,
+        updated_by: settings.AUTH_USER_MODEL,
     ) -> InuitsEquipment:
         # logger.debug("UPDATED EQUIPMENT: %s", updated_inuits_equipment)
         if inuits_equipment.equals(updated_inuits_equipment):
@@ -146,14 +144,10 @@ class InuitsEquipmentService:
             else inuits_equipment.total_value
         )
         inuits_equipment.owner_non_member = (
-            updated_inuits_equipment.owner_non_member
-            if updated_inuits_equipment.owner_non_member
-            else None
+            updated_inuits_equipment.owner_non_member if updated_inuits_equipment.owner_non_member else None
         )
         inuits_equipment.owner_member = (
-            updated_inuits_equipment.owner_member.group_admin_id
-            if updated_inuits_equipment.owner_member
-            else None
+            updated_inuits_equipment.owner_member.group_admin_id if updated_inuits_equipment.owner_member else None
         )
         if updated_inuits_equipment.owner_group:
             if isinstance(updated_inuits_equipment.owner_group, AbstractScoutsGroup):
@@ -180,26 +174,36 @@ class InuitsEquipmentService:
 
     @transaction.atomic
     def equipment_update(
-            self,
-            *,
-            equipment: Equipment,
-            updated_equipment: InuitsEquipment,
+        self,
+        *,
+        equipment: Equipment,
+        updated_equipment: InuitsEquipment,
     ) -> Equipment:
         # equipment.insurance = insurance
-        equipment.nature = (
-            updated_equipment.nature if updated_equipment.nature else equipment.nature
-        )
+        equipment.nature = updated_equipment.nature if updated_equipment.nature else equipment.nature
         equipment.description = (
             updated_equipment.description if updated_equipment.description else equipment.description
         )
         equipment.total_value = (
             updated_equipment.total_value if updated_equipment.total_value else equipment.total_value
         )
-        owner_non_member = NonMember.objects.all().filter(inuits_id=updated_equipment.owner_non_member.id).last() if updated_equipment.owner_non_member else None
-        equipment.owner_non_member = (
-            owner_non_member
+        owner_non_member = (
+            NonMember.objects.all().filter(inuits_id=updated_equipment.owner_non_member.id).last()
+            if updated_equipment.owner_non_member
+            else None
         )
-        owner_member = Member.objects.filter(group_admin_id=updated_equipment.owner_member if isinstance(updated_equipment.owner_member, str) else updated_equipment.owner_member.group_admin_id).last() if updated_equipment.owner_member else None
+        equipment.owner_non_member = owner_non_member
+        owner_member = (
+            Member.objects.filter(
+                group_admin_id=(
+                    updated_equipment.owner_member
+                    if isinstance(updated_equipment.owner_member, str)
+                    else updated_equipment.owner_member.group_admin_id
+                )
+            ).last()
+            if updated_equipment.owner_member
+            else None
+        )
         equipment.owner_member = owner_member
 
         equipment.owner_group = (

@@ -2,13 +2,12 @@ import logging
 from typing import List
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Q
-from django.core.exceptions import ValidationError
 
 from apps.equipment.models import InuitsEquipment
 from apps.equipment.services import InuitsEquipmentService
-
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.insurances.models import EquipmentInsurance
 from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
@@ -48,7 +47,9 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
         insurance.total_cost = self._calculate_total_cost(insurance)
         insurance.full_clean()
         insurance.save()
-        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("created_by"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, created_by=base_insurance_fields.get("created_by")
+        )
 
         return insurance
 
@@ -59,7 +60,14 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
         insurance.nature = fields.get("nature", insurance.nature)
         insurance.postal_code = fields.get("postal_code", None)
         insurance.city = fields.get("city", None)
-        insurance.country = fields.get("country", insurance.country if insurance.country and insurance.city is None and insurance.postal_code is None else None)
+        insurance.country = fields.get(
+            "country",
+            (
+                insurance.country
+                if insurance.country and insurance.city is None and insurance.postal_code is None
+                else None
+            ),
+        )
 
         insurance.full_clean()
         insurance.save()

@@ -1,13 +1,12 @@
-import logging, uuid
+import logging
+import uuid
 
 from rest_framework import serializers
 
 from apps.people.models import InuitsNonMember
-
 from scouts_auth.inuits.models.enums import Gender
 from scouts_auth.inuits.serializers import InuitsPersonSerializer
 from scouts_auth.inuits.serializers.fields import OptionalCharField
-
 
 logger = logging.getLogger(__name__)
 

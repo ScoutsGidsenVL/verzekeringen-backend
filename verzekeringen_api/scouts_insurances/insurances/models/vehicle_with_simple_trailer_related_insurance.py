@@ -1,12 +1,9 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
+from scouts_auth.inuits.models.fields import OptionalIntegerField
 from scouts_insurances.equipment.models import TravelAssistanceVehicle
 from scouts_insurances.equipment.models.enums import TravelAssistanceVehicleTrailerOption
 from scouts_insurances.insurances.models import VehicleRelatedInsurance
-
-from scouts_auth.inuits.models.fields import (
-    OptionalIntegerField,
-)
 
 
 class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
@@ -67,4 +64,3 @@ class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
 
     def vehicle_with_simple_trailer_to_str_mail(self):
         return f"Type: {self._vehicle_type.lower()}, Merk: {self._vehicle_brand}, Nummerplaat: {self._vehicle_license_plate}, Bouwjaar: {self._vehicle_construction_year}, Chassisnummer: {self._vehicle_chassis_number}, Aanhangwagen: {'ja' if self._vehicle_trailer == 1 else 'nee'}"
-

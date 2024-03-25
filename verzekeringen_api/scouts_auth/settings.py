@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os, logging.config
+import logging.config
+import os
+
 from environs import Env
 
 # Load the .env file

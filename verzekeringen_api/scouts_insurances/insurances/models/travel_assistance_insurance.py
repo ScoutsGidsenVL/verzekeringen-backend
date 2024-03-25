@@ -1,9 +1,8 @@
 from django.db import models
-
 from rest_framework import serializers
 
-from scouts_insurances.people.models import NonMember
 from scouts_insurances.insurances.models import BaseInsurance, VehicleWithSimpleTrailerRelatedInsurance
+from scouts_insurances.people.models import NonMember
 
 
 class TravelAssistanceInsurance(VehicleWithSimpleTrailerRelatedInsurance, BaseInsurance):

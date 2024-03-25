@@ -1,26 +1,25 @@
-import logging, requests
+import logging
 
+import requests
 from django.http import Http404
 
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsMemberPersonalData,
-    AbstractScoutsMemberGroupAdminData,
-    AbstractScoutsMemberScoutsData,
-    AbstractScoutsMember,
     AbstractScoutsAddress,
+    AbstractScoutsMember,
+    AbstractScoutsMemberGroupAdminData,
+    AbstractScoutsMemberPersonalData,
+    AbstractScoutsMemberScoutsData,
 )
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsContactSerializer,
     AbstractScoutsAddressSerializer,
+    AbstractScoutsContactSerializer,
     AbstractScoutsFunctionSerializer,
     AbstractScoutsGroupSerializer,
     AbstractScoutsGroupSpecificFieldSerializer,
+    AbstractScoutsLinkSerializer,
 )
-
 from scouts_auth.inuits.models import GenderHelper
 from scouts_auth.inuits.serializers import NonModelSerializer
-
 
 logger = logging.getLogger(__name__)
 

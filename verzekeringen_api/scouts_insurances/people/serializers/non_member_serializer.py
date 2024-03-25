@@ -2,9 +2,8 @@ import sys
 
 from rest_framework import serializers
 
-from scouts_insurances.people.models import NonMember
-
 from scouts_auth.inuits.serializers import DatetypeAwareDateSerializerField
+from scouts_insurances.people.models import NonMember
 
 
 class NonMemberSerializer(serializers.ModelSerializer):

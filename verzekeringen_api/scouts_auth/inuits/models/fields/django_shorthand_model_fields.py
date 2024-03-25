@@ -1,8 +1,9 @@
-import warnings, ast
+import ast
+import warnings
 from typing import Iterable
 
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
 from scouts_auth.inuits.models.fields import DatetypeAwareDateField
 

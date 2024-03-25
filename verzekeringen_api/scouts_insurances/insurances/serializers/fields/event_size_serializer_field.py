@@ -1,10 +1,8 @@
 import logging
 
-from scouts_insurances.insurances.models.enums import EventSize
-
 from scouts_auth.inuits.serializers import EnumSerializer
 from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
-
+from scouts_insurances.insurances.models.enums import EventSize
 
 logger = logging.getLogger(__name__)
 

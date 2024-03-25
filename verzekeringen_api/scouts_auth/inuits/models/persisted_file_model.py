@@ -5,7 +5,6 @@ from django.db import models
 from scouts_auth.inuits.files.validators import validate_file_extension
 from scouts_auth.inuits.models import AuditedBaseModel
 
-
 logger = logging.getLogger(__name__)
 
 

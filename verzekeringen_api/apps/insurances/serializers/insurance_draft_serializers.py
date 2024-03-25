@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from apps.insurances.models import InsuranceDraft
-
 from scouts_insurances.insurances.models import InsuranceType
 from scouts_insurances.insurances.serializers import InsuranceTypeSerializer
 

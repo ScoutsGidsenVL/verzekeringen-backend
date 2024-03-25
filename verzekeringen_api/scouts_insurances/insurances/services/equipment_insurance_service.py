@@ -6,12 +6,10 @@ from django.db import transaction
 from django.db.models import Q
 
 from scouts_insurances.equipment.models import Equipment
-
-from scouts_insurances.locations.models import Country
-from scouts_insurances.insurances.models import EquipmentInsurance, InsuranceType, CostVariable
+from scouts_insurances.insurances.models import CostVariable, EquipmentInsurance, InsuranceType
 from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.services import BaseInsuranceService
-
+from scouts_insurances.locations.models import Country
 
 logger = logging.getLogger(__name__)
 

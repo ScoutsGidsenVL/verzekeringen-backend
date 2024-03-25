@@ -1,26 +1,27 @@
 import logging
 
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, filters, permissions
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
-
-from apps.people.services import InuitsNonMemberService
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.response import Response
 
 from apps.insurances.serializers import (
+    InuitsActivityInsuranceSerializer,
+    InuitsEquipmentInsuranceSerializer,
+    InuitsEventInsuranceSerializer,
     InuitsTemporaryInsuranceSerializer,
-    InuitsTravelAssistanceInsuranceSerializer,
     InuitsTemporaryVehicleInsuranceSerializer,
-    InuitsEquipmentInsuranceSerializer, InuitsEventInsuranceSerializer, InuitsActivityInsuranceSerializer,
+    InuitsTravelAssistanceInsuranceSerializer,
 )
-
+from apps.people.services import InuitsNonMemberService
 from scouts_insurances.insurances.models import BaseInsurance
 from scouts_insurances.insurances.serializers import (
-    BaseInsuranceSerializer,
     ActivityInsuranceSerializer,
-    EventInsuranceSerializer, TemporaryInsuranceSerializer, EquipmentInsuranceSerializer,
+    BaseInsuranceSerializer,
+    EquipmentInsuranceSerializer,
+    EventInsuranceSerializer,
+    TemporaryInsuranceSerializer,
 )
-
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +50,7 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
             or insurance.type.is_equipment_insurance()
         ):
             if insurance.type.is_temporary_insurance():
-                serializer = TemporaryInsuranceSerializer(
-                    insurance.temporary_child, context={"request": request}
-                )
+                serializer = TemporaryInsuranceSerializer(insurance.temporary_child, context={"request": request})
             elif (
                 insurance.type.is_travel_assistance_without_vehicle_insurance()
                 or insurance.type.is_travel_assistance_with_vehicle_insurance()
@@ -64,9 +63,7 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
                     insurance.temporary_vehicle_child, context={"request": request}
                 )
             elif insurance.type.is_equipment_insurance():
-                serializer = EquipmentInsuranceSerializer(
-                    insurance.equipment_child, context={"request": request}
-                )
+                serializer = EquipmentInsuranceSerializer(insurance.equipment_child, context={"request": request})
         elif insurance.type.is_activity_insurance():
             serializer = InuitsActivityInsuranceSerializer(insurance.activity_child, context={"request": request})
         elif insurance.type.is_event_insurance():

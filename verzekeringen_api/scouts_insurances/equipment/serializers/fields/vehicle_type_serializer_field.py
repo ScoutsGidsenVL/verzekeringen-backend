@@ -1,9 +1,7 @@
 import logging
 
-from scouts_insurances.equipment.models.enums import VehicleType
-
 from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
-
+from scouts_insurances.equipment.models.enums import VehicleType
 
 logger = logging.getLogger(__name__)
 

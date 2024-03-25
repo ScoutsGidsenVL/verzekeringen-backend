@@ -1,9 +1,6 @@
 from rest_framework import routers
 
-from apps.equipment.views import (
-    InuitsEquipmentViewSet,
-    InuitsVehicleViewSet,
-)
+from apps.equipment.views import InuitsEquipmentViewSet, InuitsVehicleViewSet
 
 router = routers.SimpleRouter()
 

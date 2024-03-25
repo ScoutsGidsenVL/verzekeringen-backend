@@ -1,12 +1,12 @@
 from decimal import Decimal
 
-from django.db import models
-from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
+from django.db import models
 
-from scouts_insurances.people.models import Member, NonMember
 from scouts_insurances.equipment.managers import EquipmentManager
 from scouts_insurances.insurances.models import EquipmentInsurance
+from scouts_insurances.people.models import Member, NonMember
 
 
 class Equipment(models.Model):
@@ -87,4 +87,7 @@ class Equipment(models.Model):
         elif isinstance(self.owner_non_member, NonMember):
             owner = f"Type: Gehuurd of geleend materiaal van {self.owner_non_member.full_name()}"
         nature = f"Soort: {self.nature}," if self.nature else ""
-        return  nature + f"Beschrijving: {self.description}, Aantal: {self.amount}, Nieuwwaarde: {self.total_value}, {owner}"
+        return (
+            nature
+            + f"Beschrijving: {self.description}, Aantal: {self.amount}, Nieuwwaarde: {self.total_value}, {owner}"
+        )

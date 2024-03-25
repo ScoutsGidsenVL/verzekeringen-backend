@@ -1,21 +1,19 @@
-from typing import List, Tuple
 from datetime import date, datetime
+from typing import List, Tuple
 
 from django.db import models
 
 from scouts_auth.auth.models import User
-
 from scouts_auth.groupadmin.models import (
     AbstractScoutsAddress,
     AbstractScoutsFunction,
+    AbstractScoutsGroup,
     AbstractScoutsGroupSpecificField,
     AbstractScoutsLink,
-    AbstractScoutsGroup,
 )
 from scouts_auth.groupadmin.utils import SettingsHelper
-
 from scouts_auth.inuits.models import Gender
-from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField, OptionalCharField
+from scouts_auth.inuits.models.fields import OptionalCharField, TimezoneAwareDateTimeField
 
 
 class ScoutsUser(User):
@@ -144,8 +142,8 @@ class ScoutsUser(User):
             ", ".join(group.group_admin_id for group in self.scouts_groups),
             ", ".join(address.to_descriptive_string() for address in self.addresses),
             ", ".join(function.to_descriptive_string() for function in self.functions),
-            '',
-            '',
+            "",
+            "",
         )
 
     def to_descriptive_string(self):
@@ -202,7 +200,9 @@ class ScoutsUser(User):
             "AUTH GROUPS",
             ", ".join(group.name for group in self.groups.all()),
             "SCOUTS GROUPS",
-            ", ".join((group.name + "(" + group.group_admin_id + ")") for group in self.scouts_groups if self.scouts_groups),
+            ", ".join(
+                (group.name + "(" + group.group_admin_id + ")") for group in self.scouts_groups if self.scouts_groups
+            ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER ?",

@@ -1,6 +1,6 @@
-from rest_framework import viewsets, status, permissions
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import permissions, status, viewsets
+from rest_framework.response import Response
 
 from scouts_insurances.info.models import InfoVariable
 from scouts_insurances.info.serializers import InfoVariableSerializer

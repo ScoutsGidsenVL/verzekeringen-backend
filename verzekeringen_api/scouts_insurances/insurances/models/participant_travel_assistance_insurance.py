@@ -1,7 +1,7 @@
 from django.db import models
 
-from scouts_insurances.people.models import NonMember
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
+from scouts_insurances.people.models import NonMember
 
 
 class ParticipantTravelAssistanceInsurance(models.Model):

@@ -2,11 +2,9 @@ import logging
 
 from django.core.exceptions import ValidationError
 
-
 from scouts_insurances.insurances.models import ActivityInsurance
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
 from scouts_insurances.insurances.serializers.fields import GroupSizeSerializerField
-
 
 logger = logging.getLogger(__name__)
 

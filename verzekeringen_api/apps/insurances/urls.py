@@ -1,24 +1,24 @@
 from rest_framework import routers
 
 from apps.insurances.views import (
-    InsuranceTypeViewSet,
-    InsuranceStatusViewSet,
-    GroupSizeViewSet,
-    EventSizeViewSet,
-    TemporaryVehicleInsuranceCoverageOptionViewSet,
-    TemporaryVehicleInsuranceOptionViewSet,
-    BaseInsuranceViewSet,
-    InsuranceClaimViewSet,
-    InsuranceClaimAttachmentViewSet,
-    InsuranceDraftViewSet,
     ActivityInsuranceAttachmentViewSet,
+    BaseInsuranceViewSet,
     EventInsuranceAttachmentViewSet,
-    InuitsEventInsuranceViewSet,
+    EventSizeViewSet,
+    GroupSizeViewSet,
+    InsuranceClaimAttachmentViewSet,
+    InsuranceClaimViewSet,
+    InsuranceDraftViewSet,
+    InsuranceStatusViewSet,
+    InsuranceTypeViewSet,
     InuitsActivityInsuranceViewSet,
+    InuitsEquipmentInsuranceViewSet,
+    InuitsEventInsuranceViewSet,
     InuitsTemporaryInsuranceViewSet,
     InuitsTemporaryVehicleInsuranceViewSet,
     InuitsTravelAssistanceInsuranceViewSet,
-    InuitsEquipmentInsuranceViewSet,
+    TemporaryVehicleInsuranceCoverageOptionViewSet,
+    TemporaryVehicleInsuranceOptionViewSet,
 )
 
 router = routers.SimpleRouter()

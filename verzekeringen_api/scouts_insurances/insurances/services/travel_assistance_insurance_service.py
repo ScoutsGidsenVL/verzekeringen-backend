@@ -1,15 +1,14 @@
-import logging, math
+import logging
+import math
 from decimal import Decimal
 
 from django.db import transaction
 
-from scouts_insurances.equipment.models import TravelAssistanceVehicle
-from scouts_insurances.locations.models import Country
-from scouts_insurances.insurances.models import TravelAssistanceInsurance, InsuranceType, CostVariable
-from scouts_insurances.insurances.services import BaseInsuranceService
-
 from scouts_auth.groupadmin.services import GroupAdmin
-
+from scouts_insurances.equipment.models import TravelAssistanceVehicle
+from scouts_insurances.insurances.models import CostVariable, InsuranceType, TravelAssistanceInsurance
+from scouts_insurances.insurances.services import BaseInsuranceService
+from scouts_insurances.locations.models import Country
 
 logger = logging.getLogger(__name__)
 

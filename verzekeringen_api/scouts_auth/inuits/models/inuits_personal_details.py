@@ -1,10 +1,10 @@
 from scouts_auth.inuits.models import AbstractNonModel, Gender, GenderHelper
 from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
     DefaultCharField,
-    RequiredCharField,
-    OptionalEmailField,
+    OptionalCharField,
     OptionalDateField,
+    OptionalEmailField,
+    RequiredCharField,
 )
 
 
