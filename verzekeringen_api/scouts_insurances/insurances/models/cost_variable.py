@@ -1,11 +1,10 @@
 import logging
 from decimal import Decimal
 
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
 
 from scouts_insurances.insurances.models import InsuranceType
-
 
 logger = logging.getLogger(__name__)
 

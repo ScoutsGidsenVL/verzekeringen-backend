@@ -1,12 +1,12 @@
 from django.db import models
 
-from scouts_insurances.people.models import NonMember
 from scouts_insurances.insurances.models import BaseInsurance, VehicleWithTrailerRelatedInsurance
 from scouts_insurances.insurances.models.enums import (
     TemporaryVehicleInsuranceCoverageOption,
     TemporaryVehicleInsuranceOption,
     TemporaryVehicleParticipantType,
 )
+from scouts_insurances.people.models import NonMember
 
 
 class TemporaryVehicleInsurance(VehicleWithTrailerRelatedInsurance, BaseInsurance):

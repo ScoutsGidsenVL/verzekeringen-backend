@@ -1,4 +1,5 @@
-import copy, inspect
+import copy
+import inspect
 
 from rest_framework import serializers
 

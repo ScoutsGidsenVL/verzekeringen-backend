@@ -1,15 +1,14 @@
 import logging
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status, filters, permissions
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.response import Response
 
 from apps.equipment.filters import InuitsEquipmentFilter
+from apps.equipment.models import InuitsEquipment
 from apps.equipment.serializers import InuitsEquipmentSerializer
 from apps.equipment.services import InuitsEquipmentService
-from apps.equipment.models import InuitsEquipment
-
 
 logger = logging.getLogger(__name__)
 

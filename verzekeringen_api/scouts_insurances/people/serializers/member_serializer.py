@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
-from scouts_insurances.people.models import Member
-
 from scouts_auth.inuits.serializers import DatetypeAwareDateSerializerField
+from scouts_insurances.people.models import Member
 
 
 class MemberSerializer(serializers.ModelSerializer):

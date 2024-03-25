@@ -1,6 +1,6 @@
 import django_filters
-from django.db.models.functions import Concat
 from django.db.models import Q
+from django.db.models.functions import Concat
 
 from apps.equipment.models import InuitsVehicle
 

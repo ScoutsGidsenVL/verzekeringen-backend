@@ -3,9 +3,7 @@ import logging
 from django.db import models
 
 from apps.insurances.models import InsuranceClaim
-
 from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
-
 
 logger = logging.getLogger(__name__)
 

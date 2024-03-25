@@ -1,10 +1,9 @@
 import logging
 
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
 from scouts_insurances.people.models import AbstractMember
-
 
 logger = logging.getLogger(__name__)
 

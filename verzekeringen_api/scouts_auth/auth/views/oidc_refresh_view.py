@@ -1,16 +1,13 @@
 import logging
-from requests.exceptions import HTTPError
 
-from rest_framework import status, views, permissions
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from requests.exceptions import HTTPError
+from rest_framework import permissions, status, views
+from rest_framework.response import Response
 
-from scouts_auth.auth.services import OIDCService
-from scouts_auth.auth.serializers import (
-    RefreshSerializer,
-    TokenSerializer,
-)
 from scouts_auth.auth.exceptions import TokenRequestException
+from scouts_auth.auth.serializers import RefreshSerializer, TokenSerializer
+from scouts_auth.auth.services import OIDCService
 
 logger = logging.getLogger(__name__)
 

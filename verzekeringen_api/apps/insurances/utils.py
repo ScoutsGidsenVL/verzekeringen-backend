@@ -4,11 +4,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from apps.insurances.models import InsuranceClaim
-
-from scouts_insurances.insurances.models import BaseInsurance
-
 from scouts_auth.inuits.utils import GlobalSettingsUtil
-
+from scouts_insurances.insurances.models import BaseInsurance
 
 logger = logging.getLogger(__name__)
 

@@ -2,13 +2,12 @@ import logging
 
 from rest_framework import serializers
 
-from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
-from scouts_insurances.locations.models import Country
-from scouts_insurances.locations.serializers import CountrySerializer
-
 from scouts_insurances.equipment.serializers import EquipmentSerializer
 from scouts_insurances.insurances.models import EquipmentInsurance
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
+from scouts_insurances.locations.models import Country
+from scouts_insurances.locations.serializers import CountrySerializer
 
 logger = logging.getLogger(__name__)
 

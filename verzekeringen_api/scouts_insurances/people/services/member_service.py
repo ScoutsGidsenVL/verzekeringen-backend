@@ -5,7 +5,6 @@ from django.conf import settings
 
 from scouts_insurances.people.models import Member
 
-
 logger = logging.getLogger(__name__)
 
 

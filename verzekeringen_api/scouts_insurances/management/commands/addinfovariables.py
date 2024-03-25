@@ -1,11 +1,12 @@
-import logging, os, yaml
+import logging
+import os
 from pathlib import Path
 
-from django.core.management.base import BaseCommand
+import yaml
 from django.conf import settings
+from django.core.management.base import BaseCommand
 
 from scouts_insurances.info.models import InfoVariable
-
 
 logger = logging.getLogger(__name__)
 

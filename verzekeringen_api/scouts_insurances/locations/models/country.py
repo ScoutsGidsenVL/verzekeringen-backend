@@ -1,8 +1,7 @@
 from django.db import models
 
-from scouts_insurances.locations.managers import CountryManager
-
 from scouts_insurances.insurances.models import InsuranceType
+from scouts_insurances.locations.managers import CountryManager
 
 
 class Country(models.Model):
@@ -15,6 +14,4 @@ class Country(models.Model):
     insurance_types = models.ManyToManyField(InsuranceType, related_name="country_options")
 
     def __str__(self):
-        return "{}".format(
-            self.id
-        )
+        return "{}".format(self.id)

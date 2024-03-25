@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import Q
 
 from scouts_insurances.insurances.models.enums import InsuranceStatus
+
 logger = logging.getLogger(__name__)
 
 

@@ -1,11 +1,10 @@
 from rest_framework import serializers
 
-from scouts_insurances.locations.models import Country
-
-from scouts_insurances.people.serializers import NonMemberSerializer
 from scouts_insurances.insurances.models import TemporaryInsurance
 from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
+from scouts_insurances.locations.models import Country
+from scouts_insurances.people.serializers import NonMemberSerializer
 
 
 class TemporaryInsuranceSerializer(BaseInsuranceSerializer):

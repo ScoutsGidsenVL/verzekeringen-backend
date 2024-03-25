@@ -1,13 +1,13 @@
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import views, viewsets, status, filters, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters, permissions, status, views, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
-from scouts_insurances.locations.models import Country
 from scouts_insurances.locations.filters import CountryFilter
-from scouts_insurances.locations.serializers import CountrySerializer, BelgianPostalCodeCitySerializer
+from scouts_insurances.locations.models import Country
+from scouts_insurances.locations.serializers import BelgianPostalCodeCitySerializer, CountrySerializer
 from scouts_insurances.locations.services import BelgianPostalCodeCityService
 
 

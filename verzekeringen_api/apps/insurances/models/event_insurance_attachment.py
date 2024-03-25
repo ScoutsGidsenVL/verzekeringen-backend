@@ -2,10 +2,8 @@ import logging
 
 from django.db import models
 
-from scouts_insurances.insurances.models import EventInsurance
-
 from scouts_auth.inuits.models import AbstractBaseModel, PersistedFile
-
+from scouts_insurances.insurances.models import EventInsurance
 
 logger = logging.getLogger(__name__)
 

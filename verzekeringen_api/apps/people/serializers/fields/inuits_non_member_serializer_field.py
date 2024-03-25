@@ -4,9 +4,7 @@ from rest_framework import serializers
 
 from apps.people.models import InuitsNonMember
 from apps.people.serializers import InuitsNonMemberSerializer
-
 from scouts_insurances.people.models import Member, NonMember
-
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +44,6 @@ class InuitsNonMemberSerializerField(serializers.PrimaryKeyRelatedField):
         inuits_non_member = InuitsNonMember.objects.get(id=str(pk))
         if inuits_non_member:
             return InuitsNonMemberSerializer().to_representation(inuits_non_member)
-
 
     def validate(self, data: dict) -> InuitsNonMember:
         return InuitsNonMember(**data)

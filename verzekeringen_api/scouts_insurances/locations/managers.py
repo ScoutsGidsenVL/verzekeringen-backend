@@ -5,7 +5,6 @@ from django.db import models
 
 from scouts_insurances.insurances.models import InsuranceType
 
-
 logger = logging.getLogger(__name__)
 
 

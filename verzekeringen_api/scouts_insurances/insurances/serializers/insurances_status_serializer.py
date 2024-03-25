@@ -4,7 +4,6 @@ from rest_framework import serializers
 
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 
-
 logger = logging.getLogger(__name__)
 
 

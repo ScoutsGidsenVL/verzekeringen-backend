@@ -1,9 +1,9 @@
-import logging, importlib
+import importlib
+import logging
 
 from django.core.files.storage import Storage
 
-from scouts_auth.inuits.files import StorageSettings, CustomStorage
-
+from scouts_auth.inuits.files import CustomStorage, StorageSettings
 
 logger = logging.getLogger(__name__)
 

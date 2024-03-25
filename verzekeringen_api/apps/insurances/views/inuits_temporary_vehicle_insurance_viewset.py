@@ -2,18 +2,16 @@ import logging
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, filters, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from apps.insurances.serializers import InuitsTemporaryVehicleInsuranceSerializer
 from apps.insurances.services import InuitsTemporaryVehicleInsuranceService
-
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.serializers import InsuranceCostSerializer
-
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +79,9 @@ class InuitsTemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
         )
         if existing_insurance._status != InsuranceStatus.BILLED:
 
-            input_serializer = InuitsTemporaryVehicleInsuranceSerializer(data=request.data, context={"request": request})
+            input_serializer = InuitsTemporaryVehicleInsuranceSerializer(
+                data=request.data, context={"request": request}
+            )
             input_serializer.is_valid(raise_exception=True)
 
             updated_insurance = self.temporary_vehicle_insurance_service.temporary_vehicle_insurance_update(
@@ -92,8 +92,4 @@ class InuitsTemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
 
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            raise PermissionDenied(
-                {
-                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
-                }
-            )
+            raise PermissionDenied({"message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"})

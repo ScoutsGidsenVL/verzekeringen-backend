@@ -2,13 +2,12 @@ import logging
 from decimal import Decimal
 
 from django.conf import settings
-from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db import transaction
 
 from apps.equipment.models import InuitsEquipment, InuitsEquipmentTemplate
 from apps.equipment.services import InuitsEquipmentService
 from apps.people.models import InuitsNonMember
-
 
 logger = logging.getLogger(__name__)
 

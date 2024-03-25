@@ -2,17 +2,14 @@ import logging
 
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage, FileSystemStorage
+from django.core.files.storage import FileSystemStorage, default_storage
+from pdfrw import PdfDict, PdfName, PdfObject, PdfReader, PdfWriter
 
-from pdfrw import PdfReader, PdfDict, PdfObject, PdfName, PdfWriter
-
-from apps.people.models import InuitsClaimVictim
 from apps.insurances.models import InsuranceClaim
 from apps.insurances.utils import InsuranceAttachmentUtils
-
-from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
+from apps.people.models import InuitsClaimVictim
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
-
 from scouts_auth.inuits.files import FileUtils
 
 logger = logging.getLogger(__name__)

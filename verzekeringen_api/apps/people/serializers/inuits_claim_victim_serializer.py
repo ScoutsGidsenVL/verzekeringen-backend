@@ -4,11 +4,9 @@ from rest_framework import serializers
 
 from apps.people.models import InuitsClaimVictim
 from apps.people.serializers.fields import InuitsNonMemberSerializerField
-
-from scouts_auth.inuits.serializers import InuitsPersonSerializer
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.services import GroupAdmin
-
+from scouts_auth.inuits.serializers import InuitsPersonSerializer
 
 logger = logging.getLogger(__name__)
 

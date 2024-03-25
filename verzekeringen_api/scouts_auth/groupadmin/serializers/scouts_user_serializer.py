@@ -8,6 +8,7 @@ class ScoutsUserSerializer(serializers.ModelSerializer):
     user_permissions = serializers.SerializerMethodField()
     scouts_groups = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
+
     class Meta:
         model = ScoutsUser
         exclude = ["password"]

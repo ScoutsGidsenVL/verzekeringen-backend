@@ -1,16 +1,15 @@
-import logging, re
+import logging
+import re
 
 from django.core.exceptions import ValidationError
 from django.utils.datastructures import MultiValueDict
 from rest_framework import serializers
 
-from apps.people.serializers import InuitsClaimVictimSerializer
 from apps.insurances.models import InsuranceClaim, InsuranceClaimAttachment
-
+from apps.people.serializers import InuitsClaimVictimSerializer
 from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer, ScoutsUserSerializer
 from scouts_auth.groupadmin.serializers.fields import AbstractScoutsGroupSerializerField
 from scouts_auth.groupadmin.services import GroupAdmin
-
 from scouts_auth.inuits.serializers import PermissionRequiredField
 
 logger = logging.getLogger(__name__)
@@ -88,7 +87,7 @@ class InsuranceClaimSerializer(serializers.ModelSerializer):
         if "attachments" in self.context:  # checking if key is in context
             files: MultiValueDict = self.context["attachments"]
             for file in files.getlist("file"):
-                print('@@@@@FILE@@@@@: ', file)
+                print("@@@@@FILE@@@@@: ", file)
                 InsuranceClaimAttachment.objects.create(insurance_claim=insurance_claim, file=file)
 
         return insurance_claim

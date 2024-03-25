@@ -6,10 +6,8 @@ from django.db import transaction
 
 from apps.people.models import InuitsNonMember
 from apps.people.services import InuitsNonMemberService
-
-from scouts_insurances.insurances.models import TemporaryInsurance, InsuranceType
+from scouts_insurances.insurances.models import InsuranceType, TemporaryInsurance
 from scouts_insurances.insurances.services import TemporaryInsuranceService
-
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +55,9 @@ class InuitsTemporaryInsuranceService(TemporaryInsuranceService):
         insurance.full_clean()
         insurance.save()
 
-        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("responsible_member"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, created_by=base_insurance_fields.get("responsible_member")
+        )
 
         return insurance
 

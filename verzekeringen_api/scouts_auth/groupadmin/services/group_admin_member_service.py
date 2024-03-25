@@ -1,13 +1,12 @@
 import logging
-from typing import List
 from datetime import date, datetime, timedelta
+from typing import List
 
 from django.conf import settings
 from django.utils import timezone
 
 from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsMemberSearchResponse
 from scouts_auth.groupadmin.services import GroupAdmin
-
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,7 @@
 import logging
 
-from scouts_insurances.insurances.utils import InsuranceSettingsHelper
-
 from scouts_auth.inuits.utils import SettingsHelper
-
+from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 
 logger = logging.getLogger(__name__)
 

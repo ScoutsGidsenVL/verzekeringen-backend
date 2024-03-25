@@ -1,10 +1,9 @@
-from rest_framework import viewsets, status
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
-
-from scouts_insurances.insurances.models.enums import TemporaryVehicleInsuranceOptionApi
+from rest_framework import status, viewsets
+from rest_framework.response import Response
 
 from scouts_auth.inuits.serializers import EnumSerializer
+from scouts_insurances.insurances.models.enums import TemporaryVehicleInsuranceOptionApi
 
 
 class TemporaryVehicleInsuranceOptionViewSet(viewsets.ViewSet):

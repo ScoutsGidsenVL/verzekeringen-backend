@@ -1,12 +1,12 @@
-import os, json
+import json
+import os
 from pathlib import Path
 
-from django.core.management.base import BaseCommand
 from django.conf import settings
-
-from scouts_insurances.locations.models import Country
+from django.core.management.base import BaseCommand
 
 from scouts_insurances.insurances.models import InsuranceType
+from scouts_insurances.locations.models import Country
 
 
 class Command(BaseCommand):

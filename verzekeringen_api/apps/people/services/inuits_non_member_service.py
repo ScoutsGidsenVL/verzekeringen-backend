@@ -4,10 +4,8 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from apps.people.models import InuitsNonMember, InuitsNonMemberTemplate
-
 from scouts_insurances.people.models import NonMember
 from scouts_insurances.people.services import NonMemberService
-
 
 logger = logging.getLogger(__name__)
 

@@ -2,22 +2,20 @@ import logging
 
 from rest_framework import serializers
 
+from scouts_auth.inuits.serializers import EnumSerializer
 from scouts_insurances.equipment.serializers import TemporaryVehicleInsuranceVehicleSerializer
-from scouts_insurances.people.serializers import NonMemberSerializer
-from scouts_insurances.insurances.utils import InsuranceSettingsHelper
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 from scouts_insurances.insurances.models.enums import (
-    TemporaryVehicleInsuranceOption,
     TemporaryVehicleInsuranceCoverageOption,
+    TemporaryVehicleInsuranceOption,
 )
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
 from scouts_insurances.insurances.serializers.fields import (
-    TemporaryVehicleInsuranceOptionSerializerField,
     TemporaryVehicleInsuranceCoverageOptionSerializerField,
+    TemporaryVehicleInsuranceOptionSerializerField,
 )
-
-from scouts_auth.inuits.serializers import EnumSerializer
-
+from scouts_insurances.insurances.utils import InsuranceSettingsHelper
+from scouts_insurances.people.serializers import NonMemberSerializer
 
 logger = logging.getLogger(__name__)
 

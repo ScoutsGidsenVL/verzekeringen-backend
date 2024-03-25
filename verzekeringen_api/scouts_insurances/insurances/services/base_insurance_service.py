@@ -2,18 +2,17 @@ import logging
 from datetime import datetime
 from decimal import Decimal
 
-from django.db import transaction
 from django.conf import settings
-from django.core.exceptions import ValidationError, PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import transaction
+
 from scouts_auth.auth.models import User
-from scouts_insurances.people.models import Member
-from scouts_insurances.people.services import MemberService
+from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_insurances.insurances.models import BaseInsurance, InsuranceType
 from scouts_insurances.insurances.models.enums import InsuranceStatus
 from scouts_insurances.insurances.services import InsuranceMailService
-
-
-from scouts_auth.groupadmin.models import AbstractScoutsGroup
+from scouts_insurances.people.models import Member
+from scouts_insurances.people.services import MemberService
 
 logger = logging.getLogger(__name__)
 
@@ -23,20 +22,20 @@ class BaseInsuranceService:
     member_service = MemberService()
 
     def base_insurance_creation_fields(
-            self,
-            *,
-            id: str = None,
-            status: str = "",  # Calculated value
-            scouts_group: AbstractScoutsGroup = None,
-            total_cost: Decimal = None,  # Handled by the BaseInsuranceSerializer
-            comment: str = "",
-            vvksm_comment: str = "",
-            created_on: datetime = None,  # Calculated value
-            responsible_member: Member = None,  # Calculated value
-            type: InsuranceType = None,
-            start_date: datetime = None,
-            end_date: datetime = None,
-            created_by: settings.AUTH_USER_MODEL,
+        self,
+        *,
+        id: str = None,
+        status: str = "",  # Calculated value
+        scouts_group: AbstractScoutsGroup = None,
+        total_cost: Decimal = None,  # Handled by the BaseInsuranceSerializer
+        comment: str = "",
+        vvksm_comment: str = "",
+        created_on: datetime = None,  # Calculated value
+        responsible_member: Member = None,  # Calculated value
+        type: InsuranceType = None,
+        start_date: datetime = None,
+        end_date: datetime = None,
+        created_by: settings.AUTH_USER_MODEL,
     ) -> dict:
         # validate group
         group_object = next(
@@ -45,11 +44,7 @@ class BaseInsuranceService:
         )
         if not group_object:
             raise PermissionDenied(
-                {
-                    "message": "Given group {} is not a valid group of user".format(
-                        scouts_group.group_admin_id
-                    )
-                }
+                {"message": "Given group {} is not a valid group of user".format(scouts_group.group_admin_id)}
             )
         member = self.member_service.member_create_from_user(user=created_by)
         fields = {
@@ -75,4 +70,4 @@ class BaseInsuranceService:
         return insurance
 
     def handle_insurance_created(self, insurance: BaseInsurance, created_by: User):
-        return self.mail_service.send_insurance(insurance,created_by=created_by)
+        return self.mail_service.send_insurance(insurance, created_by=created_by)

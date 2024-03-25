@@ -5,7 +5,6 @@ from django.db import models
 
 from scouts_auth.inuits.models.fields import DatetypeAwareDateField
 
-
 logger = logging.getLogger(__name__)
 
 

@@ -4,12 +4,11 @@ from rest_framework import serializers
 
 from scouts_insurances.equipment.models import TravelAssistanceVehicle
 from scouts_insurances.equipment.serializers import TravelAssistanceVehicleSerializer
-from scouts_insurances.people.serializers import NonMemberSerializer
-from scouts_insurances.locations.models import Country
 from scouts_insurances.insurances.models import TravelAssistanceInsurance
 from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.serializers import BaseInsuranceFields, BaseInsuranceSerializer
-
+from scouts_insurances.locations.models import Country
+from scouts_insurances.people.serializers import NonMemberSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,12 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
     participants = NonMemberSerializer(many=True)
 
     country = serializers.PrimaryKeyRelatedField(
-        queryset=Country.objects.by_insurance_type_ids([InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE,InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE]),
+        queryset=Country.objects.by_insurance_type_ids(
+            [
+                InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE,
+                InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE,
+            ]
+        ),
         required=False,
     )
 
@@ -45,7 +49,6 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
             data["vehicle"] = TravelAssistanceVehicle(**serialized_vehicle)
         else:
             data["vehicle"] = None
-
 
         return data
 

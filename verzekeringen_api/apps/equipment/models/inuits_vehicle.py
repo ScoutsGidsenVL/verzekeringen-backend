@@ -1,17 +1,15 @@
 from django.core.validators import MinValueValidator
 
-from apps.equipment.models.enums import InuitsVehicleTrailerOption
 from apps.equipment.managers import InuitsVehicleManager
-
-from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle, VehicleType
-
+from apps.equipment.models.enums import InuitsVehicleTrailerOption
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
     DefaultCharField,
-    RequiredCharField,
+    OptionalCharField,
     OptionalIntegerField,
+    RequiredCharField,
 )
+from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle, VehicleType
 
 
 class InuitsVehicle(AbstractBaseModel):

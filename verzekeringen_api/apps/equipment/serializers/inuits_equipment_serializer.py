@@ -6,11 +6,10 @@ from apps.equipment.models import InuitsEquipment
 from apps.people.models import InuitsNonMember
 from apps.people.serializers import InuitsNonMemberSerializer
 from apps.people.serializers.fields import InuitsNonMemberSerializerField
-
-from scouts_auth.groupadmin.models import AbstractScoutsMember, AbstractScoutsGroup
+from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
 from scouts_auth.groupadmin.serializers.fields import (
-    AbstractScoutsMemberSerializerField,
     AbstractScoutsGroupSerializerField,
+    AbstractScoutsMemberSerializerField,
 )
 
 logger = logging.getLogger(__name__)

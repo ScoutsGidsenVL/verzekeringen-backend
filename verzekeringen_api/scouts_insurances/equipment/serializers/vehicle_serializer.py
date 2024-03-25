@@ -2,12 +2,10 @@ import logging
 
 from rest_framework import serializers
 
-from scouts_insurances.equipment.models import Vehicle, VehicleType
-from scouts_insurances.equipment.serializers.fields import VehicleTypeSerializerField
-
 from scouts_auth.inuits.serializers import EnumSerializer
 from scouts_auth.inuits.serializers.fields import OptionalCharField
-
+from scouts_insurances.equipment.models import Vehicle, VehicleType
+from scouts_insurances.equipment.serializers.fields import VehicleTypeSerializerField
 
 logger = logging.getLogger(__name__)
 

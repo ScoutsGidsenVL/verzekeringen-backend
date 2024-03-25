@@ -1,18 +1,14 @@
 from datetime import datetime
 
-from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.db import models
 from django.db.models import UUIDField
 from rest_framework import serializers
 
+from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerField
 from scouts_insurances.equipment.models import Vehicle
 from scouts_insurances.equipment.models.enums import VehicleType
-
-from scouts_auth.inuits.models.fields import (
-    OptionalCharField,
-    OptionalIntegerField,
-)
 
 
 class VehicleRelatedInsurance(models.Model):
@@ -26,7 +22,9 @@ class VehicleRelatedInsurance(models.Model):
     _vehicle_brand = OptionalCharField(db_column="automerk", max_length=15)
     _vehicle_license_plate = OptionalCharField(db_column="autokenteken", max_length=10)
     _vehicle_construction_year = OptionalIntegerField(db_column="autobouwjaar", validators=[MinValueValidator(1900)])
-    _vehicle_chassis_number = OptionalCharField(db_column="autochassis", max_length=20, null=True, default=None, blank=True)
+    _vehicle_chassis_number = OptionalCharField(
+        db_column="autochassis", max_length=20, null=True, default=None, blank=True
+    )
 
     class Meta:
         abstract = True
@@ -34,15 +32,15 @@ class VehicleRelatedInsurance(models.Model):
     def clean(self):
         super().clean()
         if not (
-                self._vehicle_type
-                and self._vehicle_brand
-                and self._vehicle_license_plate
-                and self._vehicle_construction_year
+            self._vehicle_type
+            and self._vehicle_brand
+            and self._vehicle_license_plate
+            and self._vehicle_construction_year
         ) and not (
-                not self._vehicle_type
-                and not self._vehicle_brand
-                and not self._vehicle_license_plate
-                and not self._vehicle_construction_year
+            not self._vehicle_type
+            and not self._vehicle_brand
+            and not self._vehicle_license_plate
+            and not self._vehicle_construction_year
         ):
             raise serializers.ValidationError("If one vehicle field given all vehicle fields need to be given")
 

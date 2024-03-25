@@ -1,5 +1,5 @@
+from scouts_insurances.equipment.models.enums import TravelAssistanceVehicleTrailerOption, VehicleType
 from scouts_insurances.equipment.models.value_objects import Vehicle
-from scouts_insurances.equipment.models.enums import VehicleType, TravelAssistanceVehicleTrailerOption
 
 
 class TravelAssistanceVehicle(Vehicle):

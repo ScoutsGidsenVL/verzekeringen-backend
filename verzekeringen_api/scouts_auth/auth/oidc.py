@@ -1,20 +1,18 @@
-import requests, logging
+import logging
 from datetime import datetime
-from requests.exceptions import HTTPError
 
+import requests
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from mozilla_django_oidc.contrib.drf import OIDCAuthentication
-
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import Group
-
+from requests.exceptions import HTTPError
 from rest_framework import exceptions
 
 from scouts_auth.auth.models import User
-from scouts_auth.auth.utils import SettingsHelper
 from scouts_auth.auth.signals import ScoutsAuthSignalSender
-
+from scouts_auth.auth.utils import SettingsHelper
 
 logger = logging.getLogger(__name__)
 

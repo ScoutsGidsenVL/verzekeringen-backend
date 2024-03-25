@@ -1,12 +1,11 @@
 from decimal import Decimal
 
-from django.db import models
-from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
+from django.db import models
 
 from apps.equipment.managers import InuitsEquipmentManager
 from apps.people.models import InuitsNonMember
-
 from scouts_auth.groupadmin.models import AbstractScoutsGroup
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import OptionalCharField
@@ -75,9 +74,9 @@ class InuitsEquipment(AuditedBaseModel):
             self.total_value,
             self.owner_non_member.id if self.owner_non_member else "",
             self.owner_member.group_admin_id if self.owner_member else "",
-            self.owner_group.group_admin_id
-            if self.owner_group and isinstance(self.owner_group, AbstractScoutsGroup)
-            else self.owner_group
-            if self.owner_group
-            else "",
+            (
+                self.owner_group.group_admin_id
+                if self.owner_group and isinstance(self.owner_group, AbstractScoutsGroup)
+                else self.owner_group if self.owner_group else ""
+            ),
         )

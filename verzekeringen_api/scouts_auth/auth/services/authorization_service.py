@@ -1,8 +1,7 @@
 import logging
 
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group, User
 from django.core.exceptions import ObjectDoesNotExist
-
 
 logger = logging.getLogger(__name__)
 

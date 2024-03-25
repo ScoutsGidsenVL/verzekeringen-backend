@@ -1,14 +1,12 @@
 import logging
-import jwt
 
+import jwt
 from django.conf import settings
 
 from scouts_auth.auth.oidc import InuitsOIDCAuthenticationBackend
-
 from scouts_auth.groupadmin.models import AbstractScoutsMember
 from scouts_auth.groupadmin.serializers import AbstractScoutsMemberSerializer
 from scouts_auth.groupadmin.services import GroupAdmin, ScoutsAuthorizationService
-
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +56,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
                 self.describe_user_by_claims(user_info),
             )
             return None
-    
+
     def filter_users_by_claims(self, claims):
         """Return all users matching the group admin id."""
         # logger.debug("CLAIMS: %s", claims)
@@ -66,7 +64,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         if not group_admin_id:
             return self.UserModel.objects.none()
         return self.UserModel.objects.filter(group_admin_id=group_admin_id)
-    
+
     def create_user(self, claims: dict) -> settings.AUTH_USER_MODEL:
         """
         Create and return a new user object.
@@ -101,9 +99,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return user
 
-    def update_user(
-        self, user: settings.AUTH_USER_MODEL, claims: dict
-    ) -> settings.AUTH_USER_MODEL:
+    def update_user(self, user: settings.AUTH_USER_MODEL, claims: dict) -> settings.AUTH_USER_MODEL:
         """
         Update existing user with new claims if necessary, save, and return the updated user object.
         """
@@ -112,10 +108,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
         member: AbstractScoutsMember = self._load_member_data(data=claims)
         user: settings.AUTH_USER_MODEL = self._merge_member_data(user, member, claims)
 
-        logger.info(
-            "SCOUTS OIDC AUTHENTICATION: Updated user: %s",
-            user
-        )
+        logger.info("SCOUTS OIDC AUTHENTICATION: Updated user: %s", user)
 
         return user
 
@@ -154,10 +147,7 @@ class ScoutsOIDCAuthenticationBackend(InuitsOIDCAuthenticationBackend):
 
         return user
 
-
-    def map_user_with_claims(
-        self, user: settings.AUTH_USER_MODEL, claims: dict = None
-    ) -> settings.AUTH_USER_MODEL:
+    def map_user_with_claims(self, user: settings.AUTH_USER_MODEL, claims: dict = None) -> settings.AUTH_USER_MODEL:
         """
         Override the mapping in InuitsOIDCAuthenticationBackend to handle scouts-specific data.
         """

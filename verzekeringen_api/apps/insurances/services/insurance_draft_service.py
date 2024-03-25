@@ -1,8 +1,7 @@
-from django.db import transaction
 from django.conf import settings
+from django.db import transaction
 
 from apps.insurances.models import InsuranceDraft
-
 from scouts_insurances.insurances.models import InsuranceType
 
 
