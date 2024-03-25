@@ -1,3 +1,5 @@
+"""apps.signals.signals_handler."""
+
 import logging
 from typing import List
 from operator import attrgetter

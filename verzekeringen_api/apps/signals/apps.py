@@ -1,3 +1,5 @@
+"""apps.signals.apps."""
+
 import logging
 
 from django.apps import AppConfig
