@@ -1,4 +1,5 @@
 import logging, requests
+import re
 
 from django.conf import settings
 from django.http import Http404
@@ -75,7 +76,7 @@ class GroupAdmin:
         """Makes a request to the GA with the given url and returns the response as json_data."""
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
         try:
-            response = requests.get(endpoint, headers={"Authorization": "Bearer {0}".format(active_user.access_token)})
+            response = requests.get(re.sub('^https:http:', 'https:', endpoint), headers={"Authorization": "Bearer {0}".format(active_user.access_token)})
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
