@@ -33,9 +33,9 @@ ensure-dirs:
 clean:
     @ rm -fr .venv
     @ rm -fr bin
-    @ rm -fr lib 
+    @ rm -fr lib
     @ rm -fr pyvenv.cfg
-    
+
 alias clear := clean
 
 # full initial pythondev-installation
@@ -87,3 +87,17 @@ poetry-export-requirements:
 update-staging:
     git co staging
     git pull
+
+
+
+# lint python-code with isort + black
+lint: isort black
+
+
+# run black
+black:
+    bin/black src/**/*.py
+
+# run isort
+isort:
+    bin/isort src/**/*.py

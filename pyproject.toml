@@ -27,6 +27,17 @@ exclude = '''
 '''
 
 
+[tool.isort]
+include_trailing_comma = true # corresponds to -tc flag
+# force_single_line = true
+known_third_party = []
+# lines_after_imports = 2
+line_length = 120             # corresponds to -w  flag
+multi_line_output = 3         # corresponds to -m  flag
+profile = "black"
+skip_glob = '^((?!py$).)*$'   # isort all Python files
+
+
 [tool.poetry]
 name = "verzekeringen.api"
 version = "0.1.0"
