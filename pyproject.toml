@@ -56,6 +56,8 @@ django = ">=4.2,<5.0"
 dj-email-url = ">=1.0"
 django-anymail = {extras = ["sendinblue"], version = ">=10.2"}
 django-cors-headers = ">=3.7"
+django-debug-toolbar = ">=4.3.0"
+django-extensions = ">=3.2.3"
 django-filter = ">=23.5"
 django-storages = ">=1.11"
 djangorestframework = ">=3.14"
@@ -71,8 +73,11 @@ PyYAML = ">=6.0"
 # scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}  # @TODO
 urllib3= "1.26.18"
 
-[tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
 autoread-dotenv = ">=1.0.2"
+black = ">=24.4.2"
+isort = ">=5.13.2"
 ruff = ">=0.0"
 
 [tool.poetry.group.ipython.dependencies]
@@ -93,6 +98,8 @@ pytest-django = ">=4.5.2"
 pytest-mock = ">=3.6"
 pytest-xdist = ">=3.2"
 # tox = ">=4.0"
+
+
 
 
 [tool.pytest.ini_options]
