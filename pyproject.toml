@@ -101,22 +101,23 @@ pytest-xdist = ">=3.2"
 
 
 
-
 [tool.pytest.ini_options]
-# cache_dir = "var/cache/pytest"  # relative to $PWD, use PYTEST_CACHE_DIR instead
-log_cli = false                   # enable to show log-output
+cache_dir = "var/cache/pytest"
+log_cli = false   # enable to show log-output
 log_cli_level = "NOTSET"
 filterwarnings = []
 markers = ["unit", "integration"]
+pythonpath = [".", "verzekeringen_api"]
 testpaths = ["tests"]
 # the junit-report is used to report coverage in gitlab
-addopts = "--color=yes --junit-xml='var/coverage/pytest.xml'"
+addopts = "--color=yes --junit-xml='${BASE_DIR}/var/coverage/pytest.xml'"
+django_debug_mode = "keep"
 DJANGO_SETTINGS_MODULE = "verzekeringen_api.settings"
-pythonpath = [".", "verzekeringen_api"]
 
 
 [tool.ruff]
 # ruff searches for settings in the target-dir and up
 # https://docs.astral.sh/ruff/configuration
 cache-dir = "var/cache/ruff"
+exclude = ["**/migrations/*.py"]
 line-length = 120

@@ -251,7 +251,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Europe/Brussels"
 USE_I18N = True
-USE_L10N = True
+# USE_L10N = True  # RemovedInDjango50Warning
 USE_TZ = True
 
 # Default primary key field type
@@ -318,7 +318,18 @@ BASE_URL = env.str("BASE_URL")
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
+# DEFAULT_FILE_STORAGE = env.str("DEFAULT_FILE_STORAGE")
+
+STORAGES = {
+    "default": {
+        # "BACKEND": "django.core.files.storage.FileSystemStorage",
+        # "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "BACKEND": env.str("DEFAULT_FILE_STORAGE"),
+    },
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+
+
 FILE_UPLOAD_ALLOWED_EXTENSIONS = env.list("FILE_UPLOAD_ALLOWED_EXTENSIONS")
 OVERWRITE_EXISTING_FILE = env.bool("OVERWRITE_EXISTING_FILE")
 
