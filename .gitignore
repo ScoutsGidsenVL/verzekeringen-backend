@@ -28,8 +28,8 @@
 /lib64
 /pyvenv.cfg
 
-# exclude actual virtual-environment
-/.venv/
+# exclude actual virtual-environment or symlink to it.
+/.venv
 
 # distribution / packaging
 /dist/

@@ -42,6 +42,12 @@ maintainers = [
 homepage = "https://github.com/ScoutsGidsenVL/verzekeringen-backend"
 repository = "https://github.com/ScoutsGidsenVL/verzekeringen-backend"
 keywords = ["django", "scouts", "verzekeringen"]
+packages = [
+    { include = "apps", from = "verzekeringen_api" },
+    { include = "initial_data", from = "verzekeringen_api" },
+    { include = "scouts_insurances", from = "verzekeringen_api" },
+    { include = "verzekeringen_api", from = "verzekeringen_api" },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.10"
@@ -50,6 +56,8 @@ django = ">=4.2,<5.0"
 dj-email-url = ">=1.0"
 django-anymail = {extras = ["sendinblue"], version = ">=10.2"}
 django-cors-headers = ">=3.7"
+django-debug-toolbar = ">=4.3.0"
+django-extensions = ">=3.2.3"
 django-filter = ">=23.5"
 django-storages = ">=1.11"
 djangorestframework = ">=3.14"
@@ -65,8 +73,11 @@ PyYAML = ">=6.0"
 # scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}  # @TODO
 urllib3= "1.26.18"
 
-[tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
 autoread-dotenv = ">=1.0.2"
+black = ">=24.4.2"
+isort = ">=5.13.2"
 ruff = ">=0.0"
 
 [tool.poetry.group.ipython.dependencies]
@@ -89,21 +100,24 @@ pytest-xdist = ">=3.2"
 # tox = ">=4.0"
 
 
+
 [tool.pytest.ini_options]
-# cache_dir = "var/cache/pytest"  # relative to $PWD, use PYTEST_CACHE_DIR instead
-log_cli = false                   # enable to show log-output
+cache_dir = "var/cache/pytest"
+log_cli = false   # enable to show log-output
 log_cli_level = "NOTSET"
 filterwarnings = []
 markers = ["unit", "integration"]
+pythonpath = [".", "verzekeringen_api"]
 testpaths = ["tests"]
 # the junit-report is used to report coverage in gitlab
-addopts = "--color=yes --junit-xml='var/coverage/pytest.xml'"
+addopts = "--color=yes --junit-xml='${BASE_DIR}/var/coverage/pytest.xml'"
+django_debug_mode = "keep"
 DJANGO_SETTINGS_MODULE = "verzekeringen_api.settings"
-pythonpath = [".", "verzekeringen_api"]
 
 
 [tool.ruff]
 # ruff searches for settings in the target-dir and up
 # https://docs.astral.sh/ruff/configuration
 cache-dir = "var/cache/ruff"
+exclude = ["**/migrations/*.py"]
 line-length = 120
