@@ -1,4 +1,4 @@
 from .equipment_serializer import EquipmentSerializer
-from .vehicle_serializer import VehicleSerializer
 from .temporary_vehicle_insurance_vehicle_serializer import TemporaryVehicleInsuranceVehicleSerializer
 from .travel_assistance_vehicle_serializer import TravelAssistanceVehicleSerializer
+from .vehicle_serializer import VehicleSerializer

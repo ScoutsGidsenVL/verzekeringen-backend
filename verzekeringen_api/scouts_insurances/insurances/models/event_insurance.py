@@ -1,5 +1,4 @@
 from django.db import models
-
 from scouts_insurances.insurances.models import BaseInsurance
 from scouts_insurances.insurances.models.enums import EventSize
 

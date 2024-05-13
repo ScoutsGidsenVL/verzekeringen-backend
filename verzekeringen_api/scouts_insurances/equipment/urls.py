@@ -1,5 +1,4 @@
 from rest_framework import routers
-
 from scouts_insurances.equipment.views import VehicleTrailerOptionViewSet, VehicleTypeViewSet
 
 router = routers.SimpleRouter()

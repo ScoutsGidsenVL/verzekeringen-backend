@@ -1,7 +1,5 @@
 from rest_framework import serializers
-
 from scouts_auth.auth.models import User
-
 from scouts_auth.groupadmin.serializers import AbstractScoutsGroupSerializer
 
 

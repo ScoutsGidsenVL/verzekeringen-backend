@@ -1,3 +1,3 @@
+from .inuits_claim_victim import InuitsClaimVictim
 from .inuits_non_member import InuitsNonMember
 from .inuits_non_member_template import InuitsNonMemberTemplate
-from .inuits_claim_victim import InuitsClaimVictim

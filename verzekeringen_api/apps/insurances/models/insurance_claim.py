@@ -1,14 +1,10 @@
-from django.db.models import BooleanField
-from jsonfield import JSONField
-
+from apps.insurances.managers import InsuranceClaimManager
+from apps.people.models import InuitsClaimVictim
 from django.conf import settings
 from django.db import models
-
-from apps.people.models import InuitsClaimVictim
-from apps.insurances.managers import InsuranceClaimManager
-
+from django.db.models import BooleanField
+from jsonfield import JSONField
 from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsMember
-
 from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,

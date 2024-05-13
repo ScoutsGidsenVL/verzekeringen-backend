@@ -10,6 +10,7 @@ class InsuranceDraftQuerySet(models.QuerySet):
 
         return self.filter(data__scouts_group__group_admin_id__in=user_groups)
 
+
 class InsuranceDraftManager(models.Manager):
     def get_queryset(self):
         return InsuranceDraftQuerySet(self.model, using=self._db)

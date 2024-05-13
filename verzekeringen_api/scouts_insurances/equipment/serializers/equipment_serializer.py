@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from scouts_insurances.equipment.models import Equipment
 from scouts_insurances.people.serializers import MemberSerializer, NonMemberSerializer
 

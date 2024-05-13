@@ -1,8 +1,8 @@
-import logging, pytz
+import logging
 from datetime import date, datetime
 
+import pytz
 from rest_framework import serializers
-
 
 logger = logging.getLogger(__name__)
 

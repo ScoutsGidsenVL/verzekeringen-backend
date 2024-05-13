@@ -2,14 +2,12 @@ import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsFunction
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsGroupSerializer,
     AbstractScoutsGroupingSerializer,
+    AbstractScoutsGroupSerializer,
+    AbstractScoutsLinkSerializer,
 )
-
 from scouts_auth.inuits.serializers import NonModelSerializer
 from scouts_auth.inuits.utils import DateUtils
-
 
 logger = logging.getLogger(__name__)
 

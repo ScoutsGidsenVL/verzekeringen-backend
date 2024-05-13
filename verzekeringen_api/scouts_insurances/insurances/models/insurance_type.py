@@ -1,7 +1,6 @@
 from django.db import models
-
-from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 from scouts_insurances.insurances.managers import InsuranceTypeManager
+from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 
 
 class InsuranceType(models.Model):

@@ -1,18 +1,16 @@
 import logging
 
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, filters, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from drf_yasg.utils import swagger_auto_schema
-
 from apps.insurances.serializers import InuitsEquipmentInsuranceSerializer
 from apps.insurances.services import InuitsEquipmentInsuranceService
-
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from scouts_insurances.insurances.models import EquipmentInsurance
 from scouts_insurances.insurances.models.enums import InsuranceStatus
-from scouts_insurances.insurances.serializers import InsuranceCostSerializer, EquipmentInsuranceSerializer
+from scouts_insurances.insurances.serializers import EquipmentInsuranceSerializer, InsuranceCostSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -95,8 +93,4 @@ class InuitsEquipmentInsuranceViewSet(viewsets.GenericViewSet):
 
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            raise PermissionDenied(
-                {
-                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
-                }
-            )
+            raise PermissionDenied({"message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"})

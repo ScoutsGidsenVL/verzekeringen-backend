@@ -1,5 +1,4 @@
 import django_filters
-
 from scouts_insurances.locations.models import Country
 
 

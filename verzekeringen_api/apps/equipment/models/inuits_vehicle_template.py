@@ -1,8 +1,6 @@
-from django.db import models
-
 from apps.equipment.managers import InuitsVehicleTemplateManager
 from apps.equipment.models import InuitsVehicle
-
+from django.db import models
 from scouts_insurances.insurances.models import TemporaryVehicleInsurance
 
 

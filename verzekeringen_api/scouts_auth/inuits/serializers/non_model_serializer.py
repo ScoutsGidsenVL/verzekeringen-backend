@@ -3,7 +3,6 @@ from datetime import date, datetime
 
 from rest_framework import serializers
 
-
 logger = logging.getLogger(__name__)
 
 

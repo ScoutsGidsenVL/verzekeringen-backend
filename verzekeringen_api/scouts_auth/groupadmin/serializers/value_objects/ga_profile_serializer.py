@@ -6,7 +6,6 @@ from scouts_auth.groupadmin.serializers.value_objects import (
     AbstractScoutsMemberSerializer,
 )
 
-
 logger = logging.getLogger(__name__)
 
 

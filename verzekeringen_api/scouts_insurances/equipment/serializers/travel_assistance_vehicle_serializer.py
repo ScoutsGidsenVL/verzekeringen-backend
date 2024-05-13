@@ -1,8 +1,7 @@
+from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
 from scouts_insurances.equipment.models import TravelAssistanceVehicle
 from scouts_insurances.equipment.models.enums import TravelAssistanceVehicleTrailerOption
 from scouts_insurances.equipment.serializers import VehicleSerializer
-
-from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
 
 
 class TravelAssistanceVehicleSerializer(VehicleSerializer):

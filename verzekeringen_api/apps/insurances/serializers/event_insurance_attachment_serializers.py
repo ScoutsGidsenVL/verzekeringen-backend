@@ -1,11 +1,9 @@
 import logging
 
-from django.forms import FileField as DjangoFileField
-from django.core.exceptions import ValidationError
-from rest_framework import serializers
-
 from apps.insurances.models import EventInsuranceAttachment
-
+from django.core.exceptions import ValidationError
+from django.forms import FileField as DjangoFileField
+from rest_framework import serializers
 
 logger = logging.getLogger(__name__)
 

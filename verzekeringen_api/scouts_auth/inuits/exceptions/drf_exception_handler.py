@@ -3,9 +3,7 @@ import logging
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.views import exception_handler
-
 from scouts_auth.inuits.mail import EmailServiceException
-
 
 logger = logging.getLogger(__name__)
 

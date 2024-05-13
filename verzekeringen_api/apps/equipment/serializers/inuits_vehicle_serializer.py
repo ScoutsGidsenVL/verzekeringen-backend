@@ -1,14 +1,10 @@
 import logging
 
-from rest_framework import serializers
-
 from apps.equipment.models import InuitsVehicle, InuitsVehicleTrailerOption
-
-from scouts_insurances.equipment.models import VehicleType
-
+from rest_framework import serializers
 from scouts_auth.inuits.serializers import EnumSerializer
 from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
-
+from scouts_insurances.equipment.models import VehicleType
 
 logger = logging.getLogger(__name__)
 

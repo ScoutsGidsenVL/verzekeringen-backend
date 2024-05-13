@@ -2,7 +2,6 @@ import logging
 
 from scouts_auth.inuits.files import StorageService
 
-
 logger = logging.getLogger(__name__)
 
 

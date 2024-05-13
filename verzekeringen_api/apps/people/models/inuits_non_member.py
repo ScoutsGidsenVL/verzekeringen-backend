@@ -1,10 +1,8 @@
 import logging
 
 from apps.people.managers import InuitsNonMemberManager
-
 from scouts_auth.inuits.models import InuitsPerson
 from scouts_auth.inuits.models.fields import OptionalCharField
-
 
 logger = logging.getLogger(__name__)
 

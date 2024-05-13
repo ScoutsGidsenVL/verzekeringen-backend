@@ -2,10 +2,8 @@ import logging
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
-from storages.backends.s3boto3 import S3Boto3Storage
-
 from scouts_auth.inuits.files import CustomStorage, StorageSettings
-
+from storages.backends.s3boto3 import S3Boto3Storage
 
 logger = logging.getLogger(__name__)
 

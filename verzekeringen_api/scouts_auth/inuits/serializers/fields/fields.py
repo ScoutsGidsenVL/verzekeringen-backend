@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from scouts_auth.inuits.serializers import DatetypeAwareDateSerializerField
 
 

@@ -1,35 +1,33 @@
-import logging, requests
+import logging
 import re
 
+import requests
 from django.conf import settings
 from django.http import Http404
-from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
-
+from rest_framework import status
 from scouts_auth.groupadmin.models import (
-    ScoutsAllowedCalls,
     AbstractScoutsFunction,
     AbstractScoutsFunctionListResponse,
     AbstractScoutsGroup,
     AbstractScoutsGroupListResponse,
-    AbstractScoutsMemberSearchResponse,
     AbstractScoutsMember,
     AbstractScoutsMemberListResponse,
+    AbstractScoutsMemberSearchResponse,
+    ScoutsAllowedCalls,
 )
 from scouts_auth.groupadmin.serializers import (
-    ScoutsAllowedCallsSerializer,
-    AbstractScoutsFunctionSerializer,
     AbstractScoutsFunctionListResponseSerializer,
-    AbstractScoutsGroupSerializer,
+    AbstractScoutsFunctionSerializer,
     AbstractScoutsGroupListResponseSerializer,
-    AbstractScoutsMemberSearchResponseSerializer,
-    AbstractScoutsMemberListResponseSerializer,
-    AbstractScoutsMemberSerializer,
+    AbstractScoutsGroupSerializer,
     AbstractScoutsMemberFrontendSerializer,
+    AbstractScoutsMemberListResponseSerializer,
+    AbstractScoutsMemberSearchResponseSerializer,
+    AbstractScoutsMemberSerializer,
+    ScoutsAllowedCallsSerializer,
 )
-
 from scouts_auth.groupadmin.utils import SettingsHelper
-
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +74,10 @@ class GroupAdmin:
         """Makes a request to the GA with the given url and returns the response as json_data."""
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
         try:
-            response = requests.get(re.sub('^https:http:', 'https:', endpoint), headers={"Authorization": "Bearer {0}".format(active_user.access_token)})
+            response = requests.get(
+                re.sub("^https:http:", "https:", endpoint),
+                headers={"Authorization": "Bearer {0}".format(active_user.access_token)},
+            )
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:

@@ -1,12 +1,10 @@
 import logging
 
-from django.db import models
-from django.db.models.functions import Concat
-from django.db.models import Q
-from django_filters import FilterSet, CharFilter
-
 from apps.people.models import InuitsNonMember
-
+from django.db import models
+from django.db.models import Q
+from django.db.models.functions import Concat
+from django_filters import CharFilter, FilterSet
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,6 @@
-import logging, pytz
+import logging
 
+import pytz
 from django.db import models
 
 

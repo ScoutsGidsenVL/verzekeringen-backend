@@ -1,10 +1,8 @@
 import logging
 
-from scouts_insurances.insurances.models.enums import TemporaryVehicleInsuranceOption
-
 # from scouts_auth.inuits.serializers.fields import MultipleChoiceSerializerField
 from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
-
+from scouts_insurances.insurances.models.enums import TemporaryVehicleInsuranceOption
 
 logger = logging.getLogger(__name__)
 

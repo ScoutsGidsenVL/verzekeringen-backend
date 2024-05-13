@@ -2,7 +2,6 @@ import logging
 
 from scouts_auth.inuits.utils import Singleton
 
-
 logger = logging.getLogger(__name__)
 
 

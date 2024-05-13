@@ -1,8 +1,7 @@
 from decimal import Decimal
 
 from django.db import transaction
-
-from scouts_insurances.insurances.models import ActivityInsurance, InsuranceType, CostVariable
+from scouts_insurances.insurances.models import ActivityInsurance, CostVariable, InsuranceType
 from scouts_insurances.insurances.models.enums import GroupSize
 from scouts_insurances.insurances.services import BaseInsuranceService
 
@@ -50,7 +49,9 @@ class ActivityInsuranceService:
         insurance.full_clean()
         insurance.save()
 
-        self.base_insurance_service.handle_insurance_created(insurance, base_insurance_fields.get("responsible_member"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, base_insurance_fields.get("responsible_member")
+        )
 
         return insurance
 

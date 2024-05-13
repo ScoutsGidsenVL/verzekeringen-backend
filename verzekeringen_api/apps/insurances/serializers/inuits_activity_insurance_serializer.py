@@ -1,11 +1,9 @@
-from rest_framework import serializers
-from drf_yasg.utils import swagger_serializer_method
-
 from apps.insurances.models import ActivityInsuranceAttachment
 from apps.insurances.serializers import ActivityInsuranceAttachmentSerializer
-
+from drf_yasg.utils import swagger_serializer_method
+from rest_framework import serializers
 from scouts_insurances.insurances.models import ActivityInsurance
-from scouts_insurances.insurances.serializers import BaseInsuranceFields, ActivityInsuranceSerializer
+from scouts_insurances.insurances.serializers import ActivityInsuranceSerializer, BaseInsuranceFields
 
 
 class InuitsActivityInsuranceSerializer(ActivityInsuranceSerializer):

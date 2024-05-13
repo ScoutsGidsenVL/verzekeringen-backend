@@ -1,8 +1,6 @@
-from rest_framework import serializers
-
 from apps.equipment.models import InuitsEquipmentTemplate
 from apps.equipment.serializers import InuitsEquipmentSerializer
-
+from rest_framework import serializers
 from scouts_auth.inuits.mixins import FlattenSerializerMixin
 
 

@@ -1,9 +1,7 @@
 import logging
 
 from django.core.files.storage import FileSystemStorage
-
 from scouts_auth.inuits.files import CustomStorage
-
 
 logger = logging.getLogger(__name__)
 

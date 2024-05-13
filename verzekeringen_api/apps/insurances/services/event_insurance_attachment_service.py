@@ -1,10 +1,10 @@
-import logging, os
-
-from django.core.files.base import File
-from django.core.files.storage import default_storage
+import logging
+import os
 
 from apps.insurances.models import EventInsuranceAttachment
 from apps.insurances.utils import InsuranceAttachmentUtils
+from django.core.files.base import File
+from django.core.files.storage import default_storage
 from scouts_auth.inuits.files import StorageService
 from scouts_auth.inuits.models import PersistedFile
 

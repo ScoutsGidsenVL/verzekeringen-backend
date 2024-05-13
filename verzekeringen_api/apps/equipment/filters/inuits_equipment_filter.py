@@ -1,7 +1,6 @@
 import django_filters
-from django.db.models import Q
-
 from apps.equipment.models import InuitsEquipment
+from django.db.models import Q
 
 
 class InuitsEquipmentFilter(django_filters.FilterSet):

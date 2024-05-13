@@ -2,11 +2,10 @@ import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsFunctionListResponse
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
     AbstractScoutsFunctionSerializer,
+    AbstractScoutsLinkSerializer,
     AbstractScoutsResponseSerializer,
 )
-
 
 logger = logging.getLogger(__name__)
 

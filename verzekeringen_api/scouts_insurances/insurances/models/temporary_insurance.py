@@ -1,10 +1,8 @@
-from django.db import models
 from django.core.exceptions import ValidationError
-
-from scouts_insurances.locations.models import Country
-
-from scouts_insurances.people.models import NonMember
+from django.db import models
 from scouts_insurances.insurances.models import BaseInsurance
+from scouts_insurances.locations.models import Country
+from scouts_insurances.people.models import NonMember
 
 
 class TemporaryInsurance(BaseInsurance):

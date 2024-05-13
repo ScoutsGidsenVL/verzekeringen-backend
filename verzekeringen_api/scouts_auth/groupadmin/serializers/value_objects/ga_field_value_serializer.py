@@ -1,9 +1,7 @@
 import logging
 
 from scouts_auth.groupadmin.models import AbstractScoutsValue
-
 from scouts_auth.inuits.serializers import NonModelSerializer
-
 
 logger = logging.getLogger(__name__)
 

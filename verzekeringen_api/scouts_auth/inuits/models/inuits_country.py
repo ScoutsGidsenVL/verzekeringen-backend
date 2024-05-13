@@ -1,6 +1,6 @@
+from scouts_auth.inuits.managers import InuitsCountryManager
 from scouts_auth.inuits.models import AbstractBaseModel
 from scouts_auth.inuits.models.fields import OptionalCharField, RequiredCharField
-from scouts_auth.inuits.managers import InuitsCountryManager
 
 
 class InuitsCountry(AbstractBaseModel):

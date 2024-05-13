@@ -1,7 +1,6 @@
-from scouts_insurances.insurances.models.enums import GroupSize
-
 from scouts_auth.inuits.serializers import EnumSerializer
 from scouts_auth.inuits.serializers.fields import ChoiceSerializerField
+from scouts_insurances.insurances.models.enums import GroupSize
 
 
 class GroupSizeSerializerField(ChoiceSerializerField):

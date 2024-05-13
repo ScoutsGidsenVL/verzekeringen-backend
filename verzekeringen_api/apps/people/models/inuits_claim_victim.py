@@ -1,5 +1,4 @@
 from django.core.exceptions import ValidationError
-
 from scouts_auth.inuits.models import InuitsPerson
 from scouts_auth.inuits.models.fields import OptionalCharField
 

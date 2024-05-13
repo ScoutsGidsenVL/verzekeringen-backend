@@ -1,8 +1,8 @@
 import logging
-from django_filters import rest_framework as filters
-from django.db.models import Q
 
 from apps.insurances.models import InsuranceClaim
+from django.db.models import Q
+from django_filters import rest_framework as filters
 
 logger = logging.getLogger(__name__)
 

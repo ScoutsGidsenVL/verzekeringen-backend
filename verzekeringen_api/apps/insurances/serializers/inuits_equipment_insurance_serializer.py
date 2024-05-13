@@ -1,5 +1,4 @@
 from apps.equipment.serializers import InuitsEquipmentSerializer
-
 from scouts_insurances.insurances.models import EquipmentInsurance
 from scouts_insurances.insurances.serializers import EquipmentInsuranceSerializer
 

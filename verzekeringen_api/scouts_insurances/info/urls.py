@@ -1,5 +1,4 @@
 from rest_framework import routers
-
 from scouts_insurances.info.views import InfoVariableViewSet
 
 router = routers.SimpleRouter()

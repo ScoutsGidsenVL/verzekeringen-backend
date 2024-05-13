@@ -1,27 +1,25 @@
-import logging, requests
+import logging
 import re
 
+import requests
 from django.http import Http404
-
 from scouts_auth.groupadmin.models import (
-    AbstractScoutsMemberPersonalData,
-    AbstractScoutsMemberGroupAdminData,
-    AbstractScoutsMemberScoutsData,
-    AbstractScoutsMember,
     AbstractScoutsAddress,
+    AbstractScoutsMember,
+    AbstractScoutsMemberGroupAdminData,
+    AbstractScoutsMemberPersonalData,
+    AbstractScoutsMemberScoutsData,
 )
 from scouts_auth.groupadmin.serializers.value_objects import (
-    AbstractScoutsLinkSerializer,
-    AbstractScoutsContactSerializer,
     AbstractScoutsAddressSerializer,
+    AbstractScoutsContactSerializer,
     AbstractScoutsFunctionSerializer,
     AbstractScoutsGroupSerializer,
     AbstractScoutsGroupSpecificFieldSerializer,
+    AbstractScoutsLinkSerializer,
 )
-
 from scouts_auth.inuits.models import GenderHelper
 from scouts_auth.inuits.serializers import NonModelSerializer
-
 
 logger = logging.getLogger(__name__)
 
@@ -256,7 +254,10 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
     def _fetch_function(self, endpoint: str, access_token: str):
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
         try:
-            response = requests.get(re.sub('^https:http:', 'https:', endpoint), headers={"Authorization": "Bearer {0}".format(access_token)})
+            response = requests.get(
+                re.sub("^https:http:", "https:", endpoint),
+                headers={"Authorization": "Bearer {0}".format(access_token)},
+            )
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
