@@ -42,6 +42,12 @@ maintainers = [
 homepage = "https://github.com/ScoutsGidsenVL/verzekeringen-backend"
 repository = "https://github.com/ScoutsGidsenVL/verzekeringen-backend"
 keywords = ["django", "scouts", "verzekeringen"]
+packages = [
+    { include = "apps", from = "verzekeringen_api" },
+    { include = "initial_data", from = "verzekeringen_api" },
+    { include = "scouts_insurances", from = "verzekeringen_api" },
+    { include = "verzekeringen_api", from = "verzekeringen_api" },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.10"
