@@ -213,6 +213,7 @@ class InsuranceMailService(EmailService):
         body = None
         html_body = self._prepare_email_body(template_path, dictionary)
         html_body = TextUtils.compose_html_email(self.template_path_start, html_body, self.template_path_end)
+        logger.debug(html_body)
 
         if not reply_to:
             reply_to = self.from_email
