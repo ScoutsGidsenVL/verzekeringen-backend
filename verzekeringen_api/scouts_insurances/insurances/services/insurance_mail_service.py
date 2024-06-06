@@ -1,4 +1,5 @@
 import logging
+import re
 
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -213,6 +214,10 @@ class InsuranceMailService(EmailService):
         body = None
         html_body = self._prepare_email_body(template_path, dictionary)
         html_body = TextUtils.compose_html_email(self.template_path_start, html_body, self.template_path_end)
+        # Voorkom dat Brevo automatisch achter elke lijn een '<br>' plakt.
+        html_body = ' '.join(html_body.splitlines())
+        # Combineer opeenvolgende spaties
+        html_body = re.sub('  +', ' ', html_body)
         logger.info(html_body)
 
         if not reply_to:
