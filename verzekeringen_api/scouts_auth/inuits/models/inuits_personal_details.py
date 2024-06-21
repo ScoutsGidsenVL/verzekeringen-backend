@@ -9,8 +9,8 @@ from scouts_auth.inuits.models.fields import (
 
 
 class InuitsPersonalDetails(AbstractNonModel):
-    first_name = RequiredCharField(max_length=15)
-    last_name = RequiredCharField(max_length=25)
+    first_name = RequiredCharField(max_length=255)
+    last_name = RequiredCharField(max_length=255)
     phone_number = OptionalCharField(max_length=24)
     cell_number = OptionalCharField(max_length=24)
     email = OptionalEmailField()
