@@ -30,6 +30,7 @@
 
 # exclude actual virtual-environment or symlink to it.
 /.venv
+/venv/
 
 # distribution / packaging
 /dist/
