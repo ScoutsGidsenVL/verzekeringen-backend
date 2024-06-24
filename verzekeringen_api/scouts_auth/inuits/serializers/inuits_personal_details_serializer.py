@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class InuitsPersonalDetailsSerializer(serializers.Serializer):
-    # first_name    max_length=15           required
-    # last_name     max_length=25           required
+    # first_name    max_length=255          required
+    # last_name     max_length=255          required
     # phone_number  max_length=24           optional
     # cell_number   max_length=24           optional
     # email         EmailField              optional

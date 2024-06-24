@@ -71,7 +71,7 @@ psycopg2-binary = ">=2.9"
 pyjwt = ">=2.3"
 PyYAML = ">=6.0"
 # scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}  # @TODO
-urllib3= "1.26.18"
+urllib3= "1.26.19"
 
 
 [tool.poetry.group.dev.dependencies]
