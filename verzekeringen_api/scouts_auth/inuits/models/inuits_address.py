@@ -5,7 +5,7 @@ from scouts_auth.inuits.models.fields import OptionalCharField, OptionalIntegerF
 class InuitsAddress(AbstractNonModel):
     street = OptionalCharField(max_length=100)
     number = OptionalCharField(max_length=5)
-    letter_box = OptionalCharField(max_length=5, default=None, blank=True, null=True)
+    letter_box = OptionalCharField(max_length=5, blank=True, null=True)
     postal_code = OptionalIntegerField()
     city = OptionalCharField(max_length=40)
     # country = models.ForeignKey(InuitsCountry, on_delete=models.CASCADE, null=True, related_name="address")
