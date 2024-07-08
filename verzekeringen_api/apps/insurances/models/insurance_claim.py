@@ -53,31 +53,31 @@ class InsuranceClaim(AuditedBaseModel):
     damage_type = OptionalCharField(max_length=128)
 
     # Was there someone else involved in the accident ?
-    involved_party = OptionalCharField(max_length=30, blank=True, null=True, default=None)
+    involved_party = OptionalCharField(max_length=30, blank=True, null=True)
     involved_party_name = OptionalCharField(max_length=1024)
     involved_party_description = OptionalCharField(max_length=1024)
     involved_party_birthdate = OptionalDateField()
 
     # Was the accident reported by an official instance ?
-    official_report = OptionalCharField(max_length=30, blank=True, null=True, default=None)
+    official_report = OptionalCharField(max_length=30, blank=True, null=True)
 
     official_report_description = OptionalCharField(max_length=1024)
     pv_number = OptionalCharField(max_length=30)
 
     # Was there a witness to the accident ?
-    witness = OptionalCharField(max_length=30, blank=True, null=True, default=None)
+    witness = OptionalCharField(max_length=30, blank=True, null=True)
     witness_name = OptionalCharField(max_length=128)
     witness_description = OptionalCharField(max_length=1024)
 
     # Was someone keeping watch over the scouts group while the accident happened ?
-    leadership = OptionalCharField(max_length=30, blank=True, null=True, default=None)
+    leadership = OptionalCharField(max_length=30, blank=True, null=True)
     leadership_description = OptionalCharField(max_length=1024)
 
     # Administrative personel can add case notes and insurance company case number
     note = OptionalCharField(max_length=1024)
     case_number = OptionalCharField(max_length=30)
 
-    attachment_name = OptionalCharField(max_length=1024, blank=True, null=True, default=None)
+    attachment_name = OptionalCharField(max_length=1024, blank=True, null=True)
     # Full scouts group details
     _group: AbstractScoutsGroup = None
     # Full groupadmin member data for the declarant
