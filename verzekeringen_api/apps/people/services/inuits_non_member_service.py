@@ -195,8 +195,10 @@ class InuitsNonMemberService(NonMemberService):
         non_editable_non_members = NonMember.objects.all().non_editable(user=user)
         logger.debug("NON EDITABLE NON MEMBERS: %s", non_editable_non_members)
 
-        non_editable_templates = InuitsNonMemberTemplate.objects.all().filter(non_member__in=non_editable_non_members)
-        logger.debug("NON EDITABLE TEMPLATES: %s", non_editable_templates)
+        non_editable_templates = InuitsNonMemberTemplate.objects.all().filter(
+            editable=True, non_member__in=non_editable_non_members
+        )
+        logger.debug("%s NON EDITABLE TEMPLATES: %s", len(non_editable_templates), non_editable_templates)
 
         for non_editable_template in non_editable_templates:
             non_editable_template.editable = False
