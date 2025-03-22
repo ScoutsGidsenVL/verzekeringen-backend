@@ -2,7 +2,6 @@ from django.db import models
 
 
 class Address(models.Model):
-
     id = models.AutoField(db_column="adres_id", primary_key=True)
     street = models.CharField(db_column="straat", max_length=100)
     number = models.CharField(db_column="nummer", max_length=5)

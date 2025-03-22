@@ -5,7 +5,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class InuitsClaimVictim(InuitsPerson):
-
     legal_representative = OptionalCharField(max_length=128)
     group_admin_id = OptionalCharField(max_length=64)
     membership_number = OptionalCharField(max_length=64)

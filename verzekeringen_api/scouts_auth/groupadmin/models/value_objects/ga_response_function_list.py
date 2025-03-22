@@ -5,7 +5,6 @@ from scouts_auth.inuits.models import AbstractNonModel
 
 
 class AbstractScoutsFunctionListResponse(AbstractNonModel):
-
     functions: List[AbstractScoutsFunction]
     links: List[AbstractScoutsLink]
 

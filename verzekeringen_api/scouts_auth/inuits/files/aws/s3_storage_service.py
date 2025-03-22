@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class S3StorageService(CustomStorage, S3Boto3Storage):
-
     bucket_name = StorageSettings.get_s3_bucket_name()
     file_overwrite = StorageSettings.get_s3_file_overwrite()
 

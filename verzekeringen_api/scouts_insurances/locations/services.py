@@ -12,7 +12,7 @@ class BelgianPostalCodeCityService:
 
     def search(self, term: str) -> list:
         payload = {"term": term}
-        response = requests.get(re.sub('^https:http:', 'https:', self.endpoint), params=payload)
+        response = requests.get(re.sub("^https:http:", "https:", self.endpoint), params=payload)
 
         response.raise_for_status()
         json = response.json()

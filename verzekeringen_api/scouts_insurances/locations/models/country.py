@@ -15,6 +15,4 @@ class Country(models.Model):
     insurance_types = models.ManyToManyField(InsuranceType, related_name="country_options")
 
     def __str__(self):
-        return "{}".format(
-            self.id
-        )
+        return "{}".format(self.id)

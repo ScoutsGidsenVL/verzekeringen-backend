@@ -256,7 +256,9 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
     def _fetch_function(self, endpoint: str, access_token: str):
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
         try:
-            response = requests.get(re.sub('^https:http:', 'https:', endpoint), headers={"Authorization": "Bearer {0}".format(access_token)})
+            response = requests.get(
+                re.sub("^https:http:", "https:", endpoint), headers={"Authorization": "Bearer {0}".format(access_token)}
+            )
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:

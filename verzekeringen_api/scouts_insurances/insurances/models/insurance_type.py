@@ -5,7 +5,6 @@ from scouts_insurances.insurances.managers import InsuranceTypeManager
 
 
 class InsuranceType(models.Model):
-
     objects = InsuranceTypeManager()
 
     id = models.IntegerField(db_column="verzekeringstypeid", primary_key=True)

@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class StorageService(Storage):
-
     name = "scouts_auth.inuits.files.StorageService"
 
     storage = None

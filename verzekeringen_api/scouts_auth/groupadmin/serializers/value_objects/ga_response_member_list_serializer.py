@@ -28,9 +28,7 @@ class AbstractScoutsMemberListMemberSerializer(NonModelSerializer):
         validated_data = {
             "group_admin_id": data.pop("id", None),
             "index": data.pop("positie", None),
-            "values": AbstractScoutsValueSerializer(many=True).to_internal_value(
-                list(data.pop("waarden", {}).items())
-            ),
+            "values": AbstractScoutsValueSerializer(many=True).to_internal_value(list(data.pop("waarden", {}).items())),
             "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
@@ -92,9 +90,7 @@ class AbstractScoutsMemberListResponseSerializer(AbstractScoutsResponseSerialize
 
         instance = AbstractScoutsMemberListResponse()
 
-        instance.members = AbstractScoutsMemberListMemberSerializer(many=True).create(
-            validated_data.pop("members", [])
-        )
+        instance.members = AbstractScoutsMemberListMemberSerializer(many=True).create(validated_data.pop("members", []))
 
         super().create(validated_data)
 

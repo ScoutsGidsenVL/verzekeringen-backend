@@ -51,7 +51,7 @@ class SettingsHelper:
     @staticmethod
     def get_administrator_groups() -> List[str]:
         return settings.KNOWN_ADMIN_GROUPS
-        
+
     @staticmethod
     def get_personnel_group() -> str:
         return settings.KNOWN_PERSONNEL_GROUP
@@ -63,7 +63,7 @@ class SettingsHelper:
     @staticmethod
     def get_roles() -> List[str]:
         return settings.KNOWN_ROLES
-    
+
     @staticmethod
     def get_section_leader_identifier() -> str:
         return settings.SECTION_LEADER_IDENTIFIER

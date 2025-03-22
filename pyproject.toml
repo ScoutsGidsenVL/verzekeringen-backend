@@ -50,7 +50,8 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.10"
+# python = ">=3.9,<3.10"
+python = ">=3.9,!=3.9.0,!=3.9.1,<3.10"
 boto3 = ">=1.30"
 django = ">=4.2,<5.0"
 dj-email-url = ">=1.0"
@@ -71,7 +72,7 @@ psycopg2-binary = ">=2.9"
 pyjwt = ">=2.3"
 PyYAML = ">=6.0"
 # scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}  # @TODO
-urllib3= "1.26.19"
+urllib3= "1.26.20"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -121,3 +122,6 @@ DJANGO_SETTINGS_MODULE = "verzekeringen_api.settings"
 cache-dir = "var/cache/ruff"
 exclude = ["**/migrations/*.py"]
 line-length = 120
+
+[tool.ruff.format]
+preview = true

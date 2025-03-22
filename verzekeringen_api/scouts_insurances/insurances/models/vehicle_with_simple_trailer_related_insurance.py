@@ -10,7 +10,6 @@ from scouts_auth.inuits.models.fields import (
 
 
 class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
-
     _vehicle_trailer = OptionalIntegerField(
         db_column="aanhangwagen",
         choices=TravelAssistanceVehicleTrailerOption.choices,
@@ -67,4 +66,3 @@ class VehicleWithSimpleTrailerRelatedInsurance(VehicleRelatedInsurance):
 
     def vehicle_with_simple_trailer_to_str_mail(self):
         return f"Type: {self._vehicle_type.lower()}, Merk: {self._vehicle_brand}, Nummerplaat: {self._vehicle_license_plate}, Bouwjaar: {self._vehicle_construction_year}, Chassisnummer: {self._vehicle_chassis_number}, Aanhangwagen: {'ja' if self._vehicle_trailer == 1 else 'nee'}"
-

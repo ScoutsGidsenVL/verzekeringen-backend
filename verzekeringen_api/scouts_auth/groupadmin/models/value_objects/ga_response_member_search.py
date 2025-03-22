@@ -7,7 +7,6 @@ from scouts_auth.inuits.models import AbstractNonModel, Gender
 
 
 class AbstractScoutsMemberSearchMember(AbstractNonModel):
-
     group_admin_id: str
     first_name: str
     last_name: str

@@ -5,7 +5,6 @@ from scouts_auth.inuits.utils import TextUtils
 
 
 class Commentable(models.Model):
-
     comment = OptionalTextField()
 
     class Meta:

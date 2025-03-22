@@ -5,7 +5,6 @@ from scouts_auth.inuits.utils import TextUtils
 
 
 class Translatable(models.Model):
-
     label = OptionalTextField()
 
     class Meta:

@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class AuthorizationService:
-
     SUPER_ADMIN = "role_super_admin"
 
     def add_user_to_group(self, user: User, group: Group = None, group_name: str = None) -> User:

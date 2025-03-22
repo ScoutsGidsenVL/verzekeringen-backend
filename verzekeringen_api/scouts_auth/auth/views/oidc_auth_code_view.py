@@ -36,7 +36,8 @@ class OIDCAuthCodeView(views.APIView):
         except HTTPError as exc:
             logger.error(f"Failed to refresh tokens: {exc}")
             # raise TokenRequestException("Failed to refresh tokens.")
-            raise TokenRequestException(exc)
+            # this custom error takes an exception as input-argument
+            raise TokenRequestException(exc) from exc
 
         output_serializer = TokenSerializer(tokens)
 
