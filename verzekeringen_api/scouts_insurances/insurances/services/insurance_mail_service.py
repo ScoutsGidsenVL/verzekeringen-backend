@@ -193,7 +193,9 @@ class InsuranceMailService(EmailService):
             for participant in insurance.participants.all():
                 participants.append(participant.full_name())
             vehicle = (
-                f"<li>Voertuig: {insurance.vehicle_with_simple_trailer_to_str_mail()}</li>" if insurance.vehicle else ""
+                f"<li>Voertuig: {insurance.vehicle_with_simple_trailer_to_str_mail()}</li>"
+                if insurance.vehicle
+                else ""
             )
             return (
                 f"<li>Periode: {insurance.start_date.strftime('%d %b %Y')} - {insurance.end_date.strftime('%d %b %Y')}</li>"
@@ -247,7 +249,6 @@ class InsuranceMailService(EmailService):
         html_body = " ".join(html_body.splitlines())
         # Combineer opeenvolgende spaties
         html_body = re.sub("  +", " ", html_body)
-        logger.info(html_body)
 
         if not reply_to:
             reply_to = self.from_email
