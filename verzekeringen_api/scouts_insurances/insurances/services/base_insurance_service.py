@@ -44,9 +44,9 @@ class BaseInsuranceService:
             None,
         )
         if not group_object:
-            raise PermissionDenied(
-                {"message": "Given group {} is not a valid group of user".format(scouts_group.group_admin_id)}
-            )
+            raise PermissionDenied({
+                "message": "Given group {} is not a valid group of user".format(scouts_group.group_admin_id)
+            })
         member = self.member_service.member_create_from_user(user=created_by)
         fields = {
             "status": InsuranceStatus.NEW,
