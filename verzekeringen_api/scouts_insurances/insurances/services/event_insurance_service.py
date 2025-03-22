@@ -13,7 +13,7 @@ class EventInsuranceService:
     base_insurance_service = BaseInsuranceService()
 
     def _calculate_total_cost(self, insurance: EventInsurance) -> Decimal:
-        days = ceil(((insurance.end_date.timestamp() - insurance.start_date.timestamp())/3600)/24)
+        days = ceil(((insurance.end_date.timestamp() - insurance.start_date.timestamp()) / 3600) / 24)
         if days == 0:
             days = 1
 
@@ -56,7 +56,9 @@ class EventInsuranceService:
         insurance.full_clean()
         insurance.save()
 
-        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("responsible_member"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, created_by=base_insurance_fields.get("responsible_member")
+        )
 
         return insurance
 

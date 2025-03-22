@@ -18,40 +18,38 @@ logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimService:
-
     report_service = InsuranceClaimReportService()
     attachment_service = InsuranceClaimAttachmentService()
     mail_service = InuitsInsuranceMailService()
 
     @transaction.atomic
     def create(
-            self,
-            *,
-            group_group_admin_id: str,
-            created_by: settings.AUTH_USER_MODEL,
-            date_of_accident: datetime = None,
-            declarant_city: str = "",
-            file=None,
-            bank_account: str = "",
-            activity: str = "",
-            activity_type: str = "",
-            used_transport: str = "",
-            damage_type: str = "",
-            description: str = "",
-            involved_party_description: str = "",
-            involved_party_name: str = "",
-            involved_party_birthdate: date = None,
-            official_report_description: str = "",
-            pv_number: str = "",
-            witness_name: str = "",
-            witness_description: str = "",
-            leadership_description: str = "",
-            victim: InuitsClaimVictim,
-            witness: bool = None,
-            involved_party: bool = None,
-            official_report: bool = None,
-            leadership: bool = None
-
+        self,
+        *,
+        group_group_admin_id: str,
+        created_by: settings.AUTH_USER_MODEL,
+        date_of_accident: datetime = None,
+        declarant_city: str = "",
+        file=None,
+        bank_account: str = "",
+        activity: str = "",
+        activity_type: str = "",
+        used_transport: str = "",
+        damage_type: str = "",
+        description: str = "",
+        involved_party_description: str = "",
+        involved_party_name: str = "",
+        involved_party_birthdate: date = None,
+        official_report_description: str = "",
+        pv_number: str = "",
+        witness_name: str = "",
+        witness_description: str = "",
+        leadership_description: str = "",
+        victim: InuitsClaimVictim,
+        witness: bool = None,
+        involved_party: bool = None,
+        official_report: bool = None,
+        leadership: bool = None,
     ) -> InsuranceClaim:
         # validate if person has rights to create claim for this group
         if group_group_admin_id not in (group.group_admin_id for group in created_by.scouts_groups):
@@ -83,7 +81,7 @@ class InsuranceClaimService:
             involved_party=involved_party,
             official_report=official_report,
             leadership=leadership,
-            attachment_name=file.get("file").name if file.get("file", None) else None
+            attachment_name=file.get("file").name if file.get("file", None) else None,
         )
 
         claim.full_clean()

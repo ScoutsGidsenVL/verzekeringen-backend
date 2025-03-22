@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 
 class PersonSerializer(serializers.Serializer):
-
     id = serializers.SerializerMethodField()
     group_admin_id = serializers.SerializerMethodField()
     gender = serializers.SerializerMethodField()

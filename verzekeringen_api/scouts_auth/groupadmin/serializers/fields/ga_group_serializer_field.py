@@ -30,9 +30,7 @@ class AbstractScoutsGroupSerializerField(serializers.Field):
             return None
 
         logger.debug("GROUP FIELD data: %s", group_admin_id)
-        return GroupAdmin().get_group(
-            active_user=self.context.get("request").user, group_group_admin_id=group_admin_id
-        )
+        return GroupAdmin().get_group(active_user=self.context.get("request").user, group_group_admin_id=group_admin_id)
 
     def to_representation(self, data: any) -> dict:
         logger.debug("Attempting to serialize scouts group from data of type %s", type(data))

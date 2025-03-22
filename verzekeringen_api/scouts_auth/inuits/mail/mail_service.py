@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class EmailService:
-
     backend = settings.EMAIL_BACKEND
 
     def validate_email_arguments(
@@ -81,7 +80,7 @@ class EmailService:
             template_id=mail.template_id,
             attachments=mail.attachments,
             is_html=mail.is_html,
-            tags=tags
+            tags=tags,
         )
 
     def send_email(
@@ -98,7 +97,7 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
-        tags=None
+        tags=None,
     ):
         """Decides wether to send email through the django backend or SendInBlue."""
         if tags is None:
@@ -129,7 +128,7 @@ class EmailService:
                 attachments=attachments,
                 template_id=template_id,
                 is_html=is_html,
-                tags=tags
+                tags=tags,
             )
         else:
             logger.debug("Sending mail with Django")
@@ -204,7 +203,7 @@ class EmailService:
         attachments: list = None,
         template_id: str = None,
         is_html: bool = False,
-        tags=None
+        tags=None,
     ):
         if tags is None:
             tags = []
@@ -214,7 +213,7 @@ class EmailService:
             from_email=from_email,
             to=to,
             tags=tags,
-            bcc=bcc
+            bcc=bcc,
             # Anymail extra in constructor
         )
         # if is_html:

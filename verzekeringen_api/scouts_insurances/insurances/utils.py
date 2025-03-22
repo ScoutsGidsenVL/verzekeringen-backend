@@ -71,7 +71,6 @@ class InsuranceSettingsHelper:
 
 
 class InsuranceAttachmentUtils:
-
     static_setup = False
 
     insurance_base_path = settings.INSURANCE_FILES_BASE_PATH

@@ -7,10 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class InsuranceClaimsPermission(permissions.BasePermission):
-
     def has_object_permission(self, request, view, obj):
         if request.user.has_role_administrator():
             return True
-        raise PermissionDenied({"message":"You don't have permission to access",
-                                "object_id": obj.id})
-
+        raise PermissionDenied({"message": "You don't have permission to access", "object_id": obj.id})

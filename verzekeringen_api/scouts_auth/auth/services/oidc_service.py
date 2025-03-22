@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class OIDCService:
-
     oidc_endpoint = SettingsHelper.get_oidc_op_token_endpoint()
     oidc_rp_client_id = SettingsHelper.get_oidc_rp_client_id()
     oidc_rp_client_secret = SettingsHelper.get_oidc_rp_client_secret()

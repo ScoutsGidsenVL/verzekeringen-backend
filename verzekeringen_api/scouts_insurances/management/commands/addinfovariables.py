@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-
     help = "Adds the info variables to the database"
 
     def set_variable(self, key, value):

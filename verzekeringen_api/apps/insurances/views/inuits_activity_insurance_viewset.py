@@ -80,7 +80,6 @@ class InuitsActivityInsuranceViewSet(viewsets.GenericViewSet):
             ActivityInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
         if existing_insurance._status != InsuranceStatus.BILLED:
-
             input_serializer = InuitsActivityInsuranceSerializer(data=request.data, context={"request": request})
             input_serializer.is_valid(raise_exception=True)
 
@@ -92,8 +91,4 @@ class InuitsActivityInsuranceViewSet(viewsets.GenericViewSet):
 
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            raise PermissionDenied(
-                {
-                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
-                }
-            )
+            raise PermissionDenied({"message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"})

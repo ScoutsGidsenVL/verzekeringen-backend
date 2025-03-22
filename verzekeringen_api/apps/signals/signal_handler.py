@@ -50,15 +50,17 @@ class InsuranceSignalHandler:
         leader_functions: List[AbstractScoutsFunction()] = service.get_active_leader_functions(user=user)
         scouts_groups: List[AbstractScoutsGroup] = groupadmin.get_groups(active_user=user).scouts_groups
         user_scouts_groups: List[AbstractScoutsGroup] = []
-        
+
         for function in leader_functions:
             for scouts_group in scouts_groups:
-                if (scouts_group.group_admin_id in SettingsHelper.get_administrator_groups() or
-                    scouts_group.group_admin_id == function.scouts_group.group_admin_id):
+                if (
+                    scouts_group.group_admin_id in SettingsHelper.get_administrator_groups()
+                    or scouts_group.group_admin_id == function.scouts_group.group_admin_id
+                ):
                     if scouts_group.group_admin_id not in [g.group_admin_id for g in user_scouts_groups]:
                         user_scouts_groups.append(scouts_group)
-        
-        user_scouts_groups.sort(key=attrgetter('group_admin_id'))
+
+        user_scouts_groups.sort(key=attrgetter("group_admin_id"))
         user.scouts_groups = user_scouts_groups
         # @TODO
         # now = timezone.now()
