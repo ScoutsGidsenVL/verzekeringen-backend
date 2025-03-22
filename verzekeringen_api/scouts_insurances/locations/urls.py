@@ -7,8 +7,6 @@ router = routers.SimpleRouter()
 router.register(r"", CountryViewSet, "Country")
 
 urlpatterns = router.urls
-urlpatterns.extend(
-    [
-        path("belgian_city_search/", BelgianPostalCodeCitySearch.as_view()),
-    ]
-)
+urlpatterns.extend([
+    path("belgian_city_search/", BelgianPostalCodeCitySearch.as_view()),
+])

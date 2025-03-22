@@ -5,7 +5,6 @@ from scouts_insurances.insurances.models import BaseInsurance
 
 
 class ActivityInsurance(BaseInsurance):
-
     insurance_parent = models.OneToOneField(
         BaseInsurance,
         db_column="verzekeringsid",

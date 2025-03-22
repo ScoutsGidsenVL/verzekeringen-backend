@@ -8,7 +8,6 @@ from scouts_auth.inuits.models.fields import (
 
 
 class VehicleWithTrailerRelatedInsurance(VehicleRelatedInsurance):
-
     _vehicle_trailer = OptionalCharField(
         db_column="aanhangwagen",
         choices=TemporaryVehicleInsuranceVehicleTrailerOption.choices,

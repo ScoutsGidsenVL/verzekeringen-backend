@@ -10,7 +10,6 @@ from scouts_insurances.insurances.models.enums import (
 
 
 class TemporaryVehicleInsurance(VehicleWithTrailerRelatedInsurance, BaseInsurance):
-
     insurance_parent = models.OneToOneField(
         BaseInsurance,
         db_column="verzekeringsid",

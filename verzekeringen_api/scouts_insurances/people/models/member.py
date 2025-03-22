@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class Member(AbstractMember, models.Model):
-
     id = models.AutoField(db_column="lidid", primary_key=True)
     membership_number = models.BigIntegerField(db_column="lidnr")
     email = models.EmailField(max_length=60, blank=True)

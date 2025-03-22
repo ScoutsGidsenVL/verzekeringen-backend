@@ -122,3 +122,6 @@ DJANGO_SETTINGS_MODULE = "verzekeringen_api.settings"
 cache-dir = "var/cache/ruff"
 exclude = ["**/migrations/*.py"]
 line-length = 120
+
+[tool.ruff.format]
+preview = true

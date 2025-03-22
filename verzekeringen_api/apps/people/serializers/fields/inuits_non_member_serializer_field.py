@@ -47,6 +47,5 @@ class InuitsNonMemberSerializerField(serializers.PrimaryKeyRelatedField):
         if inuits_non_member:
             return InuitsNonMemberSerializer().to_representation(inuits_non_member)
 
-
     def validate(self, data: dict) -> InuitsNonMember:
         return InuitsNonMember(**data)

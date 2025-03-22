@@ -12,12 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 class EventInsuranceAttachmentService:
-
     file_service: StorageService = default_storage
 
-    def store_attachment(
-        self, *, uploaded_file: File, insurance: EventInsuranceAttachment
-    ) -> EventInsuranceAttachment:
+    def store_attachment(self, *, uploaded_file: File, insurance: EventInsuranceAttachment) -> EventInsuranceAttachment:
         """Stores the uploaded attachment as a file."""
 
         name, extension = os.path.splitext(uploaded_file.name)

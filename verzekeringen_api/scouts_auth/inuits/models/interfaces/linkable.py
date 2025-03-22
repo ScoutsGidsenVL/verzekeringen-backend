@@ -5,7 +5,6 @@ from scouts_auth.inuits.utils import TextUtils
 
 
 class Linkable(models.Model):
-
     link = OptionalTextField()
 
     class Meta:

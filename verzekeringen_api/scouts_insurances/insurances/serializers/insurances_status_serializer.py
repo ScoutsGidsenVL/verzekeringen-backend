@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class InsuranceStatusSerializer(serializers.Serializer):
-
     id = serializers.SerializerMethodField()
     value = serializers.SerializerMethodField()
     label = serializers.SerializerMethodField()

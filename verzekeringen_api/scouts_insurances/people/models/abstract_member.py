@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractMember(models.Model):
-
     last_name = models.CharField(db_column="naam", max_length=255)
     first_name = models.CharField(db_column="voornaam", max_length=255)
     phone_number = models.CharField(db_column="telefoon", max_length=15, blank=True)

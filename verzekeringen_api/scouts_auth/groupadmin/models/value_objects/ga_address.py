@@ -6,7 +6,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField
 
 
 class AbstractScoutsAddress(AbstractNonModel):
-
     group_admin_id = models.CharField()
     street = OptionalCharField()
     number = OptionalCharField()

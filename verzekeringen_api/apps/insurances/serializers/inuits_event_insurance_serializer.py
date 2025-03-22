@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class InuitsEventInsuranceSerializer(EventInsuranceSerializer):
-
     participant_list_file = serializers.SerializerMethodField(required=False, allow_null=True)
 
     class Meta:

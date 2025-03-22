@@ -90,8 +90,4 @@ class InuitsTemporaryInsuranceViewSet(viewsets.ViewSet):
 
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            raise PermissionDenied(
-                {
-                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
-                }
-            )
+            raise PermissionDenied({"message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"})

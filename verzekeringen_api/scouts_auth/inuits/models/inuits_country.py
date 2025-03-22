@@ -4,7 +4,6 @@ from scouts_auth.inuits.managers import InuitsCountryManager
 
 
 class InuitsCountry(AbstractBaseModel):
-
     # objects = InuitsCountryManager()
 
     name = RequiredCharField(max_length=64)

@@ -82,40 +82,41 @@ class NonMemberQuerySet(models.QuerySet):
         )
         # equipment insurance ?
 
-    def not_currently_temporarily_insured(self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None, type=None):
+    def not_currently_temporarily_insured(
+        self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None, type=None
+    ):
         from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 
         if not start or not end:
-            logger.warn(
-                "Start and end date are necessary to filter correctly, returning empty list"
-            )
+            logger.warn("Start and end date are necessary to filter correctly, returning empty list")
             return []
 
         if inuits_non_members and type:
             return self.filter(
-                Q(temporary_insurances__non_members__inuits_id__in=[
-                  str(inuits_non_member.id) for inuits_non_member in inuits_non_members]
-                  )
+                Q(
+                    temporary_insurances__non_members__inuits_id__in=[
+                        str(inuits_non_member.id) for inuits_non_member in inuits_non_members
+                    ]
+                )
                 and Q(temporary_insurances__insurance_parent__start_date__gte=start)
                 and Q(temporary_insurances__insurance_parent__end_date__lte=end)
             )
 
         return []
 
-    def currently_temporarily_insured(self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None, type=None):
+    def currently_temporarily_insured(
+        self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None, type=None
+    ):
         from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 
         if not start or not end:
-            logger.warn(
-                "Start and end date are necessary to filter correctly, returning empty list"
-            )
+            logger.warn("Start and end date are necessary to filter correctly, returning empty list")
             return []
 
         if inuits_non_members and type:
-            non_members = list(self.filter(
-                Q(inuits_id__in=[
-                  str(inuits_non_member.id) for inuits_non_member in inuits_non_members]
-                  )))
+            non_members = list(
+                self.filter(Q(inuits_id__in=[str(inuits_non_member.id) for inuits_non_member in inuits_non_members]))
+            )
             logger.debug(f"NON-MEMBERS: {non_members}")
             return self.filter(
                 Q(temporary_insurances__non_members__in=non_members)
