@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class InuitsNonMemberQuerySet(models.QuerySet):
-
     FIELD_EQUIPMENT = Equipment.owner_non_member.field.name
     # Links a non-member to a temporary insurance through a jointable
     FIELD_NON_MEMBER_TEMPORARY_INSURANCE = NonMemberTemporaryInsurance.non_member_id.field.name
@@ -34,11 +33,14 @@ class InuitsNonMemberQuerySet(models.QuerySet):
         groups = [group.group_admin_id for group in user.scouts_groups]
         return self.filter(group_admin_id__in=groups)
 
-    def not_currently_temporarily_insured(self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None):
+    def not_currently_temporarily_insured(
+        self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None
+    ):
         from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 
         non_members = NonMember.objects.get_queryset().currently_temporarily_insured(
-            user, start, end, inuits_non_members, InsuranceTypeEnum.TEMPORARY)
+            user, start, end, inuits_non_members, InsuranceTypeEnum.TEMPORARY
+        )
 
         filtered = []
         non_member_ids = [non_member.inuits_id for non_member in non_members]
@@ -49,15 +51,17 @@ class InuitsNonMemberQuerySet(models.QuerySet):
 
         return filtered
 
-    def currently_temporarily_insured(self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None):
+    def currently_temporarily_insured(
+        self, user: settings.AUTH_USER_MODEL, start: datetime, end: datetime, inuits_non_members: list = None
+    ):
         from scouts_insurances.insurances.models.enums import InsuranceTypeEnum
 
         non_members = NonMember.objects.get_queryset().currently_temporarily_insured(
-            user, start, end, inuits_non_members, InsuranceTypeEnum.TEMPORARY)
+            user, start, end, inuits_non_members, InsuranceTypeEnum.TEMPORARY
+        )
 
         filtered = []
-        non_member_inuits_ids = [
-            non_member.inuits_id for non_member in non_members]
+        non_member_inuits_ids = [non_member.inuits_id for non_member in non_members]
 
         for inuits_non_member in inuits_non_members:
             if inuits_non_member.id in non_member_inuits_ids:

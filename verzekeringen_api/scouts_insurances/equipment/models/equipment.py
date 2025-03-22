@@ -10,7 +10,6 @@ from scouts_insurances.insurances.models import EquipmentInsurance
 
 
 class Equipment(models.Model):
-
     objects = EquipmentManager()
 
     id = models.AutoField(db_column="materiaalid", primary_key=True)
@@ -87,4 +86,7 @@ class Equipment(models.Model):
         elif isinstance(self.owner_non_member, NonMember):
             owner = f"Type: Gehuurd of geleend materiaal van {self.owner_non_member.full_name()}"
         nature = f"Soort: {self.nature}," if self.nature else ""
-        return  nature + f"Beschrijving: {self.description}, Aantal: {self.amount}, Nieuwwaarde: {self.total_value}, {owner}"
+        return (
+            nature
+            + f"Beschrijving: {self.description}, Aantal: {self.amount}, Nieuwwaarde: {self.total_value}, {owner}"
+        )

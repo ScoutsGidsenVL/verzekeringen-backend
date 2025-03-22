@@ -10,7 +10,6 @@ from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateFiel
 
 
 class AbstractScoutsFunction(AbstractNonModel):
-
     group_admin_id = OptionalCharField()
     type = OptionalCharField()
     function = OptionalCharField()

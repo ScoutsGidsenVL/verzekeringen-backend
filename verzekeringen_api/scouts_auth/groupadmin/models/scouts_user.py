@@ -19,7 +19,6 @@ from scouts_auth.inuits.models.fields import TimezoneAwareDateTimeField, Optiona
 
 
 class ScoutsUser(User):
-
     #
     # Fields from the groupadmin member record
     #
@@ -144,8 +143,8 @@ class ScoutsUser(User):
             ", ".join(group.group_admin_id for group in self.scouts_groups),
             ", ".join(address.to_descriptive_string() for address in self.addresses),
             ", ".join(function.to_descriptive_string() for function in self.functions),
-            '',
-            '',
+            "",
+            "",
         )
 
     def to_descriptive_string(self):
@@ -202,7 +201,9 @@ class ScoutsUser(User):
             "AUTH GROUPS",
             ", ".join(group.name for group in self.groups.all()),
             "SCOUTS GROUPS",
-            ", ".join((group.name + "(" + group.group_admin_id + ")") for group in self.scouts_groups if self.scouts_groups),
+            ", ".join(
+                (group.name + "(" + group.group_admin_id + ")") for group in self.scouts_groups if self.scouts_groups
+            ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
             "DISTRICT COMMISSIONER ?",

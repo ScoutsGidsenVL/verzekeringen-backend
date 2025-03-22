@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 @Singleton
 class GlobalSettingsUtil:
-
     _is_test = False
 
     def __init__(self):

@@ -80,13 +80,14 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
             TravelAssistanceInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
         if existing_insurance._status != InsuranceStatus.BILLED:
-
             new_participants = list()
             for participant in request.data["participants"]:
                 participant.pop("id", None)
                 new_participants.append(participant)
             request.data["participants"] = new_participants
-            input_serializer = InuitsTravelAssistanceInsuranceSerializer(data=request.data, context={"request": request})
+            input_serializer = InuitsTravelAssistanceInsuranceSerializer(
+                data=request.data, context={"request": request}
+            )
             input_serializer.is_valid(raise_exception=True)
 
             updated_insurance = self.travel_assistance_insurance_service.travel_assistance_insurance_update(
@@ -97,8 +98,4 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
 
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            raise PermissionDenied(
-                {
-                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
-                }
-            )
+            raise PermissionDenied({"message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"})

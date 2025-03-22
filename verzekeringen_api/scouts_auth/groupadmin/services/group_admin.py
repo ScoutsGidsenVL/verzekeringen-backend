@@ -36,7 +36,6 @@ logger = logging.getLogger(__name__)
 
 
 class GroupAdmin:
-
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/
     url_allowed_calls = SettingsHelper.get_group_admin_allowed_calls_endpoint() + "/"
     # https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/groep
@@ -77,7 +76,10 @@ class GroupAdmin:
         """Makes a request to the GA with the given url and returns the response as json_data."""
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
         try:
-            response = requests.get(re.sub('^https:http:', 'https:', endpoint), headers={"Authorization": "Bearer {0}".format(active_user.access_token)})
+            response = requests.get(
+                re.sub("^https:http:", "https:", endpoint),
+                headers={"Authorization": "Bearer {0}".format(active_user.access_token)},
+            )
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:

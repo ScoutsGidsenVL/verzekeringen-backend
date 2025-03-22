@@ -15,7 +15,6 @@ class EmailSettingsUtil(SettingsHelper):
 
     @staticmethod
     def log_email_settings():
-
         insurance_requester_address = "[ REQUESTER EMAIL ADDRESS ]"
         insurer_address = EmailSettingsUtil.get("EMAIL_INSURER_ADDRESS", " !! NOT SET !!")
         victim_address = "[ VICTIM EMAIL ADDRESS ]"
@@ -84,9 +83,7 @@ class EmailSettingsUtil(SettingsHelper):
         logger.info(
             "EMAIL_INSURER_ADDRESS_DEBUG: %s", EmailSettingsUtil.get("EMAIL_INSURER_ADDRESS_DEBUG", "- NOT SET -")
         )
-        logger.info(
-            "USE_SENDINBLUE           : %s", EmailSettingsUtil.get_bool("USE_SENDINBLUE", False, "- NOT SET -")
-        )
+        logger.info("USE_SENDINBLUE           : %s", EmailSettingsUtil.get_bool("USE_SENDINBLUE", False, "- NOT SET -"))
         logger.info(
             "======================================================================================================"
         )

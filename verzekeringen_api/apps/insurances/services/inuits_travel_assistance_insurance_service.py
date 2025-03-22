@@ -56,7 +56,7 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         # result = Country.objects.by_insurance_type_id(insurance.country.name)
         if insurance.country:
             insurance.country = insurance.country.name
-            
+
         insurance.full_clean()
         insurance.save()
 
@@ -72,7 +72,9 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
         insurance.full_clean()
         insurance.save()
 
-        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("responsible_member"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, created_by=base_insurance_fields.get("responsible_member")
+        )
 
         return insurance
 

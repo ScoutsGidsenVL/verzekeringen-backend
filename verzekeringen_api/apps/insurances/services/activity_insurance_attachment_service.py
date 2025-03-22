@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class ActivityInsuranceAttachmentService:
-
     file_service: StorageService = default_storage
 
     def store_attachment(

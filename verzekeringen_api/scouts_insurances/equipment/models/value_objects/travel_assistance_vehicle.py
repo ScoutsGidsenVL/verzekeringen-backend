@@ -3,7 +3,6 @@ from scouts_insurances.equipment.models.enums import VehicleType, TravelAssistan
 
 
 class TravelAssistanceVehicle(Vehicle):
-
     DEFAULT_VEHICLE_TRAILER_OPTION = TravelAssistanceVehicleTrailerOption.NO_TRAILER
 
     trailer: TravelAssistanceVehicleTrailerOption = None

@@ -5,7 +5,6 @@ from scouts_auth.inuits.utils import TextUtils
 
 
 class Explainable(models.Model):
-
     explanation = OptionalTextField()
 
     class Meta:

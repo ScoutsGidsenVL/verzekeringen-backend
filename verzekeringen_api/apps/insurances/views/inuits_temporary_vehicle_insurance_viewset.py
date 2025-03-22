@@ -80,8 +80,9 @@ class InuitsTemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
             TemporaryVehicleInsurance.objects.all().editable(request.user).allowed(request.user), pk=pk
         )
         if existing_insurance._status != InsuranceStatus.BILLED:
-
-            input_serializer = InuitsTemporaryVehicleInsuranceSerializer(data=request.data, context={"request": request})
+            input_serializer = InuitsTemporaryVehicleInsuranceSerializer(
+                data=request.data, context={"request": request}
+            )
             input_serializer.is_valid(raise_exception=True)
 
             updated_insurance = self.temporary_vehicle_insurance_service.temporary_vehicle_insurance_update(
@@ -92,8 +93,4 @@ class InuitsTemporaryVehicleInsuranceViewSet(viewsets.GenericViewSet):
 
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            raise PermissionDenied(
-                {
-                    "message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"
-                }
-            )
+            raise PermissionDenied({"message": f"Cannot edit insurance with status {str(InsuranceStatus.BILLED)}"})

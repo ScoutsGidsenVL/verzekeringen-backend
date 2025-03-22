@@ -4,16 +4,13 @@ from scouts_insurances.insurances.models import InsuranceType
 
 
 class Command(BaseCommand):
-
     help = "Adds the insurance types to the database"
 
     def handle(self, *args, **options):
         try:
             InsuranceType.objects.get(pk=1)
         except InsuranceType.DoesNotExist:
-            type = InsuranceType(
-                id=1, name="TypeEenmaligeActiviteit", description="Eenmalige activiteit", max_term="0"
-            )
+            type = InsuranceType(id=1, name="TypeEenmaligeActiviteit", description="Eenmalige activiteit", max_term="0")
             type.save()
         try:
             InsuranceType.objects.get(pk=2)

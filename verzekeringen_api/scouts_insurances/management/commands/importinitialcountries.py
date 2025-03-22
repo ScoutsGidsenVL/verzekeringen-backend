@@ -10,7 +10,6 @@ from scouts_insurances.insurances.models import InsuranceType
 
 
 class Command(BaseCommand):
-
     help = "Adds an initial list of countries to the database for each InsuranceType"
 
     def handle(self, *args, **options):

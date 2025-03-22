@@ -48,7 +48,9 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
         insurance.total_cost = self._calculate_total_cost(insurance)
         insurance.full_clean()
         insurance.save()
-        self.base_insurance_service.handle_insurance_created(insurance, created_by=base_insurance_fields.get("created_by"))
+        self.base_insurance_service.handle_insurance_created(
+            insurance, created_by=base_insurance_fields.get("created_by")
+        )
 
         return insurance
 
@@ -59,7 +61,12 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
         insurance.nature = fields.get("nature", insurance.nature)
         insurance.postal_code = fields.get("postal_code", None)
         insurance.city = fields.get("city", None)
-        insurance.country = fields.get("country", insurance.country if insurance.country and insurance.city is None and insurance.postal_code is None else None)
+        insurance.country = fields.get(
+            "country",
+            insurance.country
+            if insurance.country and insurance.city is None and insurance.postal_code is None
+            else None,
+        )
 
         insurance.full_clean()
         insurance.save()
@@ -100,9 +107,7 @@ class InuitsEquipmentInsuranceService(EquipmentInsuranceService):
                     insurance=insurance, inuits_equipment=inuits_equipment, created_by=created_by
                 )
 
-            equipment = self.equipment_service.equipment_update(
-                equipment=equipment, updated_equipment=inuits_equipment
-            )
+            equipment = self.equipment_service.equipment_update(equipment=equipment, updated_equipment=inuits_equipment)
 
             updated_insurance_equipment_list.append(equipment)
 
