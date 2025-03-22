@@ -23,8 +23,8 @@ class AuthenticationHelper:
     def has_rights_for_group(user: settings.AUTH_USER_MODEL, group_admin_id: str = None) -> bool:
         # logger.debug('groups: ', AuthenticationHelper.load_groups(user=user))
         if not group_admin_id in AuthenticationHelper.load_groups(user=user):
-            raise PermissionDenied(
-                {"message": "You don't have permission to this request for group {}".format(group_admin_id)}
-            )
+            raise PermissionDenied({
+                "message": "You don't have permission to this request for group {}".format(group_admin_id)
+            })
 
         return True

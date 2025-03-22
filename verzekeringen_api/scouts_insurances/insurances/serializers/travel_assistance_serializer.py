@@ -19,12 +19,10 @@ class TravelAssistanceInsuranceSerializer(BaseInsuranceSerializer):
     participants = NonMemberSerializer(many=True)
 
     country = serializers.PrimaryKeyRelatedField(
-        queryset=Country.objects.by_insurance_type_ids(
-            [
-                InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE,
-                InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE,
-            ]
-        ),
+        queryset=Country.objects.by_insurance_type_ids([
+            InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE,
+            InsuranceTypeEnum.TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE,
+        ]),
         required=False,
     )
 
