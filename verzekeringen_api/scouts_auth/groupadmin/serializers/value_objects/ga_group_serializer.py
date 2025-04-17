@@ -44,6 +44,7 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
             "group_specific_fields": AbstractScoutsGroupSpecificFieldSerializer().to_internal_value(
                 data.pop("groepseigenVelden", {})
             ),
+            "responsibilities": data.pop("verantwoordelijkheden", []),
             "links": AbstractScoutsLinkSerializer(many=True).to_internal_value(data.pop("links", [])),
         }
 
@@ -69,6 +70,7 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
         instance.bank_account = validated_data.pop("bank_account", None)
         instance.email = validated_data.pop("email", None)
         instance.website = validated_data.pop("website", None)
+        instance.responsibilities = validated_data.pop("responsibilities", None)
         instance.info = validated_data.pop("info", None)
         instance.type = validated_data.pop("type", None)
         instance.only_leaders = validated_data.pop("only_leaders", None)
