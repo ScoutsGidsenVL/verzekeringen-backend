@@ -3,6 +3,7 @@ import re
 
 from django.conf import settings
 from django.http import Http404
+from django.core.cache import cache
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 
@@ -119,7 +120,11 @@ class GroupAdmin:
 
         @see https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/client/docs/api.html#groepen-groepen-get
         """
-        json_data = self.get(self.url_groups, active_user)
+        cache_key = "groups_for_user_%s" % active_user.id
+        json_data = cache.get(cache_key)
+        if not json_data:
+            json_data = self.get(self.url_groups, active_user)
+            cache.set(cache_key, json_data)
 
         logger.info("GA CALL: %s (%s)", "get_groups", self.url_groups)
         logger.debug("GA RESPONSE: %s", json_data)
