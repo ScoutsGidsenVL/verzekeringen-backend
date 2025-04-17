@@ -13,6 +13,9 @@ from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField, OptionalEmailField, OptionalDateField
 
 
+LEADER_RESPONSIBILITIES = ["algemeen", "leiding", "evenementen", "personeel"]
+
+
 class AbstractScoutsGroup(AbstractNonModel):
     """Models the scouts groups a user has rights to."""
 
@@ -27,6 +30,7 @@ class AbstractScoutsGroup(AbstractNonModel):
     type = OptionalCharField()
     only_leaders = models.BooleanField(default=False)
     show_members_improved = models.BooleanField(default=False)
+    responsibilities: list[str] = models.JSONField()
 
     # Declare as foreign keys in concrete subclasses
     # addresses: List[AbstractScoutsAddress]
@@ -54,6 +58,7 @@ class AbstractScoutsGroup(AbstractNonModel):
         contacts: List[AbstractScoutsContact] = None,
         group_specific_fields: List[AbstractScoutsGroupSpecificField] = None,
         links: List[AbstractScoutsLink] = None,
+        responsibilities: List[str] = None,
     ):
         self.group_admin_id = group_admin_id
         self.number = number
@@ -70,12 +75,18 @@ class AbstractScoutsGroup(AbstractNonModel):
         self.contacts = contacts if contacts else []
         self.group_specific_fields = group_specific_fields if group_specific_fields else []
         self.links = links if links else []
+        self.responsibilities = responsibilities if responsibilities else []
 
         # super().__init__([], {})
 
     @property
     def full_name(self):
         return "{} {}".format(self.name, self.group_admin_id)
+
+    @property
+    def is_leader(self):
+        """Checks if the user of this group is considered a leader."""
+        return any(resp in LEADER_RESPONSIBILITIES for resp in self.responsibilities)
 
     def __str__(self):
         return "group_admin_id({}), number({}), name({}), addresses({}), date_of_foundation({}), only_leaders({}), show_member_improved({}), bank_account({}), email({}), website({}), info({}), type({}), contacts({}), group_specific_fields ({}), links({})".format(
