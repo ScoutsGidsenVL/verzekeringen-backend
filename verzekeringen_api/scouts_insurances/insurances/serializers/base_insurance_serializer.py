@@ -63,7 +63,12 @@ class BaseInsuranceSerializer(serializers.ModelSerializer):
         ]
 
     def __init__(self, *args, **kwargs):
+        """Add possibility to exclude fields from serializer."""
+        exclude_fields = kwargs.pop("exclude_fields", None)
         super().__init__(*args, **kwargs)
+        if exclude_fields:
+            for field in exclude_fields:
+                self.fields.pop(field, None)
 
     def to_internal_value(self, data: dict) -> dict:
         total_cost = data.pop("total_cost", None)

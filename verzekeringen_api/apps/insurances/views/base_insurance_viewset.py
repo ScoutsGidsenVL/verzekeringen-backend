@@ -87,12 +87,14 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
         insurances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(insurances)
 
-        # for insurance in insurances:
-        #     logger.debug(insurance)
+        # Only show the vvksm_comment field to administrators (T6362).
+        exclude_fields = []
+        if not request.user.has_role_administrator():
+            exclude_fields = ["vvksm_comment"]
 
         if page is not None:
-            serializer = BaseInsuranceSerializer(page, many=True)
+            serializer = BaseInsuranceSerializer(page, many=True, exclude_fields=exclude_fields)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = BaseInsuranceSerializer(insurances, many=True)
+            serializer = BaseInsuranceSerializer(insurances, many=True, exclude_fields=exclude_fields)
             return Response(serializer.data)
