@@ -11,14 +11,18 @@ from apps.insurances.serializers import (
     InuitsTemporaryInsuranceSerializer,
     InuitsTravelAssistanceInsuranceSerializer,
     InuitsTemporaryVehicleInsuranceSerializer,
-    InuitsEquipmentInsuranceSerializer, InuitsEventInsuranceSerializer, InuitsActivityInsuranceSerializer,
+    InuitsEquipmentInsuranceSerializer,
+    InuitsEventInsuranceSerializer,
+    InuitsActivityInsuranceSerializer,
 )
 
 from scouts_insurances.insurances.models import BaseInsurance
 from scouts_insurances.insurances.serializers import (
     BaseInsuranceSerializer,
     ActivityInsuranceSerializer,
-    EventInsuranceSerializer, TemporaryInsuranceSerializer, EquipmentInsuranceSerializer,
+    EventInsuranceSerializer,
+    TemporaryInsuranceSerializer,
+    EquipmentInsuranceSerializer,
 )
 
 
@@ -49,9 +53,7 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
             or insurance.type.is_equipment_insurance()
         ):
             if insurance.type.is_temporary_insurance():
-                serializer = TemporaryInsuranceSerializer(
-                    insurance.temporary_child, context={"request": request}
-                )
+                serializer = TemporaryInsuranceSerializer(insurance.temporary_child, context={"request": request})
             elif (
                 insurance.type.is_travel_assistance_without_vehicle_insurance()
                 or insurance.type.is_travel_assistance_with_vehicle_insurance()
@@ -64,9 +66,7 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
                     insurance.temporary_vehicle_child, context={"request": request}
                 )
             elif insurance.type.is_equipment_insurance():
-                serializer = EquipmentInsuranceSerializer(
-                    insurance.equipment_child, context={"request": request}
-                )
+                serializer = EquipmentInsuranceSerializer(insurance.equipment_child, context={"request": request})
         elif insurance.type.is_activity_insurance():
             serializer = InuitsActivityInsuranceSerializer(insurance.activity_child, context={"request": request})
         elif insurance.type.is_event_insurance():
@@ -87,12 +87,14 @@ class BaseInsuranceViewSet(viewsets.GenericViewSet):
         insurances = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(insurances)
 
-        # for insurance in insurances:
-        #     logger.debug(insurance)
+        # Only show the vvksm_comment field to administrators (T6362).
+        exclude_fields = []
+        if not request.user.has_role_administrator():
+            exclude_fields = ["vvksm_comment"]
 
         if page is not None:
-            serializer = BaseInsuranceSerializer(page, many=True)
+            serializer = BaseInsuranceSerializer(page, many=True, exclude_fields=exclude_fields)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = BaseInsuranceSerializer(insurances, many=True)
+            serializer = BaseInsuranceSerializer(insurances, many=True, exclude_fields=exclude_fields)
             return Response(serializer.data)
