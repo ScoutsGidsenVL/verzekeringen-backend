@@ -7,7 +7,7 @@ from scouts_insurances.insurances.serializers import InsuranceTypeSerializer
 
 
 class InsuranceTypeViewSet(viewsets.GenericViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["id"]
     ordering = ["id"]

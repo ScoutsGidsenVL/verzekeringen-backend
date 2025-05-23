@@ -8,7 +8,7 @@ from scouts_auth.inuits.serializers import EnumSerializer
 
 
 class TemporaryVehicleInsuranceCoverageOptionViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     @swagger_auto_schema(responses={status.HTTP_200_OK: EnumSerializer})
     def list(self, request):

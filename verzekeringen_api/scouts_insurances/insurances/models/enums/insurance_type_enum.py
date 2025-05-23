@@ -2,13 +2,13 @@ from django.db import models
 
 
 class InsuranceTypeEnum(models.IntegerChoices):
-    ACTIVITY = 1
-    TEMPORARY = 2
-    TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE = 3
-    TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE = 4
-    TEMPORARY_VEHICLE = 5
-    EQUIPMENT = 6
-    EVENT = 10
+    ACTIVITY = 1  # (TypeEenmaligeActiviteit)
+    TEMPORARY = 2  # (TypeTijdelijkeVerzekering)
+    TRAVEL_ASSISTANCE_WITHOUT_VEHICLE_INSURANCE = 3  # (TypeEthiasAssistanceZonderAuto)
+    TRAVEL_ASSISTANCE_WITH_VEHICLE_INSURANCE = 4  # (TypeEthiasAssistanceMetAuto)
+    TEMPORARY_VEHICLE = 5  # (TypeTijdelijkeAutoverzekering)
+    EQUIPMENT = 6  # (TypeGroepsmateriaalVerzekering)
+    EVENT = 10  # (TypeEvenementenVerzekering)
 
     @staticmethod
     def parse_type(type: int):
