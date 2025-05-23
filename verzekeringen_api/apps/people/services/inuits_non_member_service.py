@@ -192,16 +192,17 @@ class InuitsNonMemberService(NonMemberService):
         return inuits_non_member
 
     def check_editable_templates(self, user: settings.AUTH_USER_MODEL):
-        non_editable_non_members = NonMember.objects.all().non_editable(user=user)
-        logger.debug("NON EDITABLE NON MEMBERS: %s", non_editable_non_members)
+        non_editable_non_members = NonMember.objects.filter(inuits_id__isnull=False).non_editable(user=user)
+        logger.debug("NON EDITABLE NON MEMBERS: %s", len(non_editable_non_members))
 
-        non_editable_templates = InuitsNonMemberTemplate.objects.all().filter(non_member__in=non_editable_non_members)
-        logger.debug("NON EDITABLE TEMPLATES: %s", non_editable_templates)
+        non_editable_templates = InuitsNonMemberTemplate.objects.filter(non_member__in=non_editable_non_members)
+        logger.debug("NON EDITABLE TEMPLATES: %s", len(non_editable_templates))
 
         for non_editable_template in non_editable_templates:
-            non_editable_template.editable = False
-            non_editable_template.full_clean()
-            non_editable_template.save()
+            if non_editable_template.editable:
+                non_editable_template.editable = False
+                non_editable_template.full_clean()
+                non_editable_template.save()
 
         logger.debug("EDITABLE: %s", NonMember.objects.all().editable(user=user))
         logger.debug("TEMPLATE EDITABLE: %s", NonMember.objects.all().template_editable(user=user))
