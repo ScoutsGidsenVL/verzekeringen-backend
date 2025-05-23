@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.db import models
 
@@ -15,5 +17,8 @@ class InsuranceClaimQuerySet(models.QuerySet):
 
 class InsuranceClaimManager(models.Manager):
     def get_queryset(self):
-        ordered = InsuranceClaimQuerySet(self.model, using=self._db)
-        return ordered
+        return (
+            InsuranceClaimQuerySet(self.model, using=self._db)
+            .filter(updated_on__gte=datetime.now() - timedelta(days=3 * 365))
+            .order_by("updated_on")
+        )

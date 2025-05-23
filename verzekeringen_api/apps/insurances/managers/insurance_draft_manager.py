@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.db import models
 
 
@@ -12,4 +14,8 @@ class InsuranceDraftQuerySet(models.QuerySet):
 
 class InsuranceDraftManager(models.Manager):
     def get_queryset(self):
-        return InsuranceDraftQuerySet(self.model, using=self._db)
+        return (
+            InsuranceDraftQuerySet(self.model, using=self._db)
+            .filter(updated_on__gte=datetime.now() - timedelta(days=3 * 365))
+            .order_by("updated_on")
+        )

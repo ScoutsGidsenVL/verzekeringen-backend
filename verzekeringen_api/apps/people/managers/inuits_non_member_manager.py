@@ -1,8 +1,7 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
-from django.db.models import Q
 from django.conf import settings
 
 from scouts_insurances.people.models import NonMember
@@ -88,4 +87,8 @@ class InuitsNonMemberQuerySet(models.QuerySet):
 class InuitsNonMemberManager(models.Manager):
     def get_queryset(self):
         # Return InuitsNonMember instances that can show up in searches
-        return InuitsNonMemberQuerySet(self.model, using=self._db)
+        return (
+            InuitsNonMemberQuerySet(self.model, using=self._db)
+            .filter(updated_on__gte=datetime.now() - timedelta(days=3 * 365))
+            .order_by("updated_on")
+        )

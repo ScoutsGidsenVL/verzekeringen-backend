@@ -5,7 +5,7 @@ from apps.equipment.managers import InuitsVehicleManager
 
 from scouts_insurances.equipment.models import TemporaryVehicleInsuranceVehicle, VehicleType
 
-from scouts_auth.inuits.models import AbstractBaseModel
+from scouts_auth.inuits.models import AuditedBaseModel
 from scouts_auth.inuits.models.fields import (
     OptionalCharField,
     DefaultCharField,
@@ -14,7 +14,7 @@ from scouts_auth.inuits.models.fields import (
 )
 
 
-class InuitsVehicle(AbstractBaseModel):
+class InuitsVehicle(AuditedBaseModel):
     """
     Extra vehicle class we can use to save and search unique vehicles.
 

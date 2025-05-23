@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.db import models
 
@@ -21,4 +23,8 @@ class InuitsVehicleQuerySet(models.QuerySet):
 
 class InuitsVehicleManager(models.Manager):
     def get_queryset(self):
-        return InuitsVehicleQuerySet(self.model, using=self._db)
+        return (
+            InuitsVehicleQuerySet(self.model, using=self._db)
+            .filter(updated_on__gte=datetime.now() - timedelta(days=3 * 365))
+            .order_by("updated_on")
+        )
