@@ -11,10 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='travelassistanceinsurance',
-            name='_vehicle_chassis_number',
-            field=scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalCharField(blank=True, db_column='autochassis', max_length=20),
-        ),
+        # migrations.AddField(
+        #     model_name='travelassistanceinsurance',
+        #     name='_vehicle_chassis_number',
+        #     field=scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalCharField(blank=True, db_column='autochassis', max_length=20),
+        # ),
 
     ]

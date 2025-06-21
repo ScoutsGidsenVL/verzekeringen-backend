@@ -10,14 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='nonmember',
-            name='inuits_id',
-            field=models.UUIDField(blank=True, db_column='inuits_id', default=None, null=True),
-        ),
-        migrations.AlterField(
-            model_name='travelassistanceinsurance',
-            name='_vehicle_id',
-            field=models.UUIDField(blank=True, db_column='inuits_vehicle_id', default=None, null=True),
-        ),
+        # migrations.AddField(
+        #     model_name='nonmember',
+        #     name='inuits_id',
+        #     field=models.UUIDField(blank=True, db_column='inuits_id', default=None, null=True),
+        # ),
+        # migrations.AlterField(
+        #     model_name='travelassistanceinsurance',
+        #     name='_vehicle_id',
+        #     field=models.UUIDField(blank=True, db_column='inuits_vehicle_id', default=None, null=True),
+        # ),
     ]
