@@ -1,11 +1,3 @@
-CREATE TABLE vrzkverzekeringstypes (
-    verzekeringstypeid numeric(2) NOT NULL,
-    verzekeringstype varchar(30) NOT NULL,
-    verzekeringstypeomschr varchar(70) NOT NULL,
-    maxtermijn varchar(10) NOT NULL,
-    CONSTRAINT vrzkverzekeringstypes_pkey PRIMARY KEY (verzekeringstypeid)
-);
-
 CREATE SEQUENCE auth_group_id_seq 
 MINVALUE 0 
 NO MAXVALUE 
@@ -36,84 +28,84 @@ MINVALUE 0
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- scouts_auth_scoutsuser_groups_id_seq definition 
+-- public.scouts_auth_scoutsuser_groups_id_seq definition 
 -- DROP SEQUENCE scouts_auth_scoutsuser_groups_id_seq; 
 CREATE SEQUENCE scouts_auth_scoutsuser_groups_id_seq 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- scouts_auth_scoutsuser_user_permissions_id_seq definition 
+-- public.scouts_auth_scoutsuser_user_permissions_id_seq definition 
 -- DROP SEQUENCE scouts_auth_scoutsuser_user_permissions_id_seq; 
 CREATE SEQUENCE scouts_auth_scoutsuser_user_permissions_id_seq 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- scouts_insurances_costvariable_id_seq definition 
+-- public.scouts_insurances_costvariable_id_seq definition 
 -- DROP SEQUENCE scouts_insurances_costvariable_id_seq; 
 CREATE SEQUENCE scouts_insurances_costvariable_id_seq 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- scouts_insurances_country_id_seq definition 
+-- public.scouts_insurances_country_id_seq definition 
 -- DROP SEQUENCE scouts_insurances_country_id_seq; 
 CREATE SEQUENCE scouts_insurances_country_id_seq 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- scouts_insurances_country_insurance_types_id_seq definition 
+-- public.scouts_insurances_country_insurance_types_id_seq definition 
 -- DROP SEQUENCE scouts_insurances_country_insurance_types_id_seq; 
 CREATE SEQUENCE scouts_insurances_country_insurance_types_id_seq 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- seq_vrzk_adres definition 
+-- public.seq_vrzk_adres definition 
 -- DROP SEQUENCE seq_vrzk_adres; 
 CREATE SEQUENCE seq_vrzk_adres 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- seq_vrzk_bericht definition 
+-- public.seq_vrzk_bericht definition 
 -- DROP SEQUENCE seq_vrzk_bericht; 
 CREATE SEQUENCE seq_vrzk_bericht 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- seq_vrzk_vzw definition 
+-- public.seq_vrzk_vzw definition 
 -- DROP SEQUENCE seq_vrzk_vzw; 
 CREATE SEQUENCE seq_vrzk_vzw 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- seq_vrzkleden definition 
+-- public.seq_vrzkleden definition 
 -- DROP SEQUENCE seq_vrzkleden; 
 CREATE SEQUENCE seq_vrzkleden 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- seq_vrzkmateriaal definition 
+-- public.seq_vrzkmateriaal definition 
 -- DROP SEQUENCE seq_vrzkmateriaal; 
 CREATE SEQUENCE seq_vrzkmateriaal 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- seq_vrzknietleden definition 
+-- public.seq_vrzknietleden definition 
 -- DROP SEQUENCE seq_vrzknietleden; 
 CREATE SEQUENCE seq_vrzknietleden 
 MINVALUE 0 
 NO MAXVALUE 
 START 0 
 NO CYCLE; 
--- seq_vrzkverzekeringen definition 
+-- public.seq_vrzkverzekeringen definition 
 -- DROP SEQUENCE seq_vrzkverzekeringen; 
 CREATE SEQUENCE seq_vrzkverzekeringen 
 MINVALUE 0 
@@ -121,7 +113,15 @@ NO MAXVALUE
 START 0 
 NO CYCLE; 
 
-CREATE TABLE vrzkleden ( 
+CREATE TABLE vrzkverzekeringstypes (
+    verzekeringstypeid numeric(2) NOT NULL,
+    verzekeringstype varchar(30) NOT NULL,
+    verzekeringstypeomschr varchar(70) NOT NULL,
+    maxtermijn varchar(10) NOT NULL,
+    CONSTRAINT vrzkverzekeringstypes_pkey PRIMARY KEY (verzekeringstypeid)
+);
+
+CREATE TABLE public.vrzkleden ( 
     lidid numeric(6) DEFAULT nextval('seq_vrzkleden'::regclass) NOT NULL, 
     naam varchar(60) NOT NULL, 
     voornaam varchar(60) NOT NULL, 
@@ -177,7 +177,8 @@ CREATE TABLE vrzkverzekeringen (
     CONSTRAINT vrzkverzekeringen_verantwoordelijkeid_fkey FOREIGN KEY (verantwoordelijkeid) REFERENCES vrzkleden(lidid) 
 ); 
 
-CREATE TABLE vrzktypeethiasassistance IF NOT EXISTS (
+
+CREATE TABLE vrzktypeethiasassistance (
     bestemmingsland varchar(60) NOT NULL,
     autotype varchar(30) NULL,
     automerk varchar(15) NULL,
@@ -194,7 +195,7 @@ CREATE TABLE vrzktypeethiasassistance IF NOT EXISTS (
     CONSTRAINT vrzktypeethiasassistance_verzekeringsid_fkey FOREIGN KEY (verzekeringsid) REFERENCES vrzkverzekeringen(verzekeringsid)
 );
 
-CREATE INDEX "IDX_VRZKASSISTANCE_AUTOKENTEKE" ON vrzktypeethiasassistance USING btree (autokenteken);
+CREATE INDEX "IDX_VRZKASSISTANCE_AUTOKENTEKE" ON public.vrzktypeethiasassistance USING btree (autokenteken);
 
 CREATE TABLE vrzktypeevenement ( 
     ardactiviteit varchar(500) NOT NULL, 
@@ -252,12 +253,12 @@ CREATE TABLE vrzktypetijdauto (
     CONSTRAINT vrzktypetijdauto_verzekeringsid_fkey FOREIGN KEY (verzekeringsid) REFERENCES vrzkverzekeringen(verzekeringsid) 
 ); 
 
-CREATE INDEX "IDX_VRZKVERZEKERINGEN_BEGINDATUM" ON vrzkverzekeringen USING btree (begindatum); 
-CREATE INDEX "IDX_VRZKVERZEKERINGEN_DATUMVAN" ON vrzkverzekeringen USING btree (datumvaninvulling); 
-CREATE INDEX "IDX_VRZKVERZEKERINGEN_GROEPSNR" ON vrzkverzekeringen USING btree (groepsnr); 
-CREATE INDEX "IDX_VRZKVERZEKERINGEN_STATUS" ON vrzkverzekeringen USING btree (status); 
-CREATE INDEX "IDX_VRZKVERZEKERINGEN_TYPEID" ON vrzkverzekeringen USING btree (typeid); 
-CREATE INDEX "IDX_VRZKVERZEKERINGEN_VERANTWOORDELIJKE" ON vrzkverzekeringen USING btree (verantwoordelijkeid); 
+CREATE INDEX "IDX_VRZKVERZEKERINGEN_BEGINDATUM" ON public.vrzkverzekeringen USING btree (begindatum); 
+CREATE INDEX "IDX_VRZKVERZEKERINGEN_DATUMVAN" ON public.vrzkverzekeringen USING btree (datumvaninvulling); 
+CREATE INDEX "IDX_VRZKVERZEKERINGEN_GROEPSNR" ON public.vrzkverzekeringen USING btree (groepsnr); 
+CREATE INDEX "IDX_VRZKVERZEKERINGEN_STATUS" ON public.vrzkverzekeringen USING btree (status); 
+CREATE INDEX "IDX_VRZKVERZEKERINGEN_TYPEID" ON public.vrzkverzekeringen USING btree (typeid); 
+CREATE INDEX "IDX_VRZKVERZEKERINGEN_VERANTWOORDELIJKE" ON public.vrzkverzekeringen USING btree (verantwoordelijkeid); 
 INSERT INTO vrzkverzekeringstypes (verzekeringstypeid,verzekeringstype,verzekeringstypeomschr,maxtermijn) VALUES 
  (2,'TypeTijdelijkeVerzekering','Tijdelijke verzekering niet-leden','31'), 
  (5,'TypeTijdelijkeAutoverzekering','Autoverzekering','30'), 
@@ -269,7 +270,7 @@ INSERT INTO vrzkverzekeringstypes (verzekeringstypeid,verzekeringstype,verzekeri
  (6,'TypeGroepsmateriaalVerzekering','Materiaalverzekering','30'), 
  (10,'TypeEvenementenVerzekering','Evenementenverzekering','0'); 
  
-CREATE TABLE vrzknietleden ( 
+CREATE TABLE public.vrzknietleden ( 
     nietlidid numeric(6) DEFAULT nextval('seq_vrzknietleden'::regclass) NOT NULL, 
     naam varchar(255) NOT NULL, 
     voornaam varchar(255) NOT NULL, 
@@ -303,21 +304,12 @@ CREATE TABLE vrzkmateriaal (
 ); 
 
 CREATE TABLE vrzktypeeenact ( 
-
-aardactiviteit varchar(500) NOT NULL, 
-
-aantgroep numeric(2) NOT NULL, 
-
-postcode numeric(4) NOT NULL, 
-
-gemeente varchar(40) NOT NULL, 
-
-verzekeringsid numeric(10) NOT NULL, 
-
-CONSTRAINT vrzktypeeenact_aantgroep_check CHECK ((aantgroep = ANY (ARRAY[(1)::numeric, (2)::numeric, (3)::numeric, (4)::numeric, (5)::numeric, (6)::numeric, (7)::numeric, (8)::numeric, (9)::numeric]))), 
-
-CONSTRAINT vrzktypeeenact_pkey PRIMARY KEY (verzekeringsid), 
-
-CONSTRAINT vrzktypeeenact_verzekeringsid_fkey FOREIGN KEY (verzekeringsid) REFERENCES vrzkverzekeringen(verzekeringsid) 
-
+    aardactiviteit varchar(500) NOT NULL, 
+    aantgroep numeric(2) NOT NULL, 
+    postcode numeric(4) NOT NULL, 
+    gemeente varchar(40) NOT NULL, 
+    verzekeringsid numeric(10) NOT NULL, 
+    CONSTRAINT vrzktypeeenact_aantgroep_check CHECK ((aantgroep = ANY (ARRAY[(1)::numeric, (2)::numeric, (3)::numeric, (4)::numeric, (5)::numeric, (6)::numeric, (7)::numeric, (8)::numeric, (9)::numeric]))), 
+    CONSTRAINT vrzktypeeenact_pkey PRIMARY KEY (verzekeringsid), 
+    CONSTRAINT vrzktypeeenact_verzekeringsid_fkey FOREIGN KEY (verzekeringsid) REFERENCES public.vrzkverzekeringen(verzekeringsid) 
 ); 
