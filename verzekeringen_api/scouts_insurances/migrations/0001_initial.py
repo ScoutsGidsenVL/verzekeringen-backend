@@ -272,7 +272,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('key', models.CharField(max_length=30)),
                 ('value', models.DecimalField(decimal_places=5, max_digits=8, validators=[django.core.validators.MinValueValidator(Decimal('0'))])),
-                ('insurance_type', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='cost_variables', to='scouts_insurances.insurancetype')),
+                ('insurance_type', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='cost_variables', to='scouts_insurances.InsuranceType')),
             ],
             options={
                 'unique_together': {('key', 'insurance_type')},
