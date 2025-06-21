@@ -1,0 +1,53 @@
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: verzekeringen_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@localhost.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  db:
+    image: postgres:15
+    container_name: verzekeringen_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: verzekeringen
+      POSTGRES_USER: verzekeringen
+      POSTGRES_PASSWORD: Azerty123
+    volumes:
+      - ./docker/database-fix.sql:/docker-entrypoint-initdb.d/database-fix.sql
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile_development
+    container_name: verzekeringen_django
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_SETTINGS_MODULE: verzekeringen_api.settings
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: verzekeringen
+      DB_USER: verzekeringen
+      DB_PASSWORD: Azerty123
+      DEBUG: "True"
+      SECRET_KEY: your_secret_here
+
+volumes:
+  pgdata:
+  pgadmin_data:
