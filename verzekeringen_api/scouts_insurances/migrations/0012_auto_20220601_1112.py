@@ -11,9 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.AddField(
-        #     model_name='equipment',
-        #     name='inuits_id',
-        #     field=models.UUIDField(blank=True, db_column='inuits_id', default=None, null=True),
-        # ),
+        migrations.AddField(
+            model_name='equipment',
+            name='inuits_id',
+            field=models.UUIDField(blank=True, db_column='inuits_id', default=None, null=True),
+        ),
     ]
