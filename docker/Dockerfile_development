@@ -1,26 +1,38 @@
 FROM python:3.9-slim
 
-# Prevents .pyc files
+# Prevent .pyc files and ensure logs are shown
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Create work directory
+# Set workdir
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:$PATH"
 
-# Copy Django project
-COPY verzekeringen_api/ .
+# Copy project files
+COPY pyproject.toml poetry.lock* ./
+COPY verzekeringen_api/ verzekeringen_api/
 
-# Run the development server by default
-CMD sh -c "python verzekeringen_api/manage.py migrate && \
-python verzekeringen_api/manage.py collectstatic --noinput && \
-python verzekeringen_api/manage.py addinsurancetypes && \
-python verzekeringen_api/manage.py addinfovariables && \
-python verzekeringen_api/manage.py importinitialcountries && \
-python verzekeringen_api/manage.py runserver 0.0.0.0:8000"
+# Install dependencies
+RUN poetry install --no-interaction --no-ansi --only main
+
+# Set Poetry virtualenv as default
+ENV PYTHONPATH="/app"
+
+# Run the app
+CMD poetry run sh -c "\
+    python verzekeringen_api/manage.py migrate && \
+    python verzekeringen_api/manage.py collectstatic --noinput && \
+    python verzekeringen_api/manage.py addinsurancetypes && \
+    python verzekeringen_api/manage.py addinfovariables && \
+    python verzekeringen_api/manage.py importinitialcountries && \
+    python verzekeringen_api/manage.py runserver 0.0.0.0:8000"
