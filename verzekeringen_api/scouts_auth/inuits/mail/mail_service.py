@@ -1,4 +1,7 @@
+import json
+import requests
 import os, logging
+from email.utils import parseaddr
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -12,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 class EmailService:
     backend = settings.EMAIL_BACKEND
+    sendinblue_api_url = settings.SENDINBLUE_API_URL
+    sendinblue_api_key = settings.SENDINBLUE_API_KEY
 
     def validate_email_arguments(
         self,
@@ -49,6 +54,16 @@ class EmailService:
         )
 
         return from_email, to, cc, bcc, reply_to
+
+    def _add_in_blue_attachments(self, attachments: list = None) -> list[dict]:
+        """Returns a list of dicts with name and content values required for SendInBlue.
+        """
+        logger.debug("Adding %d EmailAttachment instances to email", len(attachments))
+        data = []
+        for attachment in attachments:
+            name, content = attachment.get_file_and_contents()
+            data.append({"name": name, "content": content})
+        return data
 
     def _add_attachments(self, message: EmailMessage, attachment_paths: list = None, attachments: list = None):
         attachment_paths_len = len(attachment_paths)
@@ -95,7 +110,7 @@ class EmailService:
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
-        template_id: str = None,
+        template_id: int = None,
         is_html: bool = False,
         tags=None,
     ):
@@ -115,9 +130,8 @@ class EmailService:
 
         if EmailSettingsUtil.is_send_in_blue():
             logger.debug("Sending mail with SendInBlue")
-            return self.send_send_in_blue_email(
+            return self.send_in_blue_email(
                 body=body,
-                html_body=html_body,
                 subject=subject,
                 from_email=from_email,
                 to=to,
@@ -127,7 +141,6 @@ class EmailService:
                 attachment_paths=attachment_paths,
                 attachments=attachments,
                 template_id=template_id,
-                is_html=is_html,
                 tags=tags,
             )
         else:
@@ -189,11 +202,10 @@ class EmailService:
 
             raise exc
 
-    def send_send_in_blue_email(
+    def send_in_blue_email(
         self,
         subject: str = "",
         body: str = "",
-        html_body: str = "",
         from_email: str = None,
         to: list = None,
         cc: list = None,
@@ -201,35 +213,41 @@ class EmailService:
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
-        template_id: str = None,
-        is_html: bool = False,
+        template_id: int = None,
         tags=None,
     ):
-        if tags is None:
-            tags = []
-        message = AnymailMessage(
-            subject=subject,
-            body=body,
-            from_email=from_email,
-            to=to,
-            tags=tags,
-            bcc=bcc,
-            # Anymail extra in constructor
-        )
-        # if is_html:
-        #     message.extra_headers["Content-Type"] = "text/html; charset=UTF8"
+        endpoint = "%s/smtp/email" % self.sendinblue_api_url
+        headers = {"api-key": self.sendinblue_api_key}
 
-        self._add_attachments(message=message, attachment_paths=attachment_paths, attachments=attachments)
+        data: dict = {"templateId": template_id}
+        payload = json.loads(body)
+        if payload:
+            data["params"] = payload
 
-        # if template_id:
-        #     logger.debug("Using template with id %s for SendInBlue mail", template_id)
-        #     message.template_id = template_id
+        if subject:
+            data["subject"] = subject
+        if from_email:
+            name, email = parseaddr(from_email)
+            data["sender"] = {"email": email, "name": name}
+        if to:
+            data["to"] = [{"email": email} for email in to]
+        if cc:
+            data["cc"] = [{"email": email} for email in cc]
+        if bcc:
+            data["bcc"] = [{"email": email} for email in bcc]
+        if reply_to:
+            name, email = parseaddr(from_email)
+            data["reply_to"] = {"email": email, "name": name}
+        if attachments:
+            data["attachment"] = self._add_in_blue_attachments(attachments)
+        if tags:
+            data["tags"] = tags
 
         try:
-            message.send()
+            response = requests.post(endpoint, headers=headers, json=data)
+            response.raise_for_status()
+            logger.info(f"Blue email sent successfully: {response.json()}")
+            return response.json()
         except Exception as exc:
-            logger.error("Mail could not be sent through SendInBlue", exc)
+            logger.error(f"Blue mail could not be sent: {exc}")
             raise exc
-
-        # logger.debug("Mail status: %s", message.anymail_status)
-        # logger.debug("TYPE: %s", type(message.anymail_status))

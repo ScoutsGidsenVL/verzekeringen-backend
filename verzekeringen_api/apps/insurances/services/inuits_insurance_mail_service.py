@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.conf import settings
@@ -43,20 +44,16 @@ class InuitsInsuranceMailService(InsuranceMailService):
     stakeholder_template_path = settings.RESOURCES_CLAIMS_STAKEHOLDER_TEMPLATE_PATH
     stakeholder_subject = "Bevestiging aangifte schade van (((date_of_accident)))"
 
-    template_id = settings.EMAIL_TEMPLATE
-
     def send_claim(
         self,
         claim: InsuranceClaim,
         claim_report_path: str,
     ):
-        dictionary = self._prepare_claim_dictionary(claim)
+        self.notify_insurer(claim, claim_report_path)
+        self.notify_victim(claim, claim_report_path)
+        self.notify_stakeholder(claim)
 
-        self.notify_insurer(claim, claim_report_path, dictionary)
-        self.notify_victim(claim, claim_report_path, dictionary)
-        self.notify_stakeholder(claim, dictionary)
-
-    def notify_insurer(self, claim: InsuranceClaim, claim_report_path: str, dictionary: dict):
+    def notify_insurer(self, claim: InsuranceClaim, claim_report_path: str):
         """Send the claim to the insurer."""
         logger.debug("Preparing to send claim #%d to the insurer", claim.id)
 
@@ -64,18 +61,20 @@ class InuitsInsuranceMailService(InsuranceMailService):
         subject = subject.replace("(((claim.id)))", str(claim.id))
         subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.strftime("%d-%m-%Y")).lower())
 
+        template_id = settings.SENDINBLUE_TEMPLATE_INSURANCE_INSURER
+
         self._send_prepared_claim_email(
             claim=claim,
-            dictionary=dictionary,
             subject=subject,
             template_path=self.insurer_template_path,
-            to=InuitsInsuranceSettingsHelper.get_insurer_address(self.insurer_address, claim.declarant.email),
+            to=[InuitsInsuranceSettingsHelper.get_insurer_address(self.insurer_address, claim.declarant.email)],
             add_attachments=True,
+            template_id=template_id,
             claim_report_path=claim_report_path,
             tags=["Schadeaangifte"],
         )
 
-    def notify_victim(self, claim: InsuranceClaim, claim_report_path: str, dictionary: dict):
+    def notify_victim(self, claim: InsuranceClaim, claim_report_path: str):
         """Notify the victim that the claim was sent to the insurer."""
         logger.debug("Preparing to send claim #%d to the victim", claim.id)
 
@@ -83,38 +82,63 @@ class InuitsInsuranceMailService(InsuranceMailService):
         subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.strftime("%d-%m-%Y")).lower())
 
         victim: InuitsClaimVictim = claim.victim
+
+        template_id = settings.SENDINBLUE_TEMPLATE_INSURANCE_VICTIM
+
         self._send_prepared_claim_email(
             claim=claim,
-            dictionary=dictionary,
             subject=subject,
             template_path=self.victim_template_path,
-            to=InuitsInsuranceSettingsHelper.get_victim_email(victim.email, claim.declarant.email),
+            to=[InuitsInsuranceSettingsHelper.get_victim_email(victim.email, claim.declarant.email)],
             add_attachments=True,
+            template_id=template_id,
             claim_report_path=claim_report_path,
             tags=["Schadeaangifte"],
         )
 
-    def notify_stakeholder(self, claim: InsuranceClaim, dictionary: dict):
+    def notify_stakeholder(self, claim: InsuranceClaim):
         """Notify the stakeholder that a claim was sent to the insurer and victim."""
         logger.debug("Preparing to notify the stakeholder about claim #%d", claim.id)
 
         subject = self.stakeholder_subject
         subject = subject.replace("(((claim.id)))", str(claim.id))
         subject = subject.replace("(((date_of_accident)))", str(claim.date_of_accident.strftime("%d-%m-%Y")).lower())
+
+        template_id = settings.SENDINBLUE_TEMPLATE_INSURANCE_DECLERANT
+
         self._send_prepared_claim_email(
             claim=claim,
-            dictionary=dictionary,
             subject=subject,
             template_path=self.stakeholder_template_path,
-            to=InuitsInsuranceSettingsHelper.get_declarant_email(claim.declarant.email, claim.declarant.email),
+            to=[InuitsInsuranceSettingsHelper.get_declarant_email(claim.declarant.email, claim.declarant.email)],
+            template_id=template_id,
             add_attachments=False,
             tags=["Schadeaangifte"],
         )
 
-    def _prepare_claim_dictionary(self, claim: InsuranceClaim):
-        """Replaces the keys in the mail template with the actual values."""
-        # @TODO: i18n ?
-        # @TODO: groupleader name
+    def _prepare_claim_dictionary(self, claim: InsuranceClaim, via_blue: bool = False, template_id: int = None) -> dict:
+        """
+        ...
+        Consider both django mail templates and Sendinblue templates.
+        """
+        if via_blue:
+            params = {}
+            if template_id == settings.SENDINBLUE_TEMPLATE_INSURANCE_VICTIM:
+                params["voornaam"] = claim.victim.first_name
+            elif template_id == settings.SENDINBLUE_TEMPLATE_INSURANCE_DECLERANT:
+                accident_date = (
+                    claim.date_of_accident
+                    and claim.date_of_accident.strftime("%d-%m-%Y")
+                )
+                create_date = claim.created_on.strftime("%d-%m-%Y")
+                params["voornaam"] = claim.declarant.first_name
+                params["details"] = (
+                    f"<li>Aangever: {claim.declarant.first_name}</li>"
+                    f"<li>Slachtoffer: {claim.victim.first_name}</li>"
+                    f"<li>Datum ongeval: {accident_date or ''}</li>"
+                    f"<li>Datum aangifte: {create_date}</li>"
+                )
+            return params
         return {
             "declarant__first_name": claim.declarant.first_name,
             "declarant__name": claim.declarant.first_name + " " + claim.declarant.last_name,
@@ -134,41 +158,44 @@ class InuitsInsuranceMailService(InsuranceMailService):
     def _send_prepared_claim_email(
         self,
         claim: InsuranceClaim,
-        dictionary: dict,
         subject: str,
         template_path: str,
         to: list = None,
         cc: list = None,
         bcc: list = None,
         reply_to: str = None,
-        template_id: str = None,
+        template_id: int = None,
         claim_report_path: str = None,
         add_attachments: bool = False,
         tags=None,
     ):
         if tags is None:
             tags = []
-        dictionary["title_mail"] = subject
-        # @TODO load txt body ?
-        body = None
-        html_body = self._prepare_email_body(template_path, dictionary)
-        html_body = TextUtils.compose_html_email(self.template_path_start, html_body, self.template_path_end)
 
         if not reply_to:
             reply_to = InuitsInsuranceSettingsHelper.get_email_insurance_reply_to(self.from_email)
 
+        values = self._prepare_claim_dictionary(claim, settings.USE_SENDINBLUE, template_id)
+
         mail = Email(
-            subject=dictionary["title_mail"],
-            body=body,
-            html_body=html_body,
+            subject=subject,
             from_email=self.from_email,
             to=to,
             cc=cc,
             bcc=bcc,
             reply_to=reply_to,
             template_id=template_id,
-            is_html=True,
         )
+
+        if settings.USE_SENDINBLUE:
+            mail.body = json.dumps(values)
+        else:
+            mail.is_html = True
+            html_body = self._prepare_email_body(template_path, values)
+            html_body = TextUtils.compose_html_email(
+                self.template_path_start, html_body, self.template_path_end
+            )
+            mail.html_body = html_body
 
         if add_attachments:
             if claim_report_path:
