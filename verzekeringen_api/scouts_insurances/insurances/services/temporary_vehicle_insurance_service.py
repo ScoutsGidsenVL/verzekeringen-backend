@@ -20,7 +20,7 @@ class TemporaryVehicleInsuranceService:
     base_insurance_service = BaseInsuranceService()
 
     def _calculate_total_cost(self, insurance: TemporaryVehicleInsurance) -> Decimal:
-        days = (insurance.end_date - insurance.start_date).days
+        days = (insurance.end_date - insurance.start_date).days + 1
 
         cost = 0
 

@@ -30,7 +30,7 @@ class TravelAssistanceInsuranceService:
         return cost
 
     def _calculate_total_cost(self, insurance: TravelAssistanceInsurance, participant_amount: int) -> Decimal:
-        days = (insurance.end_date - insurance.start_date).days
+        days = (insurance.end_date - insurance.start_date).days + 1
         limits = (1, 3, 5, 11, 17, 23, 32)
 
         active_limit = None
