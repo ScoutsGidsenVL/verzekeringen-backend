@@ -34,7 +34,7 @@ class Email:
     reply_to: str = None
     attachment_paths: list = None
     attachments: list = None
-    template_id: str = None
+    template_id: int = None
     is_html: bool = False
 
     # https://stackoverflow.com/questions/4535667/python-list-should-be-empty-on-class-instance-initialisation-but-its-not-why
@@ -50,7 +50,7 @@ class Email:
         reply_to: str = None,
         attachment_paths: list = None,
         attachments: list = None,
-        template_id: str = None,
+        template_id: int = None,
         is_html: bool = False,
     ):
         self.subject = subject

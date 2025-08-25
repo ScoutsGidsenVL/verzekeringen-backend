@@ -1,4 +1,5 @@
 import logging
+import json
 import re
 
 from django.conf import settings
@@ -52,8 +53,6 @@ class InsuranceMailService(EmailService):
             insurance.responsible_member.first_name + " " + insurance.responsible_member.last_name,
         )
 
-        dictionary = self._prepare_insurance_dictionary(insurance)
-
         subject = "Bevestiging aanvraag {} van {} tot {} [Ref {}]".format(
             str(insurance.type.description).lower(),
             insurance.start_date.strftime("%d-%m-%Y"),
@@ -63,7 +62,6 @@ class InsuranceMailService(EmailService):
 
         self._send_prepared_insurance_email(
             insurance=insurance,
-            dictionary=dictionary,
             subject=subject,
             template_path=self.insurance_request_template_path,
             to=[
@@ -75,8 +73,23 @@ class InsuranceMailService(EmailService):
             tags=["Verzekeringsaanvraag"],
         )
 
-    def _prepare_insurance_dictionary(self, insurance: BaseInsurance):
-        """Replaces the keys in the mail template with the actual values."""
+    def _prepare_insurance_dictionary(
+        self,
+        insurance: BaseInsurance,
+        via_blue: bool = False
+    ):
+        """Replaces the keys in the mail template with the actual values.
+        Consider both django mail templates and Sendinblue templates.
+        """
+        if via_blue:
+            # Based on template SENDINBLUE_TEMPLATE_INSURANCE_REQUESTER.
+            return {
+                "voornaam": insurance.responsible_member.first_name,
+                "verzekeringstype": insurance.type.description.lower(),
+                "extra": self._extra_text(insurance),
+                "details": self._extra_list_items(insurance),
+            }
+
         return {
             "date_of_request": insurance.created_on.strftime("%d-%m-%Y"),
             "title_mail": "",
@@ -228,7 +241,6 @@ class InsuranceMailService(EmailService):
     def _send_prepared_insurance_email(
         self,
         insurance: BaseInsurance,
-        dictionary: dict,
         subject: str,
         template_path: str,
         to: list = None,
@@ -241,45 +253,36 @@ class InsuranceMailService(EmailService):
     ):
         if tags is None:
             tags = []
-        dictionary["title_mail"] = subject
-        body = None
-        html_body = self._prepare_email_body(template_path, dictionary)
-        html_body = TextUtils.compose_html_email(self.template_path_start, html_body, self.template_path_end)
-        # Voorkom dat Brevo automatisch achter elke lijn een '<br>' plakt.
-        html_body = " ".join(html_body.splitlines())
-        # Combineer opeenvolgende spaties
-        html_body = re.sub("  +", " ", html_body)
 
         if not reply_to:
             reply_to = self.from_email
 
+        values = self._prepare_insurance_dictionary(insurance, settings.USE_SENDINBLUE)
+
         mail = Email(
             subject=subject,
-            body=body,
-            html_body=html_body,
             from_email=self.from_email,
             to=to,
             cc=cc,
             bcc=bcc,
             reply_to=reply_to,
             template_id=template_id,
-            is_html=True,
         )
 
-        # if add_attachments:
-        #     if insurance.has_attachment():
-        #         attachment = None
-        #         if insurance.type.is_activity_insurance():
-        #             attachment: ActivityInsuranceAttachment = insurance.attachment
-        #         elif insurance.type.is_event_insurance():
-        #             attachment: EventInsuranceAttachment = insurance.attachment
-
-        #         if not attachment:
-        #             logger.error("Unable to append attachment for insurance with id %d", insurance.id)
-        #         else:
-        #             logger.debug(
-        #                 "Adding attachment with path %s to insurance(%d) email", attachment.file.name, insurance.id
-        #             )
-        #             mail.add_attachment(EmailAttachment(attachment.file.name, self.file_service))
+        if settings.USE_SENDINBLUE:
+            mail.template_id = settings.SENDINBLUE_TEMPLATE_INSURANCE_REQUESTER
+            mail.body = json.dumps(values)
+        else:
+            mail.is_html = True
+            html_body = self._prepare_email_body(template_path, values)
+            html_body = TextUtils.compose_html_email(
+                self.template_path_start,
+                html_body,
+                self.template_path_end
+            )
+            # Voorkom dat Brevo automatisch achter elke lijn een '<br>' plakt.
+            html_body = " ".join(html_body.splitlines())
+            # Combineer opeenvolgende spaties
+            mail.html_body = re.sub("  +", " ", html_body)
 
         self.send(mail, tags=tags)
