@@ -26,7 +26,7 @@ class CountryViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["get"], detail=False, url_path="countries_by_type/(?P<type_id>\d+)")
     def get_by_type(self, request, type_id=None):
-        countries = self.filter_queryset(self.get_queryset().by_insurance_type_id(type_id))
+        countries = Country.objects.filter(insurance_types__id=type_id)
         page = self.paginate_queryset(countries)
 
         if page is not None:
@@ -43,8 +43,7 @@ class BelgianPostalCodeCitySearch(views.APIView):
     @swagger_auto_schema(responses={status.HTTP_200_OK: BelgianPostalCodeCitySerializer})
     def get(self, request):
         search_term = self.request.GET.get("term", None)
-        if not search_term:
-            raise ValidationError("Url param 'term' is a required filter")
+
         results = BelgianPostalCodeCityService().search(term=search_term)
         output_serializer = BelgianPostalCodeCitySerializer(results, many=True)
 
