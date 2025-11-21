@@ -3,9 +3,7 @@ from decimal import Decimal
 
 from django.db import transaction
 
-from scouts_insurances.equipment.models import TravelAssistanceVehicle
-from scouts_insurances.locations.models import Country
-from scouts_insurances.insurances.models import TravelAssistanceInsurance, InsuranceType, CostVariable
+from scouts_insurances.insurances.models import TravelAssistanceInsurance
 from scouts_insurances.insurances.services import BaseInsuranceService
 
 from scouts_auth.groupadmin.services import GroupAdmin
@@ -18,62 +16,25 @@ class TravelAssistanceInsuranceService:
     base_insurance_service = BaseInsuranceService()
     groupadmin = GroupAdmin()
 
-    def _cost_by_prefix(self, prefix: str, type: InsuranceType, active_limit: int, days: int) -> Decimal:
-        if not active_limit:
-            # If no active limit we need to get price of max so 32 and calculate extra months
-            cost = CostVariable.objects.get_variable(type, "%s_32" % (prefix)).value
-            monthly_cost = CostVariable.objects.get_variable(type, "%s_extramonth" % (prefix)).value
-            extra_months = math.ceil((days - 32) / 30)
-            cost += extra_months * monthly_cost
-        else:
-            cost = CostVariable.objects.get_variable(type, "%s_%s" % (prefix, str(active_limit))).value
+    def calculate_total_cost(self, days_amount:int, person_amount:int=0, vehicle_amount:int=0) -> Decimal:
+        """
+        Calculates the cost of a insurance based on the given params.
+
+        Policy description: Ethias assistance - Travel abroad
+        Policy price calculation:
+         - Per person worldwide coverage: 1.00 EUR/day
+         - Per vehicle in europe coverage: 2.50 EUR/day
+         - Minimum yearly premium: 100.00 EUR
+         - Tax 9.25%
+         - RIZIV 7.5% (only for vehicle coverage)
+        """
+        cost = Decimal(0.0)
+        if person_amount:
+            cost += days_amount * Decimal(1.0) * Decimal(person_amount)
+        if vehicle_amount:
+            cost += days_amount * Decimal(2.5) * vehicle_amount * Decimal(1.075)
+        cost *= Decimal(1.0925)
         return cost
-
-    def _calculate_total_cost(self, insurance: TravelAssistanceInsurance, participant_amount: int) -> Decimal:
-        days = (insurance.end_date - insurance.start_date).days + 1
-        limits = (1, 3, 5, 11, 17, 23, 32)
-
-        active_limit = None
-        for limit in limits:
-            if days <= limit:
-                active_limit = limit
-                break
-
-        if insurance.vehicle:
-            cost = participant_amount * self._cost_by_prefix("premium_participant", insurance.type, active_limit, days)
-            cost += self._cost_by_prefix("premium_vehicle", insurance.type, active_limit, days)
-        else:
-            # TODO seperate european and world
-            cost = participant_amount * self._cost_by_prefix("premium_europe", insurance.type, active_limit, days)
-
-        return round(cost, 2)
-
-    # We create an insurance in memory (! so no saving) and calculate cost
-    def travel_assistance_insurance_cost_calculation(
-        self,
-        *,
-        participants: list,
-        country: str = None,
-        vehicle: TravelAssistanceVehicle = None,
-        group_admin_id: str = "",
-        **base_insurance_fields,
-    ) -> Decimal:
-        type = (
-            InsuranceType.objects.travel_assistance_without_vehicle()
-            if vehicle is None
-            else InsuranceType.objects.travel_assistance_with_vehicle()
-        )
-        base_insurance_fields = self.base_insurance_service.base_insurance_creation_fields(
-            **base_insurance_fields, type=type
-        )
-        country = country if country and isinstance(country, str) else Country.DEFAULT_COUNTRY_NAME
-        insurance = TravelAssistanceInsurance(
-            **base_insurance_fields,
-        )
-        insurance.country = country
-        if vehicle:
-            insurance.vehicle = vehicle
-        return self._calculate_total_cost(insurance, len(participants))
 
     @transaction.atomic
     def travel_assistance_insurance_delete(self, *, insurance: TravelAssistanceInsurance):

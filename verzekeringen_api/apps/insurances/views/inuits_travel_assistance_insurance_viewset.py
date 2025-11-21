@@ -54,17 +54,26 @@ class InuitsTravelAssistanceInsuranceViewSet(viewsets.GenericViewSet):
         request_body=InuitsTravelAssistanceInsuranceSerializer,
         responses={status.HTTP_201_CREATED: InsuranceCostSerializer},
     )
-    @action(methods=["post"], detail=False, url_path="cost")
+    @action(
+        methods=["post"],
+        detail=False,
+        url_path="cost",
+        permission_classes=[permissions.AllowAny]
+    )
     def cost_calculation_travel_assistance(self, request):
+        """
+        Public API Endpoint to calculate cost of travel assistance insurance
+        based on the amount of days, people and vehicles.
+        """
         logger.debug("COST CALCULATION REQUEST DATA: %s", request.data)
-        input_serializer = InuitsTravelAssistanceInsuranceSerializer(data=request.data, context={"request": request})
-        input_serializer.is_valid(raise_exception=True)
+        days_amount =  request.data.get("days_amount", 0)
+        person_amount =  request.data.get("person_amount", 0)
+        vehicle_amount = request.data.get("vehicle_amount", 0)
 
-        validated_data = input_serializer.validated_data
-        logger.debug("COST CALCULATION VALIDATED DATA: %s", validated_data)
-
-        cost = self.travel_assistance_insurance_service.travel_assistance_insurance_cost_calculation(
-            **validated_data, created_by=request.user
+        cost = self.travel_assistance_insurance_service.calculate_total_cost(
+            days_amount,
+            person_amount,
+            vehicle_amount,
         )
 
         output_serializer = InsuranceCostSerializer({"total_cost": cost})
