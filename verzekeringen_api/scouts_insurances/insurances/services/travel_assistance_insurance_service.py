@@ -30,9 +30,9 @@ class TravelAssistanceInsuranceService:
         """
         cost = Decimal(0.0)
         if person_amount:
-            cost += days_amount * Decimal(1.0) * Decimal(person_amount)
+            cost += Decimal(days_amount) * Decimal(1.0) * Decimal(person_amount)
         if vehicle_amount:
-            cost += days_amount * Decimal(2.5) * vehicle_amount * Decimal(1.075)
+            cost += Decimal(days_amount) * Decimal(2.5) * Decimal(vehicle_amount) * Decimal(1.075)
         cost *= Decimal(1.0925)
         return cost
 
