@@ -24,16 +24,16 @@ services:
       POSTGRES_PASSWORD: Azerty123
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./docker/database-fix.sql:/docker-entrypoint-initdb.d/database-fix.sql
+      - ./database-fix.sql:/docker-entrypoint-initdb.d/database-fix.sql
     ports:
       - "5432:5432"
   web:
     build:
-      context: .
+      context: ..
       dockerfile: docker/Dockerfile_development
     container_name: verzekeringen_django
     volumes:
-      - .:/app
+      - ..:/app
     ports:
       - "8000:8000"
     depends_on:
