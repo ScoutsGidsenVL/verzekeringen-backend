@@ -14,6 +14,8 @@ Requirements: Python
     - Windows: `venv\Scripts\Activate.ps1`
     - Linux & MacOS: `source venv/bin/activate`
 
+3. Change python version: `pyenv local 3.9.9` // if not installed = `yay -S pyenv` and then `pyenv install 3.9.9`
+4. Use python version 3.9.9: `poetry env use python3.9`
 3. Install packages (poetry): `poetry install`
 4. Activeer de poetry shell: `poetry shell`
 5. Run the app: `python verzekeringen_api/manage.py runserver 0.0.0.0:8000`
