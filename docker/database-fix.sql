@@ -1,117 +1,21 @@
-CREATE SEQUENCE auth_group_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
-CREATE SEQUENCE auth_group_permissions_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
-CREATE SEQUENCE auth_permission_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
-CREATE SEQUENCE django_admin_log_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
-CREATE SEQUENCE django_content_type_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
-CREATE SEQUENCE django_migrations_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.scouts_auth_scoutsuser_groups_id_seq definition 
--- DROP SEQUENCE scouts_auth_scoutsuser_groups_id_seq; 
-CREATE SEQUENCE scouts_auth_scoutsuser_groups_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.scouts_auth_scoutsuser_user_permissions_id_seq definition 
--- DROP SEQUENCE scouts_auth_scoutsuser_user_permissions_id_seq; 
-CREATE SEQUENCE scouts_auth_scoutsuser_user_permissions_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.scouts_insurances_costvariable_id_seq definition 
--- DROP SEQUENCE scouts_insurances_costvariable_id_seq; 
-CREATE SEQUENCE scouts_insurances_costvariable_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.scouts_insurances_country_id_seq definition 
--- DROP SEQUENCE scouts_insurances_country_id_seq; 
-CREATE SEQUENCE scouts_insurances_country_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.scouts_insurances_country_insurance_types_id_seq definition 
--- DROP SEQUENCE scouts_insurances_country_insurance_types_id_seq; 
-CREATE SEQUENCE scouts_insurances_country_insurance_types_id_seq 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.seq_vrzk_adres definition 
--- DROP SEQUENCE seq_vrzk_adres; 
-CREATE SEQUENCE seq_vrzk_adres 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.seq_vrzk_bericht definition 
--- DROP SEQUENCE seq_vrzk_bericht; 
-CREATE SEQUENCE seq_vrzk_bericht 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.seq_vrzk_vzw definition 
--- DROP SEQUENCE seq_vrzk_vzw; 
-CREATE SEQUENCE seq_vrzk_vzw 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.seq_vrzkleden definition 
--- DROP SEQUENCE seq_vrzkleden; 
-CREATE SEQUENCE seq_vrzkleden 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.seq_vrzkmateriaal definition 
--- DROP SEQUENCE seq_vrzkmateriaal; 
-CREATE SEQUENCE seq_vrzkmateriaal 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.seq_vrzknietleden definition 
--- DROP SEQUENCE seq_vrzknietleden; 
-CREATE SEQUENCE seq_vrzknietleden 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
--- public.seq_vrzkverzekeringen definition 
--- DROP SEQUENCE seq_vrzkverzekeringen; 
-CREATE SEQUENCE seq_vrzkverzekeringen 
-MINVALUE 0 
-NO MAXVALUE 
-START 0 
-NO CYCLE; 
+CREATE SEQUENCE auth_group_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE auth_group_permissions_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE auth_permission_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE django_admin_log_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE django_content_type_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE django_migrations_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE scouts_auth_scoutsuser_groups_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE scouts_auth_scoutsuser_user_permissions_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE scouts_insurances_costvariable_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE scouts_insurances_country_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE scouts_insurances_country_insurance_types_id_seq MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE seq_vrzk_adres MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE seq_vrzk_bericht MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE seq_vrzk_vzw MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE seq_vrzkleden MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE seq_vrzkmateriaal MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE seq_vrzknietleden MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
+CREATE SEQUENCE seq_vrzkverzekeringen MINVALUE 0 NO MAXVALUE START 0 NO CYCLE;
 
 CREATE TABLE vrzkverzekeringstypes (
     verzekeringstypeid numeric(2) NOT NULL,
@@ -312,4 +216,182 @@ CREATE TABLE vrzktypeeenact (
     CONSTRAINT vrzktypeeenact_aantgroep_check CHECK ((aantgroep = ANY (ARRAY[(1)::numeric, (2)::numeric, (3)::numeric, (4)::numeric, (5)::numeric, (6)::numeric, (7)::numeric, (8)::numeric, (9)::numeric]))), 
     CONSTRAINT vrzktypeeenact_pkey PRIMARY KEY (verzekeringsid), 
     CONSTRAINT vrzktypeeenact_verzekeringsid_fkey FOREIGN KEY (verzekeringsid) REFERENCES public.vrzkverzekeringen(verzekeringsid) 
-); 
+);
+
+-- Groups
+INSERT INTO public.auth_group (name) VALUES 
+('role_section_leader'), 
+('role_group_leader'), 
+('role_district_commissioner'), 
+('role_administrator'), 
+('role_super_admin');
+
+-- Permissions
+INSERT INTO public.auth_permission (name,content_type_id,codename) VALUES
+('Can add log entry',1,'add_logentry'),
+('Can change log entry',1,'change_logentry'),
+('Can delete log entry',1,'delete_logentry'),
+('Can view log entry',1,'view_logentry'),
+('Can add permission',2,'add_permission'),
+('Can change permission',2,'change_permission'),
+('Can delete permission',2,'delete_permission'),
+('Can view permission',2,'view_permission'),
+('Can add group',3,'add_group'),
+('Can change group',3,'change_group'),
+('Can delete group',3,'delete_group'),
+('Can view group',3,'view_group'),
+('Can add content type',4,'add_contenttype'),
+('Can change content type',4,'change_contenttype'),
+('Can delete content type',4,'delete_contenttype'),
+('Can view content type',4,'view_contenttype'),
+('Can add session',5,'add_session'),
+('Can change session',5,'change_session'),
+('Can delete session',5,'delete_session'),
+('Can view session',5,'view_session'),
+('Can add inuits equipment',6,'add_inuitsequipment'),
+('Can change inuits equipment',6,'change_inuitsequipment'),
+('Can delete inuits equipment',6,'delete_inuitsequipment'),
+('Can view inuits equipment',6,'view_inuitsequipment'),
+('Can add inuits vehicle',7,'add_inuitsvehicle'),
+('Can change inuits vehicle',7,'change_inuitsvehicle'),
+('Can delete inuits vehicle',7,'delete_inuitsvehicle'),
+('Can view inuits vehicle',7,'view_inuitsvehicle'),
+('Can add inuits vehicle template',8,'add_inuitsvehicletemplate'),
+('Can change inuits vehicle template',8,'change_inuitsvehicletemplate'),
+('Can delete inuits vehicle template',8,'delete_inuitsvehicletemplate'),
+('Can view inuits vehicle template',8,'view_inuitsvehicletemplate'),
+('Can add inuits equipment template',9,'add_inuitsequipmenttemplate'),
+('Can change inuits equipment template',9,'change_inuitsequipmenttemplate'),
+('Can delete inuits equipment template',9,'delete_inuitsequipmenttemplate'),
+('Can view inuits equipment template',9,'view_inuitsequipmenttemplate'),
+('Can add activity insurance attachment',10,'add_activityinsuranceattachment'),
+('Can change activity insurance attachment',10,'change_activityinsuranceattachment'),
+('Can delete activity insurance attachment',10,'delete_activityinsuranceattachment'),
+('Can view activity insurance attachment',10,'view_activityinsuranceattachment'),
+('Can add event insurance attachment',11,'add_eventinsuranceattachment'),
+('Can change event insurance attachment',11,'change_eventinsuranceattachment'),
+('Can delete event insurance attachment',11,'delete_eventinsuranceattachment'),
+('Can view event insurance attachment',11,'view_eventinsuranceattachment'),
+('Can add insurance claim',12,'add_insuranceclaim'),
+('Can change insurance claim',12,'change_insuranceclaim'),
+('Can delete insurance claim',12,'delete_insuranceclaim'),
+('Can view insurance claim',12,'view_insuranceclaim'),
+('User can add a note to a claim',12,'add_insuranceclaim_note'),
+('Administrative users can view a claim note',12,'view_insuranceclaim_note'),
+('Users can add a claim case number',12,'add_insuranceclaim_case_number'),
+('Administrative users can view a claim case number',12,'view_insuranceclaim_case_number'),
+('User can view a list of claims',12,'list_insuranceclaims'),
+('User can view the filename of a claim attachment',12,'view_insuranceclaimattachment_filename'),
+('Can add insurance draft',13,'add_insurancedraft'),
+('Can change insurance draft',13,'change_insurancedraft'),
+('Can delete insurance draft',13,'delete_insurancedraft'),
+('Can view insurance draft',13,'view_insurancedraft'),
+('Can add insurance claim attachment',14,'add_insuranceclaimattachment'),
+('Can change insurance claim attachment',14,'change_insuranceclaimattachment'),
+('Can delete insurance claim attachment',14,'delete_insuranceclaimattachment'),
+('Can view insurance claim attachment',14,'view_insuranceclaimattachment'),
+('Can add inuits non member',15,'add_inuitsnonmember'),
+('Can change inuits non member',15,'change_inuitsnonmember'),
+('Can delete inuits non member',15,'delete_inuitsnonmember'),
+('Can view inuits non member',15,'view_inuitsnonmember'),
+('Can add inuits non member template',16,'add_inuitsnonmembertemplate'),
+('Can change inuits non member template',16,'change_inuitsnonmembertemplate'),
+('Can delete inuits non member template',16,'delete_inuitsnonmembertemplate'),
+('Can view inuits non member template',16,'view_inuitsnonmembertemplate'),
+('Can add inuits claim victim',17,'add_inuitsclaimvictim'),
+('Can change inuits claim victim',17,'change_inuitsclaimvictim'),
+('Can delete inuits claim victim',17,'delete_inuitsclaimvictim'),
+('Can view inuits claim victim',17,'view_inuitsclaimvictim');
+
+-- Group permissions
+INSERT INTO public.auth_group_permissions (group_id,permission_id) VALUES 
+(1,45), (1,46), (1,53), 
+(2,45), (2,46), (2,53), 
+(3,53), (3,49), (3,50), (3,51), (3,52), (3,54), 
+(5,53);
+
+CREATE TABLE vrzk_adres (
+    adres_id numeric(38) DEFAULT nextval('seq_vrzk_adres'::regclass) NOT NULL,
+    straat varchar(100) NOT NULL,
+    nummer varchar(5) NOT NULL,
+    bus varchar(5) NULL,
+    postcode varchar(4) NOT NULL,
+    gemeente varchar(40) NOT NULL,
+    CONSTRAINT vrzk_adres_pkey PRIMARY KEY (adres_id)
+);
+
+CREATE TABLE vrzk_ba_vereniging (
+    verzekeringsid numeric(38) NOT NULL,
+    ba_type varchar(10) NOT NULL,
+    vereniging_id numeric(38) NOT NULL,
+    CONSTRAINT vrzk_ba_vereniging_pkey PRIMARY KEY (verzekeringsid)
+);
+
+CREATE TABLE vrzk_bericht (
+    bericht_id numeric(10) DEFAULT nextval('seq_vrzk_bericht'::regclass) NOT NULL,
+    verzekeringsid numeric(10) NOT NULL,
+    type_bericht varchar(50) NOT NULL,
+    ontvangers varchar(255) NOT NULL,
+    verstuurd timestamp(0) DEFAULT now() NOT NULL,
+    bericht varchar(4000) NULL,
+    CONSTRAINT vrzk_bericht_pkey PRIMARY KEY (bericht_id)
+);
+
+CREATE TABLE vrzk_log (
+    tijd timestamp(6) DEFAULT now() NOT NULL,
+    message varchar(1500) NOT NULL
+);
+
+CREATE TABLE vrzk_oba_zaal (
+    verzekeringsid numeric(38) NOT NULL,
+    inrichting_aard varchar(25) NOT NULL,
+    inrichting_adres_id numeric(38) NOT NULL,
+    inrichting_opp numeric(4) NOT NULL,
+    vereniging_id numeric(38) NULL,
+    CONSTRAINT "UX_VZOBA_VERENIGING" UNIQUE (vereniging_id),
+    CONSTRAINT vrzk_oba_zaal_pkey PRIMARY KEY (verzekeringsid)
+);
+
+CREATE TABLE vrzk_vereniging (
+    vereniging_id numeric(38) DEFAULT nextval('seq_vrzk_vzw'::regclass) NOT NULL,
+    naam varchar(255) NOT NULL,
+    ondernemingsnr varchar(12) NULL,
+    juridische_vorm varchar(21) NOT NULL,
+    omschrijving varchar(255) NOT NULL,
+    adres_id numeric(38) NOT NULL,
+    contact_naam varchar(41) NOT NULL,
+    contact_email varchar(255) NOT NULL,
+    contact_tel varchar(20) NOT NULL,
+    contact_fax varchar(20) NULL,
+    contact_adres_id numeric(38) NOT NULL,
+    CONSTRAINT vrzk_vereniging_check CHECK (
+        (
+            (juridische_vorm = 'VZW' AND ondernemingsnr ~ '^0[0-9]{3}-[0-9]{3}-[0-9]{3}$')
+            OR
+            (juridische_vorm = 'Feitelijke vereniging' AND ondernemingsnr IS NULL)
+        )
+    ),
+    CONSTRAINT vrzk_vereniging_pkey PRIMARY KEY (vereniging_id)
+);
+
+CREATE TABLE vrzkassistpassagier (
+    passagierid numeric(6) NOT NULL,
+    verzekeringsid numeric(10) NOT NULL,
+    CONSTRAINT vrzkassistpassagier_pkey PRIMARY KEY (passagierid)
+);
+
+CREATE TABLE vrzknietledentijd (
+    nietledenid numeric(6) NOT NULL,
+    verzekeringsid numeric(10) NOT NULL,
+    CONSTRAINT vrzknietledentijd_pkey PRIMARY KEY (nietledenid)
+);
+
+CREATE TABLE vrzktijdautonietleden (
+    bestuurderid numeric(6) NOT NULL,
+    soort varchar(10) NOT NULL,
+    verzekeringsid numeric(10) NOT NULL,
+    CONSTRAINT vrzktijdautonietleden_pkey PRIMARY KEY (bestuurderid),
+    CONSTRAINT vrzktijdautonietleden_soort_check CHECK (
+        soort IN ('Eigenaar', 'Bestuurder')
+    )
+);
