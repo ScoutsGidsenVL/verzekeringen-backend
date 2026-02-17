@@ -30,10 +30,11 @@ class TravelAssistanceInsuranceService:
         """
         cost = Decimal(0.0)
         if person_amount:
-            cost += days_amount * Decimal(1.0) * Decimal(person_amount)
+            cost += days_amount * Decimal(1.0) * person_amount * (
+                1 + Decimal(0.0925))
         if vehicle_amount:
-            cost += days_amount * Decimal(2.5) * vehicle_amount * Decimal(1.075)
-        cost *= Decimal(1.0925)
+            cost += days_amount * Decimal(2.5) * vehicle_amount * (
+                1 + Decimal(0.0925) + Decimal(0.075))
         return cost
 
     @transaction.atomic
