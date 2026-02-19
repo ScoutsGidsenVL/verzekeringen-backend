@@ -51,7 +51,8 @@ class InuitsTravelAssistanceInsuranceService(TravelAssistanceInsuranceService):
             insurance.vehicle = vehicle
         else:
             insurance.vehicle = None
-        insurance.total_cost = self.calculate_total_cost(insurance, len(participants), int(bool(vehicle)))
+        days = (insurance.end_date - insurance.start_date).days + 1
+        insurance.total_cost = self.calculate_total_cost(days, len(participants), int(bool(vehicle)))
 
         if insurance.country:
             insurance.country = insurance.country.name

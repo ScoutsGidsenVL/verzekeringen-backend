@@ -35,7 +35,7 @@ class TravelAssistanceInsuranceService:
         if vehicle_amount:
             cost += days_amount * Decimal(2.5) * vehicle_amount * (
                 1 + Decimal(0.0925) + Decimal(0.075))
-        return cost
+        return round(cost, 2)
 
     @transaction.atomic
     def travel_assistance_insurance_delete(self, *, insurance: TravelAssistanceInsurance):
