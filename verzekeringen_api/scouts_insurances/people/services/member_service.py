@@ -35,15 +35,24 @@ class MemberService:
         email: str,
         membership_number: int,
         group_admin_id: str,
+        force_create: bool = False,
     ) -> Member:
-        try:
-            member = Member.objects.get(group_admin_id=group_admin_id)
+        """
+        Creates a Member record or returns an existing one matched by group_admin_id.
 
-            if member:
-                logger.debug("Member with group admin id %s already exists in Member", group_admin_id)
-                return member
-        except Exception:
-            pass
+        By default, reuses an existing Member if one with the same group_admin_id exists.
+        Set force_create=True to always create a new record, e.g. for equipment owners
+        where each equipment item needs its own Member row (required by legacy ASP deletion logic).
+        """
+        if not force_create:
+            try:
+                member = Member.objects.get(group_admin_id=group_admin_id)
+
+                if member:
+                    logger.debug("Member with group admin id %s already exists in Member", group_admin_id)
+                    return member
+            except Exception:
+                pass
 
         member = Member(
             first_name=first_name,

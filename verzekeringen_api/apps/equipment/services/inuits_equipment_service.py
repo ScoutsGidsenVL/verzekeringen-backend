@@ -111,6 +111,7 @@ class InuitsEquipmentService:
                 email=inuits_equipment.owner_member.email,
                 membership_number=inuits_equipment.owner_member.membership_number,
                 group_admin_id=inuits_equipment.owner_member.group_admin_id,
+                force_create=True,
             )
         equipment.full_clean()
         equipment.save()
