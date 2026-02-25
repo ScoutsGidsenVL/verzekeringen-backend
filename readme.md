@@ -19,6 +19,14 @@ Om logs weer te geven:
 docker logs -f verzekeringen_django
 ```
 
+## Migraties
+
+Om migraties te beheren of uit te voeren, kun je het volgende commando gebruiken:
+
+```bash
+docker exec -it verzekeringen_django python verzekeringen_api/manage.py migrate
+```
+
 ### Handmatige setup
 
 Vereisten: Python
