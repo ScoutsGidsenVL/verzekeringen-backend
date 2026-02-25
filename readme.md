@@ -6,6 +6,16 @@ This is the Django API repository for the Scouts verzekeringen project. See http
 
 The common repository contains information about how to easily run a local (developement) enviroment.
 
+### Docker
+
+Navigate to /docker folder and execute following command in terminal:
+
+```bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+### Manual
+
 Requirements: Python
 
 1. Create virtual env: `python -m venv ./venv`
