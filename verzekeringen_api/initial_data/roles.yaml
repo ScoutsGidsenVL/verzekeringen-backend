@@ -8,11 +8,11 @@ role_group_leader:
   - insurances.list_insuranceclaims                   # https://redmine.inuits.eu/issues/79995
 role_district_commissioner:
   - insurances.list_insuranceclaims                   # View the list of claims
-# role_administrator:
-#   - insurances.list_insuranceclaims
-#   - insurances.add_insuranceclaim_note                # https://redmine.inuits.eu/issues/78579
-#   - insurances.view_insuranceclaim_note               # https://redmine.inuits.eu/issues/78579
-#   - insurances.add_insuranceclaim_case_number         # https://redmine.inuits.eu/issues/78579
-#   - insurances.view_insuranceclaim_case_number        # https://redmine.inuits.eu/issues/78579
-#   - insurances.view_insuranceclaimattachment_filename # https://redmine.inuits.eu/issues/82927
+role_administrator:
+  - insurances.list_insuranceclaims
+  - insurances.add_insuranceclaim_note                # https://redmine.inuits.eu/issues/78579
+  - insurances.view_insuranceclaim_note               # https://redmine.inuits.eu/issues/78579
+  - insurances.add_insuranceclaim_case_number         # https://redmine.inuits.eu/issues/78579
+  - insurances.view_insuranceclaim_case_number        # https://redmine.inuits.eu/issues/78579
+  - insurances.view_insuranceclaimattachment_filename # https://redmine.inuits.eu/issues/82927
 role_super_admin: [] # Doesn't need permissions because is made super user in django
