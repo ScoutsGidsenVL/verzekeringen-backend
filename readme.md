@@ -1,36 +1,41 @@
 # Verzekeringen API
 
-This is the Django API repository for the Scouts verzekeringen project. See https://gitlab.inuits.io/customers/scouts/verzekeringen/verzekeringen-common for general information.
+Dit is de Django API-repository voor het Scouts verzekeringen-project. Zie https://gitlab.inuits.io/customers/scouts/verzekeringen/verzekeringen-common voor algemene informatie.
 
-## Local setup
+## Lokale setup
 
-The common repository contains information about how to easily run a local (developement) enviroment.
+De gemeenschappelijke repository bevat informatie over hoe je eenvoudig een lokale (ontwikkelings)omgeving kunt uitvoeren.
 
-### Docker
+### Automatische setup met Docker
 
-Navigate to /docker folder and execute following command in terminal:
+Navigeer naar de /docker map en voer het volgende commando uit in de terminal:
 
 ```bash
-docker-compose -f docker-compose.dev.yml up --build
+docker compose up -d --build
 ```
 
-### Manual
+Om logs weer te geven:
+```bash
+docker logs -f verzekeringen_django
+```
 
-Requirements: Python
+### Handmatige setup
 
-1. Create virtual env: `python -m venv ./venv`
-2. Activate virtual env:
+Vereisten: Python
+
+1. Maak virtual env aan: `python -m venv ./venv`
+2. Activeer virtual env:
 
     - Windows: `venv\Scripts\Activate.ps1`
     - Linux & MacOS: `source venv/bin/activate`
 
-3. Change python version: `pyenv local 3.9.9` // if not installed = `yay -S pyenv` and then `pyenv install 3.9.9`
-4. Use python version 3.9.9: `poetry env use python3.9`
-3. Install packages (poetry): `poetry install`
-4. Activeer de poetry shell: `poetry shell`
-5. Run the app: `python verzekeringen_api/manage.py runserver 0.0.0.0:8000`
+3. Wijzig python versie: `pyenv local 3.9.9` // indien niet geïnstalleerd = `yay -S pyenv` en daarna `pyenv install 3.9.9`
+4. Gebruik python versie 3.9.9: `poetry env use python3.9`
+5. Installeer packages (poetry): `poetry install`
+6. Activeer de poetry shell: `poetry shell`
+7. Voer de app uit: `python verzekeringen_api/manage.py runserver 0.0.0.0:8000`
 
-## Problems
+## Problemen
 
 ### Kan requirements niet installeren door python versie
 
@@ -48,5 +53,5 @@ Installeer:
 
 ### Packages toevoegen
 
-If you want to add a package: `poetry add requests`
-Or for dev dependencies: `poetry add --dev pytest`
+Als je een package wilt toevoegen: `poetry add requests`
+Of voor dev dependencies: `poetry add --dev pytest`
