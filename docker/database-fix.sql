@@ -90,8 +90,6 @@ CREATE TABLE vrzktypeethiasassistance (
     autobouwjaar numeric(4) NULL,
     aanhangwagen numeric(1) NULL,
     verzekeringsid numeric(10) NOT NULL,
-    inuits_vehicle_id uuid NULL,
-    autochassis varchar(20) NULL,
     CONSTRAINT vrzktypeethiasassistance_aanhangwagen_check CHECK (((aanhangwagen IS NULL) OR (aanhangwagen = ANY (ARRAY[(0)::numeric, (1)::numeric])))),
     CONSTRAINT vrzktypeethiasassistance_autobouwjaar_check CHECK (((autobouwjaar IS NULL) OR ((1900)::numeric < autobouwjaar))),
     CONSTRAINT vrzktypeethiasassistance_check CHECK ((((autotype IS NULL) AND (automerk IS NULL) AND (autobouwjaar IS NULL) AND (aanhangwagen IS NULL)) OR ((autotype IS NOT NULL) AND (automerk IS NOT NULL) AND (autobouwjaar IS NOT NULL) AND (aanhangwagen IS NOT NULL)))),
@@ -146,7 +144,6 @@ CREATE TABLE vrzktypetijdauto (
     autochassis varchar(20) NOT NULL, 
     aanhangwagen varchar(1) DEFAULT NULL::character varying NOT NULL, 
     verzekeringsid numeric(10) NOT NULL, 
-    inuits_vehicle_id uuid NULL, 
     CONSTRAINT vrzktypetijdauto_aanhangwagen_check CHECK (((aanhangwagen)::text = ANY (ARRAY[('0'::character varying)::text, ('1'::character varying)::text, ('2'::character varying)::text, ('3'::character varying)::text]))), 
     CONSTRAINT vrzktypetijdauto_autobouwjaar_check CHECK (((1900)::numeric < autobouwjaar)), 
     CONSTRAINT vrzktypetijdauto_autotype_check CHECK (((autotype)::text = ANY (ARRAY[('AUTO DUBBEL GEBRUIK'::character varying)::text, ('MINIBUS'::character varying)::text, ('PERSONENWAGEN'::character varying)::text, ('VRACHTWAGEN'::character varying)::text]))), 
@@ -186,7 +183,6 @@ CREATE TABLE public.vrzknietleden (
     postcode numeric(4) NULL, 
     gemeente varchar(100) NULL, 
     commentaar varchar(500) NULL, 
-    inuits_id uuid NULL, 
     CONSTRAINT vrzknietleden_check CHECK ((((straat IS NULL) AND (nr IS NULL) AND (gemeente IS NULL) AND (postcode IS NULL)) OR ((straat IS NOT NULL) AND (nr IS NOT NULL) AND (gemeente IS NOT NULL) AND (postcode IS NOT NULL)))), 
     CONSTRAINT vrzknietleden_pkey PRIMARY KEY (nietlidid) 
 ); 
@@ -200,7 +196,6 @@ CREATE TABLE vrzkmateriaal (
     aantal numeric(3) NOT NULL, 
     nieuwwaardeperstuk numeric(7, 2) NOT NULL, 
     verzekeringsid numeric(10) NOT NULL, 
-    inuits_id uuid NULL, 
     CONSTRAINT vrzkmateriaal_aantal_check CHECK ((((0)::numeric < aantal))), 
     CONSTRAINT vrzkmateriaal_check CHECK ((((eigenaaridnietlid IS NULL) OR (aard IS NOT NULL) OR ((eigenaaridnietlid IS NOT NULL) OR (aard IS NULL))))), 
     CONSTRAINT vrzkmateriaal_nieuwwaardeperstuk_check CHECK ((((0)::numeric < nieuwwaardeperstuk))), 
