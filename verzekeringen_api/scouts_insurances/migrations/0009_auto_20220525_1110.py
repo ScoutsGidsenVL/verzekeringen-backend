@@ -10,56 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.SeparateDatabaseAndState(
-            database_operations=[
-                migrations.RunSQL(
-                    sql=(
-                        "ALTER TABLE vrzknietleden "
-                        "ADD COLUMN IF NOT EXISTS inuits_id uuid"
-                    ),
-                    reverse_sql=(
-                        "ALTER TABLE vrzknietleden "
-                        "DROP COLUMN IF EXISTS inuits_id"
-                    ),
-                ),
-            ],
-            state_operations=[
-                migrations.AddField(
-                    model_name='nonmember',
-                    name='inuits_id',
-                    field=models.UUIDField(
-                        blank=True,
-                        db_column='inuits_id',
-                        default=None,
-                        null=True,
-                    ),
-                ),
-            ],
+        migrations.AddField(
+            model_name='nonmember',
+            name='inuits_id',
+            field=models.UUIDField(blank=True, db_column='inuits_id', default=None, null=True),
         ),
-        migrations.SeparateDatabaseAndState(
-            database_operations=[
-                migrations.RunSQL(
-                    sql=(
-                        "ALTER TABLE vrzktypeethiasassistance "
-                        "ADD COLUMN IF NOT EXISTS inuits_vehicle_id uuid"
-                    ),
-                    reverse_sql=(
-                        "ALTER TABLE vrzktypeethiasassistance "
-                        "DROP COLUMN IF EXISTS inuits_vehicle_id"
-                    ),
-                ),
-            ],
-            state_operations=[
-                migrations.AddField(
-                    model_name='travelassistanceinsurance',
-                    name='_vehicle_id',
-                    field=models.UUIDField(
-                        blank=True,
-                        db_column='inuits_vehicle_id',
-                        default=None,
-                        null=True,
-                    ),
-                ),
-            ],
+        migrations.AlterField(
+            model_name='travelassistanceinsurance',
+            name='_vehicle_id',
+            field=models.UUIDField(blank=True, db_column='inuits_vehicle_id', default=None, null=True),
         ),
     ]

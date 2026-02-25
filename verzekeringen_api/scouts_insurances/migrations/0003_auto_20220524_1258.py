@@ -10,4 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AddField(
+            model_name='travelassistanceinsurance',
+            name='_vehicle_id',
+            field=models.UUIDField(db_column='inuits_vehicle_id', default=None, null=True),
+        ),
     ]

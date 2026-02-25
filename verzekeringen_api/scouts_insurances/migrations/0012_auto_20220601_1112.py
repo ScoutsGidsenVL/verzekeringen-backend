@@ -11,30 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.SeparateDatabaseAndState(
-            database_operations=[
-                migrations.RunSQL(
-                    sql=(
-                        "ALTER TABLE vrzkmateriaal "
-                        "ADD COLUMN IF NOT EXISTS inuits_id uuid"
-                    ),
-                    reverse_sql=(
-                        "ALTER TABLE vrzkmateriaal "
-                        "DROP COLUMN IF EXISTS inuits_id"
-                    ),
-                ),
-            ],
-            state_operations=[
-                migrations.AddField(
-                    model_name='equipment',
-                    name='inuits_id',
-                    field=models.UUIDField(
-                        blank=True,
-                        db_column='inuits_id',
-                        default=None,
-                        null=True,
-                    ),
-                ),
-            ],
+        migrations.AddField(
+            model_name='equipment',
+            name='inuits_id',
+            field=models.UUIDField(blank=True, db_column='inuits_id', default=None, null=True),
         ),
     ]
