@@ -16,4 +16,5 @@ class Migration(migrations.Migration):
             name='_vehicle_chassis_number',
             field=scouts_auth.inuits.models.fields.django_shorthand_model_fields.OptionalCharField(blank=True, db_column='autochassis', max_length=20),
         ),
+
     ]
