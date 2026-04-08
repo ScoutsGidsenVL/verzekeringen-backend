@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  Build_and_deploy:
+  Deploy:
     runs-on: ubuntu-22.04
 
     steps:
