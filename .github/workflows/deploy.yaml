@@ -33,4 +33,4 @@ jobs:
           envs: BRANCH_NAME
           script: |
             echo "Branch: $BRANCH_NAME"
-            sudo -u ansible /opt/deploy-github-verzekeringen.sh backend ${BRANCH_NAME}
+            sudo -u ansible /opt/deploy-verzekeringen.sh backend ${BRANCH_NAME}
