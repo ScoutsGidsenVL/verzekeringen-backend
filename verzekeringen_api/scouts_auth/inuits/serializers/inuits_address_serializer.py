@@ -1,4 +1,4 @@
-import logging
+import logging, re
 
 from rest_framework import serializers
 
@@ -22,3 +22,14 @@ class InuitsAddressSerializer(serializers.Serializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def to_internal_value(self, data):
+        postal_code = data.get("postal_code")
+        if postal_code is not None and postal_code != "":
+            # Buitenlandse postcodes kunnen letters bevatten (bv. "1234 AB" in Nederland).
+            # We bewaren enkel de cijfers; het numerieke deel volstaat als benadering.
+            # Bij een volledig niet-numerieke waarde vallen we terug op 0.
+            digits_only = re.sub(r"\D", "", str(postal_code))
+            data = data.copy()
+            data["postal_code"] = int(digits_only) if digits_only else 0
+        return super().to_internal_value(data)
