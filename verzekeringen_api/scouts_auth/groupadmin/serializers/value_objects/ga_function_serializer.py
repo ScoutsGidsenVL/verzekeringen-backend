@@ -43,7 +43,7 @@ class AbstractScoutsFunctionSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", str(remaining_keys))
+            logger.debug("UNPARSED INCOMING JSON DATA KEYS: %s", str(remaining_keys))
             for key in remaining_keys:
                 logger.debug("UNPARSED DATA: %s", data[key])
 
