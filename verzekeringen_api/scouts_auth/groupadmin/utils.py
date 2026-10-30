@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 class SettingsHelper:
     """Convenience class with static methods to easily distinguish what settings are required for dependent packages."""
 
+    # Calls to the GA that take at least this long (in ms) are logged as warning
+    GA_SLOW_CALL_MS = 1000
+
     @staticmethod
     def is_debug() -> List[str]:
         return getattr(settings, "DEBUG", False)

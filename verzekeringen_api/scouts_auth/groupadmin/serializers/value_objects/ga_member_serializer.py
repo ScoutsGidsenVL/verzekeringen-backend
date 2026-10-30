@@ -42,7 +42,7 @@ class AbstractScoutsMemberPersonalDataSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.debug("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -91,7 +91,7 @@ class AbstractScoutsMemberGroupAdminDataSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.debug("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -138,7 +138,7 @@ class AbstractScoutsMemberScoutsDataSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.debug("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -197,7 +197,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
 
         remaining_keys = data.keys()
         if len(remaining_keys) > 0:
-            logger.warn("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
+            logger.debug("UNPARSED INCOMING JSON DATA KEYS: %s", remaining_keys)
 
         return validated_data
 
@@ -250,12 +250,16 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
         function_list = self._fetch_function(SettingsHelper.get_group_admin_functions_endpoint(), access_token)
         functions_by_id = {f.get("id"): f for f in function_list.get("functies", [])}
 
-        missing = 0
+        ignored = 0
         for function in functions:
             function_id = function.get("functie")
-            if function_id not in functions_by_id:
-                missing += 1
-                logger.error("GA: function %s not in /functie list", function_id)
+            # Functions that are skipped on purpose:
+            # - functions with an end date: the member no longer holds them, so they are irrelevant here
+            # - functions missing from the /functie list: these are group specific functions (groepseigen
+            #   functies, always ignored) or functions that are no longer in use
+            if function.get("einde") or function_id not in functions_by_id:
+                ignored += 1
+                logger.debug("GA: function %s ignored (einde %s)", function_id, function.get("einde"))
                 continue
             # deepcopy: the same function occurs once per group, and the function serializer pops nested values
             parsed_functions.append(
@@ -267,10 +271,10 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
                 }
             )
 
-        logger.warning(
-            "GA: %d functions found, %d missing in %d ms",
+        logger.debug(
+            "GA: %d functions found, %d ignored in %d ms",
             len(parsed_functions),
-            missing,
+            ignored,
             (time.monotonic() - start) * 1000,
         )
 
@@ -291,10 +295,14 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
                 raise Http404
             raise error
         finally:
-            # Logged as warning because scouts_auth.groupadmin only logs ERROR by default
-            # Also logged when the call fails, so slow failing calls show up in the measurements
-            logger.warning(
-                "GA CALL: fetch_function (%s) %d ms, status %s", endpoint, (time.monotonic() - start) * 1000, status
+            # Slow calls are logged as warning, also when the call fails
+            ms = (time.monotonic() - start) * 1000
+            logger.log(
+                logging.WARNING if ms >= SettingsHelper.GA_SLOW_CALL_MS else logging.DEBUG,
+                "GA CALL: fetch_function (%s) %d ms, status %s",
+                endpoint,
+                ms,
+                status,
             )
 
         return response.json()
