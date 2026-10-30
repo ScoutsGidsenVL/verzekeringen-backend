@@ -253,7 +253,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
                     parsed_function = self._merge_function_values(parsed_function, function)
                     parsed_functions.append(parsed_function)
 
-        logger.info(
+        logger.warning(
             "GA: %d functions fetched in %d ms", len(parsed_functions), (time.monotonic() - start) * 1000
         )
 
@@ -274,8 +274,9 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
                 raise Http404
             raise error
         finally:
+            # Logged as warning because scouts_auth.groupadmin only logs ERROR by default
             # Also logged when the call fails, so slow failing calls show up in the measurements
-            logger.info(
+            logger.warning(
                 "GA CALL: fetch_function (%s) %d ms, status %s", endpoint, (time.monotonic() - start) * 1000, status
             )
 
