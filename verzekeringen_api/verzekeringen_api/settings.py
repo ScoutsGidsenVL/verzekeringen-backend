@@ -107,7 +107,8 @@ LOGGING = {
         },
         "scouts_auth.groupadmin": {
             "handlers": ["console"],
-            "level": LOGGING_LEVEL_ROOT,
+            # WARNING instead of LOGGING_LEVEL_ROOT so the timing of GA calls shows up (T7607)
+            "level": "WARNING",
             "propagate": False,
         },
         "scouts_insurances": {
