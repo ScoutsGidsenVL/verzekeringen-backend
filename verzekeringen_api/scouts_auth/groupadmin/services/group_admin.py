@@ -90,10 +90,14 @@ class GroupAdmin:
                 raise Http404
             raise error
         finally:
-            # Logged as warning because scouts_auth.groupadmin only logs ERROR by default
-            # Also logged when the call fails, so slow failing calls show up in the measurements
-            logger.warning(
-                "GA CALL: get (%s) %d ms, status %s", endpoint, (time.monotonic() - start) * 1000, status_code
+            # Slow calls are logged as warning, also when the call fails
+            ms = (time.monotonic() - start) * 1000
+            logger.log(
+                logging.WARNING if ms >= SettingsHelper.GA_SLOW_CALL_MS else logging.DEBUG,
+                "GA CALL: get (%s) %d ms, status %s",
+                endpoint,
+                ms,
+                status_code,
             )
 
         return response.json()

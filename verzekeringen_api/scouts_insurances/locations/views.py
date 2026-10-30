@@ -15,8 +15,8 @@ class CountryViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_class = CountryFilter
-    ordering_fields = ["id"]
-    ordering = ["id"]
+    ordering_fields = ["id", "name"]
+    ordering = ["name"]
 
     def get_queryset(self):
         return Country.objects.all()
@@ -26,7 +26,7 @@ class CountryViewSet(viewsets.GenericViewSet):
     )
     @action(methods=["get"], detail=False, url_path="countries_by_type/(?P<type_id>\d+)")
     def get_by_type(self, request, type_id=None):
-        countries = Country.objects.filter(insurance_types__id=type_id)
+        countries = Country.objects.filter(insurance_types__id=type_id).order_by("name")
         page = self.paginate_queryset(countries)
 
         if page is not None:
