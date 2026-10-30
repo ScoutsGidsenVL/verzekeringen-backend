@@ -1,5 +1,6 @@
 import logging, requests
 import re
+import time
 
 from django.http import Http404
 
@@ -242,6 +243,7 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
         if access_token is None:
             return functions
 
+        start = time.monotonic()
         for function in functions:
             for link in function.pop("links", []):
                 rel = link.pop("rel", None)
@@ -251,19 +253,31 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
                     parsed_function = self._merge_function_values(parsed_function, function)
                     parsed_functions.append(parsed_function)
 
+        logger.info(
+            "GA: %d functions fetched in %d ms", len(parsed_functions), (time.monotonic() - start) * 1000
+        )
+
         return parsed_functions
 
     def _fetch_function(self, endpoint: str, access_token: str):
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
+        start = time.monotonic()
+        status = None
         try:
             response = requests.get(
                 re.sub("^https:http:", "https:", endpoint), headers={"Authorization": "Bearer {0}".format(access_token)}
             )
+            status = response.status_code
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
                 raise Http404
             raise error
+        finally:
+            # Also logged when the call fails, so slow failing calls show up in the measurements
+            logger.info(
+                "GA CALL: fetch_function (%s) %d ms, status %s", endpoint, (time.monotonic() - start) * 1000, status
+            )
 
         return response.json()
 
