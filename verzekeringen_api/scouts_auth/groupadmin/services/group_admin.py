@@ -1,5 +1,6 @@
 import logging, requests
 import re
+import time
 
 from django.conf import settings
 from django.http import Http404
@@ -75,16 +76,25 @@ class GroupAdmin:
     def get(self, endpoint: str, active_user: settings.AUTH_USER_MODEL):
         """Makes a request to the GA with the given url and returns the response as json_data."""
         logger.debug("GA: Fetching data from endpoint %s", endpoint)
+        start = time.monotonic()
+        status_code = None
         try:
             response = requests.get(
                 re.sub("^https:http:", "https:", endpoint),
                 headers={"Authorization": "Bearer {0}".format(active_user.access_token)},
             )
+            status_code = response.status_code
             response.raise_for_status()
         except requests.exceptions.HTTPError as error:
             if error.response.status_code == 404:
                 raise Http404
             raise error
+        finally:
+            # Logged as warning because scouts_auth.groupadmin only logs ERROR by default
+            # Also logged when the call fails, so slow failing calls show up in the measurements
+            logger.warning(
+                "GA CALL: get (%s) %d ms, status %s", endpoint, (time.monotonic() - start) * 1000, status_code
+            )
 
         return response.json()
 
