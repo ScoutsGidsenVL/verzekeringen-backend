@@ -1,3 +1,4 @@
+import copy
 import logging, requests
 import re
 import time
@@ -20,6 +21,7 @@ from scouts_auth.groupadmin.serializers.value_objects import (
     AbstractScoutsGroupSpecificFieldSerializer,
 )
 
+from scouts_auth.groupadmin.utils import SettingsHelper
 from scouts_auth.inuits.models import GenderHelper
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -244,17 +246,32 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
             return functions
 
         start = time.monotonic()
+        # One call for all function descriptions instead of one call per function in the profile (T7607)
+        function_list = self._fetch_function(SettingsHelper.get_group_admin_functions_endpoint(), access_token)
+        functions_by_id = {f.get("id"): f for f in function_list.get("functies", [])}
+
+        missing = 0
         for function in functions:
-            for link in function.pop("links", []):
-                rel = link.pop("rel", None)
-                if rel == "functie":
-                    href = link.pop("href", None)
-                    parsed_function = self._fetch_function(href, access_token)
-                    parsed_function = self._merge_function_values(parsed_function, function)
-                    parsed_functions.append(parsed_function)
+            function_id = function.get("functie")
+            if function_id not in functions_by_id:
+                missing += 1
+                logger.error("GA: function %s not in /functie list", function_id)
+                continue
+            # deepcopy: the same function occurs once per group, and the function serializer pops nested values
+            parsed_functions.append(
+                {
+                    **copy.deepcopy(functions_by_id[function_id]),
+                    "groep": function.get("groep"),
+                    "begin": function.get("begin"),
+                    "einde": function.get("einde"),
+                }
+            )
 
         logger.warning(
-            "GA: %d functions fetched in %d ms", len(parsed_functions), (time.monotonic() - start) * 1000
+            "GA: %d functions found, %d missing in %d ms",
+            len(parsed_functions),
+            missing,
+            (time.monotonic() - start) * 1000,
         )
 
         return parsed_functions
@@ -281,12 +298,6 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
             )
 
         return response.json()
-
-    def _merge_function_values(self, new_function: dict, old_function: dict):
-        new_function["groep"] = old_function.pop("groep", None)
-        new_function["begin"] = old_function.pop("begin", None)
-        new_function["einde"] = old_function.pop("einde", None)
-        return new_function
 
 
 class AbstractScoutsMemberSearchFrontendSerializer(NonModelSerializer):
