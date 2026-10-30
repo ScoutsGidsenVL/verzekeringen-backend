@@ -1,9 +1,4 @@
-import copy
-import logging, requests
-import re
-import time
-
-from django.http import Http404
+import logging
 
 from scouts_auth.groupadmin.models import (
     AbstractScoutsMemberPersonalData,
@@ -21,7 +16,6 @@ from scouts_auth.groupadmin.serializers.value_objects import (
     AbstractScoutsGroupSpecificFieldSerializer,
 )
 
-from scouts_auth.groupadmin.utils import SettingsHelper
 from scouts_auth.inuits.models import GenderHelper
 from scouts_auth.inuits.serializers import NonModelSerializer
 
@@ -240,72 +234,17 @@ class AbstractScoutsMemberSerializer(NonModelSerializer):
         return instance
 
     def _get_functions_from_user_profile(self, functions: list, access_token: str):
-        parsed_functions = []
-
+        # Only the profile of the authenticated user (OIDC claims) contains an access token.
+        # Other member profiles keep all their functions, ended ones included: the member searches need them.
         if access_token is None:
             return functions
 
-        start = time.monotonic()
-        # One call for all function descriptions instead of one call per function in the profile (T7607)
-        function_list = self._fetch_function(SettingsHelper.get_group_admin_functions_endpoint(), access_token)
-        functions_by_id = {f.get("id"): f for f in function_list.get("functies", [])}
-
-        ignored = 0
-        for function in functions:
-            function_id = function.get("functie")
-            # Functions that are skipped on purpose:
-            # - functions with an end date: the member no longer holds them, so they are irrelevant here
-            # - functions missing from the /functie list: these are group specific functions (groepseigen
-            #   functies, always ignored) or functions that are no longer in use
-            if function.get("einde") or function_id not in functions_by_id:
-                ignored += 1
-                logger.debug("GA: function %s ignored (einde %s)", function_id, function.get("einde"))
-                continue
-            # deepcopy: the same function occurs once per group, and the function serializer pops nested values
-            parsed_functions.append(
-                {
-                    **copy.deepcopy(functions_by_id[function_id]),
-                    "groep": function.get("groep"),
-                    "begin": function.get("begin"),
-                    "einde": function.get("einde"),
-                }
-            )
-
-        logger.debug(
-            "GA: %d functions found, %d ignored in %d ms",
-            len(parsed_functions),
-            ignored,
-            (time.monotonic() - start) * 1000,
-        )
-
-        return parsed_functions
-
-    def _fetch_function(self, endpoint: str, access_token: str):
-        logger.debug("GA: Fetching data from endpoint %s", endpoint)
-        start = time.monotonic()
-        status = None
-        try:
-            response = requests.get(
-                re.sub("^https:http:", "https:", endpoint), headers={"Authorization": "Bearer {0}".format(access_token)}
-            )
-            status = response.status_code
-            response.raise_for_status()
-        except requests.exceptions.HTTPError as error:
-            if error.response.status_code == 404:
-                raise Http404
-            raise error
-        finally:
-            # Slow calls are logged as warning, also when the call fails
-            ms = (time.monotonic() - start) * 1000
-            logger.log(
-                logging.WARNING if ms >= SettingsHelper.GA_SLOW_CALL_MS else logging.DEBUG,
-                "GA CALL: fetch_function (%s) %d ms, status %s",
-                endpoint,
-                ms,
-                status,
-            )
-
-        return response.json()
+        # The functions in the profile are no longer enriched with the descriptions of the GA /functie call (T7607).
+        # That data (code, groupings) only determined the district commissioner role, whose only permission
+        # (list_insuranceclaims) every user already has through the section leader or administrator role.
+        # Access to groups comes from the /groep call, not from functions.
+        # Functions with an end date are ignored: the member no longer holds them.
+        return [function for function in functions if not function.get("einde")]
 
 
 class AbstractScoutsMemberSearchFrontendSerializer(NonModelSerializer):
