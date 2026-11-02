@@ -1,12 +1,18 @@
+# role_section_leader: the base role for every user that is not an administrator (despite the name, it is not
+# linked to being a section leader). It only grants permissions on insurance claims.
+#
+# Requesting insurances needs no role or permission: every authenticated user can call the endpoints.
+# Access is limited by group instead:
+# - user.scouts_groups only holds the groups for which the GA /groep call returns a leader responsibility
+#   (verantwoordelijkheden: algemeen, leiding, evenementen or personeel, see LEADER_RESPONSIBILITIES in ga_group.py),
+#   plus the administrator groups. The GA derives these responsibilities from the functions of the member.
+# - Insurances and claims can only be requested for a group in user.scouts_groups (base_insurance_service.py,
+#   insurance_claim_service.py). A user without leader responsibilities can log in, but can't request anything.
+# - Administrators can view all insurances, but can only request them for their own groups.
+# - The /groep response is cached for 15 minutes per worker, so a changed responsibility can take that long to apply.
 role_section_leader:
   - insurances.add_insuranceclaim
   - insurances.change_insuranceclaim
-  - insurances.list_insuranceclaims                   # View the list of claims
-role_group_leader:
-  - insurances.add_insuranceclaim
-  - insurances.change_insuranceclaim
-  - insurances.list_insuranceclaims                   # https://redmine.inuits.eu/issues/79995
-role_district_commissioner:
   - insurances.list_insuranceclaims                   # View the list of claims
 role_administrator:
   - insurances.list_insuranceclaims

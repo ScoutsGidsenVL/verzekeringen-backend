@@ -6,7 +6,7 @@ from django.conf import settings
 
 from scouts_auth.auth.services import AuthorizationService
 
-from scouts_auth.groupadmin.models import AbstractScoutsGroup, AbstractScoutsFunction
+from scouts_auth.groupadmin.models import AbstractScoutsFunction
 from scouts_auth.groupadmin.services import GroupAdminMemberService
 from scouts_auth.groupadmin.utils import SettingsHelper
 
@@ -23,46 +23,20 @@ class ScoutsAuthorizationService(AuthorizationService):
     For a scouts user, the following sources are required for full authorization:
     0) Successfull authentication (provides partial scouts groups)
     1) Full user information, after a groupadmin call to /profiel (the "me" call)
-    2) BASIC PERMISSIONS: Membership of groups, defined in roles.yaml and loaded by PermissionService, after successfull authentication
-        -> load_user_scouts_groups
+    2) BASIC PERMISSIONS: Membership of groups, defined in roles.yaml and loaded by PermissionService
     3) ADMINISTRATOR: Membership of administrator groups, from the user informatiom (/profiel)
-    4) SECTION LEADER: Section leader status, loaded after a groupadmin call for every function
-        -> load_user_functions
-    5) GROUP LEADER: Group leader status, from the function code in the profile response in 1)
-    6) DISCTRICT COMMISSIONER: District commissioner status, from the function code in the profile response in 1)
+    4) SECTION LEADER: every user that is not an administrator
+
+    The roles role_group_leader and role_district_commissioner were removed (T7607): they were never assigned
+    or only granted permissions the user already had through the section leader role.
     """
 
-    USER = "role_user"
     SECTION_LEADER = "role_section_leader"
-    GROUP_LEADER = "role_group_leader"
-    DISTRICT_COMMISSIONER = "role_district_commissioner"
     ADMINISTRATOR = "role_administrator"
 
-    known_roles = [USER, SECTION_LEADER, GROUP_LEADER, DISTRICT_COMMISSIONER, ADMINISTRATOR]
+    known_roles = [SECTION_LEADER, ADMINISTRATOR]
 
     service = GroupAdminMemberService()
-
-    def load_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        scouts_groups: List[AbstractScoutsGroup] = self.service.get_groups(active_user=user).scouts_groups
-
-        user.scouts_groups = [group for group in scouts_groups if user.has_role_group_leader(group)]
-
-        user = self.update_user_scouts_groups(user)
-
-        return user
-
-    def update_user_scouts_groups(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
-        """
-        Updates the authenticated user with the groups he/she belongs to.
-
-        The groupadmin call for groups can only be made after the user has been authenticated.
-        """
-        user: settings.AUTH_USER_MODEL = self.update_user_authorizations(user)
-
-        user.full_clean()
-        user.save()
-
-        return user
 
     def update_user_authorizations(self, user: settings.AUTH_USER_MODEL) -> settings.AUTH_USER_MODEL:
         # Initialize authorizations we can derive from membership of a scouts group
@@ -73,9 +47,6 @@ class ScoutsAuthorizationService(AuthorizationService):
 
         # if user.has_role_section_leader():
         #     user = self.add_user_to_group(user, ScoutsAuthorizationService.SECTION_LEADER)
-
-        if user.has_role_district_commissioner():
-            user = self.add_user_to_group(user, ScoutsAuthorizationService.DISTRICT_COMMISSIONER)
 
         if SettingsHelper.is_debug():
             test_groups = SettingsHelper.get_test_groups()
