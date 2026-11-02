@@ -1,10 +1,8 @@
 from typing import List, Dict
 from datetime import date, datetime
-from django.utils import timezone
 
 from scouts_auth.groupadmin.models.value_objects import AbstractScoutsGroup, AbstractScoutsGrouping, AbstractScoutsLink
 from scouts_auth.groupadmin.models.enums import AbstractScoutsFunctionCode
-from scouts_auth.groupadmin.utils import SettingsHelper
 from scouts_auth.inuits.models import AbstractNonModel
 from scouts_auth.inuits.models.fields import OptionalCharField, OptionalDateField, OptionalDateTimeField
 
@@ -29,8 +27,6 @@ class AbstractScoutsFunction(AbstractNonModel):
     # Runtime data
     _scouts_function_code: AbstractScoutsFunctionCode = None
     groups_section_leader: Dict[str, bool]
-    groups_group_leader: Dict[str, bool]
-    is_district_commissioner: bool = False
 
     class Meta:
         abstract = True
@@ -51,7 +47,6 @@ class AbstractScoutsFunction(AbstractNonModel):
         adjunct: str = "",
         links: List[AbstractScoutsLink] = None,
         groups_section_leader: Dict[str, bool] = None,
-        groups_group_leader: Dict[str, bool] = None,
     ):
         self.group_admin_id = group_admin_id
         self.type = type
@@ -67,7 +62,6 @@ class AbstractScoutsFunction(AbstractNonModel):
         self.adjunct = adjunct
         self.links = links if links else []
         self.groups_section_leader = groups_section_leader if groups_section_leader else {}
-        self.groups_group_leader = groups_group_leader if groups_group_leader else {}
 
         # super().__init__([], {})
 
@@ -79,17 +73,6 @@ class AbstractScoutsFunction(AbstractNonModel):
 
     def is_section_leader(self, group: AbstractScoutsGroup) -> bool:
         return self.groups_section_leader.get(group.group_admin_id, False)
-
-    def is_group_leader(self, group: AbstractScoutsGroup) -> bool:
-        for grouping in self.groupings:
-            if grouping.name.lower() == SettingsHelper.get_section_leader_identifier().lower():
-                if isinstance(self.end, datetime) and self.end < timezone.now():
-                    return False
-                return True
-        return False
-
-    def is_district_commissioner(self) -> bool:
-        return self.function_code.is_district_commissioner()
 
     def __str__(self):
         return "group_admin_id ({}), type ({}), function({}), scouts_group({}), scouts_groups({}), groupings({}), begin({}), end ({}), max_birth_date ({}), code({}), description({}), adjunct ({}), links({})".format(

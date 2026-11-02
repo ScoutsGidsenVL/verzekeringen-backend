@@ -61,7 +61,6 @@ class ScoutsUser(User):
     # Some shortcut fields
     #
     is_administrator = False
-    is_district_commissioner = False
 
     is_fully_loaded = False
 
@@ -93,29 +92,6 @@ class ScoutsUser(User):
 
     def get_section_leader_groups(self) -> List[AbstractScoutsGroup]:
         return [group for group in self.scouts_groups if self.has_role_section_leader(group)]
-
-    def has_role_group_leader(self, group: AbstractScoutsGroup) -> bool:
-        """
-        Determines if the user is a group leader based on a function in the specified group
-        """
-        for function in self.functions:
-            for scouts_group in function.scouts_groups:
-                if scouts_group.group_admin_id == group.group_admin_id and function.is_group_leader(group):
-                    return True
-
-        return False
-
-    def get_group_leader_groups(self) -> List[AbstractScoutsGroup]:
-        return [group for group in self.scouts_groups if self.has_role_group_leader(group)]
-
-    def has_role_district_commissioner(self) -> bool:
-        """
-        Determines if the user is a district commissioner based on a function code
-        """
-        for function in self.functions:
-            if function.is_district_commissioner():
-                return True
-        return False
 
     def has_role_administrator(self) -> bool:
         """
@@ -166,8 +142,6 @@ class ScoutsUser(User):
             "{:<24}: {}\n"  # auth groups
             "{:<24}: {}\n"  # scouts groups
             "{:<24}: {}\n"  # administrator ?
-            "{:<24}: {}\n"  # district commissioner ?
-            "{:<24}: {}\n"  # group leader
             "{:<24}: {}\n"  # section leader
         ).format(
             "USER INFO FOR",
@@ -206,10 +180,6 @@ class ScoutsUser(User):
             ),
             "ADMINISTRATOR ?",
             self.has_role_administrator(),
-            "DISTRICT COMMISSIONER ?",
-            self.has_role_district_commissioner(),
-            "GROUP LEADER",
-            ", ".join(group.group_admin_id for group in self.get_group_leader_groups()),
             "SECTION LEADER",
             ", ".join(group.group_admin_id for group in self.get_section_leader_groups()),
         )
