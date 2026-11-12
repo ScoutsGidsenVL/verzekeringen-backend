@@ -1,4 +1,5 @@
-import logging, pytz
+import logging
+from datetime import timezone
 
 from django.db import models
 
@@ -11,5 +12,5 @@ class TimezoneAwareDateTimeField(models.DateTimeField):
 
     def to_python(self, value):
         if value and (not hasattr(value, "tzinfo") or value.tzinfo is None or value.tzinfo.utcoffset(value) is None):
-            value = pytz.utc.localize(value)
+            value = value.replace(tzinfo=timezone.utc)
         return super().to_python(value)
