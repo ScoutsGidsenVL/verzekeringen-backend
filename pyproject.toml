@@ -52,7 +52,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
 boto3 = ">=1.30"
-django = ">=4.2,<5.0"
+django = ">=5.2,<6.0"
 dj-email-url = ">=1.0"
 django-anymail = {extras = ["sendinblue"], version = ">=10.2"}
 django-cors-headers = ">=3.7"
@@ -60,7 +60,7 @@ django-debug-toolbar = ">=4.3.0"
 django-extensions = ">=3.2.3"
 django-filter = ">=23.5"
 django-storages = ">=1.11"
-djangorestframework = ">=3.14"
+djangorestframework = ">=3.18"
 drf-yasg = ">=1.21.4"
 environs = ">=10.0"
 jsonfield = ">=3.1"

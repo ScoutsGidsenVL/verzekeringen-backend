@@ -218,7 +218,7 @@ WSGI_APPLICATION = "verzekeringen_api.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": env.str("DB_ENGINE"),
+        "ENGINE": "verzekeringen_api.postgresql13_eol",
         "HOST": env.str("DB_HOST"),
         "PORT": env.str("DB_PORT"),
         "NAME": env.str("DB_NAME"),

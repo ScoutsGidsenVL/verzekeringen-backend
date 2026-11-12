@@ -1,4 +1,4 @@
-import logging, pytz
+import logging
 from typing import List
 from datetime import datetime
 
