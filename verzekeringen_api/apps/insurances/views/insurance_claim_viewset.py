@@ -130,7 +130,7 @@ class InsuranceClaimViewSet(viewsets.ModelViewSet):
         try:
             self.service.email_claim(insurance_claim)
         except Exception as exc:
-            logger.error("Error while sending insurance claim emails", exc)
+            logger.error("Error while sending insurance claim emails: %s", exc)
             raise ValidationError(
                 message={"mail": "Error while sending insurance claim emails"},
                 code=406,

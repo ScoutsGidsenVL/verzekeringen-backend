@@ -1,3 +1,4 @@
+import base64
 import json
 import requests
 import os, logging
@@ -62,7 +63,10 @@ class EmailService:
         data = []
         for attachment in attachments:
             name, content = attachment.get_file_and_contents()
-            data.append({"name": name, "content": content})
+            # Brevo verwacht base64-gecodeerde inhoud en enkel de bestandsnaam, geen volledig pad
+            if isinstance(content, str):
+                content = content.encode("utf-8")
+            data.append({"name": os.path.basename(name), "content": base64.b64encode(content).decode("ascii")})
         return data
 
     def _add_attachments(self, message: EmailMessage, attachment_paths: list = None, attachments: list = None):
@@ -198,7 +202,7 @@ class EmailService:
         except Exception as exc:
             # Actually do something when this fails
             # https://redmine.inuits.eu/issues/83311
-            logger.error("Mail could not be sent", exc)
+            logger.error("Mail could not be sent: %s", exc)
 
             raise exc
 
