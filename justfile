@@ -39,7 +39,7 @@ clean:
 alias clear := clean
 
 # full initial pythondev-installation
-install: ensure-dirs create-venv symlink-venv-dirs upgrade-pip poetry-install
+install: ensure-dirs create-venv symlink-venv-dirs upgrade-pip uv-sync
 
 
 # create python39 virtual-environment
@@ -64,23 +64,14 @@ upgrade-pip:
     .venv/bin/pip install -U pip
 
 
-# run poetry install
-poetry-install:
-    poetry install
+# install the dependencies from uv.lock
+uv-sync:
+    uv sync --python 3.11
 
 
-# update poetry.lock
-poetry-lock:
-    poetry lock
-
-# export poetry-defined requirements to a pip-installable requirements-file
-[linux]
-poetry-export-requirements:
-    @ poetry lock
-    @ poetry export -f requirements.txt --output etc/requirements.txt
-    @ cat etc/requirements-header.txt <(echo "") etc/requirements.txt > etc/temp.txt && mv etc/temp.txt etc/requirements.txt
-    @ cp etc/requirements.txt requirements.txt
-    @ echo -e "Updated etc/requirements.txt"
+# update uv.lock
+uv-lock:
+    uv lock
 
 
 # switch to staging-branch and git pull to update

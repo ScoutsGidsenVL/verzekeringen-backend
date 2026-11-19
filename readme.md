@@ -27,37 +27,21 @@ Om migraties te beheren of uit te voeren, kun je het volgende commando gebruiken
 docker exec -it verzekeringen_django python verzekeringen_api/manage.py migrate
 ```
 
-### Handmatige setup
+### Lokale installatie
 
-Vereisten: Python
+Vereisten: [uv](https://docs.astral.sh/uv/getting-started/installation/). Python hoef je niet zelf te installeren, uv haalt zelf Python 3.11, de versie van de server.
 
-1. Maak virtual env aan: `python -m venv ./venv`
-2. Activeer virtual env:
+1. Installeer de dependencies uit `uv.lock` in `.venv`: `uv sync --python 3.11`
+2. Voer de app uit: `uv run python verzekeringen_api/manage.py runserver 0.0.0.0:8000`
 
-    - Windows: `venv\Scripts\Activate.ps1`
-    - Linux & MacOS: `source venv/bin/activate`
+Met `just install` doe je stap 1 en maak je ook de mappen onder `var/` aan.
 
-3. Wijzig python versie: `pyenv local 3.9.9` // indien niet geïnstalleerd = `yay -S pyenv` en daarna `pyenv install 3.9.9`
-4. Gebruik python versie 3.9.9: `poetry env use python3.9`
-5. Installeer packages (poetry): `poetry install`
-6. Activeer de poetry shell: `poetry shell`
-7. Voer de app uit: `python verzekeringen_api/manage.py runserver 0.0.0.0:8000`
+### Dependencies wijzigen
 
-## Problemen
+De dependencies staan in `pyproject.toml` onder `[project] dependencies`. Pas je die aan, werk dan `uv.lock` bij en commit beide files:
 
-Fix 1: Installeer python versie 3.11
-Fix 2: Ga in etc/requirements en pas python_version aan
+```bash
+uv lock
+```
 
-## Poetry
-
-### Installeren
-
-Project gebruikt poetry voor het onderhouden van de packages.
-Installeer:
-
--   Linux (yay): `yay -S python-poetry`
-
-### Packages toevoegen
-
-Als je een package wilt toevoegen: `poetry add requests`
-Of voor dev dependencies: `poetry add --dev pytest`
+Een pull request controleert of `uv.lock` overeenkomt met `pyproject.toml`.

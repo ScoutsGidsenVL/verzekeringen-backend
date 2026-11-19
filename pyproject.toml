@@ -1,19 +1,53 @@
 # syntax-documentation:
-#  - https://python-poetry.org/docs/pyproject
-#  - https://flit.readthedocs.io/en/latest/pyproject_toml.html
+#  - https://packaging.python.org/en/latest/specifications/pyproject-toml/
+#  - https://docs.astral.sh/uv/concepts/projects/
 #
 # NOTE: you have to use single-quoted strings in TOML for regular expressions.
 # It's the equivalent of r-strings in Python.  Multiline strings are treated as
 # verbose regular expressions by Black.  Use [ ] to denote a significant space
 # character.
 #
-#   > poetry install
-#   > poetry install --only docs
-#   > poetry install (--with|--without) (docs|dev|ipython|profiling|testing|typing)
+#   > uv sync       installeer de dependencies uit uv.lock
+#   > uv lock       werk uv.lock bij na een wijziging aan dependencies
 
-[build-system]
-requires = ["poetry-core>=1.4.0"]
-build-backend = "poetry.core.masonry.api"
+[project]
+name = "verzekeringen-backend"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "boto3>=1.30",
+    "django>=5.2,<6.0",
+    "dj-email-url>=1.0",
+    "django-anymail[sendinblue]>=10.2",
+    "django-cors-headers>=3.7",
+    "django-extensions>=3.2.3",
+    "django-filter>=23.5",
+    "django-storages>=1.11",
+    "djangorestframework>=3.18",
+    "drf-yasg>=1.21.4",
+    "environs>=10.0",
+    "gunicorn>=26,<27",
+    "jsonfield>=3.1",
+    "mozilla-django-oidc>=2.0", # @TODO
+    "packaging>=23.2",
+    "pdfrw>=0.4",
+    "psycopg2-binary>=2.9",
+    "pyjwt>=2.3",
+    "PyYAML>=6.0",
+    # scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}  # @TODO
+    "urllib3>=2.8.0",
+]
+
+[dependency-groups]
+# tools voor ontwikkeling en CI; Ansible installeert met --no-dev
+dev = [
+    "black>=24.4.2",
+    "ruff>=0.0",
+]
+
+[tool.uv]
+# applicatie, geen pakket: uv bouwt of installeert het project zelf niet
+package = false
 
 
 [tool.black]
@@ -25,80 +59,6 @@ exclude = '''
 )/
 
 '''
-
-
-[tool.poetry]
-name = "verzekeringen.api"
-version = "0.1.0"
-description = "The api for scouts verzekeringen"
-authors = [
-    "Jonas Elst <jonas.elst@inuits.eu>",
-    "Stijn Verholen <boro@inuits.eu>",
-    ]
-maintainers = [
-    "Tinus Van Langendonck <tvl@scoutsengidsenvlaanderen.be>",
-    "Wouter Vanden Hove <wouter@libranet.eu>",
-    ]
-homepage = "https://github.com/ScoutsGidsenVL/verzekeringen-backend"
-repository = "https://github.com/ScoutsGidsenVL/verzekeringen-backend"
-keywords = ["django", "scouts", "verzekeringen"]
-packages = [
-    { include = "apps", from = "verzekeringen_api" },
-    { include = "initial_data", from = "verzekeringen_api" },
-    { include = "scouts_insurances", from = "verzekeringen_api" },
-    { include = "verzekeringen_api", from = "verzekeringen_api" },
-]
-
-[tool.poetry.dependencies]
-python = ">=3.11,<3.12"
-boto3 = ">=1.30"
-django = ">=5.2,<6.0"
-dj-email-url = ">=1.0"
-django-anymail = {extras = ["sendinblue"], version = ">=10.2"}
-django-cors-headers = ">=3.7"
-django-debug-toolbar = ">=4.3.0"
-django-extensions = ">=3.2.3"
-django-filter = ">=23.5"
-django-storages = ">=1.11"
-djangorestframework = ">=3.18"
-drf-yasg = ">=1.21.4"
-environs = ">=10.0"
-jsonfield = ">=3.1"
-mozilla-django-oidc = ">=2.0" # @TODO
-packaging = ">=23.2"
-pdfrw = ">=0.4"
-psycopg2-binary = ">=2.9"
-pyjwt = ">=2.3"
-PyYAML = ">=6.0"
-# scouts-auth = {git = "ssh://git@gitlab.inuits.io:2224/boro/scouts_auth.git", rev = "master"}  # @TODO
-urllib3= ">=2.8.0"
-
-
-[tool.poetry.group.dev.dependencies]
-autoread-dotenv = ">=1.0.2"
-black = ">=24.4.2"
-isort = ">=5.13.2"
-ruff = ">=0.0"
-
-[tool.poetry.group.ipython.dependencies]
-ipdb = ">=0.13"
-ipython = ">=8.18"
-
-[tool.poetry.group.testing.dependencies]
-coverage = { extras = ["toml"], version = ">=6.2" }
-hypothesis = ">=6.72"
-# nox = ">=2022.11"
-# nox-poetry = ">=1.0"
-pytest = ">=7.0"
-pytest-clarity = ">=1.0"
-pytest-codecov = ">=0.5"
-pytest-cov = ">=3.0"
-pytest-click = ">=1.1"
-pytest-django = ">=4.5.2"
-pytest-mock = ">=3.6"
-pytest-xdist = ">=3.2"
-# tox = ">=4.0"
-
 
 
 [tool.pytest.ini_options]
