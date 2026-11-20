@@ -2,7 +2,6 @@ name: Controle pull request
 
 on:
   pull_request:
-    branches: [ "staging" ]
 
 permissions:
   contents: read
@@ -13,72 +12,4 @@ concurrency:
 
 jobs:
   controle:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-        with:
-          # de Python-versie van de server
-          python-version: "3.11"
-      - name: uv.lock komt overeen met pyproject.toml
-        run: |
-          if ! uv lock --check; then
-            echo "::error::uv.lock is niet bijgewerkt. Draai \`uv lock\` en commit uv.lock."
-            exit 1
-          fi
-      - name: Installeren
-        run: uv sync --locked --no-dev
-      - name: Django check
-        env:
-          # enkel dummywaarden, geen secrets
-          DJANGO_SETTINGS_MODULE: verzekeringen_api.settings
-          SECRET_KEY: dummy
-          DEBUG: "False"
-          ALLOWED_HOSTS: localhost
-          BASE_URL: http://localhost:8000
-          DB_HOST: localhost
-          DB_PORT: "5432"
-          DB_NAME: dummy
-          DB_USER: dummy
-          DB_PASSWORD: dummy
-          CORS_ORIGIN_WHITELIST: http://localhost:8000
-          CSRF_TRUSTED_ORIGINS: http://localhost
-          OIDC_OP_ISSUER: http://localhost/realms/dummy
-          OIDC_OP_JWKS_ENDPOINT: protocol/openid-connect/certs
-          OIDC_OP_AUTHORIZATION_ENDPOINT: protocol/openid-connect/auth
-          OIDC_OP_TOKEN_ENDPOINT: protocol/openid-connect/token
-          OIDC_OP_USER_ENDPOINT: http://localhost/profiel
-          OIDC_RP_CLIENT_ID: dummy
-          OIDC_RP_CLIENT_SECRET: dummy
-          GROUP_ADMIN_BASE_URL: http://localhost/groepsadmin
-          KNOWN_ADMIN_GROUPS: X0000G
-          KNOWN_TEST_GROUPS: ""
-          KNOWN_ROLES: role_dummy
-          SECTION_LEADER_IDENTIFIER: Leiding
-          STATIC_ROOT: /tmp/static
-          DEFAULT_FILE_STORAGE: scouts_auth.inuits.files.StorageService
-          FILE_UPLOAD_ALLOWED_EXTENSIONS: pdf
-          OVERWRITE_EXISTING_FILE: "False"
-          USE_S3_STORAGE: "False"
-          RESOURCES_PATH: resources/
-          RESOURCES_MAIL_TEMPLATE_PATH: mail/
-          RESOURCES_MAIL_TEMPLATE_START: start.html
-          RESOURCES_MAIL_TEMPLATE_END: end.html
-          RESOURCES_INSURANCES_TEMPLATE_PATH: insurance.html
-          RESOURCES_CLAIMS_INSURER_TEMPLATE_PATH: insurer.html
-          RESOURCES_CLAIMS_VICTIM_TEMPLATE_PATH: victim.html
-          RESOURCES_CLAIMS_STAKEHOLDER_TEMPLATE_PATH: declarant.html
-          INSURANCE_FILES_BASE_PATH: verzekeringen/
-          INSURANCE_FILE_NAME_PREFIX: verzekeringen
-          INSURANCE_CLAIM_FILES_BASE_PATH: schadeaangiftes/
-          INSURANCE_CLAIM_FILE_NAME_PREFIX: schadeaangifte
-          INSURANCE_CLAIM_FILE_NAME_SUFFIX: bijlage
-          INSURANCE_EVENT_PARTICIPANT_LIST_FILES_BASE_PATH: verzekeringen/
-          INSURANCE_EVENT_PARTICIPANT_LIST_FILE_NAME_PREFIX: deelnemerslijst
-          EMAIL_DEBUG_RECIPIENT: dummy@example.org
-          EMAIL_INSURER_ADDRESS: dummy@example.org
-          EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
-          USE_SENDINBLUE: "False"
-          SENDINBLUE_API_KEY: dummy
-        run: uv run --no-sync python verzekeringen_api/manage.py check
-      # geen pytest-stap: tests/ bevat enkel een controle op settings.DEBUG, geen echte tests
+    uses: ./.github/workflows/controle.yaml
