@@ -27,9 +27,16 @@ class AbstractScoutsGroupSerializer(NonModelSerializer):
         if data is None:
             return None
 
+        # Since 23/11/2026 the GA returns a technical key as group id (a GUID, sometimes prefixed with MERGE_2016_)
+        # instead of the group number. The rest of the application (frontend, permission checks, the
+        # group_group_admin_id columns and the GA /groep/{id} call) expects the group number, so prefer groepsnummer.
+        # Data that only contains an id (e.g. the groups of a function) keeps that id.
+        group_admin_id = data.pop("id", None)
+        number = data.pop("groepsnummer", None)
+
         validated_data: dict = {
-            "group_admin_id": data.pop("id", None),
-            "number": data.pop("groepsnummer", None),
+            "group_admin_id": number or group_admin_id,
+            "number": number,
             "name": data.pop("naam", None),
             "date_of_foundation": data.pop("opgericht", None),
             "bank_account": data.pop("rekeningnummer", None),
